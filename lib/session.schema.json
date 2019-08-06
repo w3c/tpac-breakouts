@@ -1,0 +1,30 @@
+{"type": "object",
+ "properties": {
+   "title": {"type": "string"},
+   "proposer": {
+     "type": "object",
+     "properties": {
+       "name": {"type": "string"},
+       "login": {"type": "string"},
+       "email": {"type": "string", "pattern": ".+@.+\\..+"}
+     },
+     "required": ["name", "email", "login"]
+   },
+   "summary": {"type": "string"},
+   "goals": {"oneOf": [
+     { "type": "array", "items": {"type": "string"} },
+     { "type": "string" }
+   ]
+            },
+   "others":  { "type": "array", "items": {"type": "string"} },
+   "type":  {"oneOf": [
+     { "type": "array", "items": {"type": "string"} },
+     { "type": "string" }
+   ]
+            },
+   "capacity": {"type": "string", "enum": ["big", "medium", "small"] },
+   "possibleSlots": { "type": "array", "items": {"type": "number"} }
+ },
+ "required": ["title", "proposer", "summary", "goals"],
+ "additionalProperties": false
+}
