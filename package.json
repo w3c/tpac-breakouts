@@ -2,7 +2,7 @@
   "name": "tpac-breakouts",
   "scripts": {
     "test": "node bin/validate-sessions.js && node bin/validate-grid.js",
-    "build": "node bin/build-sessions-page.js",
+    "build": "node bin/build-sessions-page.js"
   },
   "dependencies": {
     "jsdom": "^15.1.1",
