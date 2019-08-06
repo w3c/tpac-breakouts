@@ -1,6 +1,6 @@
 const fs = require("fs");
 const util = require("util");
-const {validate: jsonvalidate} = require('jsonschema');
+const jsonvalidate = require('jsonschema').validate;
 
 const schema = require('../lib/session.schema.json');
 
