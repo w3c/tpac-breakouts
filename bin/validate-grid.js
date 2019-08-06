@@ -1,8 +1,16 @@
 const fs = require("fs");
 const util = require("util");
 
-const grid = require("../grid.json"),
-      rooms = require("../rooms.json");
+// If no grid, no work
+let grid;
+try {
+  grid = require("../grid.json");
+} catch (e) {
+  console.log("No grid to be checked, exiting");
+  process.exit(0);
+}
+
+const rooms = require("../rooms.json");
 
 const compareSize = ({capacity: cap1}, {size: cap2} ) => {
   if (!cap1) return 0;

@@ -24,6 +24,8 @@ The `sessions/` contains one JSON file per proposed breakout, with a name matchi
 `grid.json` is an array of objects; each object describes one of the breakout timeslots, and has for keys the ids of the rooms defined in `rooms.json`. The value associated with a given key is the shortname of the session that will be run in the said room in the said slot.
 
 # Scripts
-`validate-grid.js` checks that the data is valid and consistent.
+`validate-sessions.js` checks that the session data is valid and consistent.
+
+`validate-grid.js` checks that the proposed gridd is valid and consistent.
 
 `build-sessions-page.js` generates `sessions.html` - the list of sessions as defined by `grid.json`.
