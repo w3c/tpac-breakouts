@@ -53,9 +53,15 @@
     "size": "small",
     "name": "Kei"
   },
+  "rigel": {
+    "floor": 3,
+    "capacity": 30,
+    "size": "medium",
+    "name": "Rigel"
+  },
   "yoh": {
     "floor": 3,
-    "capacity": 20,
+    "capacity": 15,
     "size": "small",
     "name": "Yoh"
   }
