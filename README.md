@@ -26,6 +26,6 @@ The `sessions/` contains one JSON file per proposed breakout, with a name matchi
 # Scripts
 `validate-sessions.js` checks that the session data is valid and consistent.
 
-`validate-grid.js` checks that the proposed gridd is valid and consistent.
+`validate-grid.js` checks that the proposed grid is valid and consistent.
 
 `build-sessions-page.js` generates `sessions.html` - the list of sessions as defined by `grid.json`.
