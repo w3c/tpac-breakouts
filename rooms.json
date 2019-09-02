@@ -1,4 +1,10 @@
 {
+  "argos-df": {
+    "floor": 1,
+    "capacity": 50,
+    "size": "big",
+    "name": "Argos D-F"
+  },
   "navis-a": {
     "floor": 1,
     "capacity": 50,
