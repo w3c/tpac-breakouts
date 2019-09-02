@@ -12,6 +12,7 @@ The `sessions/` contains one JSON file per proposed breakout, with a name matchi
 * `others` is an optional array of the W3C logins of other critical parties to the session (beyond the proposer)
 * `possibleSlots` is an optional array of integers indicating during which timeslots the session can be scheduled (first slot is 0); if not defined, any slot is assumed to be acceptable
 * `capacity` is an optional string with value either of `big`, `medium` or `small`, describing the room size needed based on expected participation
+* `track` is an optional arbitrary string that can be used to indicate that several sessions share a common topic (e.g. "privacy", "media")
 
 # Only needed for W3C Staff plenary day organizers
 
