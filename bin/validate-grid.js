@@ -46,6 +46,7 @@ loadDir("./sessions/").then(() => {
 
   grid.forEach((slot,i) => {
     const criticalParties = new Set();
+    const tracks = {};
     Object.keys(slot).forEach(roomId => {
       // Fail if a slot refers to an unknown room
       if (!rooms[roomId])
@@ -72,6 +73,15 @@ loadDir("./sessions/").then(() => {
         if (criticalParties.has(p))
           warnings.push(`Session ${sessionId} scheduled in slot #${i}, but ${p} is critical in another session of that slot`);
         criticalParties.add(p);
+      }
+
+      if (session.track) {
+        if (!tracks[session.track]) {
+          tracks[session.track] = new Set();
+        }
+        if (tracks[session.track].has(slot))
+          warnings.push(`Session ${sessionId} scheduled in slot #${i}, but another session of the track ${session.track} is scheduled in that slot`);
+        tracks[session.track].add(slot);
       }
     });
   });
