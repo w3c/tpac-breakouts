@@ -1,0 +1,15 @@
+{
+  "title": "JS Built-In Modules",
+  "proposer": {
+    "login": "dcrousso",
+    "name": "Devin Rousso",
+    "email": "dcrousso@apple.com"
+  },
+  "summary": "introduction to the concept of JS Built-In Modules, as well as an overview of the currently proposed governance model",
+  "type": "Talk",
+  "goals": "disseminate knowledge of JS Built-In modules to other hosts built on top of JavaScript (e.g. web browsers), and introduce the proposed governance model to potential stakeholders of additional JS Built-In Module namespaces (e.g. web:)",
+  "others": ["msaboff@apple.com"],
+  "capacity": "medium",
+  "possibleSlots": [0, 1],
+  "track": "js"
+}

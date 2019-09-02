@@ -1,0 +1,13 @@
+{
+  "title": "Ad Measurement and Privacy",
+  "proposer": {
+    "login": "johnwilander",
+    "name": "John Wilander",
+    "email": "wilander@apple.com"
+  },
+  "summary": "We will discuss Apple's proposed and implemented [Private Click Measurement](https://wicg.github.io/ad-click-attribution/index.html) and Google's proposed [Click Through Conversion Measurement](https://github.com/csharrison/conversion-measurement-api)",
+  "type": "Open discussion",
+  "goals": "Discuss the open issue of fraud detection and what is required to ship this feature.",
+  "capacity": "medium",
+  "track": "privacy"
+}

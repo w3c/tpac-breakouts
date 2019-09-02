@@ -1,0 +1,13 @@
+{
+  "title": "DataCue and \"Time marches on\" in HTML",
+  "proposer": {
+    "login": "chrisn",
+    "name": "Chris Needham",
+    "email": "chris.needham@bbc.co.uk"
+  },
+  "summary": "The DataCue API for media-synchronised metadata and interactivity events is part of HTML5, but not implemented across all browsers, and existing implementations vary. There are also issues with the time marches on algorithm in HTML for triggering timed interactivity events",
+  "type": "talk and open discussion",
+  "goals": "To advance the DataCue API design between media experts and browser developers, and discuss how to improve synchronisation of media and associated content on the web",
+  "capacity": "medium",
+  "track": "media"
+}

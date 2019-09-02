@@ -1,0 +1,14 @@
+{
+  "title": "Efficient audio/video processing",
+  "proposer": {
+    "login": "fd",
+    "name": "Francois Daoust",
+    "email": "fd@w3.org"
+  },
+  "summary": "W3C groups (e.g. WebRTC WG, Machine Learning for the Web CG, Audio WG, Media WG, Immersive Web WG) discuss, develop and/or dream about ways to process audio/video streams efficiently. Use cases include barcode reading, face/gesture tracking, emotion analysis, funny hats, background removal or blurring, augmented reality, video overlays, voice effects, or custom codecs. Would it be useful and possible to develop a common mechanism that different APIs could leverage to hook together with streams of media while avoiding useless memory copies? What could such a mechanism look like?",
+  "type": "open discussion",
+  "goals": "Look at use cases and at how they can be implemented today, assess possible performance gains if they were implemented with a more efficient mechanism, refine scope for possible work on the topic, and gauge interest among parties.",
+  "others": ["dom", "riju", "joconnor","pthatcher","padenot"],
+  "capacity": "medium",
+  "track": "media"
+}

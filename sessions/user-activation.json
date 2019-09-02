@@ -1,0 +1,14 @@
+{
+  "title": "Standardizing user activation behavior",
+  "proposer": {
+    "login": "mustaq",
+    "name": "Mustaq Ahmed",
+    "email": "mustaq@google.com"
+  },
+  "summary": "We are proposing to replace the user activation model implied by the current HTML spec with a simple-to-implement model because the current model doesn't reflect the reality https://github.com/whatwg/html/issues/1903",
+  "type": "Open discussion",
+  "goals": "rying to reach consensus on our proposed change to the spec (https://github.com/whatwg/html/pull/3851)",
+  "others": ["ddenicol"],
+  "capacity": "medium",
+  "track": "core"
+}

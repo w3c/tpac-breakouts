@@ -1,0 +1,14 @@
+{
+  "title": "A target privacy threat model for the Web",
+  "proposer": {
+    "login": "jyasskin",
+    "name": "Jeffrey Yasskin",
+    "email": "jyasskin@google.com"
+  },
+  "summary": "Proposals for new features often encounter resistance from folks who want the Web Platform to defend its users' privacy better than it does today. This often surprises the authors of those proposals, who were designing against the Web's current, implicit, and weak privacy threat model. Making our privacy goals explicit could avoid those surprises and reduce the load on privacy reviewers.",
+  "type": "Open discussion",
+  "goals": "Figure out whether there's interest in developing a target privacy threat model for the Web.",
+  "possibleSlots": [0],
+  "capacity": "big",
+  "track": "privacy"
+}

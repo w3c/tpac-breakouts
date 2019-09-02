@@ -1,0 +1,13 @@
+{
+  "title": "Privacy Budget",
+  "proposer": {
+    "login": "blassey",
+    "name": "Brad Lassey",
+    "email": "lassey@google.com"
+  },
+  "summary": "Chrome proposed a [privacy budget](https://github.com/bslassey/privacy-budget) to limit the ability for websites to fingerprint users. We's like to have a discussion around this proposal and its implications.",
+  "type": "Open discussion",
+  "goals": "Determine interest level from implementers, discuss concerns.",
+  "capacity": "medium",
+  "track": "privacy"
+}
