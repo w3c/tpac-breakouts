@@ -23,7 +23,8 @@
    ]
             },
    "capacity": {"type": "string", "enum": ["big", "medium", "small"] },
-   "possibleSlots": { "type": "array", "items": {"type": "number"} }
+   "possibleSlots": { "type": "array", "items": {"type": "number"} },
+   "track": {"type": "string"}
  },
  "required": ["title", "proposer", "summary", "goals"],
  "additionalProperties": false
