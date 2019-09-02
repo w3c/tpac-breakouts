@@ -1,0 +1,36 @@
+[
+  {
+    "navis-a": "privthreatmodel",
+    "navis-b": "jsbuiltin",
+    "kusu": "datacue",
+    "hishi": "mdn",
+    "rigel": "jlreq",
+    "kashi": "miniapp"
+  },
+  {
+    "kaede": "openjs",
+    "kusu": "mediaprocessing",
+    "kashi": "privacybudget",
+    "rigel": "bulletchat",
+    "hishi": "portals"
+  },
+  {
+    "kusu": "textcueapi",
+    "kashi": "ad-privacy",
+    "hishi": "workerinput",
+    "rigel": "webtransport",
+    "kaede": "webstories"
+  },
+  {
+    "kashi": "adselection",
+    "kusu": "webcodecs",
+    "hishi": "user-activation",
+    "kaede": "xra11y",
+    "rigel": "wpack"
+  },
+  {
+    "navis-a": "webgpu",
+    "kashi": "trusttokens",
+    "hishi": "pub"
+  }
+]
