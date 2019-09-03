@@ -28,11 +28,9 @@
         [role=rowheader] {padding-left: 0; font-size: 1em}
         .room {display: none}
       }
-      @supports (display: run-in) {
-	dt {display: run-in}
-	dt::after {content: " "}
-	dd {margin-left: 0}
-      }
+      dd {margin-left: 7em}
+      dd {min-height: 1.3em} /* Make sure there is at least one line */
+      dt {float: left; clear: left; margin-right: 0.33em; font-weight: inherit}
     </style>
   </head>
 
@@ -108,18 +106,19 @@
     </template>
     <template id="session">
       <h3 class="title"></h3>
-      <p>In room <span class="room-name"></span>, <span class="room-floor"></span></p>
       <dl>
         <dt>Proposer:</dt>
-        <dd><span class="organizer-name"></span> - <a class="organizer-email"></a></dd>
+        <dd><span class="organizer-name"></span> – <a class="organizer-email"></a></dd>
         <dt>Summary:</dt>
         <dd class="summary"></dd>
         <dt>Type of session:</dt>
         <dd class="type"></dd>
         <dt>Goals:</dt>
         <dd><ul class="goals"></ul></dd>
-        <dt>IRC Channel</dt>
+        <dt>IRC Channel:</dt>
         <dd class="irc"></dd>
+	<dt>Room:</dt>
+        <dd><span class="room-name"></span>, <span class="room-floor"></span></dd>
       </dl>
     </template>
 
