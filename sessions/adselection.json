@@ -5,7 +5,7 @@
     "name": "Michael Kleber",
     "email": "kleber@google.com"
   },
-  "summary": "Discussion of various ideas for how browsers could support ad selection use cases which today rely on users having a consistent cross-site identity. Chrome has explainers out for [Federated Learning of Cohorts (FLoC)](https://github.com/jkarlin/floc) and [Private Interest Groups, Including Noise (PIGIN)](https://github.com/michaelkleber/pigin)",
+  "summary": "Discussion of various ideas for how browsers could support ad selection use cases which today rely on users having a consistent cross-site identity. Chrome has explainers out for <a href='https://github.com/jkarlin/floc'>Federated Learning of Cohorts (FLoC)</a> and <a href='https://github.com/michaelkleber/pigin'>Private Interest Groups, Including Noise (PIGIN)</a>",
   "type": "Open discussion",
   "goals": "Determine interest level from implementers, discuss concerns.",
   "capacity": "medium",

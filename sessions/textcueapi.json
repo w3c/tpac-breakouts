@@ -5,7 +5,7 @@
     "name": "Eric Carlson",
     "email": "eric.carlson@apple.com"
   },
-  "summary": "TextTrackCue enhancements for programmatic subtitle and caption presentation. We've been making progress since FOMS this past spring. Please see [our FOMS slides](https://www.icloud.com/keynote/0GJUbJwWfA2i77M2JysKjj45w#Generic_Text_Cue_-_FOMS_2019) for the basic idea",
+  "summary": "TextTrackCue enhancements for programmatic subtitle and caption presentation. We've been making progress since FOMS this past spring. Please see <a href='https://www.icloud.com/keynote/0GJUbJwWfA2i77M2JysKjj45w#Generic_Text_Cue_-_FOMS_2019'>our FOMS slides</a> for the basic idea",
   "type": "talk and open discussion",
   "goals": "Engage with browser engineers and media experts & gauge interest in pursuing this as new web API",
   "others": ["eoconnor", "plemieux"],

@@ -5,7 +5,7 @@
     "name": "Peter Thatcher",
     "email": "pthatcher@google.com"
   },
-  "summary": "Discuss [WebTransport API](https://github.com/WICG/web-transport) and next steps for a WG or CG",
+  "summary": "Discuss <a href='https://github.com/WICG/web-transport'>WebTransport API</a> and next steps for a WG or CG",
   "type": "short talk (maybe demo too) & discussion",
   "goals": ["Ensure everyone is up to date on the latest API, implementation status, and interaction with the IETF (https://mailarchive.ietf.org/arch/browse/webtransport/ https://tools.ietf.org/wg/dispatch/minutes)", "Determine when and how we should create a WG or CG", "Discuss advanced API topics such as how best to use WHATWG streams, how to handle congestion control, and stream prioritization"],
   "capacity": "medium"
