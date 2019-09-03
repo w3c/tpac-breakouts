@@ -2,37 +2,28 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta content="width=device-width" name="viewport">
     <title>TPAC 2019: break-outs schedule</title>
-    <link rel="stylesheet" href="https://www.w3.org/2019/09/TPAC-template/tpac.css">
-    <link rel="alternate stylesheet" title="Less color" href="https://www.w3.org/2019/09/TPAC-template/alt.css">
+    <base href="https://www.w3.org/2019/09/TPAC/">
+    <link rel="stylesheet" href="../../../2019/09/TPAC-template/tpac.css">
     <link rel="first" href="Overview.html">
-    <!--
-    <link rel="next" href="participation.html">
-    -->
     <link rel="author" href="mailto:w3t-tpregister@w3.org">
     <link rel="license" href="../../../Consortium/Legal/copyright-documents">
     <link rel="search" href="../../../Help/search?q=site:www.w3.org/2019/09/TPAC/">
 
     <!-- Temporary style element for testing during development. -->
     <style>
-      .thead, .tfoot, .capacity {display: none}
-      .th {margin: 1.2em 0 0 0}
-      .td {display: list-item; padding: 0; margin: 0 0 0 1em}
-      .th {font-weight: bold}
+      [role=rowgroup]:first-child {display: none} /* hide the "thead" */
+      [role=cell] {display: list-item; padding: 0; margin: 0 0 0 1em}
       .room {color: #005A9C}
       @media (min-width: 80em) {
-	.table {display: table; table-layout: fixed; width: 100%;
-          font-size: 0.9em}
-	.thead {display: table-header-group}
-	.tfoot {display: table-footer-group}
-	.tbody {display: table-row-group}
-	.tr {display: table-row}
-        .th, .td {display: table-cell; padding: 0.4em 0 0.4em 1.3em;
-          vertical-align: baseline}
-        .th:first-child, .td:first-child {padding-left: 0}
-        .th {color: #005A9C; font-size: 1em}
-        .thead .th {vertical-align: bottom}
-        .tbody .th, .tbody .td, .tfoot .th, .tfoot .td {border-width: 0.2em;
-          border-style: solid none none none; border-color: orange}
+	[role=table] {display: table; table-layout: fixed; width: 100%;
+          font-size: 0.9em; border-collapse: collapse; border: hidden}
+	[role=rowgroup] {display: table-row-group}
+	[role=rowgroup]:first-child {display: table-header-group}
+	[role=row] {display: table-row; border-top: 0.2em solid orange}
+        [role=cell], [role=columnheader], [role=rowheader] {display: table-cell;
+          padding: 0.4em 0 0.4em 1.3em; vertical-align: baseline}
+        [role=columnheader], [role=rowheader] {font-weight: 700; color: #005A9C}
+        [role=rowheader] {padding-left: 0; font-size: 1em}
         .room {display: none}
       }
       @supports (display: run-in) {
@@ -84,32 +75,32 @@
 
       <p>This is a first stab at organizing the <a href="https://www.w3.org/wiki/TPAC/2019/SessionIdeas">breakout sessions that have been proposed so far</a> - please get in touch with <a href="mailto:public-tpac-unconference@w3.org">public-tpac-unconference@w3.org</a> if you identify problems with the proposed schedule. See also <a href="https://www.w3.org/wiki/TPAC/2019/FAQ#How_does_the_agenda_get_built.3F">how to help building the unconference agenda</a>.</p>
 
-      <div class="table breakouts" role="table">
-        <div class="thead" role="rowgroup">
-          <div class="tr" role="row">
-            <h3 class="th" role="rowheader">Room</h3>
-            <p class="th" role="columnheader"><span class="name">Argos D-F</span>, <i class="floor">Floor&nbsp;1</i></p><p class="th" role="columnheader"><span class="name">Navis-A</span>, <i class="floor">Floor&nbsp;1</i></p><p class="th" role="columnheader"><span class="name">Navis-B</span>, <i class="floor">Floor&nbsp;1</i></p><p class="th" role="columnheader"><span class="name">Navis-C</span>, <i class="floor">Floor&nbsp;1</i></p><p class="th" role="columnheader"><span class="name">Kaede</span>, <i class="floor">Floor&nbsp;1</i></p><p class="th" role="columnheader"><span class="name">Kusu</span>, <i class="floor">Floor&nbsp;1</i></p><p class="th" role="columnheader"><span class="name">Kashi</span>, <i class="floor">Floor&nbsp;1</i></p><p class="th" role="columnheader"><span class="name">Hishi</span>, <i class="floor">Floor&nbsp;3</i></p><p class="th" role="columnheader"><span class="name">Kei</span>, <i class="floor">Floor&nbsp;3</i></p><p class="th" role="columnheader"><span class="name">Rigel</span>, <i class="floor">Floor&nbsp;3</i></p><p class="th" role="columnheader"><span class="name">Yoh</span>, <i class="floor">Floor&nbsp;3</i></p>
+      <div class="breakouts" role="table">
+        <div role="rowgroup">
+          <div role="row">
+            <h3 role="rowheader">Room</h3>
+            <p role="columnheader"><span class="name">Argos D-F</span>, <i class="floor">Floor&nbsp;1</i></p><p role="columnheader"><span class="name">Navis-A</span>, <i class="floor">Floor&nbsp;1</i></p><p role="columnheader"><span class="name">Navis-B</span>, <i class="floor">Floor&nbsp;1</i></p><p role="columnheader"><span class="name">Navis-C</span>, <i class="floor">Floor&nbsp;1</i></p><p role="columnheader"><span class="name">Kaede</span>, <i class="floor">Floor&nbsp;1</i></p><p role="columnheader"><span class="name">Kusu</span>, <i class="floor">Floor&nbsp;1</i></p><p role="columnheader"><span class="name">Kashi</span>, <i class="floor">Floor&nbsp;1</i></p><p role="columnheader"><span class="name">Hishi</span>, <i class="floor">Floor&nbsp;3</i></p><p role="columnheader"><span class="name">Kei</span>, <i class="floor">Floor&nbsp;3</i></p><p role="columnheader"><span class="name">Bay Penthouse</span>, <i class="floor">Floor&nbsp;34</i></p><p role="columnheader"><span class="name">Yoh</span>, <i class="floor">Floor&nbsp;3</i></p>
           </div>
         </div>
-        <div class="tbody" role="rowgroup">
-          <div class="tr" role="row">
-              <h3 class="th" role="rowheader"><time class="start">11:00</time>-​<time class="end">12:00</time></h3>
-            <p class="td" role="cell"> <span class="room">– Argos D-F</span></p><p class="td" role="cell"><a class="title-link" href="#privthreatmodel">A target privacy threat model for the Web</a> <span class="room">– Navis-A</span></p><p class="td" role="cell"><a class="title-link" href="#jsbuiltin">JS Built-In Modules</a> <span class="room">– Navis-B</span></p><p class="td" role="cell"> <span class="room">– Navis-C</span></p><p class="td" role="cell"> <span class="room">– Kaede</span></p><p class="td" role="cell"><a class="title-link" href="#datacue">DataCue and "Time marches on" in HTML</a> <span class="room">– Kusu</span></p><p class="td" role="cell"><a class="title-link" href="#miniapp">Mini App Standardization</a> <span class="room">– Kashi</span></p><p class="td" role="cell"><a class="title-link" href="#mdn">Results from MDN Developer Survey</a> <span class="room">– Hishi</span></p><p class="td" role="cell"> <span class="room">– Kei</span></p><p class="td" role="cell"><a class="title-link" href="#jlreq">Japan Language Requirements Task Force: Evolving the JLReq document</a> <span class="room">– Rigel</span></p><p class="td" role="cell"> <span class="room">– Yoh</span></p></div><div class="tr" role="row">
-              <h3 class="th" role="rowheader"><time class="start">13:30</time>-​<time class="end">14:30</time></h3>
-            <p class="td" role="cell"> <span class="room">– Argos D-F</span></p><p class="td" role="cell"><a class="title-link" href="#mediaprocessing">Efficient audio/video processing</a> <span class="room">– Navis-A</span></p><p class="td" role="cell"> <span class="room">– Navis-B</span></p><p class="td" role="cell"> <span class="room">– Navis-C</span></p><p class="td" role="cell"><a class="title-link" href="#openjs">OpenJS Foundation Collaboration</a> <span class="room">– Kaede</span></p><p class="td" role="cell"><a class="title-link" href="#html-3d">HTML 3D Element</a> <span class="room">– Kusu</span></p><p class="td" role="cell"><a class="title-link" href="#privacybudget">Privacy Budget</a> <span class="room">– Kashi</span></p><p class="td" role="cell"><a class="title-link" href="#portals">Portals (status and next steps)</a> <span class="room">– Hishi</span></p><p class="td" role="cell"> <span class="room">– Kei</span></p><p class="td" role="cell"><a class="title-link" href="#bulletchat">Bullet Chatting</a> <span class="room">– Rigel</span></p><p class="td" role="cell"> <span class="room">– Yoh</span></p></div><div class="tr" role="row">
-              <h3 class="th" role="rowheader"><time class="start">14:30</time>-​<time class="end">15:30</time></h3>
-            <p class="td" role="cell"> <span class="room">– Argos D-F</span></p><p class="td" role="cell"> <span class="room">– Navis-A</span></p><p class="td" role="cell"> <span class="room">– Navis-B</span></p><p class="td" role="cell"> <span class="room">– Navis-C</span></p><p class="td" role="cell"><a class="title-link" href="#webstories">Web stories</a> <span class="room">– Kaede</span></p><p class="td" role="cell"><a class="title-link" href="#textcueapi">Next Generation TextTrackCue</a> <span class="room">– Kusu</span></p><p class="td" role="cell"><a class="title-link" href="#ad-privacy">Ad Measurement and Privacy</a> <span class="room">– Kashi</span></p><p class="td" role="cell"><a class="title-link" href="#workerinput">Input for workers/worklets</a> <span class="room">– Hishi</span></p><p class="td" role="cell"> <span class="room">– Kei</span></p><p class="td" role="cell"><a class="title-link" href="#webtransport">WebTransport status and next steps</a> <span class="room">– Rigel</span></p><p class="td" role="cell"><a class="title-link" href="#voice">Voice assistants - opportunities for standardization?</a> <span class="room">– Yoh</span></p></div><div class="tr" role="row">
-              <h3 class="th" role="rowheader"><time class="start">16:30</time>-​<time class="end">17:30</time></h3>
-            <p class="td" role="cell"> <span class="room">– Argos D-F</span></p><p class="td" role="cell"> <span class="room">– Navis-A</span></p><p class="td" role="cell"> <span class="room">– Navis-B</span></p><p class="td" role="cell"> <span class="room">– Navis-C</span></p><p class="td" role="cell"><a class="title-link" href="#xra11y">XR Accessibility</a> <span class="room">– Kaede</span></p><p class="td" role="cell"><a class="title-link" href="#webcodecs">WebCodecs</a> <span class="room">– Kusu</span></p><p class="td" role="cell"><a class="title-link" href="#adselection">Supporting privacy-focused ads selection</a> <span class="room">– Kashi</span></p><p class="td" role="cell"><a class="title-link" href="#user-activation">Standardizing user activation behavior</a> <span class="room">– Hishi</span></p><p class="td" role="cell"> <span class="room">– Kei</span></p><p class="td" role="cell"><a class="title-link" href="#wpack">Web Packaging</a> <span class="room">– Rigel</span></p><p class="td" role="cell"> <span class="room">– Yoh</span></p></div><div class="tr" role="row">
-              <h3 class="th" role="rowheader"><time class="start">17:30</time>-​<time class="end">18:30</time></h3>
-            <p class="td" role="cell"> <span class="room">– Argos D-F</span></p><p class="td" role="cell"><a class="title-link" href="#webgpu">WebGPU</a> <span class="room">– Navis-A</span></p><p class="td" role="cell"> <span class="room">– Navis-B</span></p><p class="td" role="cell"> <span class="room">– Navis-C</span></p><p class="td" role="cell"> <span class="room">– Kaede</span></p><p class="td" role="cell"> <span class="room">– Kusu</span></p><p class="td" role="cell"><a class="title-link" href="#trusttokens">Trust Tokens</a> <span class="room">– Kashi</span></p><p class="td" role="cell"><a class="title-link" href="#pub">ReSpec - so many new features!</a> <span class="room">– Hishi</span></p><p class="td" role="cell"> <span class="room">– Kei</span></p><p class="td" role="cell"> <span class="room">– Rigel</span></p><p class="td" role="cell"> <span class="room">– Yoh</span></p></div>
+        <div role="rowgroup">
+          <div role="row">
+              <h3 role="rowheader"><time class="start">11:00</time>-​<time class="end">12:00</time></h3>
+            <p role="cell"> <span class="room">– Argos D-F</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#privthreatmodel">A target privacy threat model for the Web</a> <span class="room">– Navis-A</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#jsbuiltin">JS Built-In Modules</a> <span class="room">– Navis-B</span></p><p role="cell"> <span class="room">– Navis-C</span></p><p role="cell"> <span class="room">– Kaede</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#datacue">DataCue and "Time marches on" in HTML</a> <span class="room">– Kusu</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#miniapp">Mini App Standardization</a> <span class="room">– Kashi</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#mdn">Results from MDN Developer Survey</a> <span class="room">– Hishi</span></p><p role="cell"> <span class="room">– Kei</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#jlreq">Japan Language Requirements Task Force: Evolving the JLReq document</a> <span class="room">– Bay Penthouse</span></p><p role="cell"> <span class="room">– Yoh</span></p></div><div role="row">
+              <h3 role="rowheader"><time class="start">13:30</time>-​<time class="end">14:30</time></h3>
+            <p role="cell"> <span class="room">– Argos D-F</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#mediaprocessing">Efficient audio/video processing</a> <span class="room">– Navis-A</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#bulletchat">Bullet Chatting</a> <span class="room">– Navis-B</span></p><p role="cell"> <span class="room">– Navis-C</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#openjs">OpenJS Foundation Collaboration</a> <span class="room">– Kaede</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#html-3d">HTML 3D Element</a> <span class="room">– Kusu</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#privacybudget">Privacy Budget</a> <span class="room">– Kashi</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#portals">Portals (status and next steps)</a> <span class="room">– Hishi</span></p><p role="cell"> <span class="room">– Kei</span></p><p role="cell"> <span class="room">– Bay Penthouse</span></p><p role="cell"> <span class="room">– Yoh</span></p></div><div role="row">
+              <h3 role="rowheader"><time class="start">14:30</time>-​<time class="end">15:30</time></h3>
+            <p role="cell"> <span class="room">– Argos D-F</span></p><p role="cell"> <span class="room">– Navis-A</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#ad-privacy">Ad Measurement and Privacy</a> <span class="room">– Navis-B</span></p><p role="cell"> <span class="room">– Navis-C</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#webstories">Web stories</a> <span class="room">– Kaede</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#textcueapi">Next Generation TextTrackCue</a> <span class="room">– Kusu</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#webtransport">WebTransport status and next steps</a> <span class="room">– Kashi</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#workerinput">Input for workers/worklets</a> <span class="room">– Hishi</span></p><p role="cell"> <span class="room">– Kei</span></p><p role="cell"> <span class="room">– Bay Penthouse</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#voice">Voice assistants - opportunities for standardization?</a> <span class="room">– Yoh</span></p></div><div role="row">
+              <h3 role="rowheader"><time class="start">16:30</time>-​<time class="end">17:30</time></h3>
+            <p role="cell"> <span class="room">– Argos D-F</span></p><p role="cell"> <span class="room">– Navis-A</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#adselection">Supporting privacy-focused ads selection</a> <span class="room">– Navis-B</span></p><p role="cell"> <span class="room">– Navis-C</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#xra11y">XR Accessibility</a> <span class="room">– Kaede</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#webcodecs">WebCodecs</a> <span class="room">– Kusu</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#wpack">Web Packaging</a> <span class="room">– Kashi</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#user-activation">Standardizing user activation behavior</a> <span class="room">– Hishi</span></p><p role="cell"> <span class="room">– Kei</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#webmonetization">Next steps for Web Monetization</a> <span class="room">– Bay Penthouse</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#groupautomation">Github tools and Bots to assist Chairing</a> <span class="room">– Yoh</span></p></div><div role="row">
+              <h3 role="rowheader"><time class="start">17:30</time>-​<time class="end">18:30</time></h3>
+            <p role="cell"> <span class="room">– Argos D-F</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#webgpu">WebGPU</a> <span class="room">– Navis-A</span></p><p role="cell"> <span class="room">– Navis-B</span></p><p role="cell"> <span class="room">– Navis-C</span></p><p role="cell"> <span class="room">– Kaede</span></p><p role="cell"> <span class="room">– Kusu</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#trusttokens">Trust Tokens</a> <span class="room">– Kashi</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#pub">ReSpec - so many new features!</a> <span class="room">– Hishi</span></p><p role="cell"> <span class="room">– Kei</span></p><p role="cell"><a class="title-link" href="https://w3c.github.io/tpac-breakouts/sessions.html#webmonetization">Next steps for Web Monetization</a> <span class="room">– Bay Penthouse</span></p><p role="cell"> <span class="room">– Yoh</span></p></div>
           
         </div>
       </div>
     </section>
 
     <section id="slot1">
-      <p class="skip"><a title="Next section" data-last="#sponsors" href="#slot2">
+      <p class="skip"><a title="Next section" data-last="#sponsors" href="https://w3c.github.io/tpac-breakouts/sessions.html#slot2">
           <span>Skip</span> ⬇</a></p>
       <h2>Sessions <time class="start">11:00</time>–<time class="end">12:00</time></h2>
     <div id="privthreatmodel">
@@ -189,7 +180,7 @@
       </dl>
     </div><div id="jlreq">
       <h3 class="title">Japan Language Requirements Task Force: Evolving the JLReq document</h3>
-      <p>In room <span class="room-name">Rigel</span>, <span class="room-floor">Floor 3</span></p>
+      <p>In room <span class="room-name">Bay Penthouse</span>, <span class="room-floor">Floor 34</span></p>
       <dl>
         <dt>Proposer:</dt>
         <dd><span class="organizer-name"> Nathaniel McCully</span> - <a class="organizer-email" href="mailto:nmccully@adobe.com">nmccully@adobe.com</a></dd>
@@ -203,7 +194,7 @@
         <dd class="irc"><a href="http://irc.w3.org/?channels=%23jlreq">#jlreq</a></dd>
       </dl>
     </div></section><section id="slot2">
-      <p class="skip"><a title="Next section" data-last="#sponsors" href="#slot3">
+      <p class="skip"><a title="Next section" data-last="#sponsors" href="https://w3c.github.io/tpac-breakouts/sessions.html#slot3">
           <span>Skip</span> ⬇</a></p>
       <h2>Sessions <time class="start">13:30</time>–<time class="end">14:30</time></h2>
     <div id="mediaprocessing">
@@ -220,6 +211,21 @@
         <dd><ul class="goals"><li>Look at use cases and at how they can be implemented today, assess possible performance gains if they were implemented with a more efficient mechanism, refine scope for possible work on the topic, and gauge interest among parties.</li></ul></dd>
         <dt>IRC Channel</dt>
         <dd class="irc"><a href="http://irc.w3.org/?channels=%23mediaprocessing">#mediaprocessing</a></dd>
+      </dl>
+    </div><div id="bulletchat">
+      <h3 class="title">Bullet Chatting</h3>
+      <p>In room <span class="room-name">Navis-B</span>, <span class="room-floor">Floor 1</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd><span class="organizer-name">Song Xu</span> - <a class="organizer-email" href="mailto:xusong@migu.cn">xusong@migu.cn</a></dd>
+        <dt>Summary:</dt>
+        <dd class="summary"> Introduce what is the Bullet Chatting , and introduce the Bullet Chatting specification drafted by W3C Chinese Interest Group. Discuss the way forward for Bullet Chatting standardization in W3C.</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">talk &amp; discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Help the global web community to better understand Bullet Chatting and the value of its standardization, and looking for teams interested in Bullet Chatting standardization, hoping to get some feedback and support, and get advice about what the W3C workflow. </li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23bulletchat">#bulletchat</a></dd>
       </dl>
     </div><div id="openjs">
       <h3 class="title">OpenJS Foundation Collaboration</h3>
@@ -281,26 +287,26 @@
         <dt>IRC Channel</dt>
         <dd class="irc"><a href="http://irc.w3.org/?channels=%23portals">#portals</a></dd>
       </dl>
-    </div><div id="bulletchat">
-      <h3 class="title">Bullet Chatting</h3>
-      <p>In room <span class="room-name">Rigel</span>, <span class="room-floor">Floor 3</span></p>
-      <dl>
-        <dt>Proposer:</dt>
-        <dd><span class="organizer-name">Song Xu</span> - <a class="organizer-email" href="mailto:xusong@migu.cn">xusong@migu.cn</a></dd>
-        <dt>Summary:</dt>
-        <dd class="summary"> Introduce what is the Bullet Chatting , and introduce the Bullet Chatting specification drafted by W3C Chinese Interest Group. Discuss the way forward for Bullet Chatting standardization in W3C.</dd>
-        <dt>Type of session:</dt>
-        <dd class="type">talk &amp; discussion</dd>
-        <dt>Goals:</dt>
-        <dd><ul class="goals"><li>Help the global web community to better understand Bullet Chatting and the value of its standardization, and looking for teams interested in Bullet Chatting standardization, hoping to get some feedback and support, and get advice about what the W3C workflow. </li></ul></dd>
-        <dt>IRC Channel</dt>
-        <dd class="irc"><a href="http://irc.w3.org/?channels=%23bulletchat">#bulletchat</a></dd>
-      </dl>
     </div></section><section id="slot3">
-      <p class="skip"><a title="Next section" data-last="#sponsors" href="#slot4">
+      <p class="skip"><a title="Next section" data-last="#sponsors" href="https://w3c.github.io/tpac-breakouts/sessions.html#slot4">
           <span>Skip</span> ⬇</a></p>
       <h2>Sessions <time class="start">14:30</time>–<time class="end">15:30</time></h2>
-    <div id="webstories">
+    <div id="ad-privacy">
+      <h3 class="title">Ad Measurement and Privacy</h3>
+      <p>In room <span class="room-name">Navis-B</span>, <span class="room-floor">Floor 1</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd><span class="organizer-name">John Wilander</span> - <a class="organizer-email" href="mailto:wilander@apple.com">wilander@apple.com</a></dd>
+        <dt>Summary:</dt>
+        <dd class="summary">We will discuss Apple's proposed and implemented <a href="https://wicg.github.io/ad-click-attribution/index.html">Private Click Measurement</a> and Google's proposed <a href="https://github.com/csharrison/conversion-measurement-api">Click Through Conversion Measurement</a></dd>
+        <dt>Type of session:</dt>
+        <dd class="type">Open discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Discuss the open issue of fraud detection and what is required to ship this feature.</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23ad-privacy">#ad-privacy</a></dd>
+      </dl>
+    </div><div id="webstories">
       <h3 class="title">Web stories</h3>
       <p>In room <span class="room-name">Kaede</span>, <span class="room-floor">Floor 1</span></p>
       <dl>
@@ -330,20 +336,20 @@
         <dt>IRC Channel</dt>
         <dd class="irc"><a href="http://irc.w3.org/?channels=%23textcueapi">#textcueapi</a></dd>
       </dl>
-    </div><div id="ad-privacy">
-      <h3 class="title">Ad Measurement and Privacy</h3>
+    </div><div id="webtransport">
+      <h3 class="title">WebTransport status and next steps</h3>
       <p>In room <span class="room-name">Kashi</span>, <span class="room-floor">Floor 1</span></p>
       <dl>
         <dt>Proposer:</dt>
-        <dd><span class="organizer-name">John Wilander</span> - <a class="organizer-email" href="mailto:wilander@apple.com">wilander@apple.com</a></dd>
+        <dd><span class="organizer-name">Peter Thatcher</span> - <a class="organizer-email" href="mailto:pthatcher@google.com">pthatcher@google.com</a></dd>
         <dt>Summary:</dt>
-        <dd class="summary">We will discuss Apple's proposed and implemented <a href="https://wicg.github.io/ad-click-attribution/index.html">Private Click Measurement</a> and Google's proposed <a href="https://github.com/csharrison/conversion-measurement-api">Click Through Conversion Measurement</a></dd>
+        <dd class="summary">Discuss <a href="https://github.com/WICG/web-transport">WebTransport API</a> and next steps for a WG or CG</dd>
         <dt>Type of session:</dt>
-        <dd class="type">Open discussion</dd>
+        <dd class="type">short talk (maybe demo too) &amp; discussion</dd>
         <dt>Goals:</dt>
-        <dd><ul class="goals"><li>Discuss the open issue of fraud detection and what is required to ship this feature.</li></ul></dd>
+        <dd><ul class="goals"><li>Ensure everyone is up to date on the latest API, implementation status, and interaction with the IETF (https://mailarchive.ietf.org/arch/browse/webtransport/ https://tools.ietf.org/wg/dispatch/minutes)</li><li>Determine when and how we should create a WG or CG</li><li>Discuss advanced API topics such as how best to use WHATWG streams, how to handle congestion control, and stream prioritization</li></ul></dd>
         <dt>IRC Channel</dt>
-        <dd class="irc"><a href="http://irc.w3.org/?channels=%23ad-privacy">#ad-privacy</a></dd>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23webtransport">#webtransport</a></dd>
       </dl>
     </div><div id="workerinput">
       <h3 class="title">Input for workers/worklets</h3>
@@ -359,21 +365,6 @@
         <dd><ul class="goals"><li>Discuss use cases and implications, brainstorm the API</li></ul></dd>
         <dt>IRC Channel</dt>
         <dd class="irc"><a href="http://irc.w3.org/?channels=%23workerinput">#workerinput</a></dd>
-      </dl>
-    </div><div id="webtransport">
-      <h3 class="title">WebTransport status and next steps</h3>
-      <p>In room <span class="room-name">Rigel</span>, <span class="room-floor">Floor 3</span></p>
-      <dl>
-        <dt>Proposer:</dt>
-        <dd><span class="organizer-name">Peter Thatcher</span> - <a class="organizer-email" href="mailto:pthatcher@google.com">pthatcher@google.com</a></dd>
-        <dt>Summary:</dt>
-        <dd class="summary">Discuss <a href="https://github.com/WICG/web-transport">WebTransport API</a> and next steps for a WG or CG</dd>
-        <dt>Type of session:</dt>
-        <dd class="type">short talk (maybe demo too) &amp; discussion</dd>
-        <dt>Goals:</dt>
-        <dd><ul class="goals"><li>Ensure everyone is up to date on the latest API, implementation status, and interaction with the IETF (https://mailarchive.ietf.org/arch/browse/webtransport/ https://tools.ietf.org/wg/dispatch/minutes)</li><li>Determine when and how we should create a WG or CG</li><li>Discuss advanced API topics such as how best to use WHATWG streams, how to handle congestion control, and stream prioritization</li></ul></dd>
-        <dt>IRC Channel</dt>
-        <dd class="irc"><a href="http://irc.w3.org/?channels=%23webtransport">#webtransport</a></dd>
       </dl>
     </div><div id="voice">
       <h3 class="title">Voice assistants - opportunities for standardization?</h3>
@@ -391,10 +382,25 @@
         <dd class="irc"><a href="http://irc.w3.org/?channels=%23voice">#voice</a></dd>
       </dl>
     </div></section><section id="slot4">
-      <p class="skip"><a title="Next section" data-last="#sponsors" href="#slot5">
+      <p class="skip"><a title="Next section" data-last="#sponsors" href="https://w3c.github.io/tpac-breakouts/sessions.html#slot5">
           <span>Skip</span> ⬇</a></p>
       <h2>Sessions <time class="start">16:30</time>–<time class="end">17:30</time></h2>
-    <div id="xra11y">
+    <div id="adselection">
+      <h3 class="title">Supporting privacy-focused ads selection</h3>
+      <p>In room <span class="room-name">Navis-B</span>, <span class="room-floor">Floor 1</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd><span class="organizer-name">Michael Kleber</span> - <a class="organizer-email" href="mailto:kleber@google.com">kleber@google.com</a></dd>
+        <dt>Summary:</dt>
+        <dd class="summary">Discussion of various ideas for how browsers could support ad selection use cases which today rely on users having a consistent cross-site identity. Chrome has explainers out for <a href="https://github.com/jkarlin/floc">Federated Learning of Cohorts (FLoC)</a> and <a href="https://github.com/michaelkleber/pigin">Private Interest Groups, Including Noise (PIGIN)</a></dd>
+        <dt>Type of session:</dt>
+        <dd class="type">Open discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Determine interest level from implementers, discuss concerns.</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23adselection">#adselection</a></dd>
+      </dl>
+    </div><div id="xra11y">
       <h3 class="title">XR Accessibility</h3>
       <p>In room <span class="room-name">Kaede</span>, <span class="room-floor">Floor 1</span></p>
       <dl>
@@ -424,20 +430,20 @@
         <dt>IRC Channel</dt>
         <dd class="irc"><a href="http://irc.w3.org/?channels=%23webcodecs">#webcodecs</a></dd>
       </dl>
-    </div><div id="adselection">
-      <h3 class="title">Supporting privacy-focused ads selection</h3>
+    </div><div id="wpack">
+      <h3 class="title">Web Packaging</h3>
       <p>In room <span class="room-name">Kashi</span>, <span class="room-floor">Floor 1</span></p>
       <dl>
         <dt>Proposer:</dt>
-        <dd><span class="organizer-name">Michael Kleber</span> - <a class="organizer-email" href="mailto:kleber@google.com">kleber@google.com</a></dd>
+        <dd><span class="organizer-name">Jeffrey Yasskin</span> - <a class="organizer-email" href="mailto:jyasskin@google.com">jyasskin@google.com</a></dd>
         <dt>Summary:</dt>
-        <dd class="summary">Discussion of various ideas for how browsers could support ad selection use cases which today rely on users having a consistent cross-site identity. Chrome has explainers out for <a href="https://github.com/jkarlin/floc">Federated Learning of Cohorts (FLoC)</a> and <a href="https://github.com/michaelkleber/pigin">Private Interest Groups, Including Noise (PIGIN)</a></dd>
+        <dd class="summary">Discuss W3C feelings about the <a href="https://github.com/WICG/webpackage">Web Packaging proposal</a></dd>
         <dt>Type of session:</dt>
-        <dd class="type">Open discussion</dd>
+        <dd class="type">Short talk &amp; discussion</dd>
         <dt>Goals:</dt>
-        <dd><ul class="goals"><li>Determine interest level from implementers, discuss concerns.</li></ul></dd>
+        <dd><ul class="goals"><li>Ensure everyone knows the state of the IETF discussion and the Chromium implementation</li><li>Recruit collaborators</li><li>Discover concerns and needed changes</li><li>Get advice about what route through the W3C/WHATWG processes to follow</li></ul></dd>
         <dt>IRC Channel</dt>
-        <dd class="irc"><a href="http://irc.w3.org/?channels=%23adselection">#adselection</a></dd>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23wpack">#wpack</a></dd>
       </dl>
     </div><div id="user-activation">
       <h3 class="title">Standardizing user activation behavior</h3>
@@ -454,23 +460,38 @@
         <dt>IRC Channel</dt>
         <dd class="irc"><a href="http://irc.w3.org/?channels=%23user-activation">#user-activation</a></dd>
       </dl>
-    </div><div id="wpack">
-      <h3 class="title">Web Packaging</h3>
-      <p>In room <span class="room-name">Rigel</span>, <span class="room-floor">Floor 3</span></p>
+    </div><div id="webmonetization">
+      <h3 class="title">Next steps for Web Monetization</h3>
+      <p>In room <span class="room-name">Bay Penthouse</span>, <span class="room-floor">Floor 34</span></p>
       <dl>
         <dt>Proposer:</dt>
-        <dd><span class="organizer-name">Jeffrey Yasskin</span> - <a class="organizer-email" href="mailto:jyasskin@google.com">jyasskin@google.com</a></dd>
+        <dd><span class="organizer-name">Adrian Hope-Bailie</span> - <a class="organizer-email" href="mailto:adrian@coil.com">adrian@coil.com</a></dd>
         <dt>Summary:</dt>
-        <dd class="summary">Discuss W3C feelings about the <a href="https://github.com/WICG/webpackage">Web Packaging proposal</a></dd>
+        <dd class="summary">We're developing a standard for micropayments in the browser. Join us to discuss the proposed standard, raise questions, concerns, or requirements and bring us closer to getting Web Monetization on the standards track.</dd>
         <dt>Type of session:</dt>
-        <dd class="type">Short talk &amp; discussion</dd>
+        <dd class="type">Talk &amp; discussion</dd>
         <dt>Goals:</dt>
-        <dd><ul class="goals"><li>Ensure everyone knows the state of the IETF discussion and the Chromium implementation</li><li>Recruit collaborators</li><li>Discover concerns and needed changes</li><li>Get advice about what route through the W3C/WHATWG processes to follow</li></ul></dd>
+        <dd><ul class="goals"><li></li></ul></dd>
         <dt>IRC Channel</dt>
-        <dd class="irc"><a href="http://irc.w3.org/?channels=%23wpack">#wpack</a></dd>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23webmonetization">#webmonetization</a></dd>
+      </dl>
+    </div><div id="groupautomation">
+      <h3 class="title">Github tools and Bots to assist Chairing</h3>
+      <p>In room <span class="room-name">Yoh</span>, <span class="room-floor">Floor 3</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd><span class="organizer-name">Ada Rose Cannon</span> - <a class="organizer-email" href="mailto:ada@ada.is">ada@ada.is</a></dd>
+        <dt>Summary:</dt>
+        <dd class="summary">I'm a lazy chair and have created bots and scripts to help me chair, this is to show some of the tools I use to help leverage Github's APIs to help chair. I would also be interested in other tools people use to automate some of their teams.</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">Presentation + discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Share tools used.</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23groupautomation">#groupautomation</a></dd>
       </dl>
     </div></section><section id="slot5">
-      <p class="skip"><a title="Next section" data-last="#sponsors" href="#slot6">
+      <p class="skip"><a title="Next section" data-last="#sponsors" href="https://w3c.github.io/tpac-breakouts/sessions.html#sponsors">
           <span>Skip</span> ⬇</a></p>
       <h2>Sessions <time class="start">17:30</time>–<time class="end">18:30</time></h2>
     <div id="webgpu">
@@ -517,6 +538,21 @@
         <dd><ul class="goals"><li>Introduce Editors to new features.</li></ul></dd>
         <dt>IRC Channel</dt>
         <dd class="irc"><a href="http://irc.w3.org/?channels=%23pub">#pub</a></dd>
+      </dl>
+    </div><div id="webmonetization">
+      <h3 class="title">Next steps for Web Monetization</h3>
+      <p>In room <span class="room-name">Bay Penthouse</span>, <span class="room-floor">Floor 34</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd><span class="organizer-name">Adrian Hope-Bailie</span> - <a class="organizer-email" href="mailto:adrian@coil.com">adrian@coil.com</a></dd>
+        <dt>Summary:</dt>
+        <dd class="summary">We're developing a standard for micropayments in the browser. Join us to discuss the proposed standard, raise questions, concerns, or requirements and bring us closer to getting Web Monetization on the standards track.</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">Talk &amp; discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li></li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23webmonetization">#webmonetization</a></dd>
       </dl>
     </div></section>
     
