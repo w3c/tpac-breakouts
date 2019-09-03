@@ -39,7 +39,8 @@ loadDir("./sessions/").then(() => {
     if (sessionSlots.length === 0)
       errors.push(`Session ${sessionId} not in grid`);
     // Fail if a given session appears in multiple slot
-    if (sessionSlots.length > 1)
+    const span = sessions[sessionId].span || 1;
+    if (sessionSlots.length > span)
       errors.push(`Session ${sessionId} twice in grid`);
 
   });
