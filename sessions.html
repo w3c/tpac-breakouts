@@ -1,531 +1,622 @@
-<!DOCTYPE html><html lang="en"><head>
-    <meta charset="utf-8">
-    <title>TPAC 2019 breakout sessions agenda - W3C</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale = 1.0, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://www.w3.org/webperf/css/main.css">
+<!DOCTYPE html><html lang="en-us"><head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width" name="viewport">
+    <title>TPAC 2019: break-outs schedule</title>
+    <link rel="stylesheet" href="https://www.w3.org/2019/09/TPAC-template/tpac.css">
+    <link rel="alternate stylesheet" title="Less color" href="https://www.w3.org/2019/09/TPAC-template/alt.css">
+    <link rel="first" href="Overview.html">
+    <!--
+    <link rel="next" href="participation.html">
+    -->
+    <link rel="author" href="mailto:w3t-tpregister@w3.org">
+    <link rel="license" href="../../../Consortium/Legal/copyright-documents">
+    <link rel="search" href="../../../Help/search?q=site:www.w3.org/2019/09/TPAC/">
+
+    <!-- Temporary style element for testing during development. -->
     <style>
-      summary { min-height: 40px; margin-left: -2em;}
-      details { padding-left: 2em;}
-      header ul { align-items: center;}
-      ul {
-        padding-left: 40px;
+      .thead, .tfoot, .capacity {display: none}
+      .th {margin: 1.2em 0 0 0}
+      .td {display: list-item; padding: 0; margin: 0 0 0 1em}
+      .th {font-weight: bold}
+      .room {color: #005A9C}
+      @media (min-width: 80em) {
+	.table {display: table; table-layout: fixed; width: 100%;
+          font-size: 0.9em}
+	.thead {display: table-header-group}
+	.tfoot {display: table-footer-group}
+	.tbody {display: table-row-group}
+	.tr {display: table-row}
+        .th, .td {display: table-cell; padding: 0.4em 0 0.4em 1.3em;
+          vertical-align: baseline}
+        .th:first-child, .td:first-child {padding-left: 0}
+        .th {color: #005A9C; font-size: 1em}
+        .thead .th {vertical-align: bottom}
+        .tbody .th, .tbody .td, .tfoot .th, .tfoot .td {border-width: 0.2em;
+          border-style: solid none none none; border-color: orange}
+        .room {display: none}
       }
-      main ul li { display: list-item;}
-      header a[href]:hover, header a[href]:focus {
-      background: white;
+      @supports (display: run-in) {
+	dt {display: run-in}
+	dt::after {content: " "}
+	dd {margin-left: 0}
       }
-h2 a.self-link::before {
-    content: "§";
-      }
-      h2 { position: relative;}
-h2 a.self-link {
-    font-size: 83%;
-    position: absolute;
-    left: calc(-1 * (3.5rem - 26px));
-    width: calc(3.5rem - 26px);
-    height: 2em;
-    text-align: center;
-    border: none;
-    transition: opacity .2s;
-    opacity: .5;
-}
-a[href]:focus, a[href]:hover {
-    background: #f8f8f8;
-    background: rgba(75%, 75%, 75%, .25);
-    border-bottom-width: 3px;
-      margin-bottom: -2px;
-      opacity: 1;
-      }
-      table { border-collapse: collapse; ;}
-      th, tfoot td { border-right: 1px black solid;}
-      tfoot td { text-align: right;}
-      tbody tr:nth-child(odd) { background-color: #eee; }
-      th[scope="row"] { text-align: right; font-weight: normal; border-left: 0;}
-      .published, .review, .draft, .outdated { border: 1px black solid;}
-      .published { background-color: #dfd;}
-      .review { background-color: #ff4;}
-      .draft { background-color: #ddd;}
-      .outdated { background-color: #fdd;}
-      tbody { border-bottom: 1px solid black;}
-      tbody td { padding: 0; text-align: center; border-right: thin gray solid;}
-      tbody td.num { text-align: right;}
-      td a { display: block; margin: 0; width: 100%;}
-      thead tr th.lang { position: -webkit-sticky; position: sticky; top:0; z-index: 10; }
-      dl.legend dt { width: 2em; text-align: center;}
-      tbody tr.hidden, section.hidden { display: none;}
-      #specs input { background-image: url("https://w3c.github.io/cg-monitor/funnel.svg"); background-repeat: no-repeat; background-size: 12px; background-position: calc(1em - 12px) 5px; padding-left:20px;}
-      cite { font-weight: bold; font-style: normal; }
-      a, a:visited, a:hover, a:focus {color: #0C51C0;}
-      h1 { text-shadow: none; text-align: left;}
- th.lang {
-  /* Something you can count on */
-  height: 140px;
-      white-space: nowrap;
-      border-right: none;
-}
-
-th.lang > div {
-  transform:
-    /* Magic Numbers */
-    translate(17px, 51px)
-    /* 45 is really 360 - 45 */
-    rotate(315deg);
-      width: 30px;
-}
-th.lang > div > span {
-      background-color: rgba(255,255,255,0.8);
-  
-      padding: 5px 10px;
-      z-index: 11;
-      border-bottom: 1px solid gray;
-            border-right: 1px solid gray;
-
-}
     </style>
   </head>
+
   <body>
-    <header>
+    <header id="header">
+      <p class="skip"><a accesskey="s" href="#schedule" title="Skip to content"><span>Skip</span> ⬇</a></p>
+
+      <h1>TPAC 2019 <span>Fukuoka, Japan</span> <span>16–20
+        September 2019</span></h1>
+
       <nav>
-        <ul>
-          <li><a href="/"><img srcset="https://www.w3.org/Icons/w3c_home_white_transp.svg" src="https://www.w3.org/Icons/w3c_home_white_transp.png" alt="W3C"></a></li>
-          <li><a href="https://www.w3.org/standards/">Standards</a></li>
-          <li><a href="https://www.w3.org/participate/">Participate</a></li>
-          <li><a href="https://www.w3.org/Consortium/membership">Membership</a></li>
-          <li><a href="https://www.w3.org/Consortium/">About W3C</a></li>
-        </ul>
+        <p>
+          <a href="/" accesskey="0">
+	    <!-- SVG inline so that it can inherit style -->
+	    <svg role="img" aria-label="W3C" viewBox="0 0 68 34" width="68px" height="34px">
+              <desc>
+		<img src="../../../Icons/WWW/w3c_home_nb_transp.png" alt="W3C">
+	      </desc>
+              <path d="m16.117 1.006 5.759 19.58 5.759-19.58h4.17 11.444v1.946l-5.879 10.128c2.065.663 3.627 1.868 4.686 3.615 1.059 1.748 1.589 3.799 1.589 6.155 0 2.914-.775 5.363-2.324 7.348s-3.555 2.978-6.017 2.978c-1.854 0-3.469-.589-4.845-1.767-1.377-1.178-2.396-2.773-3.058-4.786l3.256-1.35c.477 1.218 1.106 2.178 1.887 2.879.781.702 1.701 1.052 2.76 1.052 1.112 0 2.052-.622 2.82-1.866.768-1.245 1.152-2.74 1.152-4.489 0-1.933-.411-3.429-1.231-4.488-.954-1.244-2.45-1.867-4.489-1.867h-1.588v-1.906l5.56-9.612h-6.712l-.382.65-8.163 27.548h-.397l-5.958-19.937-5.957 19.937h-.397l-9.53-32.168h4.17l5.759 19.58 3.892-13.185-1.906-6.395z"></path>
+              <path d="m64.92 1.006c-.819 0-1.554.295-2.111.861-.591.6-.92 1.376-.92 2.178s.313 1.545.887 2.128c.583.591 1.334.912 2.145.912.793 0 1.562-.321 2.161-.903.574-.557.887-1.3.887-2.136 0-.811-.321-1.57-.878-2.136-.584-.592-1.344-.904-2.171-.904zm2.643 3.065c0 .701-.271 1.351-.768 1.832-.524.507-1.174.777-1.892.777-.675 0-1.342-.278-1.84-.785s-.777-1.157-.777-1.849.287-1.368.802-1.891c.481-.49 1.131-.751 1.84-.751.726 0 1.376.271 1.883.785.49.489.752 1.147.752 1.882zm-2.559-1.807h-1.3v3.445h.65v-1.469h.642l.701 1.469h.726l-.769-1.57c.498-.102.785-.439.785-.929 0-.625-.472-.946-1.435-.946zm-.118.422c.608 0 .886.169.886.591 0 .405-.278.549-.87.549h-.549v-1.14z"></path>
+              <path d="m59.807.825.676 4.107-2.391 4.575s-.918-1.941-2.443-3.015c-1.285-.905-2.122-1.102-3.431-.832-1.681.347-3.587 2.357-4.419 4.835-.995 2.965-1.005 4.4-1.04 5.718-.056 2.113.277 3.362.277 3.362s-1.452-2.686-1.438-6.62c.009-2.808.451-5.354 1.75-7.867 1.143-2.209 2.842-3.535 4.35-3.691 1.559-.161 2.791.59 3.743 1.403 1 .854 2.01 2.721 2.01 2.721z"></path>
+              <path d="m60.102 24.063s-1.057 1.889-1.715 2.617c-.659.728-1.837 2.01-3.292 2.651s-2.218.762-3.656.624c-1.437-.138-2.772-.97-3.24-1.317s-1.664-1.369-2.34-2.322-1.733-2.859-1.733-2.859.589 1.91.958 2.721c.212.467.864 1.894 1.789 3.136.863 1.159 2.539 3.154 5.086 3.604 2.547.451 4.297-.693 4.73-.97s1.346-1.042 1.924-1.66c.603-.645 1.174-1.468 1.49-1.962.231-.36.607-1.092.607-1.092z"></path>
+            </svg>
+	  </a>
+	  <a href="Overview.html" accesskey="1" title="TPAC 2019 overview">Intro</a>
+	  <a href="participation.html" accesskey="2">Participation rules</a>
+	  <a href="registration.html" accesskey="3">Registration</a>
+	  <a href="schedule.html" accesskey="4">Schedule</a>
+	  <a href="venue.html" accesskey="5">Venue</a>
+	  <a href="travel.html" accesskey="6">Accommodation and transportation</a>
+	  <a href="events.html" accesskey="7">Side events</a>
+	  <a href="sponsorship.html" accesskey="8">Sponsorship</a>
+	  <a href="../../../2002/09/TPOverview.html" accesskey="9" title="Technical Plenary (TPAC) Meetings">About TPAC</a>
+	</p>
       </nav>
     </header>
-    <main>
-        <h1>TPAC 2019 breakout sessions agenda</h1>
-        <section id="slot1">
-          <h2><time class="start">11:00</time> — <time class="end">12:00</time></h2>
-        <div id="privthreatmodel">
-          <details>
-            <summary class="title">A target privacy threat model for the Web - Navis-A</summary>
-            <p>In room <span class="room-name">Navis-A</span>, <span class="room-floor">Floor 1</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">Proposals for new features often encounter resistance from folks who want the Web Platform to defend its users' privacy better than it does today. This often surprises the authors of those proposals, who were designing against the Web's current, implicit, and weak privacy threat model. Making our privacy goals explicit could avoid those surprises and reduce the load on privacy reviewers.</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>Figure out whether there's interest in developing a target privacy threat model for the Web.</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">Open discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Jeffrey Yasskin</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23privthreatmodel">#privthreatmodel</a></dd>
-            </dl>
-          </details>
-          </div><div id="jsbuiltin">
-          <details>
-            <summary class="title">JS Built-In Modules - Navis-B</summary>
-            <p>In room <span class="room-name">Navis-B</span>, <span class="room-floor">Floor 1</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">introduction to the concept of JS Built-In Modules, as well as an overview of the currently proposed governance model</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>disseminate knowledge of JS Built-In modules to other hosts built on top of JavaScript (e.g. web browsers), and introduce the proposed governance model to potential stakeholders of additional JS Built-In Module namespaces (e.g. web:)</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">Talk</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Devin Rousso</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23jsbuiltin">#jsbuiltin</a></dd>
-            </dl>
-          </details>
-          </div><div id="datacue">
-          <details>
-            <summary class="title">DataCue and "Time marches on" in HTML - Kusu</summary>
-            <p>In room <span class="room-name">Kusu</span>, <span class="room-floor">Floor 1</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">The DataCue API for media-synchronised metadata and interactivity events is part of HTML5, but not implemented across all browsers, and existing implementations vary. There are also issues with the time marches on algorithm in HTML for triggering timed interactivity events</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>To advance the DataCue API design between media experts and browser developers, and discuss how to improve synchronisation of media and associated content on the web</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">talk and open discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Chris Needham</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23datacue">#datacue</a></dd>
-            </dl>
-          </details>
-          </div><div id="miniapp">
-          <details>
-            <summary class="title">Mini App Standardization - Kashi</summary>
-            <p>In room <span class="room-name">Kashi</span>, <span class="room-floor">Floor 1</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">Meet the major Mini App players, introduction of Mini App white paper drafted by W3C Chinese IG, discuss the way forward for Mini App Standardization in W3C</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>help the global web community to better understand Mini App and the value of its standardization, find proper way to move forward in W3C</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">short talk &amp; discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Angel Li</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23miniapp">#miniapp</a></dd>
-            </dl>
-          </details>
-          </div><div id="mdn">
-          <details>
-            <summary class="title">Results from MDN Developer Survey - Hishi</summary>
-            <p>In room <span class="room-name">Hishi</span>, <span class="room-floor">Floor 3</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">Meet the MDN Product Advisory Board and discuss how the results of the <a href="https://hacks.mozilla.org/2019/07/mdn-web-developer-designer-survey/">MDN Developer Survey</a> can impact W3C's agenda</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>Bring input to the MDN Product Advisory Board to see how MDN documentation can evolve to better meet the need from the W3C community</li><li>Learn about the MDN Developer Survey and discuss what conclusions to draw from its results in terms of the W3C standardization agenda</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">talk, discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Dominique Hazaël-Massieux</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23mdn">#mdn</a></dd>
-            </dl>
-          </details>
-          </div><div id="jlreq">
-          <details>
-            <summary class="title">Japan Language Requirements Task Force: Evolving the JLReq document - Rigel</summary>
-            <p>In room <span class="room-name">Rigel</span>, <span class="room-floor">Floor 3</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">Explanation of the JLReq v2 effort currently underway, and a glimpse into the roadmap of a v3, that seeks to serve the needs of developers of layout engines for modern, dynamic media that support high-quality Japanese layout</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>To inform that this is happening, and get more people interested in the issues of high-end Japanese typography and layout in the context of responsive modern digital media.</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">talk</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer"> Nathaniel McCully</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23jlreq">#jlreq</a></dd>
-            </dl>
-          </details>
-          </div></section><section id="slot2">
-          <h2><time class="start">13:30</time> — <time class="end">14:30</time></h2>
-        <div id="openjs">
-          <details>
-            <summary class="title">OpenJS Foundation Collaboration - Kaede</summary>
-            <p>In room <span class="room-name">Kaede</span>, <span class="room-floor">Floor 1</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">embers of the OpenJS Foundation cross project council would like to propose a 'BoF' conversation about how to build and strengthen healthy collaborations between foundation projects and W3C groups.</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li></li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">open discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Jory Burson</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23openjs">#openjs</a></dd>
-            </dl>
-          </details>
-          </div><div id="mediaprocessing">
-          <details>
-            <summary class="title">Efficient audio/video processing - Kusu</summary>
-            <p>In room <span class="room-name">Kusu</span>, <span class="room-floor">Floor 1</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">W3C groups (e.g. WebRTC WG, Machine Learning for the Web CG, Audio WG, Media WG, Immersive Web WG) discuss, develop and/or dream about ways to process audio/video streams efficiently. Use cases include barcode reading, face/gesture tracking, emotion analysis, funny hats, background removal or blurring, augmented reality, video overlays, voice effects, or custom codecs. Would it be useful and possible to develop a common mechanism that different APIs could leverage to hook together with streams of media while avoiding useless memory copies? What could such a mechanism look like?</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>Look at use cases and at how they can be implemented today, assess possible performance gains if they were implemented with a more efficient mechanism, refine scope for possible work on the topic, and gauge interest among parties.</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">open discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Francois Daoust</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23mediaprocessing">#mediaprocessing</a></dd>
-            </dl>
-          </details>
-          </div><div id="privacybudget">
-          <details>
-            <summary class="title">Privacy Budget - Kashi</summary>
-            <p>In room <span class="room-name">Kashi</span>, <span class="room-floor">Floor 1</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">Chrome proposed a [privacy budget](https://github.com/bslassey/privacy-budget) to limit the ability for websites to fingerprint users. We's like to have a discussion around this proposal and its implications.</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>Determine interest level from implementers, discuss concerns.</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">Open discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Brad Lassey</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23privacybudget">#privacybudget</a></dd>
-            </dl>
-          </details>
-          </div><div id="portals">
-          <details>
-            <summary class="title">Portals (status and next steps) - Hishi</summary>
-            <p>In room <span class="room-name">Hishi</span>, <span class="room-floor">Floor 3</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">Discuss Portals and next steps for a WG or CG. Portals allow for seamless navigation between different documents, same and cross origin, embedded or not. See hands-on article and WICG repository.</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>Ensure everyone is up to date on the latest proposed API, implementation status, use cases and interest from developers</li><li>Determine what are the next steps, and concerns if any</li><li>Discuss advanced API topics or use cases.</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">short talk followed by discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Jeremy Roman</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23portals">#portals</a></dd>
-            </dl>
-          </details>
-          </div><div id="bulletchat">
-          <details>
-            <summary class="title">Bullet Chatting - Rigel</summary>
-            <p>In room <span class="room-name">Rigel</span>, <span class="room-floor">Floor 3</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary"> Introduce what is the Bullet Chatting , and introduce the Bullet Chatting specification drafted by W3C Chinese Interest Group. Discuss the way forward for Bullet Chatting standardization in W3C.</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>Help the global web community to better understand Bullet Chatting and the value of its standardization, and looking for teams interested in Bullet Chatting standardization, hoping to get some feedback and support, and get advice about what the W3C workflow. </li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">talk &amp; discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Song Xu</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23bulletchat">#bulletchat</a></dd>
-            </dl>
-          </details>
-          </div></section><section id="slot3">
-          <h2><time class="start">14:30</time> — <time class="end">15:30</time></h2>
-        <div id="webstories">
-          <details>
-            <summary class="title">Web stories - Kaede</summary>
-            <p>In room <span class="room-name">Kaede</span>, <span class="room-floor">Floor 1</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">Feedback and brainstorming for (re)introducing the Web Consortium to the public. The W3C Comm team wants to get background stories from our Members and community about how they were drawn to the Web (before the Web, or their first involvement with the Web). There is a path for how everyone in our community has come to the Web, what they see happening now and what they see in the future.</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>We want to gather stories in order to tell a compelling story to the public. W3C Comm team may use this as part of an upcoming crowdfunding campaign.</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">open discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer"> Coralie Mercier</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23webstories">#webstories</a></dd>
-            </dl>
-          </details>
-          </div><div id="textcueapi">
-          <details>
-            <summary class="title">Next Generation TextTrackCue - Kusu</summary>
-            <p>In room <span class="room-name">Kusu</span>, <span class="room-floor">Floor 1</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">TextTrackCue enhancements for programmatic subtitle and caption presentation. We've been making progress since FOMS this past spring. Please see [our FOMS slides](https://www.icloud.com/keynote/0GJUbJwWfA2i77M2JysKjj45w#Generic_Text_Cue_-_FOMS_2019) for the basic idea</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>Engage with browser engineers and media experts &amp; gauge interest in pursuing this as new web API</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">talk and open discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Eric Carlson</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23textcueapi">#textcueapi</a></dd>
-            </dl>
-          </details>
-          </div><div id="ad-privacy">
-          <details>
-            <summary class="title">Ad Measurement and Privacy - Kashi</summary>
-            <p>In room <span class="room-name">Kashi</span>, <span class="room-floor">Floor 1</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">We will discuss Apple's proposed and implemented [Private Click Measurement](https://wicg.github.io/ad-click-attribution/index.html) and Google's proposed [Click Through Conversion Measurement](https://github.com/csharrison/conversion-measurement-api)</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>Discuss the open issue of fraud detection and what is required to ship this feature.</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">Open discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">John Wilander</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23ad-privacy">#ad-privacy</a></dd>
-            </dl>
-          </details>
-          </div><div id="workerinput">
-          <details>
-            <summary class="title">Input for workers/worklets - Hishi</summary>
-            <p>In room <span class="room-name">Hishi</span>, <span class="room-floor">Floor 3</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">Towards exposing input events to Workers and Worklets.</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>Discuss use cases and implications, brainstorm the API</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">open discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Navid Zolghadr</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23workerinput">#workerinput</a></dd>
-            </dl>
-          </details>
-          </div><div id="webtransport">
-          <details>
-            <summary class="title">WebTransport status and next steps - Rigel</summary>
-            <p>In room <span class="room-name">Rigel</span>, <span class="room-floor">Floor 3</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">Discuss [WebTransport API](https://github.com/WICG/web-transport) and next steps for a WG or CG</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>Ensure everyone is up to date on the latest API, implementation status, and interaction with the IETF (https://mailarchive.ietf.org/arch/browse/webtransport/ https://tools.ietf.org/wg/dispatch/minutes)</li><li>Determine when and how we should create a WG or CG</li><li>Discuss advanced API topics such as how best to use WHATWG streams, how to handle congestion control, and stream prioritization</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">short talk (maybe demo too) &amp; discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Peter Thatcher</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23webtransport">#webtransport</a></dd>
-            </dl>
-          </details>
-          </div></section><section id="slot4">
-          <h2><time class="start">16:30</time> — <time class="end">17:30</time></h2>
-        <div id="xra11y">
-          <details>
-            <summary class="title">XR Accessibility - Kaede</summary>
-            <p>In room <span class="room-name">Kaede</span>, <span class="room-floor">Floor 1</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">Explore how to grow a broader accessibility community in the areas of XR (Virtual and Augmented Reality).</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>Figure out how to bring together the accessibility community to build capability, collaboration and community engagement in developing standards that address the challenges of making Virtual and Augmented Reality accessible.</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">Talk &amp; open discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Josh O Connor</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23xra11y">#xra11y</a></dd>
-            </dl>
-          </details>
-          </div><div id="webcodecs">
-          <details>
-            <summary class="title">WebCodecs - Kusu</summary>
-            <p>In room <span class="room-name">Kusu</span>, <span class="room-floor">Floor 1</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">Discuss WebCodecs (https://discourse.wicg.io/t/webcodecs-proposal/3662)</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>Get input from potential users of the API to see what use cases we need to make sure are well supported, as well as from experts of codecs. </li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">short talk &amp; discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Peter Thatcher</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23webcodecs">#webcodecs</a></dd>
-            </dl>
-          </details>
-          </div><div id="adselection">
-          <details>
-            <summary class="title">Supporting privacy-focused ads selection - Kashi</summary>
-            <p>In room <span class="room-name">Kashi</span>, <span class="room-floor">Floor 1</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">Discussion of various ideas for how browsers could support ad selection use cases which today rely on users having a consistent cross-site identity. Chrome has explainers out for [Federated Learning of Cohorts (FLoC)](https://github.com/jkarlin/floc) and [Private Interest Groups, Including Noise (PIGIN)](https://github.com/michaelkleber/pigin)</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>Determine interest level from implementers, discuss concerns.</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">Open discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Michael Kleber</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23adselection">#adselection</a></dd>
-            </dl>
-          </details>
-          </div><div id="user-activation">
-          <details>
-            <summary class="title">Standardizing user activation behavior - Hishi</summary>
-            <p>In room <span class="room-name">Hishi</span>, <span class="room-floor">Floor 3</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">We are proposing to replace the user activation model implied by the current HTML spec with a simple-to-implement model because the current model doesn't reflect the reality https://github.com/whatwg/html/issues/1903</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>rying to reach consensus on our proposed change to the spec (https://github.com/whatwg/html/pull/3851)</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">Open discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Mustaq Ahmed</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23user-activation">#user-activation</a></dd>
-            </dl>
-          </details>
-          </div><div id="wpack">
-          <details>
-            <summary class="title">Web Packaging - Rigel</summary>
-            <p>In room <span class="room-name">Rigel</span>, <span class="room-floor">Floor 3</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">Discuss W3C feelings about the [Web Packaging proposal](https://github.com/WICG/webpackage)</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>Ensure everyone knows the state of the IETF discussion and the Chromium implementation</li><li>Recruit collaborators</li><li>Discover concerns and needed changes</li><li>Get advice about what route through the W3C/WHATWG processes to follow</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">Short talk &amp; discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Jeffrey Yasskin</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23wpack">#wpack</a></dd>
-            </dl>
-          </details>
-          </div></section><section id="slot5">
-          <h2><time class="start">17:30</time> — <time class="end">18:30</time></h2>
-        <div id="webgpu">
-          <details>
-            <summary class="title">WebGPU - Navis-A</summary>
-            <p>In room <span class="room-name">Navis-A</span>, <span class="room-floor">Floor 1</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">Update on the progress of WebGPU, and group discussion about future directions and what to focus on</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>Help people understand the direction that WebGPU is going, and get feedback from the broader community</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">talk &amp; open discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Myles C. Maxfield</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23webgpu">#webgpu</a></dd>
-            </dl>
-          </details>
-          </div><div id="trusttokens">
-          <details>
-            <summary class="title">Trust Tokens - Kashi</summary>
-            <p>In room <span class="room-name">Kashi</span>, <span class="room-floor">Floor 1</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">Cloudflare proposed the concept of the [Privacy Pass protocol](https://privacypass.github.io/) to avoid repeatedly showing captchas to Tor users and Chrome expanded on the idea to propose a more general purpose [Trust Token API](https://github.com/dvorak42/trust-token-api) for conveying user trust between parties in order to prevent fraud.</dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>Determine interest level from implementers, discuss concerns.</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">Open discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Brad Lassey</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23trusttokens">#trusttokens</a></dd>
-            </dl>
-          </details>
-          </div><div id="pub">
-          <details>
-            <summary class="title">ReSpec - so many new features! - Hishi</summary>
-            <p>In room <span class="room-name">Hishi</span>, <span class="room-floor">Floor 3</span></p>
-            <dl>
-              <dt>Summary</dt>
-              <dd class="summary">Covering all the exciting advancements we've made in the last year, including automatic cross references, smart citations, MDN integration, and more! </dd>
-              <dt>Goals</dt>
-              <dd><ul class="goals"><li>Introduce Editors to new features.</li></ul></dd>
-              <dt>Type</dt>
-              <dd class="type">talk, open discussion</dd>
-              <dt>Organizer</dt>
-              <dd class="organizer">Marcos Caceres</dd>
-              <dt>IRC Channel</dt>
-              <dd class="irc"><a href="http://irc.w3.org/?channels=%23pub">#pub</a></dd>
-            </dl>
-          </details>
-          </div></section>
-        
-        
-    </main>
 
-    <footer>
-      <address>
-        <a href="https://github.com/w3c/tpac-breakouts/">We are on GitHub</a></address>
-      <p id="copyright">
-        <a href="https://www.w3.org/">W3C</a> - <a href="https://www.w3.org/Consortium/Legal/privacy-statement">Privacy</a> - <a href="http://www.w3.org/Consortium/Legal/ipr-notice">Terms</a>
+    <section class="wide" id="schedule">
+      <p class="skip"><a href="#slot1" title="Next section"><span>Skip</span> ⬇</a></p>
+
+      <h1>TPAC 2019 breakout sessions</h1>
+
+      <div class="table breakouts" role="table">
+        <div class="thead" role="rowgroup">
+          <div class="tr" role="row">
+            <h3 class="th" role="rowheader">Room</h3>
+            <p class="th" role="columnheader"><span class="name">Argos D-F</span>, <i class="floor">Floor&nbsp;1</i></p><p class="th" role="columnheader"><span class="name">Navis-A</span>, <i class="floor">Floor&nbsp;1</i></p><p class="th" role="columnheader"><span class="name">Navis-B</span>, <i class="floor">Floor&nbsp;1</i></p><p class="th" role="columnheader"><span class="name">Navis-C</span>, <i class="floor">Floor&nbsp;1</i></p><p class="th" role="columnheader"><span class="name">Kaede</span>, <i class="floor">Floor&nbsp;1</i></p><p class="th" role="columnheader"><span class="name">Kusu</span>, <i class="floor">Floor&nbsp;1</i></p><p class="th" role="columnheader"><span class="name">Kashi</span>, <i class="floor">Floor&nbsp;1</i></p><p class="th" role="columnheader"><span class="name">Hishi</span>, <i class="floor">Floor&nbsp;3</i></p><p class="th" role="columnheader"><span class="name">Kei</span>, <i class="floor">Floor&nbsp;3</i></p><p class="th" role="columnheader"><span class="name">Rigel</span>, <i class="floor">Floor&nbsp;3</i></p><p class="th" role="columnheader"><span class="name">Yoh</span>, <i class="floor">Floor&nbsp;3</i></p>
+          </div>
+        </div>
+        <div class="tbody" role="rowgroup">
+          <div class="tr" role="row">
+              <h3 class="th" role="rowheader"><time class="start">11:00</time>-​<time class="end">12:00</time></h3>
+            <p class="td" role="cell"> <span class="room">– Argos D-F</span></p><p class="td" role="cell"><a class="title-link" href="#privthreatmodel">A target privacy threat model for the Web</a> <span class="room">– Navis-ANavis-A</span></p><p class="td" role="cell"><a class="title-link" href="#jsbuiltin">JS Built-In Modules</a> <span class="room">– Navis-BNavis-B</span></p><p class="td" role="cell"> <span class="room">– Navis-C</span></p><p class="td" role="cell"> <span class="room">– Kaede</span></p><p class="td" role="cell"><a class="title-link" href="#datacue">DataCue and "Time marches on" in HTML</a> <span class="room">– KusuKusu</span></p><p class="td" role="cell"><a class="title-link" href="#miniapp">Mini App Standardization</a> <span class="room">– KashiKashi</span></p><p class="td" role="cell"><a class="title-link" href="#mdn">Results from MDN Developer Survey</a> <span class="room">– HishiHishi</span></p><p class="td" role="cell"> <span class="room">– Kei</span></p><p class="td" role="cell"><a class="title-link" href="#jlreq">Japan Language Requirements Task Force: Evolving the JLReq document</a> <span class="room">– RigelRigel</span></p><p class="td" role="cell"> <span class="room">– Yoh</span></p></div><div class="tr" role="row">
+              <h3 class="th" role="rowheader"><time class="start">13:30</time>-​<time class="end">14:30</time></h3>
+            <p class="td" role="cell"> <span class="room">– Argos D-F</span></p><p class="td" role="cell"> <span class="room">– Navis-A</span></p><p class="td" role="cell"> <span class="room">– Navis-B</span></p><p class="td" role="cell"> <span class="room">– Navis-C</span></p><p class="td" role="cell"><a class="title-link" href="#openjs">OpenJS Foundation Collaboration</a> <span class="room">– KaedeKaede</span></p><p class="td" role="cell"><a class="title-link" href="#mediaprocessing">Efficient audio/video processing</a> <span class="room">– KusuKusu</span></p><p class="td" role="cell"><a class="title-link" href="#privacybudget">Privacy Budget</a> <span class="room">– KashiKashi</span></p><p class="td" role="cell"><a class="title-link" href="#portals">Portals (status and next steps)</a> <span class="room">– HishiHishi</span></p><p class="td" role="cell"> <span class="room">– Kei</span></p><p class="td" role="cell"><a class="title-link" href="#bulletchat">Bullet Chatting</a> <span class="room">– RigelRigel</span></p><p class="td" role="cell"> <span class="room">– Yoh</span></p></div><div class="tr" role="row">
+              <h3 class="th" role="rowheader"><time class="start">14:30</time>-​<time class="end">15:30</time></h3>
+            <p class="td" role="cell"> <span class="room">– Argos D-F</span></p><p class="td" role="cell"> <span class="room">– Navis-A</span></p><p class="td" role="cell"> <span class="room">– Navis-B</span></p><p class="td" role="cell"> <span class="room">– Navis-C</span></p><p class="td" role="cell"><a class="title-link" href="#webstories">Web stories</a> <span class="room">– KaedeKaede</span></p><p class="td" role="cell"><a class="title-link" href="#textcueapi">Next Generation TextTrackCue</a> <span class="room">– KusuKusu</span></p><p class="td" role="cell"><a class="title-link" href="#ad-privacy">Ad Measurement and Privacy</a> <span class="room">– KashiKashi</span></p><p class="td" role="cell"><a class="title-link" href="#workerinput">Input for workers/worklets</a> <span class="room">– HishiHishi</span></p><p class="td" role="cell"> <span class="room">– Kei</span></p><p class="td" role="cell"><a class="title-link" href="#webtransport">WebTransport status and next steps</a> <span class="room">– RigelRigel</span></p><p class="td" role="cell"> <span class="room">– Yoh</span></p></div><div class="tr" role="row">
+              <h3 class="th" role="rowheader"><time class="start">16:30</time>-​<time class="end">17:30</time></h3>
+            <p class="td" role="cell"> <span class="room">– Argos D-F</span></p><p class="td" role="cell"> <span class="room">– Navis-A</span></p><p class="td" role="cell"> <span class="room">– Navis-B</span></p><p class="td" role="cell"> <span class="room">– Navis-C</span></p><p class="td" role="cell"><a class="title-link" href="#xra11y">XR Accessibility</a> <span class="room">– KaedeKaede</span></p><p class="td" role="cell"><a class="title-link" href="#webcodecs">WebCodecs</a> <span class="room">– KusuKusu</span></p><p class="td" role="cell"><a class="title-link" href="#adselection">Supporting privacy-focused ads selection</a> <span class="room">– KashiKashi</span></p><p class="td" role="cell"><a class="title-link" href="#user-activation">Standardizing user activation behavior</a> <span class="room">– HishiHishi</span></p><p class="td" role="cell"> <span class="room">– Kei</span></p><p class="td" role="cell"><a class="title-link" href="#wpack">Web Packaging</a> <span class="room">– RigelRigel</span></p><p class="td" role="cell"> <span class="room">– Yoh</span></p></div><div class="tr" role="row">
+              <h3 class="th" role="rowheader"><time class="start">17:30</time>-​<time class="end">18:30</time></h3>
+            <p class="td" role="cell"> <span class="room">– Argos D-F</span></p><p class="td" role="cell"><a class="title-link" href="#webgpu">WebGPU</a> <span class="room">– Navis-ANavis-A</span></p><p class="td" role="cell"> <span class="room">– Navis-B</span></p><p class="td" role="cell"> <span class="room">– Navis-C</span></p><p class="td" role="cell"> <span class="room">– Kaede</span></p><p class="td" role="cell"> <span class="room">– Kusu</span></p><p class="td" role="cell"><a class="title-link" href="#trusttokens">Trust Tokens</a> <span class="room">– KashiKashi</span></p><p class="td" role="cell"><a class="title-link" href="#pub">ReSpec - so many new features!</a> <span class="room">– HishiHishi</span></p><p class="td" role="cell"> <span class="room">– Kei</span></p><p class="td" role="cell"> <span class="room">– Rigel</span></p><p class="td" role="cell"> <span class="room">– Yoh</span></p></div>
+          
+        </div>
+      </div>
+    </section>
+
+    <section id="slot1">
+      <p class="skip"><a title="Next section" data-last="#sponsors" href="#slot2">
+          <span>Skip</span> ⬇</a></p>
+      <h2>Sessions <time class="start">11:00</time>–<time class="end">12:00</time></h2>
+    <div id="privthreatmodel">
+      <h3 class="title">A target privacy threat model for the Web</h3>
+      <p>In room <span class="room-name">Navis-A</span>, <span class="room-floor">Floor 1</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Jeffrey Yasskin</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">Proposals for new features often encounter resistance from folks who want the Web Platform to defend its users' privacy better than it does today. This often surprises the authors of those proposals, who were designing against the Web's current, implicit, and weak privacy threat model. Making our privacy goals explicit could avoid those surprises and reduce the load on privacy reviewers.</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">Open discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Figure out whether there's interest in developing a target privacy threat model for the Web.</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23privthreatmodel">#privthreatmodel</a></dd>
+      </dl>
+    </div><div id="jsbuiltin">
+      <h3 class="title">JS Built-In Modules</h3>
+      <p>In room <span class="room-name">Navis-B</span>, <span class="room-floor">Floor 1</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Devin Rousso</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">introduction to the concept of JS Built-In Modules, as well as an overview of the currently proposed governance model</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">Talk</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>disseminate knowledge of JS Built-In modules to other hosts built on top of JavaScript (e.g. web browsers), and introduce the proposed governance model to potential stakeholders of additional JS Built-In Module namespaces (e.g. web:)</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23jsbuiltin">#jsbuiltin</a></dd>
+      </dl>
+    </div><div id="datacue">
+      <h3 class="title">DataCue and "Time marches on" in HTML</h3>
+      <p>In room <span class="room-name">Kusu</span>, <span class="room-floor">Floor 1</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Chris Needham</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">The DataCue API for media-synchronised metadata and interactivity events is part of HTML5, but not implemented across all browsers, and existing implementations vary. There are also issues with the time marches on algorithm in HTML for triggering timed interactivity events</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">talk and open discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>To advance the DataCue API design between media experts and browser developers, and discuss how to improve synchronisation of media and associated content on the web</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23datacue">#datacue</a></dd>
+      </dl>
+    </div><div id="miniapp">
+      <h3 class="title">Mini App Standardization</h3>
+      <p>In room <span class="room-name">Kashi</span>, <span class="room-floor">Floor 1</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Angel Li</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">Meet the major Mini App players, introduction of Mini App white paper drafted by W3C Chinese IG, discuss the way forward for Mini App Standardization in W3C</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">short talk &amp; discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>help the global web community to better understand Mini App and the value of its standardization, find proper way to move forward in W3C</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23miniapp">#miniapp</a></dd>
+      </dl>
+    </div><div id="mdn">
+      <h3 class="title">Results from MDN Developer Survey</h3>
+      <p>In room <span class="room-name">Hishi</span>, <span class="room-floor">Floor 3</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Dominique Hazaël-Massieux</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">Meet the MDN Product Advisory Board and discuss how the results of the <a href="https://hacks.mozilla.org/2019/07/mdn-web-developer-designer-survey/">MDN Developer Survey</a> can impact W3C's agenda</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">talk, discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Bring input to the MDN Product Advisory Board to see how MDN documentation can evolve to better meet the need from the W3C community</li><li>Learn about the MDN Developer Survey and discuss what conclusions to draw from its results in terms of the W3C standardization agenda</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23mdn">#mdn</a></dd>
+      </dl>
+    </div><div id="jlreq">
+      <h3 class="title">Japan Language Requirements Task Force: Evolving the JLReq document</h3>
+      <p>In room <span class="room-name">Rigel</span>, <span class="room-floor">Floor 3</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer"> Nathaniel McCully</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">Explanation of the JLReq v2 effort currently underway, and a glimpse into the roadmap of a v3, that seeks to serve the needs of developers of layout engines for modern, dynamic media that support high-quality Japanese layout</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">talk</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>To inform that this is happening, and get more people interested in the issues of high-end Japanese typography and layout in the context of responsive modern digital media.</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23jlreq">#jlreq</a></dd>
+      </dl>
+    </div></section><section id="slot2">
+      <p class="skip"><a title="Next section" data-last="#sponsors" href="#slot3">
+          <span>Skip</span> ⬇</a></p>
+      <h2>Sessions <time class="start">13:30</time>–<time class="end">14:30</time></h2>
+    <div id="openjs">
+      <h3 class="title">OpenJS Foundation Collaboration</h3>
+      <p>In room <span class="room-name">Kaede</span>, <span class="room-floor">Floor 1</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Jory Burson</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">embers of the OpenJS Foundation cross project council would like to propose a 'BoF' conversation about how to build and strengthen healthy collaborations between foundation projects and W3C groups.</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">open discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li></li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23openjs">#openjs</a></dd>
+      </dl>
+    </div><div id="mediaprocessing">
+      <h3 class="title">Efficient audio/video processing</h3>
+      <p>In room <span class="room-name">Kusu</span>, <span class="room-floor">Floor 1</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Francois Daoust</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">W3C groups (e.g. WebRTC WG, Machine Learning for the Web CG, Audio WG, Media WG, Immersive Web WG) discuss, develop and/or dream about ways to process audio/video streams efficiently. Use cases include barcode reading, face/gesture tracking, emotion analysis, funny hats, background removal or blurring, augmented reality, video overlays, voice effects, or custom codecs. Would it be useful and possible to develop a common mechanism that different APIs could leverage to hook together with streams of media while avoiding useless memory copies? What could such a mechanism look like?</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">open discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Look at use cases and at how they can be implemented today, assess possible performance gains if they were implemented with a more efficient mechanism, refine scope for possible work on the topic, and gauge interest among parties.</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23mediaprocessing">#mediaprocessing</a></dd>
+      </dl>
+    </div><div id="privacybudget">
+      <h3 class="title">Privacy Budget</h3>
+      <p>In room <span class="room-name">Kashi</span>, <span class="room-floor">Floor 1</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Brad Lassey</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">Chrome proposed a [privacy budget](https://github.com/bslassey/privacy-budget) to limit the ability for websites to fingerprint users. We's like to have a discussion around this proposal and its implications.</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">Open discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Determine interest level from implementers, discuss concerns.</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23privacybudget">#privacybudget</a></dd>
+      </dl>
+    </div><div id="portals">
+      <h3 class="title">Portals (status and next steps)</h3>
+      <p>In room <span class="room-name">Hishi</span>, <span class="room-floor">Floor 3</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Jeremy Roman</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">Discuss Portals and next steps for a WG or CG. Portals allow for seamless navigation between different documents, same and cross origin, embedded or not. See hands-on article and WICG repository.</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">short talk followed by discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Ensure everyone is up to date on the latest proposed API, implementation status, use cases and interest from developers</li><li>Determine what are the next steps, and concerns if any</li><li>Discuss advanced API topics or use cases.</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23portals">#portals</a></dd>
+      </dl>
+    </div><div id="bulletchat">
+      <h3 class="title">Bullet Chatting</h3>
+      <p>In room <span class="room-name">Rigel</span>, <span class="room-floor">Floor 3</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Song Xu</dd>
+        <dt>Summary:</dt>
+        <dd class="summary"> Introduce what is the Bullet Chatting , and introduce the Bullet Chatting specification drafted by W3C Chinese Interest Group. Discuss the way forward for Bullet Chatting standardization in W3C.</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">talk &amp; discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Help the global web community to better understand Bullet Chatting and the value of its standardization, and looking for teams interested in Bullet Chatting standardization, hoping to get some feedback and support, and get advice about what the W3C workflow. </li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23bulletchat">#bulletchat</a></dd>
+      </dl>
+    </div></section><section id="slot3">
+      <p class="skip"><a title="Next section" data-last="#sponsors" href="#slot4">
+          <span>Skip</span> ⬇</a></p>
+      <h2>Sessions <time class="start">14:30</time>–<time class="end">15:30</time></h2>
+    <div id="webstories">
+      <h3 class="title">Web stories</h3>
+      <p>In room <span class="room-name">Kaede</span>, <span class="room-floor">Floor 1</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer"> Coralie Mercier</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">Feedback and brainstorming for (re)introducing the Web Consortium to the public. The W3C Comm team wants to get background stories from our Members and community about how they were drawn to the Web (before the Web, or their first involvement with the Web). There is a path for how everyone in our community has come to the Web, what they see happening now and what they see in the future.</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">open discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>We want to gather stories in order to tell a compelling story to the public. W3C Comm team may use this as part of an upcoming crowdfunding campaign.</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23webstories">#webstories</a></dd>
+      </dl>
+    </div><div id="textcueapi">
+      <h3 class="title">Next Generation TextTrackCue</h3>
+      <p>In room <span class="room-name">Kusu</span>, <span class="room-floor">Floor 1</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Eric Carlson</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">TextTrackCue enhancements for programmatic subtitle and caption presentation. We've been making progress since FOMS this past spring. Please see [our FOMS slides](https://www.icloud.com/keynote/0GJUbJwWfA2i77M2JysKjj45w#Generic_Text_Cue_-_FOMS_2019) for the basic idea</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">talk and open discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Engage with browser engineers and media experts &amp; gauge interest in pursuing this as new web API</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23textcueapi">#textcueapi</a></dd>
+      </dl>
+    </div><div id="ad-privacy">
+      <h3 class="title">Ad Measurement and Privacy</h3>
+      <p>In room <span class="room-name">Kashi</span>, <span class="room-floor">Floor 1</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">John Wilander</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">We will discuss Apple's proposed and implemented [Private Click Measurement](https://wicg.github.io/ad-click-attribution/index.html) and Google's proposed [Click Through Conversion Measurement](https://github.com/csharrison/conversion-measurement-api)</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">Open discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Discuss the open issue of fraud detection and what is required to ship this feature.</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23ad-privacy">#ad-privacy</a></dd>
+      </dl>
+    </div><div id="workerinput">
+      <h3 class="title">Input for workers/worklets</h3>
+      <p>In room <span class="room-name">Hishi</span>, <span class="room-floor">Floor 3</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Navid Zolghadr</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">Towards exposing input events to Workers and Worklets.</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">open discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Discuss use cases and implications, brainstorm the API</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23workerinput">#workerinput</a></dd>
+      </dl>
+    </div><div id="webtransport">
+      <h3 class="title">WebTransport status and next steps</h3>
+      <p>In room <span class="room-name">Rigel</span>, <span class="room-floor">Floor 3</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Peter Thatcher</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">Discuss [WebTransport API](https://github.com/WICG/web-transport) and next steps for a WG or CG</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">short talk (maybe demo too) &amp; discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Ensure everyone is up to date on the latest API, implementation status, and interaction with the IETF (https://mailarchive.ietf.org/arch/browse/webtransport/ https://tools.ietf.org/wg/dispatch/minutes)</li><li>Determine when and how we should create a WG or CG</li><li>Discuss advanced API topics such as how best to use WHATWG streams, how to handle congestion control, and stream prioritization</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23webtransport">#webtransport</a></dd>
+      </dl>
+    </div></section><section id="slot4">
+      <p class="skip"><a title="Next section" data-last="#sponsors" href="#slot5">
+          <span>Skip</span> ⬇</a></p>
+      <h2>Sessions <time class="start">16:30</time>–<time class="end">17:30</time></h2>
+    <div id="xra11y">
+      <h3 class="title">XR Accessibility</h3>
+      <p>In room <span class="room-name">Kaede</span>, <span class="room-floor">Floor 1</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Josh O Connor</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">Explore how to grow a broader accessibility community in the areas of XR (Virtual and Augmented Reality).</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">Talk &amp; open discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Figure out how to bring together the accessibility community to build capability, collaboration and community engagement in developing standards that address the challenges of making Virtual and Augmented Reality accessible.</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23xra11y">#xra11y</a></dd>
+      </dl>
+    </div><div id="webcodecs">
+      <h3 class="title">WebCodecs</h3>
+      <p>In room <span class="room-name">Kusu</span>, <span class="room-floor">Floor 1</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Peter Thatcher</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">Discuss WebCodecs (https://discourse.wicg.io/t/webcodecs-proposal/3662)</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">short talk &amp; discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Get input from potential users of the API to see what use cases we need to make sure are well supported, as well as from experts of codecs. </li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23webcodecs">#webcodecs</a></dd>
+      </dl>
+    </div><div id="adselection">
+      <h3 class="title">Supporting privacy-focused ads selection</h3>
+      <p>In room <span class="room-name">Kashi</span>, <span class="room-floor">Floor 1</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Michael Kleber</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">Discussion of various ideas for how browsers could support ad selection use cases which today rely on users having a consistent cross-site identity. Chrome has explainers out for [Federated Learning of Cohorts (FLoC)](https://github.com/jkarlin/floc) and [Private Interest Groups, Including Noise (PIGIN)](https://github.com/michaelkleber/pigin)</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">Open discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Determine interest level from implementers, discuss concerns.</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23adselection">#adselection</a></dd>
+      </dl>
+    </div><div id="user-activation">
+      <h3 class="title">Standardizing user activation behavior</h3>
+      <p>In room <span class="room-name">Hishi</span>, <span class="room-floor">Floor 3</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Mustaq Ahmed</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">We are proposing to replace the user activation model implied by the current HTML spec with a simple-to-implement model because the current model doesn't reflect the reality https://github.com/whatwg/html/issues/1903</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">Open discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>rying to reach consensus on our proposed change to the spec (https://github.com/whatwg/html/pull/3851)</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23user-activation">#user-activation</a></dd>
+      </dl>
+    </div><div id="wpack">
+      <h3 class="title">Web Packaging</h3>
+      <p>In room <span class="room-name">Rigel</span>, <span class="room-floor">Floor 3</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Jeffrey Yasskin</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">Discuss W3C feelings about the [Web Packaging proposal](https://github.com/WICG/webpackage)</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">Short talk &amp; discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Ensure everyone knows the state of the IETF discussion and the Chromium implementation</li><li>Recruit collaborators</li><li>Discover concerns and needed changes</li><li>Get advice about what route through the W3C/WHATWG processes to follow</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23wpack">#wpack</a></dd>
+      </dl>
+    </div></section><section id="slot5">
+      <p class="skip"><a title="Next section" data-last="#sponsors" href="#slot6">
+          <span>Skip</span> ⬇</a></p>
+      <h2>Sessions <time class="start">17:30</time>–<time class="end">18:30</time></h2>
+    <div id="webgpu">
+      <h3 class="title">WebGPU</h3>
+      <p>In room <span class="room-name">Navis-A</span>, <span class="room-floor">Floor 1</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Myles C. Maxfield</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">Update on the progress of WebGPU, and group discussion about future directions and what to focus on</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">talk &amp; open discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Help people understand the direction that WebGPU is going, and get feedback from the broader community</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23webgpu">#webgpu</a></dd>
+      </dl>
+    </div><div id="trusttokens">
+      <h3 class="title">Trust Tokens</h3>
+      <p>In room <span class="room-name">Kashi</span>, <span class="room-floor">Floor 1</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Brad Lassey</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">Cloudflare proposed the concept of the [Privacy Pass protocol](https://privacypass.github.io/) to avoid repeatedly showing captchas to Tor users and Chrome expanded on the idea to propose a more general purpose [Trust Token API](https://github.com/dvorak42/trust-token-api) for conveying user trust between parties in order to prevent fraud.</dd>
+        <dt>Type of session:</dt>
+        <dd class="type">Open discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Determine interest level from implementers, discuss concerns.</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23trusttokens">#trusttokens</a></dd>
+      </dl>
+    </div><div id="pub">
+      <h3 class="title">ReSpec - so many new features!</h3>
+      <p>In room <span class="room-name">Hishi</span>, <span class="room-floor">Floor 3</span></p>
+      <dl>
+        <dt>Proposer:</dt>
+        <dd class="organizer">Marcos Caceres</dd>
+        <dt>Summary:</dt>
+        <dd class="summary">Covering all the exciting advancements we've made in the last year, including automatic cross references, smart citations, MDN integration, and more! </dd>
+        <dt>Type of session:</dt>
+        <dd class="type">talk, open discussion</dd>
+        <dt>Goals:</dt>
+        <dd><ul class="goals"><li>Introduce Editors to new features.</li></ul></dd>
+        <dt>IRC Channel</dt>
+        <dd class="irc"><a href="http://irc.w3.org/?channels=%23pub">#pub</a></dd>
+      </dl>
+    </div></section>
+    
+
+
+<section id="sponsors" class="wide">
+      <p class="skip"><a title="Next section" href="#footer"><span>Skip</span> ⬇</a></p>
+      <h2>Sponsors</h2>
+      <h3>Platinum sponsors</h3>
+      <p class="sponsors"> <a href="https://rit.rakuten.co.jp/"><big><big><big><img src="Rakuten_InstituteOfTechnology.png" srcset="Rakuten_InstituteOfTechnology.svg" style="height: 1.1em" alt="Rakuten Institute of Technology,"></big></big></big></a>
+        <a href="https://coil.com/"><big><big><big><img src="coil-logo-black.png" srcset="coil-logo-black.svg" alt="Coil
+      Technologies," style="height: 0.95em"></big></big></big></a> <a href="https://www.ntt.co.jp/index_e.html"><big><big><big><img style="height: 1.3em" src="NTT_Logo_L.png" srcset="NTT_Logo_L.svg" alt="NTT"></big></big></big></a> </p>
+      <h3>Gold sponsor</h3>
+      <p class="sponsors"> <a href="https://www.panasonic.com/global/home.html"><big><big><img style="height: 0.75em" srcset="Panasonic_logo_bl_posi.svg" src="Panasonic_logo_bl_posi.png" alt="Panasonic"></big></big></a> </p>
+      <h3>Silver sponsor</h3>
+      <p class="sponsors"> <a href="https://about.yahoo.co.jp/info/en/company/"><big><img style="height: 1em" srcset="Yahoo_JAPAN_red.svg" src="Yahoo_JAPAN_red.png" alt="Yahoo! Japan"></big></a> </p>
+      <h3>Gift sponsor</h3>
+      <p class="sponsors"> <a href="https://www.global.jcb/en/"><big><img style="height:
+      1.9em" src="JCB-EmblemColor-small-1.png" alt="JCB"></big></a> </p>
+      <h3>Bronze sponsors</h3>
+      <p class="sponsors"> <a href="https://www.newphoria.co.jp/"><img src="newphoria_logo.png" srcset="newphoria_logo.svg" alt="Newphoria," style="height:
+      1.4em"></a> <a href="https://jprs.co.jp/en/"><img src="jprs_logo_RGB.png" srcset="jprs_logo_RGB.svg" alt="JPRS," style="height: 1.55em"></a> <a href="https://www.kodansha.co.jp/"><img src="Kodansha.png" srcset="Kodansha.svg" alt="Kodansha," style="height: 1.2em"></a> <a href="http://www.hitachi.com/"><img src="cs_01_01-small.png" alt="Hitachi," style="height: 1.2em"></a> <a href="https://www.shueisha.co.jp/"><img srcset="shueisha_blue_on_white.svg" src="shueisha_blue_on_white.png" alt="Shueisha," style="height: 1.6em"></a>
+        <a href="https://www.mediado.jp/"><img srcset="mediado.svg" src="mediado.png" style="height: 1em" alt="Media Do,"></a> <a href="https://www.sony.net/"><img srcset="sony_logo_blue_RGB.svg" style="height: 0.75em" src="sony_logo_blue_RGB.png" alt="Sony,"></a> <a href="igalia.html"><img style="height:2.2em" src="../Meetup/images/logo-Igalia.png" alt="Igalia"></a> </p>
+      <h3>Friday Coffee sponsor</h3>
+      <p class="sponsors"> <a href="https://www.softbank.jp/"><big><big><img style="height:
+      0.8em" src="SoftBank.png" srcset="SoftBank.svg" alt="SoftBank"></big></big></a>
       </p>
+      <h3>Network sponsors</h3>
+      <p class="sponsors"> <a href="https://www.ntt-west.co.jp/english/"><big><big><big><img style="height: 1.3em" src="NTT-West-A2type.png" srcset="NTT-West-A2type.svg" alt="NTT West,"></big></big></big></a> <a href="https://www.cisco.com/"><big><big><big><img style="height: 1.3em;" src="Cisco_Logo_no_TM_Sky_Blue-RGB.png" srcset="Cisco_Logo_no_TM_Sky_Blue-RGB.svg" alt="Cisco,"></big></big></big></a>
+        <a href="https://www.ntt.com/en/index.html"><big><big><big><img style="height: 1.65em;" src="NTT-Communications.png" srcset="NTT-Communications.svg" alt="NTT Communications"></big></big></big></a>
+      </p>
+      <p class="noprint">Support TPAC 2019 and get great benefits from our <b><a href="../TPAC/TPAC-2019-Sponsorship.pdf">Sponsorship packages</a>.</b></p>
+      <p class="noprint">For further details, contact <a href="mailto:sponsorship@w3.org">sponsorship@w3.org</a></p>
+</section>
+
+    <footer id="footer">
+      <p class="skip"><a title="Back to top" href="#header"><span>Top</span> ⇱</a></p>
+
+      <p><strong>Need Help?</strong> Please
+      mail <a href="mailto:w3t-tpregister@w3.org">w3t-tpregister@w3.org</a>, and someone will assist you.</p>
+
+      <p><a href="https://twitter.com/search?src=typd&amp;q=w3cTPAC" title="Search #w3cTPAC on Twitter"><img alt="Twitter" class="icon" src="../../../2008/site/images/Twitter_bird_logo_2012" height="18" width="22">#w3cTPAC</a></p>
+
+      <nav>
+        <div>
+          <h3><a href="../../../standards/">Web and Industry</a></h3>
+          <ul>
+            <li><a href="../../../auto/">Automotive</a></li>
+            <li><a href="../../../tv/">Entertainment (TV and Broadcasting)</a></li>
+            <li><a href="../../../publishing/">Publishing</a></li>
+            <li><a href="../../../WebCommerce/">Web Commerce</a></li>
+            <li><a href="../../../Payments/WG/">Web Payments</a></li>
+            <li><a href="../../../2013/data/">Web of Data</a></li>
+            <li><a href="../../../Telco/">Web and Telecommunications</a></li>
+            <li><a href="../../../WoT/">Web of Things</a></li>
+            <li><a href="../../../Security/">Web Security</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3><a href="../../../Consortium/mission.html#principles">Web for All</a></h3>
+          <ul>
+            <li><a href="../../../WAI/">Accessibility</a></li>
+            <li><a href="../../../International/">Internationalization</a></li>
+            <li><a title="Popular links to W3C technology information" href="../../../Consortium/siteindex.html#technologies">W3C
+                A&nbsp;to&nbsp;Z (site map)</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3><a href="../../../Consortium/activities">W3C Work Groups</a></h3>
+          <ul>
+            <li><a href="../../../Consortium/activities">W3C Groups</a></li>
+            <li><a title="Member-only group participant guidebook" href="../../../Guide/">Participant
+                guidebook</a></li>
+            <li><a href="../../../community/groups/">Current W3C Community
+                Groups</a></li>
+            <li><a href="../../../community/groups/proposed/">Proposed W3C
+                Community Groups</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3><a href="../../../participate/">Dev Resources</a></h3>
+          <ul>
+            <li><a href="https://validator.w3.org/">Validators</a></li>
+            <li><a href="../../../2009/cheatsheet/">W3C cheatsheet</a></li>
+            <li><a href="../../../Status.html">More Open Source Software</a></li>
+            <li><a title="Open Web Platform testing" href="https://web-platform-tests.org/">Web
+                Platform Tests</a></li>
+            <li><a href="../../../developers/">W3C Developer Avenue</a></li>
+            <li><a title="MOOCs from W3C on edX" href="https://www.edx.org/school/w3cx">W3Cx
+                (Training)</a></li>
+            <li><a href="../../../participate/">More ways to participate</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3><a href="../../../Member/">Member-only Home</a></h3>
+          <ul>
+            <li><a href="../../../Consortium/activities">Join a Group</a></li>
+            <li><a href="https://www.w3.org/Help/Account/Request/Member">Get a
+                Member Account</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Navigation</h3>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="../../../standards/">Standards</a></li>
+            <li><a href="../../../participate/">Participate</a></li>
+            <li><a href="../../../Consortium/membership">Membership</a></li>
+            <li><a href="../../../Consortium/">About W3C</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Contact W3C</h3>
+          <ul>
+            <li><a href="../../../Consortium/contact">Contact</a></li>
+            <li><a href="../../../Help/">Help and FAQ</a></li>
+            <li><a href="../../../Consortium/sponsor/">Sponsor / Donate</a></li>
+            <li><a href="../../../Consortium/siteindex">Site Map</a></li>
+            <li><a href="https://lists.w3.org/Archives/Public/site-comments/">Feedback</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>W3C Updates</h3>
+          <ul>
+            <li><a href="https://twitter.com/W3C" title="Follow W3C on
+      Twitter"><img src="../../../2008/site/images/Twitter_bird_logo_2012" alt="Twitter" class="icon" height="18" width="22"></a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <address>Created by Bert Bos – March 2019<br>
+        Updated $Date: 2019/09/02 19:53:35 $ by $Author: bbos $</address>
     </footer>
 
   
