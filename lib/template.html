@@ -4,37 +4,28 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta content="width=device-width" name="viewport">
     <title>TPAC 2019: break-outs schedule</title>
-    <link rel="stylesheet" href="https://www.w3.org/2019/09/TPAC-template/tpac.css">
-    <link rel="alternate stylesheet" title="Less color" href="https://www.w3.org/2019/09/TPAC-template/alt.css">
+    <base href="https://www.w3.org/2019/09/TPAC/">
+    <link rel="stylesheet" href="../../../2019/09/TPAC-template/tpac.css">
     <link rel="first" href="Overview.html">
-    <!--
-    <link rel="next" href="participation.html">
-    -->
     <link rel="author" href="mailto:w3t-tpregister@w3.org">
     <link rel="license" href="../../../Consortium/Legal/copyright-documents">
     <link rel="search" href="../../../Help/search?q=site:www.w3.org/2019/09/TPAC/">
 
     <!-- Temporary style element for testing during development. -->
     <style>
-      .thead, .tfoot, .capacity {display: none}
-      .th {margin: 1.2em 0 0 0}
-      .td {display: list-item; padding: 0; margin: 0 0 0 1em}
-      .th {font-weight: bold}
+      [role=rowgroup]:first-child {display: none} /* hide the "thead" */
+      [role=cell] {display: list-item; padding: 0; margin: 0 0 0 1em}
       .room {color: #005A9C}
       @media (min-width: 80em) {
-	.table {display: table; table-layout: fixed; width: 100%;
-          font-size: 0.9em}
-	.thead {display: table-header-group}
-	.tfoot {display: table-footer-group}
-	.tbody {display: table-row-group}
-	.tr {display: table-row}
-        .th, .td {display: table-cell; padding: 0.4em 0 0.4em 1.3em;
-          vertical-align: baseline}
-        .th:first-child, .td:first-child {padding-left: 0}
-        .th {color: #005A9C; font-size: 1em}
-        .thead .th {vertical-align: bottom}
-        .tbody .th, .tbody .td, .tfoot .th, .tfoot .td {border-width: 0.2em;
-          border-style: solid none none none; border-color: orange}
+	[role=table] {display: table; table-layout: fixed; width: 100%;
+          font-size: 0.9em; border-collapse: collapse; border: hidden}
+	[role=rowgroup] {display: table-row-group}
+	[role=rowgroup]:first-child {display: table-header-group}
+	[role=row] {display: table-row; border-top: 0.2em solid orange}
+        [role=cell], [role=columnheader], [role=rowheader] {display: table-cell;
+          padding: 0.4em 0 0.4em 1.3em; vertical-align: baseline}
+        [role=columnheader], [role=rowheader] {font-weight: 700; color: #005A9C}
+        [role=rowheader] {padding-left: 0; font-size: 1em}
         .room {display: none}
       }
       @supports (display: run-in) {
@@ -88,23 +79,23 @@
 
       <p>This is a first stab at organizing the <a href="https://www.w3.org/wiki/TPAC/2019/SessionIdeas">breakout sessions that have been proposed so far</a> - please get in touch with <a href="mailto:public-tpac-unconference@w3.org">public-tpac-unconference@w3.org</a> if you identify problems with the proposed schedule. See also <a href="https://www.w3.org/wiki/TPAC/2019/FAQ#How_does_the_agenda_get_built.3F">how to help building the unconference agenda</a>.</p>
 
-      <div class="table breakouts" role=table>
-        <div class=thead role=rowgroup>
-          <div class=tr role=row>
-            <h3 class=th role=rowheader>Room</h3>
+      <div class=breakouts role=table>
+        <div role=rowgroup>
+          <div role=row>
+            <h3 role=rowheader>Room</h3>
             <template id="room">
-              <p class=th role=columnheader><span class="name"></span>, <i class="floor"></i></p>
+              <p role=columnheader><span class="name"></span>, <i class="floor"></i></p>
             </template>
           </div>
         </div>
-        <div class=tbody role=rowgroup>
+        <div role=rowgroup>
           <template id="slot-summary">
-            <div class=tr role=row>
-              <h3 class=th role=rowheader><time class="start">11:00</time>-&#x200B;<time class="end">12:00</time></h3>
+            <div role=row>
+              <h3 role=rowheader><time class="start">11:00</time>-&#x200B;<time class="end">12:00</time></h3>
             </div>
           </template>
           <template id="session-summary">
-            <p class=td role=cell><a class="title-link"></a> <span class=room>&ndash; </span></p>
+            <p role=cell><a class="title-link"></a> <span class=room>&ndash; </span></p>
           </template>
         </div>
       </div>
