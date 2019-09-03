@@ -50,7 +50,6 @@ JSDOM.fromFile("./lib/template.html").then(dom => {
 
         sessionSummaryEl.querySelector(".title-link").textContent = session.title;
         sessionSummaryEl.querySelector(".title-link").href= "#" + sessionId;
-        sessionSummaryEl.querySelector(".room").appendChild(document.createTextNode(room.name));
 
         const sessionEl = document.createElement("div");
         sessionEl.innerHTML = sessionTpl.innerHTML;
