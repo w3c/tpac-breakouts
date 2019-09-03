@@ -9,5 +9,6 @@
   "type": "talk & open discussion",
   "goals": "Help people understand the direction that WebGPU is going, and get feedback from the broader community",
   "others": ["djackson4"],
-  "capacity": "medium"
+  "capacity": "medium",
+  "track": "3d"
 }
