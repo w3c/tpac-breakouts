@@ -65,7 +65,9 @@ JSDOM.fromFile("./lib/template.html").then(dom => {
           sessionEl.querySelector(".goals").appendChild(li);
         });
         sessionEl.querySelector(".type").textContent = arrayify(session.type).join(", ");
-        sessionEl.querySelector(".organizer").textContent = session.proposer.name;
+        sessionEl.querySelector(".organizer-name").textContent = session.proposer.name;
+        sessionEl.querySelector(".organizer-email").textContent = session.proposer.email;
+        sessionEl.querySelector(".organizer-email").href = "mailto:" + session.proposer.email;
         const ircLink = document.createElement("a");
         ircLink.href = "http://irc.w3.org/?channels=%23" + sessionId;
         ircLink.textContent = "#" + sessionId;
