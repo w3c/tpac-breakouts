@@ -25,7 +25,7 @@
    "capacity": {"type": "string", "enum": ["big", "medium", "small"] },
    "possibleSlots": { "type": "array", "items": {"type": "number"} },
    "track": {"type": "string"},
-   "sponsored": {"type": "boolean"},
+   "sponsor": {"type": "string"},
    "span": {"type": "number"}
  },
  "required": ["title", "proposer", "summary", "goals"],
