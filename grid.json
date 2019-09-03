@@ -9,7 +9,8 @@
   },
   {
     "kaede": "openjs",
-    "kusu": "mediaprocessing",
+    "navis-a": "mediaprocessing",
+    "kusu": "html-3d",
     "kashi": "privacybudget",
     "rigel": "bulletchat",
     "hishi": "portals"
@@ -19,7 +20,8 @@
     "kashi": "ad-privacy",
     "hishi": "workerinput",
     "rigel": "webtransport",
-    "kaede": "webstories"
+    "kaede": "webstories",
+    "yoh": "voice"
   },
   {
     "kashi": "adselection",

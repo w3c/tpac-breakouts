@@ -1,0 +1,12 @@
+{
+  "title": "HTML 3D Element",
+  "proposer": {
+    "login": "zyu",
+    "name": "Zhiqiang Yu",
+    "email": "yuzhiqiang5@huawei.com"
+  },
+  "summary": " A proposal on HTML 3D element, to bring rich 3D & AR experience to Web with a single line of code. Use cases include on-line shopping, creative advertisement,education, etc. A few demos will be shown as well.",
+  "type": "Short talk & discussion",
+  "goals": "promote the HTML 3D tag and looking forward to a wider collaboration w/ the community, as well as standardization in W3C.",
+  "capacity": "medium"
+}
