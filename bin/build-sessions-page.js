@@ -32,10 +32,10 @@ JSDOM.fromFile("./lib/template.html").then(dom => {
     slotEl.querySelector(".start").textContent = slot.start;
     slotEl.querySelector(".end").textContent = slot.end;
     const navLink = slotEl.querySelector(".skip a");
-    if (i < slots.length) {
-      navLink.href = "#slot" + (i + 2);
+    if (i < slots.length - 1) {
+      navLink.href = "https://w3c.github.io/tpac-breakouts/sessions.html#slot" + (i + 2);
     } else {
-      navLink.href = navLink.dataset("last");
+      navLink.href = "https://w3c.github.io/tpac-breakouts/sessions.html" + navLink.dataset.last;
     }
     slotTpl.parentNode.insertBefore(slotEl, slotTpl);
     Object.keys(rooms).forEach(roomid => {
@@ -49,7 +49,7 @@ JSDOM.fromFile("./lib/template.html").then(dom => {
         const session = require("../sessions/" + sessionId + ".json");
 
         sessionSummaryEl.querySelector(".title-link").textContent = session.title;
-        sessionSummaryEl.querySelector(".title-link").href= "#" + sessionId;
+        sessionSummaryEl.querySelector(".title-link").href= "https://w3c.github.io/tpac-breakouts/sessions.html#" + sessionId;
 
         const sessionEl = document.createElement("div");
         sessionEl.innerHTML = sessionTpl.innerHTML;
