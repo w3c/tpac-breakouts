@@ -4,7 +4,7 @@
     "navis-b": "jsbuiltin",
     "kusu": "datacue",
     "hishi": "mdn",
-    "rigel": "jlreq",
+    "bay": "jlreq",
     "kashi": "miniapp"
   },
   {
@@ -12,27 +12,29 @@
     "navis-a": "mediaprocessing",
     "kusu": "html-3d",
     "kashi": "privacybudget",
-    "rigel": "bulletchat",
+    "navis-b": "bulletchat",
     "hishi": "portals"
   },
   {
     "kusu": "textcueapi",
-    "kashi": "ad-privacy",
+    "navis-b": "ad-privacy",
     "hishi": "workerinput",
-    "rigel": "webtransport",
+    "kashi": "webtransport",
     "kaede": "webstories",
     "yoh": "voice"
   },
   {
-    "kashi": "adselection",
+    "navis-b": "adselection",
     "kusu": "webcodecs",
     "hishi": "user-activation",
     "kaede": "xra11y",
-    "rigel": "wpack"
+    "bay": "webmonetization",
+    "kashi": "wpack"
   },
   {
     "navis-a": "webgpu",
     "kashi": "trusttokens",
-    "hishi": "pub"
+    "hishi": "pub",
+    "bay": "webmonetization"
   }
 ]

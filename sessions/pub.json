@@ -9,5 +9,6 @@
   "type": "talk, open discussion",
   "goals": "Introduce Editors to new features.",
   "others": ["breakingchange", "saschanaz"],
-  "capacity": "medium"
+  "capacity": "medium",
+  "track": "tool"
 }

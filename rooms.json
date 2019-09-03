@@ -53,11 +53,11 @@
     "size": "small",
     "name": "Kei"
   },
-  "rigel": {
-    "floor": 3,
+  "bay": {
+    "floor": 34,
     "capacity": 30,
     "size": "medium",
-    "name": "Rigel"
+    "name": "Bay Penthouse"
   },
   "yoh": {
     "floor": 3,
