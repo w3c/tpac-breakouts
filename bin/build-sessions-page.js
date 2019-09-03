@@ -55,6 +55,11 @@ JSDOM.fromFile("./lib/template.html").then(dom => {
         sessionEl.innerHTML = sessionTpl.innerHTML;
         sessionEl.id = sessionId;
         sessionEl.querySelector(".title").textContent = session.title;
+        if (session.sponsor) {
+          sessionEl.querySelector(".sponsor").textContent += session.sponsor;
+        } else {
+          sessionEl.querySelector(".sponsor").innerHTML = "";
+        }
         sessionEl.querySelector(".room-name").textContent = room.name;
         sessionEl.querySelector(".room-floor").textContent = "Floor " + room.floor;
         sessionEl.querySelector(".summary").innerHTML = session.summary;
