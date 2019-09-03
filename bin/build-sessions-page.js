@@ -9,24 +9,53 @@ const arrayify = s => Array.isArray(s) ? s : [s]
 
 JSDOM.fromFile("./lib/template.html").then(dom => {
   const document = dom.window.document;
+  const roomTpl = document.getElementById("room");
+  const slotSummaryTpl = document.getElementById("slot-summary");
+  const sessionSummaryTpl = document.getElementById("session-summary");
   const slotTpl = document.getElementById("slot");
   const sessionTpl = document.getElementById("session");
+  Object.values(rooms).forEach(room => {
+    const roomEl = document.importNode(roomTpl.content.children[0], true);
+    roomEl.querySelector(".name").textContent = room.name;
+    roomEl.querySelector(".floor").textContent = "Floor " + room.floor;
+    roomTpl.parentNode.insertBefore(roomEl, roomTpl);
+  });
   slots.forEach((slot, i) => {
+    const slotSummaryEl = document.importNode(slotSummaryTpl.content.children[0], true);
+    slotSummaryEl.querySelector(".start").textContent = slot.start;
+    slotSummaryEl.querySelector(".end").textContent = slot.end;
+    slotSummaryTpl.parentNode.insertBefore(slotSummaryEl, slotSummaryTpl);
+
     const slotEl = document.createElement("section");
     slotEl.id = "slot" + (i + 1);
     slotEl.innerHTML = slotTpl.innerHTML;
-    slotEl.querySelector("h2 .start").textContent = slot.start;
-    slotEl.querySelector("h2 .end").textContent = slot.end;
-    document.getElementById("slot").parentNode.insertBefore(slotEl, slotTpl);
+    slotEl.querySelector(".start").textContent = slot.start;
+    slotEl.querySelector(".end").textContent = slot.end;
+    const navLink = slotEl.querySelector(".skip a");
+    if (i < slots.length) {
+      navLink.href = "#slot" + (i + 2);
+    } else {
+      navLink.href = navLink.dataset("last");
+    }
+    slotTpl.parentNode.insertBefore(slotEl, slotTpl);
     Object.keys(rooms).forEach(roomid => {
+      const room = rooms[roomid];
+      const sessionSummaryEl = document.importNode(sessionSummaryTpl.content.children[0], true);
+      sessionSummaryEl.querySelector(".room").appendChild(document.createTextNode(room.name));
+      slotSummaryEl.appendChild(sessionSummaryEl);
+
       if (grid[i] && grid[i][roomid]) {
         const sessionId = grid[i][roomid];
-        const room = rooms[roomid];
         const session = require("../sessions/" + sessionId + ".json");
+
+        sessionSummaryEl.querySelector(".title-link").textContent = session.title;
+        sessionSummaryEl.querySelector(".title-link").href= "#" + sessionId;
+        sessionSummaryEl.querySelector(".room").appendChild(document.createTextNode(room.name));
+
         const sessionEl = document.createElement("div");
         sessionEl.innerHTML = sessionTpl.innerHTML;
         sessionEl.id = sessionId;
-        sessionEl.querySelector(".title").textContent = session.title + " - " + room.name;
+        sessionEl.querySelector(".title").textContent = session.title;
         sessionEl.querySelector(".room-name").textContent = room.name;
         sessionEl.querySelector(".room-floor").textContent = "Floor " + room.floor;
         sessionEl.querySelector(".summary").innerHTML = session.summary;
@@ -42,9 +71,14 @@ JSDOM.fromFile("./lib/template.html").then(dom => {
         ircLink.textContent = "#" + sessionId;
         sessionEl.querySelector(".irc").appendChild(ircLink);
         slotEl.appendChild(sessionEl);
+      } else {
+        sessionSummaryEl.querySelector(".title-link").remove();
       }
     });
   });
+  roomTpl.remove();
+  slotSummaryTpl.remove();
+  sessionSummaryTpl.remove();
   slotTpl.remove();
   sessionTpl.remove();
   fs.writeFileSync("./sessions.html", dom.serialize());
