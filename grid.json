@@ -17,23 +17,23 @@
     "hishi": "portals"
   },
   {
-    "bay": "textcueapi",
+    "navis-c": "textcueapi",
     "navis-b": "ad-privacy",
-    "kusu": "html-3d",
-    "navis-a": "webauthnnetwork",
-    "hishi": "workerinput",
+    "kusu": "webauthnnetwork",
+    "argos-df": "miniapp",
     "kashi": "webtransport",
     "kaede": "webstories",
-    "yoh": "voice"
+    "yoh": "voice",
+    "navis-a": "xra11y"
   },
   {
-    "navis-a": "miniapp",
     "navis-b": "adselection",
-    "kusu": "webcodecs",
-    "hishi": "did",
-    "kaede": "xra11y",
+    "kusu": "html-3d",
+    "hishi": "webcodecs",
+    "navis-a": "did",
     "bay": "webmonetization",
     "kashi": "wpack",
+    "kaede": "workerinput",
     "yoh": "groupautomation"
   },
   {
