@@ -8,5 +8,6 @@
   "summary": "Feedback and brainstorming for (re)introducing the Web Consortium to the public. The W3C Comm team wants to get background stories from our Members and community about how they were drawn to the Web (before the Web, or their first involvement with the Web). There is a path for how everyone in our community has come to the Web, what they see happening now and what they see in the future.",
   "type": "open discussion",
   "goals": "We want to gather stories in order to tell a compelling story to the public. W3C Comm team may use this as part of an upcoming crowdfunding campaign.",
-  "capacity": "medium"
+  "capacity": "medium",
+  "track": "org"
 }

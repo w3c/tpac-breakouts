@@ -9,5 +9,6 @@
   "type": "Open discussion",
   "goals": "Determine interest level from implementers, discuss concerns.",
   "others": ["kleber"],
-  "capacity": "medium"
+  "capacity": "medium",
+  "track": "security"
 }
