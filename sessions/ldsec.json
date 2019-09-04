@@ -1,0 +1,13 @@
+{
+  "title": "Linked Data Security",
+  "proposer": {
+    "login": "msporny",
+    "name": "Manu Sporny",
+    "email": "msporny@digitalbazaar.com"
+  },
+  "summary": "Should we standardize: RDF Dataset Canonicalization, Linked Data Proofs, Linked Data Signatures, RSA2019Signature, Ed25519Signature, and if so, on what timeline?",
+  "type": "open discussion",
+  "goals": "Determine if certain Linked Data Security technologies are ready for standardization.",
+  "others": ["gkellogg", "ivan", "rsanders", "BigBlueHat"],
+  "capacity": "small"
+}
