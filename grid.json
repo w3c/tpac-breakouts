@@ -5,14 +5,13 @@
     "kusu": "datacue",
     "hishi": "mdn",
     "bay": "jlreq",
-    "kashi": "miniapp",
+    "kashi": "user-activation",
     "yoh": "ldsec"
   },
   {
     "kaede": "openjs",
     "navis-a": "mediaprocessing",
     "navis-c": "future",
-    "kusu": "html-3d",
     "kashi": "privacybudget",
     "navis-b": "bulletchat",
     "hishi": "portals"
@@ -20,17 +19,18 @@
   {
     "bay": "textcueapi",
     "navis-b": "ad-privacy",
-    "kusu": "webauthnnetwork",
+    "kusu": "html-3d",
+    "navis-a": "webauthnnetwork",
     "hishi": "workerinput",
     "kashi": "webtransport",
     "kaede": "webstories",
     "yoh": "voice"
   },
   {
-    "navis-a": "did",
+    "navis-a": "miniapp",
     "navis-b": "adselection",
     "kusu": "webcodecs",
-    "hishi": "user-activation",
+    "hishi": "did",
     "kaede": "xra11y",
     "bay": "webmonetization",
     "kashi": "wpack",
