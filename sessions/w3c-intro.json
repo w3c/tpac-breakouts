@@ -1,0 +1,13 @@
+{
+  "title": "Introduction to W3C",
+  "proposer": {
+    "login": "plh",
+    "name": "Philippe Le Hégaret",
+    "email": "plh@w3.org"
+  },
+  "summary": "If you're a new Group participant in the W3C, this session will guide you through the W3C labyrinth and allow you to contribute to the Web",
+  "type": "talk, tutorial and open discussion",
+  "goals": "Make sure attendees are up-to-speed on how to participate in their Groups, get familiar with various documentations and tools used by W3C, including GitHub.",
+  "others": [],
+  "capacity": "small"
+}

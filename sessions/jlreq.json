@@ -2,7 +2,7 @@
   "title": "Japan Language Requirements Task Force: Evolving the JLReq document",
   "proposer": {
     "login": "nmccully",
-    "name": " Nathaniel McCully",
+    "name": "Nathaniel McCully",
     "email": "nmccully@adobe.com"
   },
   "summary": "Explanation of the JLReq v2 effort currently underway, and a glimpse into the roadmap of a v3, that seeks to serve the needs of developers of layout engines for modern, dynamic media that support high-quality Japanese layout",

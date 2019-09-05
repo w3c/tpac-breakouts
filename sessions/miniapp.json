@@ -9,5 +9,6 @@
   "type": "short talk & discussion",
   "goals": "help the global web community to better understand Mini App and the value of its standardization, find proper way to move forward in W3C",
   "capacity": "medium",
-  "track": "core"
+  "track": "core",
+  "possibleSlots": [0, 1, 2]
 }
