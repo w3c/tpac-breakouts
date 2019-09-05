@@ -1,13 +1,14 @@
 {
-  "title": "HTML 3D Element",
+  "title": "HTML 3D Element & Native GLTF",
   "proposer": {
     "login": "zyu",
     "name": "Zhiqiang Yu",
     "email": "yuzhiqiang5@huawei.com"
   },
-  "summary": " A proposal on HTML 3D element, to bring rich 3D & AR experience to Web with a single line of code. Use cases include on-line shopping, creative advertisement,education, etc. A few demos will be shown as well.",
+  "summary": " A proposal on HTML 3D element, to bring rich 3D & AR experience to Web with a single line of code. Use cases include on-line shopping, creative advertisement,education, etc. Another related idea is for a <a href='https://github.com/immersive-web/proposals/issues/52'>scene element proposal</a> .   Demo prototypes will be provided.",
   "type": "Short talk & discussion",
-  "goals": "promote the HTML 3D tag and looking forward to a wider collaboration w/ the community, as well as standardization in W3C.",
+  "goals": "Gauge developer interest in native 3D support in HTML (similar to image/audio/video tag) and looking forward to a wider collaboration with the community, as well as standardization in W3C.",
+  "others": ["sushraja"],
   "capacity": "medium",
   "track": "3d"
 }
