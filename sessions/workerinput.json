@@ -5,7 +5,7 @@
     "name": "Navid Zolghadr",
     "email": "nzolghadr@chromium.org"
   },
-  "summary": "Towards exposing input events to Workers and Worklets.",
+  "summary": "Towards exposing <a href='https://wicg.github.io/input-for-workers'>input events to Workers and Worklets</a>.",
   "type": "open discussion",
   "goals": "Discuss use cases and implications, brainstorm the API",
   "others": ["majidvp"],
