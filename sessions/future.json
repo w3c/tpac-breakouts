@@ -10,5 +10,6 @@
   "goals": ["A discussion to understand the community's level of consensus on fundamental questions:", " Mission – W3C’s traditional mission statement is “lead the web to its full potential”. Does the community believe W3C’s basic value proposition need updating, perhaps to focus on some combination of documenting how the web actually works, certifying which products comply with the consensus standards, and focusing on the most pressing challenges to the original vision?", " Leadership – The founding Director is no longer involved with W3C’s day to day operations, but the “Director” has a key role in the process and governance. Would the community be more comfortable with finding another neutral person with considerable expertise who can commit the time to being Director, or delegating tasks such as adjudicating formal objections to some sort of elected council?", " Staffing – What role or roles should the Team prioritize and focus on? Mechanics of consensus building, or technical guidance on solutions?"],
   "others": [],
   "capacity": "medium",
-  "track": "org"
+  "track": "org",
+  "possibleSlots": [0, 1]
 }

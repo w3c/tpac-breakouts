@@ -10,5 +10,6 @@
   "goals": "rying to reach consensus on our proposed change to the spec (https://github.com/whatwg/html/pull/3851)",
   "others": ["ddenicol"],
   "capacity": "medium",
-  "track": "core"
+  "track": "core",
+  "possibleSlots":[0, 1]
 }
