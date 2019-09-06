@@ -3,12 +3,12 @@
     "navis-a": "privthreatmodel",
     "navis-b": "jsbuiltin",
     "kusu": "datacue",
-    "hishi": "mdn",
+    "navis-c": "mdn",
     "bay": "jlreq",
     "kashi": "user-activation",
     "yoh": "ldsec",
     "kei": "w3c-intro",
-    "navis-c": "360video"
+    "hishi": "360video"
   },
   {
     "argos-df": "wot-pf",
