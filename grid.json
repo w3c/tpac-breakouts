@@ -3,6 +3,7 @@
     "navis-a": "privthreatmodel",
     "navis-b": "jsbuiltin",
     "kusu": "datacue",
+    "kaede": "didtalk",
     "navis-c": "mdn",
     "bay": "jlreq",
     "kashi": "user-activation",
@@ -17,7 +18,10 @@
     "navis-c": "future",
     "kashi": "privacybudget",
     "navis-b": "bulletchat",
-    "hishi": "portals"
+    "hishi": "portals",
+    "yoh": "json-ld",
+    "kei": "pwg-audio",
+    "kusu": "digital-transformation"
   },
   {
     "navis-c": "textcueapi",
