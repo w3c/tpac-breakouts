@@ -27,6 +27,7 @@ loadDir("./sessions/").then(() => {
 
   Object.keys(sessions).forEach(sessionId =>  {
     const session = sessions[sessionId];
+    session.proposer = Array.isArray(session.proposer) ? session.proposer : [session.proposer];
     // Fail if session does not json-schema-validate
     const validation = jsonvalidate(session, schema);
     validation.errors.forEach(e => errors.push(sessionId + ": " + e.stack));
@@ -41,7 +42,7 @@ loadDir("./sessions/").then(() => {
       uniquelyAcceptable[session.possibleSlots[0]]++;
     }
 
-    [session.proposer.login].concat(session.others || []).forEach(p => {
+    session.proposer.map(p => p.login).concat(session.others || []).forEach(p => {
       if (!criticalParties[p])
         criticalParties[p] = 0;
       criticalParties[p]++;
