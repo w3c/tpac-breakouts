@@ -7,6 +7,8 @@ const grid = require("../grid.json"),
 
 const arrayify = s => Array.isArray(s) ? s : [s]
 
+const latestSlot = process.argv.length > 2 ? parseInt(process.argv[2], 10) : -1;
+
 JSDOM.fromFile("./lib/template.html").then(dom => {
   const document = dom.window.document;
   const roomTpl = document.getElementById("room");
@@ -88,6 +90,17 @@ JSDOM.fromFile("./lib/template.html").then(dom => {
         ircLink.href = "http://irc.w3.org/?channels=%23" + sessionId;
         ircLink.textContent = "#" + sessionId;
         sessionEl.querySelector(".irc").appendChild(ircLink);
+        if (i <= latestSlot) {
+          const dt = document.createElement("dt");
+          dt.textContent = "Minutes";
+          const dd = document.createElement("dd");
+          const minutesLink = document.createElement("a");
+          minutesLink.href = "https://www.w3.org/2019/09/18-" + sessionId + "-minutes.html";
+          minutesLink.textContent = "Notes taken on #" + sessionId;
+          dd.appendChild(minutesLink);
+          sessionEl.querySelector("dl").appendChild(dt);
+          sessionEl.querySelector("dl").appendChild(dd);
+        }
         slotEl.appendChild(sessionEl);
       } else {
         sessionSummaryEl.querySelector(".title-link").remove();
