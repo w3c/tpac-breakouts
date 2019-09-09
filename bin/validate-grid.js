@@ -59,6 +59,7 @@ loadDir("./sessions/").then(() => {
         return errors.push(`In slot #${i}, unknown session ${slot[roomId]}`);
 
       const session = sessions[sessionId];
+      session.proposer = Array.isArray(session.proposer) ? session.proposer : [session.proposer];
       const room = rooms[roomId];
 
       // Fail if a given session doesn't respect its time constraints
@@ -70,7 +71,7 @@ loadDir("./sessions/").then(() => {
         warnings.push(`Room ${roomId} is ${room.capacity} and hosts session ${sessionId} which needs ${session.capacity}`);
 
       // Warn if a session has conflicts in critical parties
-      for (let p of [session.proposer.login].concat(session.others || [])) {
+      for (let p of session.proposer.map(p => p.login).concat(session.others || [])) {
         if (criticalParties.has(p))
           warnings.push(`Session ${sessionId} scheduled in slot #${i}, but ${p} is critical in another session of that slot`);
         criticalParties.add(p);

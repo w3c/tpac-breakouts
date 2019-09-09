@@ -47,7 +47,7 @@ JSDOM.fromFile("./lib/template.html").then(dom => {
       if (grid[i] && grid[i][roomid]) {
         const sessionId = grid[i][roomid];
         const session = require("../sessions/" + sessionId + ".json");
-
+        session.proposer = arrayify(session.proposer);
         sessionSummaryEl.querySelector(".title-link").textContent = session.title;
         sessionSummaryEl.querySelector(".title-link").href= "https://w3c.github.io/tpac-breakouts/sessions.html#" + sessionId;
 
@@ -69,9 +69,18 @@ JSDOM.fromFile("./lib/template.html").then(dom => {
           sessionEl.querySelector(".goals").appendChild(li);
         });
         sessionEl.querySelector(".type").textContent = arrayify(session.type).join(", ");
-        sessionEl.querySelector(".organizer-name").textContent = session.proposer.name;
-        sessionEl.querySelector(".organizer-email").textContent = session.proposer.email;
-        sessionEl.querySelector(".organizer-email").href = "mailto:" + session.proposer.email;
+        const organizerTmpl = sessionEl.querySelector(".organizer");
+        session.proposer.forEach((p,i) => {
+          const organizerEl = organizerTmpl.cloneNode(true);
+          organizerEl.querySelector(".organizer-name").textContent = p.name;
+          organizerEl.querySelector(".organizer-email").textContent = p.email;
+          organizerEl.querySelector(".organizer-email").href = "mailto:" + p.email;
+          if (i < session.proposer.length - 1) {
+            organizerEl.appendChild(document.createTextNode(", "));
+          }
+          organizerTmpl.parentNode.insertBefore(organizerEl, organizerTmpl);
+        });
+        organizerTmpl.remove();
         const ircLink = document.createElement("a");
         ircLink.href = "http://irc.w3.org/?channels=%23" + sessionId;
         ircLink.textContent = "#" + sessionId;

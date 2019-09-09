@@ -1,15 +1,23 @@
-{"type": "object",
- "properties": {
+{
+  "definitions": {
+    "proposer": {
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"},
+        "login": {"type": "string"},
+        "email": {"type": "string", "pattern": ".+@.+\\..+"},
+        "annotation": {"type": "string"}
+      },
+      "required": ["name", "email", "login"]
+    }
+  },
+  "type": "object",
+  "properties": {
    "title": {"type": "string"},
-   "proposer": {
-     "type": "object",
-     "properties": {
-       "name": {"type": "string"},
-       "login": {"type": "string"},
-       "email": {"type": "string", "pattern": ".+@.+\\..+"}
-     },
-     "required": ["name", "email", "login"]
-   },
+   "proposer": {"oneOf": [
+     { "type": "array", "items": {"$ref": "#/definitions/proposer"}},
+     { "$ref": "#/definitions/proposer"}
+   ]},
    "summary": {"type": "string"},
    "goals": {"oneOf": [
      { "type": "array", "items": {"type": "string"} },
