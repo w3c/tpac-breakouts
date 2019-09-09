@@ -5,7 +5,7 @@
     "name": "Song Xu",
     "email": "xusong@migu.cn"
   },
-  "summary": " Introduce what is the Bullet Chatting , and introduce the Bullet Chatting specification drafted by W3C Chinese Interest Group. Discuss the way forward for Bullet Chatting standardization in W3C.",
+  "summary": " Introduce what Bullet Chatting is, and introduce the <a href='https://w3c.github.io/danmaku/index_en.html'>Bullet Chatting proposal</a> drafted by W3C Chinese Interest Group. Discuss the way forward for Bullet Chatting standardization in W3C.",
   "type": "talk & discussion",
   "goals": "Help the global web community to better understand Bullet Chatting and the value of its standardization, and looking for teams interested in Bullet Chatting standardization, hoping to get some feedback and support, and get advice about what the W3C workflow. ",
   "capacity": "small",
