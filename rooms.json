@@ -13,44 +13,44 @@
   },
   "navis-b": {
     "floor": 1,
-    "capacity": 50,
+    "capacity": 70,
     "size": "big",
     "name": "Navis-B"
   },
   "navis-c": {
     "floor": 1,
-    "capacity": 50,
+    "capacity": 56,
     "size": "big",
     "name": "Navis-C"
   },
-  "kaede": {
-    "floor": 1,
-    "capacity": 20,
+  "sumire": {
+    "floor": 3,
+    "capacity": 24,
     "size": "medium",
-    "name": "Kaede"
+    "name": "Sumire"
   },
-  "kusu": {
-    "floor": 1,
-    "capacity": 20,
+  "sakura": {
+    "floor": 3,
+    "capacity": 24,
     "size": "medium",
-    "name": "Kusu"
+    "name": "Sakura"
   },
   "kashi": {
     "floor": 1,
-    "capacity": 20,
-    "size": "medium",
+    "capacity": 17,
+    "size": "small",
     "name": "Kashi"
   },
   "hishi": {
     "floor": 3,
-    "capacity": 20,
+    "capacity": 22,
     "size": "medium",
     "name": "Hishi"
   },
   "kei": {
     "floor": 3,
-    "capacity": 15,
-    "size": "small",
+    "capacity": 24,
+    "size": "medium",
     "name": "Kei"
   },
   "bay": {
@@ -61,8 +61,14 @@
   },
   "yoh": {
     "floor": 3,
-    "capacity": 15,
-    "size": "small",
+    "capacity": 24,
+    "size": "medium",
     "name": "Yoh"
+  },
+  "boardroom": {
+    "floor": 3,
+    "capacity": 30,
+    "size": "medium",
+    "name": "Boardroom"
   }
 }
