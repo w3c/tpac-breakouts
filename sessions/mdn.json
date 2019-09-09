@@ -1,10 +1,17 @@
 {
   "title": "Results from MDN Developer Survey",
-  "proposer": {
-    "name": "Dominique Hazaël-Massieux",
-    "login": "dom",
-    "email": "dom@w3.org"
-  },
+  "proposer": [
+    {
+      "name": "Kadir Topal",
+      "login": "atopal",
+      "email": " atopal@mozilla.com"
+    },
+    {
+      "name": "Dominique Hazaël-Massieux",
+      "login": "dom",
+      "email": "dom@w3.org"
+    }
+  ],
   "summary": "Meet the MDN Product Advisory Board and discuss how the results of the <a href='https://hacks.mozilla.org/2019/07/mdn-web-developer-designer-survey/'>MDN Developer Survey</a> can impact W3C's agenda",
   "type": ["talk", "discussion"],
   "goals": [
