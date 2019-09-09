@@ -75,6 +75,9 @@ JSDOM.fromFile("./lib/template.html").then(dom => {
           organizerEl.querySelector(".organizer-name").textContent = p.name;
           organizerEl.querySelector(".organizer-email").textContent = p.email;
           organizerEl.querySelector(".organizer-email").href = "mailto:" + p.email;
+          if (p.annotation) {
+            organizerEl.appendChild(document.createTextNode(` (${p.annotation})`));
+          }
           if (i < session.proposer.length - 1) {
             organizerEl.appendChild(document.createTextNode(", "));
           }
