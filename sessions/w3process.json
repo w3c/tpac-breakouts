@@ -1,0 +1,31 @@
+{
+  "title": "Process 2020",
+  "proposer": [
+    {
+      "login": "frivoal",
+      "name": "Florian Rivoal",
+      "email": "tpac@florian.rivoal.net"
+    },
+    {
+      "login": "fantasai",
+      "name": "Elika Etemad",
+      "annotation": "Fantasai",
+      "email": "fantasai.lists@inkedblade.net"
+    },
+    {
+      "login": "plh",
+      "name": "Philippe Le Hégaret",
+      "email": "plh@w3.org"
+    },
+    {
+      "login": "dsinger2",
+      "name": "David Singer",
+      "email": "singer@apple.com"
+    }
+  ],
+  "summary": "Discussion of Process2020 Proposals (continuous development, registries)",
+  "type": "open discussion",
+  "goals": "Get feedback from community and develop consensus on Process2020 proposals",
+  "capacity": "big",
+  "track": "org"
+}

@@ -9,5 +9,6 @@
   "type": "talk, tutorial and open discussion",
   "goals": "Make sure attendees are up-to-speed on how to participate in their Groups, get familiar with various documentations and tools used by W3C, including GitHub.",
   "others": [],
-  "capacity": "small"
+  "capacity": "small",
+  "track": "org"
 }
