@@ -11,5 +11,6 @@
   "others": ["msaboff@apple.com"],
   "capacity": "medium",
   "possibleSlots": [0, 1],
-  "track": "core"
+  "track": "core",
+  "remote": true
 }

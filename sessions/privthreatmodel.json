@@ -10,5 +10,6 @@
   "goals": "Figure out whether there's interest in developing a target privacy threat model for the Web.",
   "possibleSlots": [0],
   "capacity": "big",
-  "track": "privacy"
+  "track": "privacy",
+  "remote": true
 }

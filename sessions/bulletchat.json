@@ -9,5 +9,6 @@
   "type": "talk & discussion",
   "goals": "Help the global web community to better understand Bullet Chatting and the value of its standardization, and looking for teams interested in Bullet Chatting standardization, hoping to get some feedback and support, and get advice about what the W3C workflow. ",
   "capacity": "small",
-  "track": "cn-std"
+  "track": "cn-std",
+  "remote": true
 }
