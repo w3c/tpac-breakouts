@@ -8,7 +8,7 @@
   "summary": "To remain relevant with native/hybrid/mini apps, web apps, too, need access to a comparable set of APIs. In this session, we briefly touch upon the APIs being worked on by the cross-company Capabilities Project (aka. Project Fugu), and then open the floor for an open discussion on why we see the browser-accessible web in danger if we don’t move it forward now, despite all fully acknowledged challenges around privacy, security, and compatibility.",
   "type": "open discussion",
   "goals": "The session strives to explain our sense of urgency for keeping the web an attractive application platform given fierce competition. The main objective is building an understanding of the arguments of multiple sides: those who argue the web can’t compete if it’s not equally capable, and those who argue this is not an option for reasons including, but not limited to, privacy or security.",
-  "others": ["akostiai"],
+  "others": ["akostiai", "jjansen3"],
   "capacity": "medium",
   "track": "core"
 }
