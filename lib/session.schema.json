@@ -26,7 +26,8 @@
    "possibleSlots": { "type": "array", "items": {"type": "number"} },
    "track": {"type": "string"},
    "sponsor": {"type": "string"},
-   "span": {"type": "number"}
+   "span": {"type": "number"},
+   "remote": {"type": "boolean"}
  },
  "required": ["title", "proposer", "summary", "goals"],
  "additionalProperties": false
