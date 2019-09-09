@@ -7,7 +7,7 @@
     "navis-c": "mdn",
     "bay": "jlreq",
     "boardroom": "user-activation",
-    "yoh": "ldsec",
+    "kashi": "ldsec",
     "kei": "w3c-intro",
     "hishi": "360video"
   },
@@ -19,7 +19,7 @@
     "boardroom": "privacybudget",
     "navis-b": "bulletchat",
     "hishi": "portals",
-    "yoh": "json-ld",
+    "kashi": "json-ld",
     "kei": "pwg-audio",
     "sakura": "digital-transformation"
   },
@@ -30,7 +30,7 @@
     "argos-df": "miniapp",
     "boardroom": "webtransport",
     "sumire": "webstories",
-    "yoh": "voice",
+    "kashi": "voice",
     "navis-a": "xra11y"
   },
   {
@@ -43,13 +43,13 @@
     "bay": "webmonetization",
     "boardroom": "wpack",
     "sumire": "workerinput",
-    "yoh": "groupautomation"
+    "kashi": "groupautomation"
   },
   {
     "navis-a": "webgpu",
     "boardroom": "trusttokens",
     "hishi": "pub",
     "bay": "webmonetization",
-    "yoh": "undomanager"
+    "kashi": "undomanager"
   }
 ]
