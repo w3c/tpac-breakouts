@@ -3,7 +3,8 @@
   "proposer": {
     "login": "tanekelik",
     "name": "Tantek Çelik",
-    "email": "tantek@cs.stanford.edu"
+    "email": "tantek@cs.stanford.edu",
+    "annotation": "Mozilla, and former AB member"
   },
   "summary": "How should W3C evolve to better serve the web community? The AB and AC are discussing changes to its structure, but they need to hear from stakeholders about the mission and the structure designed to achieve it.",
   "type": "open discussion",
