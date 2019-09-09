@@ -5,7 +5,7 @@
     "name": "Wenson Hsieh",
     "email": "wenson_hsieh@apple.com"
   },
-  "summary": "The UndoManager API allows web applications to modify the platform undo stack, and scope undo stacks to elements.",
+  "summary": "The UndoManager API allows web applications to modify the platform undo stack, and scope undo stacks to elements. For more information, see <a href='https://github.com/whsieh/UndoManager'>the UndoManager repository</a>.",
   "type": "talk, open discussion",
   "goals": "Introduce a proposal for the UndoManager API, which allows web applications to modify and inspect the platform’s undo stack. This has implications for all types of web apps, with particular relevance to editing and productivity apps. We hope to establish context for the UndoManager API, demo a prototype of the API, and gain feedback for our proposal.",
   "others": ["megangardner"],

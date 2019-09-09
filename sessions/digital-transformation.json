@@ -1,0 +1,12 @@
+{
+  "title": "Digital Transformation, the Sentient Web and Cognitive Agents",
+  "proposer": {
+    "login": "dsr",
+    "name": "Dave Raggett",
+    "email": "dsr@w3.org"
+  },
+  "summary": "raming the aims and challenges for the Digital Transformation of industry, the emergence of the Sentient Web and new approaches to <a href='https://www.w3.org/Data/demos/chunks/chunks.html'>cognitive agents</a> based upon decades of progress in Cognitive Psychology that pave the way for a new paradigm for AI, focusing on human oriented computing.",
+  "type": "Talk with discussion and demos",
+  "goals": "Introduce the W3C to opportunities for addressing Digital Transformation with graph data and rules, together with highly scalable graph algorithms and AI/ML",
+  "capacity": "medium"
+}

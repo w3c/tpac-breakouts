@@ -1,0 +1,13 @@
+{
+  "title": "A Non-Technical Discussion on Decentralized Identifier (DIDs) & Self-Sovereign Identity (SSI)",
+  "proposer": {
+    "login": "hgarneau",
+    "name": "Helen Garneau",
+    "email": "helen@sovrin.org"
+  },
+  "summary": "DIDs are disruptive new technology possessing the possibility to overturn the status quo of data exchange across all industry verticals. But how do we explain this to policy makers, budget decision makers, and customers? Let's discuss how to bring this tech into the non-tech narrative.",
+  "type": "open discussion",
+  "goals": "The primary goal is to have a non-technical discussion about DIDs and prepare W3C members with the messaging they need to make the case publicly for this new type of identifier.",
+  "others": ["kenebert", "DrummondReed"],
+  "capacity": "medium"
+}
