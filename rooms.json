@@ -3,49 +3,57 @@
     "floor": 1,
     "capacity": 50,
     "size": "big",
-    "name": "Argos D-F"
+    "name": "Argos D-F",
+    "remote": true
   },
   "navis-a": {
     "floor": 1,
     "capacity": 50,
     "size": "big",
-    "name": "Navis-A"
+    "name": "Navis-A",
+    "remote": true
   },
   "navis-b": {
     "floor": 1,
     "capacity": 70,
     "size": "big",
-    "name": "Navis-B"
+    "name": "Navis-B",
+    "remote": true
   },
   "navis-c": {
     "floor": 1,
     "capacity": 56,
     "size": "big",
-    "name": "Navis-C"
+    "name": "Navis-C",
+    "remote": true
   },
   "sumire": {
     "floor": 3,
     "capacity": 24,
     "size": "medium",
-    "name": "Sumire"
+    "name": "Sumire",
+    "remote": true
   },
   "sakura": {
     "floor": 3,
     "capacity": 24,
     "size": "medium",
-    "name": "Sakura"
+    "name": "Sakura",
+    "remote": true
   },
   "kashi": {
     "floor": 1,
     "capacity": 17,
     "size": "small",
-    "name": "Kashi"
+    "name": "Kashi",
+    "remote": true
   },
   "hishi": {
     "floor": 3,
     "capacity": 22,
     "size": "medium",
-    "name": "Hishi"
+    "name": "Hishi",
+    "remote": true
   },
   "kei": {
     "floor": 3,
@@ -57,18 +65,21 @@
     "floor": 34,
     "capacity": 30,
     "size": "medium",
-    "name": "Bay Penthouse"
+    "name": "Bay Penthouse",
+    "remote": true
   },
   "yoh": {
     "floor": 3,
     "capacity": 24,
     "size": "medium",
-    "name": "Yoh"
+    "name": "Yoh",
+    "remote": true
   },
   "boardroom": {
     "floor": 3,
     "capacity": 30,
     "size": "medium",
-    "name": "Boardroom"
+    "name": "Boardroom",
+    "remote": true
   }
 }

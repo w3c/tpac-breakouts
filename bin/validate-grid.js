@@ -77,6 +77,11 @@ loadDir("./sessions/").then(() => {
         criticalParties.add(p);
       }
 
+      // Warn if a session needs remote but is in a room that doesn't support it
+      if (session.remote && !room.remote) {
+          warnings.push(`Session ${sessionId} scheduled in room ${roomId} needs remote support but that room doesn't provide remote support`);
+      }
+
       if (session.track) {
         if (!tracks[session.track]) {
           tracks[session.track] = new Set();
