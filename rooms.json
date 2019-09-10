@@ -27,6 +27,13 @@
     "name": "Navis-C",
     "remote": true
   },
+  "kashi": {
+    "floor": 1,
+    "capacity": 17,
+    "size": "small",
+    "name": "Kashi",
+    "remote": true
+  },
   "sumire": {
     "floor": 3,
     "capacity": 24,
@@ -39,13 +46,6 @@
     "capacity": 24,
     "size": "medium",
     "name": "Sakura",
-    "remote": true
-  },
-  "kashi": {
-    "floor": 1,
-    "capacity": 17,
-    "size": "small",
-    "name": "Kashi",
     "remote": true
   },
   "hishi": {
@@ -61,13 +61,6 @@
     "size": "medium",
     "name": "Kei"
   },
-  "bay": {
-    "floor": 34,
-    "capacity": 30,
-    "size": "medium",
-    "name": "Bay Penthouse",
-    "remote": true
-  },
   "yoh": {
     "floor": 3,
     "capacity": 24,
@@ -80,6 +73,13 @@
     "capacity": 30,
     "size": "medium",
     "name": "Boardroom",
+    "remote": true
+  },
+  "bay": {
+    "floor": 34,
+    "capacity": 30,
+    "size": "medium",
+    "name": "Bay Penthouse",
     "remote": true
   }
 }
