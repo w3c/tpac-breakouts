@@ -1,0 +1,13 @@
+{
+  "title": "Building a Smartweb Powered by Blockchain",
+  "proposer": {
+    "login": "rong2019",
+    "name": "Rong Chen",
+    "email": "chenrong@elastos.org"
+  },
+  "summary": "A Smartweb has its own DIDs, browsers, micro-websites, and instant mini-apps; but has no explicit IP addresses, nor communication protocols, to prevent network attacks or 3rd party apps from stealing users data.",
+  "type": "talk & open discussion",
+  "goals": "Proposing a New Web that Runs Apps to the W3C",
+  "others": ["suyipeng","njingyu"],
+  "capacity": "big"
+}
