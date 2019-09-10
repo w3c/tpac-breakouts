@@ -7,7 +7,6 @@
     "navis-c": "mdn",
     "bay": "jlreq",
     "boardroom": "user-activation",
-    "kashi": "ldsec",
     "kei": "w3c-intro",
     "hishi": "360video"
   },
@@ -30,7 +29,8 @@
     "argos-df": "miniapp",
     "boardroom": "webtransport",
     "sumire": "webstories",
-    "kashi": "voice",
+    "hishi": "voice",
+    "kashi": "ldsec",
     "navis-a": "xra11y"
   },
   {
