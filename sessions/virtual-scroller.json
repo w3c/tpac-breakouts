@@ -1,0 +1,14 @@
+{
+  "title": "A new approach to large DOM and virtual scrollers using display locking",
+  "proposer": {
+    "login": "fergal",
+    "name": "Fergal Daly",
+    "email": "fergal@chromium.org"
+  },
+  "summary": "Describe our work on using <a href='https://github.com/WICG/display-locking'>display locking</a> to prototype the <a href='https://github.com/WICG/virtual-scroller'>virtual-scroller custom element</a> that allows large amounts of content to be present in the DOM without causing performance problems. This is an alternative to virtualization which often breaks accessibility, indexability and in-page find.",
+  "type": "talk & discussion",
+  "goals": "Raise awareness and start discussion about this problem and solution. Demonstrate a use-case for display locking.",
+  "others": ["chrishtr", "ddenicol", "rakina", "vmpstr"],
+  "capacity": "medium",
+  "track": "core"
+}
