@@ -8,7 +8,7 @@
   "summary": "Discuss WebCodecs (https://discourse.wicg.io/t/webcodecs-proposal/3662)",
   "type": "short talk & discussion",
   "goals": "Get input from potential users of the API to see what use cases we need to make sure are well supported, as well as from experts of codecs. ",
-  "others": [],
+  "others": ["halvestr"],
   "capacity": "small",
   "track": "media"
 }
