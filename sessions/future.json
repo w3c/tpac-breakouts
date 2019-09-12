@@ -12,6 +12,6 @@
   "others": [],
   "capacity": "medium",
   "track": "org",
-  "possibleSlots": [0, 1],
+  "possibleSlots": [0, 2],
   "remote": true
 }

@@ -10,7 +10,7 @@
   "goals": "disseminate knowledge of JS Built-In modules to other hosts built on top of JavaScript (e.g. web browsers), and introduce the proposed governance model to potential stakeholders of additional JS Built-In Module namespaces (e.g. web:)",
   "others": ["msaboff@apple.com"],
   "capacity": "medium",
-  "possibleSlots": [0, 1],
+  "possibleSlots": [0, 2],
   "track": "core",
   "remote": true
 }
