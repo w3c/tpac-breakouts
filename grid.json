@@ -52,6 +52,7 @@
   {
     "navis-a": "webgpu",
     "navis-b": "smartweb",
+    "navis-c": "registries",
     "boardroom": "trusttokens",
     "sakura": "pub",
     "hishi": "webrtc-insertable",

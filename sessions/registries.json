@@ -1,0 +1,14 @@
+{
+  "title": "Registries at the W3C",
+  "proposer": {
+    "login": "dsinger2",
+    "name": "David Singer",
+    "email": "singer@apple.com"
+  },
+  "summary": "Discuss the <a href='https://www.w3.org/wiki/Registries'>proposals for formalizing Registries</a> at the W3C",
+  "type": "discussion",
+  "goals": "connect with people/groups that need Registries, to explore how they could work with the proposed formalization",
+  "others": ["frivoal", "fantasai"],
+  "capacity": "medium",
+  "track": "org"
+}
