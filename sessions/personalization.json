@@ -1,0 +1,16 @@
+{
+  "title": "Personalization of Web Content",
+  "proposer": {
+    "login": "clapierre",
+    "name": "Charles LaPierre",
+    "email": "charlesl@benetech.org"
+  },
+  "summary": "People have very different needs. some people can not do numeric information, but others prefer numbers to words, some people with severe language disabilities use of symbols to represent words, but one of the main challenges is transforming content for these different needs. We are working on an extreme personalization standard that let people with cognitive and learning disabilities join the online community and share information and communicate across groups. Are there more use-cases and new user groups for this technology? Here are our <a href='https://github.com/w3c/personalization-semantics/wiki/Use-cases'>Use Case Examples</a>. Here is a link to our <a href='https://w3c.github.io/personalization-semantics/'>latest working draft of our explainer document</a>.",
+  "type": "Demo and open discussion ",
+  "goals": "Find additional use cases, and see if we could be using a better mechanism.",
+  "others": ["jsajka", "lseeman"],
+  "remote": true,
+  "capacity": "small",
+  "possibleSlots": [5,6],
+  "track": "accessibility"
+}

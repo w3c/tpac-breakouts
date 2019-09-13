@@ -8,7 +8,8 @@
     "bay": "jlreq",
     "boardroom": "user-activation",
     "kei": "w3c-intro",
-    "hishi": "360video"
+    "hishi": "360video",
+    "yoh": "pronunciation"
   },
   {},
   {
@@ -57,6 +58,7 @@
     "sakura": "pub",
     "hishi": "webrtc-insertable",
     "bay": "webmonetization",
-    "kashi": "undomanager"
+    "yoh": "undomanager",
+    "kashi": "personalization"
   }
 ]
