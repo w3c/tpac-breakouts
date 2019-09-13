@@ -7,7 +7,7 @@
     "end": "13:30",
     "break": true,
     "name": "Lunch",
-    "room": "Argos A-B, 1F"
+    "room": "Argos A-B, 1st floor"
   },
   {"start": "13:30",
    "end": "14:25"
@@ -20,12 +20,19 @@
     "end": "16:30",
     "break": true,
     "name": "Break and <a href='https://www.w3.org/wiki/TPAC2019/Demos'>W3C Groups Demos</a>",
-    "room": "Argos A-B-C, 1F"
+    "room": "Argos A-B-C, 1st floor"
   },
   {"start": "16:30",
    "end": "17:25"
   },
   {"start": "17:30",
    "end": "18:30"
+  },
+  {
+    "start": "18:30",
+    "end": "21:00",
+    "break": true,
+    "name": "Reception",
+    "room": "Argos A-B-C, 1st floor"
   }
 ]
