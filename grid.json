@@ -49,16 +49,16 @@
     "bay": "webmonetization",
     "boardroom": "wpack",
     "sumire": "workerinput",
-    "kashi": "groupautomation",
+    "yoh": "pub",
     "kei": "telecom-authn",
-    "yoh": "webrtc-ims"
+    "kashi": "webrtc-ims"
   },
   {
     "navis-a": "webgpu",
     "navis-b": "smartweb",
     "navis-c": "registries",
     "boardroom": "trusttokens",
-    "sakura": "pub",
+    "sakura": "groupautomation",
     "hishi": "webrtc-insertable",
     "bay": "webmonetization",
     "yoh": "undomanager",
