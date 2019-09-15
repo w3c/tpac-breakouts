@@ -1,0 +1,14 @@
+{
+  "title": "Images on the Web",
+  "proposer": {
+    "login": "cconcola",
+    "name": "Cyril Concolato",
+    "email": "cconcolato@netflix.com"
+  },
+  "summary": "discuss evolutions of image formats on the Web",
+  "type": "open discussion",
+  "goals": "Discuss the growing overlap between video formats and codecs, and image formats and codecs (e.g. AV1 AVIF, HEVC HEIF, MIAF) and the consequences for browsers, content providers and users.",
+  "others": ["dsinger2"],
+  "capacity": "medium",
+  "track": "media"
+}

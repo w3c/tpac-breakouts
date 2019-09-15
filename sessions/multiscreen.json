@@ -1,0 +1,13 @@
+{
+  "title": "Multiscreen/foldables",
+  "proposer": {
+    "login": "dlibby",
+    "name": "Daniel Libby",
+    "email": "dlibby@microsoft.com"
+  },
+  "summary": "Discuss series of related proposals in the multiscreen/foldables area",
+  "type": "discussion",
+  "goals": "Rationalize existing proposals to ensure we're on the same page for primitives that should be exposed to the Web.",
+  "others": [],
+  "capacity": "small"
+}

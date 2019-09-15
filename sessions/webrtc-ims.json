@@ -1,0 +1,13 @@
+{
+  "title": "WebRTC combined with IMS",
+  "proposer": {
+    "login": "xiayefeng",
+    "name": "Yefeng Xia",
+    "email": "xiayefeng@chinamobile.com"
+  },
+  "summary": "A proposal on networking scheme for deploying WebRTC end-to-end real-time audio and video communication applications in SIP-based IMS network architecture.",
+  "type": "short talk & discussion",
+  "goals": "With the continuous improvement of WebRTC related standards and technologies, the combination of WebRTC technology and IMS will renew more vitality.",
+  "others": [],
+  "capacity": "small"
+}
