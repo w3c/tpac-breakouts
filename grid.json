@@ -31,11 +31,12 @@
     "argos-df": "miniapp",
     "boardroom": "webtransport",
     "sumire": "webstories",
-    "hishi": "voice",
-    "kashi": "ldsec",
+    "hishi": "spec-infra",
+    "kashi": "voice",
     "navis-a": "xra11y",
     "yoh": "virtual-scroller",
-    "kei": "images"
+    "kei": "images",
+    "bay": "ldsec"
   },
   {},
   {

@@ -8,7 +8,7 @@
   "summary": "We're developing a standard for micropayments in the browser. Join us to discuss the proposed standard, raise questions, concerns, or requirements and bring us closer to getting Web Monetization on the standards track.",
   "type": "Talk & discussion",
   "goals": "",
-  "others": [],
+  "others": ["tobie"],
   "sponsor": "Coil",
   "span": 2,
   "capacity": "medium"
