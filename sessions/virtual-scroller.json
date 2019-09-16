@@ -1,13 +1,13 @@
 {
-  "title": "A new approach to large DOM and virtual scrollers using display locking",
+  "title": "A new approach to large DOM and virtual scrollers using rendersubtree",
   "proposer": {
     "login": "fergal",
     "name": "Fergal Daly",
     "email": "fergal@chromium.org"
   },
-  "summary": "Describe our work on using <a href='https://github.com/WICG/display-locking'>display locking</a> to prototype the <a href='https://github.com/WICG/virtual-scroller'>virtual-scroller custom element</a> that allows large amounts of content to be present in the DOM without causing performance problems (the name may change since it's not actually JSON-DOM virtualization). This is in contrast to traditional virtualization which achieves performance by keeping most of the content outside of the DOM. By keeping content in the DOM, we retain accessibility, indexability and in-page find.",
+  "summary": "Describe our work on using <a href='https://github.com/WICG/display-locking'>display locking/rendersubtree</a> to prototype the <a href='https://github.com/WICG/virtual-scroller'>virtual-scroller custom element</a> that allows large amounts of content to be present in the DOM without causing performance problems (the name may change since it's not actually JSON-DOM virtualization). This is in contrast to traditional virtualization which achieves performance by keeping most of the content outside of the DOM. By keeping content in the DOM, we retain accessibility, indexability and in-page find.",
   "type": "talk & discussion",
-  "goals": "Raise awareness and start discussion about this problem and solution. Demonstrate a use-case for display locking.",
+  "goals": "Raise awareness and start discussion about this problem and solution. Demonstrate a use of rendersubtree.",
   "others": ["chrishtr", "ddenicol", "rakina", "vmpstr"],
   "capacity": "medium",
   "track": "core"
