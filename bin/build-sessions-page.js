@@ -117,6 +117,18 @@ JSDOM.fromFile("./lib/template.html").then(dom => {
           ircLink.href = "http://irc.w3.org/?channels=%23" + sessionId;
           ircLink.textContent = "#" + sessionId;
           sessionEl.querySelector(".irc").appendChild(ircLink);
+          if (session.remote) {
+            const remote = document.createElement("dt");
+            remote.textContent = "Remote participation";
+            const dd = document.createElement("dd");
+            if (session.remote === true) {
+              dd.textContent = "Yes";
+            } else {
+              dd.innerHTML = session.remote;
+            }
+            sessionEl.querySelector("dl").appendChild(remote);
+            sessionEl.querySelector("dl").appendChild(dd);
+          }
           if (i <= latestSlot) {
             const dt = document.createElement("dt");
             dt.textContent = "Minutes";

@@ -35,7 +35,7 @@
    "track": {"type": "string"},
    "sponsor": {"type": "string"},
    "span": {"type": "number"},
-   "remote": {"type": "boolean"}
+    "remote": {"oneOf": [{"type": "boolean"}, {"type": "string"}]}
  },
  "required": ["title", "proposer", "summary", "goals"],
  "additionalProperties": false
