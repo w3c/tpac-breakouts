@@ -21,8 +21,7 @@
     "navis-b": "bulletchat",
     "hishi": "portals",
     "kashi": "json-ld",
-    "kei": "pwg-audio",
-    "sakura": "digital-transformation"
+    "kei": "pwg-audio"
   },
   {
     "navis-c": "textcueapi",
@@ -63,6 +62,7 @@
     "bay": "webmonetization",
     "yoh": "undomanager",
     "kashi": "personalization",
-    "sumire": "multiscreen"
+    "sumire": "multiscreen",
+    "kei": "digital-transformation"
   }
 ]
