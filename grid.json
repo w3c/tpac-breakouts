@@ -58,7 +58,8 @@
   {
     "navis-a": "webgpu",
     "navis-b": "smartweb",
-    "navis-c": "registries",
+    "argos-df": "registries",
+    "navis-c": "edge-computing",
     "boardroom": "trusttokens",
     "sakura": "groupautomation",
     "hishi": "webrtc-insertable",

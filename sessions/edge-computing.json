@@ -1,0 +1,26 @@
+{
+  "title": "Edge Computing for the Web",
+  "proposer": [
+    {
+      "login": "ddruta",
+      "name": "Dan Druta",
+      "email": "dd5826@att.com"
+    },
+    {
+      "login": "sudeepdi",
+      "name": "Sudeep Divakaran",
+      "email": "sudeep.divakaran@intel.com"
+    },
+    {
+      "login": "xusong",
+      "name": "Xu Song",
+      "email": " xusong@migu.cn"
+    }
+              ],
+  "summary": "With advancements in edge compute, there is a paradigm shift that has a positive impact on applications architecture that can leverage capabilites like low latency.",
+  "type": "short talk and discussion",
+  "goals": "identify opportunities for web APIs for Edge computing, capitalize on 5G features and look at challenges around security and privacy.",
+  "others": [],
+  "capacity": "medium",
+  "track": "telco"
+}
