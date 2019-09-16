@@ -7,8 +7,8 @@
   },
   "summary": "Members of the OpenJS Foundation cross project council would like to propose a 'BoF' conversation about how to build and strengthen healthy collaborations between foundation projects and W3C groups.",
   "type": "open discussion",
-  "goals": "",
-  "others": ["mylesborins","christian-bromann","bkardell","tobie"],
+  "goals": ["Discuss efforts underway in the foundation to recruit participation from our project communities into various W3C efforts.", "Discuss opportunities for cross-org collaboration. Highlight areas where OpenJSF projects would be additive to W3C. "],
+  "others": ["dappelqu","christian-bromann","bkardell","tobie"],
   "capacity": "small",
   "track": "js"
 }
