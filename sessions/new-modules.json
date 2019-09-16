@@ -1,0 +1,14 @@
+{
+  "title": "New Module types: JSON, CSS, HTML",
+  "proposer": {
+    "login": "daniec",
+    "name": "Daniel Clark",
+    "email": "daniec@microsoft.com"
+  },
+  "summary": "Introduce JSON, CSS, and HTML modules and discuss open issues",
+  "type": "Talk followed by open discussion",
+  "goals": ["Introduce and provide motivation for new JSON, CSS, and HTML module types."," Share status of the proposals and implementations.", "Discuss open design questions."],
+  "others": [],
+  "capacity": "medium",
+  "track": "core"
+}
