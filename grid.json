@@ -23,7 +23,8 @@
     "kashi": "json-ld",
     "kei": "pwg-audio",
     "sakura": "new-modules",
-    "yoh": "wpt"
+    "yoh": "wpt",
+    "bay": "aria-virtualcontent"
   },
   {
     "navis-c": "textcueapi",
