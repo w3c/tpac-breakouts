@@ -7,9 +7,10 @@
     "navis-c": "mdn",
     "bay": "jlreq",
     "boardroom": "user-activation",
-    "kei": "w3c-intro",
-    "hishi": "360video",
-    "yoh": "pronunciation"
+    "kashi": "w3c-intro",
+    "yoh": "pronunciation",
+    "hishi": "aha",
+    "kei": "telecom-authn"
   },
   {},
   {
@@ -52,7 +53,7 @@
     "boardroom": "wpack",
     "sumire": "workerinput",
     "yoh": "pub",
-    "kei": "telecom-authn",
+    "kei": "rdf-dir-literal",
     "kashi": "webrtc-ims"
   },
   {
@@ -62,11 +63,11 @@
     "navis-c": "edge-computing",
     "boardroom": "trusttokens",
     "sakura": "groupautomation",
-    "hishi": "aha",
     "bay": "webmonetization",
     "yoh": "undomanager",
     "kashi": "personalization",
     "sumire": "multiscreen",
-    "kei": "digital-transformation"
+    "kei": "digital-transformation",
+    "hishi": "360video"
   }
 ]
