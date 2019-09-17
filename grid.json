@@ -38,8 +38,9 @@
     "kashi": "voice",
     "navis-a": "xra11y",
     "yoh": "virtual-scroller",
-    "kei": "images",
-    "bay": "ldsec"
+    "bay": "ldsec",
+    "kei": "multiscreen"
+
   },
   {},
   {
@@ -57,6 +58,7 @@
     "kashi": "webrtc-ims"
   },
   {
+    "sumire": "images",
     "navis-a": "webgpu",
     "navis-b": "smartweb",
     "argos-df": "registries",
@@ -66,7 +68,6 @@
     "bay": "webmonetization",
     "yoh": "undomanager",
     "kashi": "personalization",
-    "sumire": "multiscreen",
     "kei": "digital-transformation",
     "hishi": "360video"
   }
