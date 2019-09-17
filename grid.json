@@ -35,12 +35,11 @@
     "boardroom": "webtransport",
     "sumire": "webstories",
     "hishi": "spec-infra",
-    "kashi": "voice",
     "navis-a": "xra11y",
     "yoh": "virtual-scroller",
     "bay": "ldsec",
-    "kei": "multiscreen"
-
+    "kei": "multiscreen",
+    "kashi": "webrtc-ims"
   },
   {},
   {
@@ -55,7 +54,7 @@
     "sumire": "workerinput",
     "yoh": "pub",
     "kei": "rdf-dir-literal",
-    "kashi": "webrtc-ims"
+    "kashi": "voice"
   },
   {
     "sumire": "images",
