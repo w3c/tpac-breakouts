@@ -39,7 +39,7 @@
     "yoh": "virtual-scroller",
     "bay": "ldsec",
     "kei": "multiscreen",
-    "kashi": "webrtc-ims"
+    "kashi": "voice"
   },
   {},
   {
@@ -54,7 +54,7 @@
     "sumire": "workerinput",
     "yoh": "pub",
     "kei": "rdf-dir-literal",
-    "kashi": "voice"
+    "kashi": "webrtc-ims"
   },
   {
     "sumire": "images",
