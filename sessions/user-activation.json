@@ -7,10 +7,12 @@
   },
   "summary": "We are proposing to replace the user activation model implied by the current HTML spec with a simple-to-implement model because the current model doesn't reflect the reality https://github.com/whatwg/html/issues/1903",
   "type": "Open discussion",
-  "goals": "rying to reach consensus on our proposed change to the spec (https://github.com/whatwg/html/pull/3851)",
+  "goals": "Trying to reach consensus on our proposed change to the spec (https://github.com/whatwg/html/pull/3851)",
   "others": ["ddenicol"],
   "capacity": "medium",
   "track": "core",
   "possibleSlots":[0, 2],
-  "remote": true
+  "remote": true,
+  "minutes": "https://www.w3.org/2019/09/18-user-activation-notes.pdf",
+  "report": "<p>The presentation covered three topics:</p><ul><li>The motivation for our proposal is current (broken) state of the Web.  The current spec, based on the idea of causality tracking, is neither complete nor practical.  Moreover, there is no interop among major browsers today.</li><li>Chromium’s recent switch (from causality tracking) to the simple model of User Activation v2 fixed many popular-yet-old bugs.</li><li>Three specific comments we received in the past were addressed:<ol><li>Scope of the spec proposal: this would change the core model, and fully define (for the first time) simple activation-gated APIs like file dialog and clipboard.  Spec-ing complex activation-gated APIs like popup and autoplay is orthogonal from this proposal because those API rely on many browser-specific details.</li><li>Testability: a few manual tests have been added recently.  Automated testing is not easy because user activation is not an unexposed feature.</li><li>Defining activation triggering events: we isolated this problem as a future step because we need to fix the core model first.</li></ol></li></ul>"
 }
