@@ -10,5 +10,6 @@
   "goals": "Determine interest level from implementers, discuss concerns.",
   "others": ["kleber"],
   "capacity": "medium",
-  "track": "security"
+  "track": "security",
+  "report": "Overall tenor: excitement all around.  Good fit for a bunch of applications, ready for more work, probably in WICG."
 }

@@ -9,5 +9,6 @@
   "type": "short talk followed by discussion",
   "goals": ["Ensure everyone is up to date on the latest proposed API, implementation status, use cases and interest from developers", "Determine what are the next steps, and concerns if any", "Discuss advanced API topics or use cases."] ,
   "capacity": "medium",
-  "track": "packaging"
+  "track": "packaging",
+  "report": "We went through a quick overview of the Portals proposal, API shape, and use cases. Attendees raised questions about a variety of topics, including security (X-Frame-Options, Content Security Policy, etc), resource consumption/incentives, accessibility, author wishes to maintain control after activation, and implementation details (such as use of OS processes)."
 }

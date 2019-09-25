@@ -9,5 +9,7 @@
   "type": "open discussion",
   "goals": "The primary goal is to have a non-technical discussion about DIDs and prepare W3C members with the messaging they need to make the case publicly for this new type of identifier.",
   "others": ["kenebert", "DrummondReed"],
-  "capacity": "medium"
+  "capacity": "medium",
+  "report": "The “Non-technical Discussion” on Decentralized identifiers and Self-Sovereign Identity breakout session resulted in a greater understanding in the need to identify the participants in baseline conversations about DIDs, examples of successful examples and metaphors, and a collection of tips to help guide initial conversations outside of the DID community. Verifiable Credentials were identified as a key part of the explanation that leads to DIDs and help describe the technology to individuals with a variety of technology backgrounds and fluency. The value and benefits of DIDs should be augmented depending on messaging needs in particular communication instances."
+
 }

@@ -8,5 +8,6 @@
   "summary": "Update on JSON-LD since the 1.0 recommendation, focusing on new features.",
   "type": "talk",
   "goals": "The goal is to give users of JSON-LD 1.0 an update on features in the forthcoming JSON-LD 1.1 release, and what the impact on publishing and processing documents may be.",
-  "capacity": "small"
+  "capacity": "small",
+  "report": "<p><a href='http://json-ld.org/presentations/JSON-LD-Update-TPAC-2019/'>slides</a></p><p>We showed the updates to JSON-LD since the 1.0 release in 2014 and described our transition to CR expected in a couple of weeks.</p><p>There was discussion about reactivating the JSON-LD CG to serve as an advocacy point, and to solicit input on a new JSON-LD timeline for subsequent changes.</p><p>One area noted was the non-resolution of text direction in both JSON-LD and RDF, which will be discussed in another session. If a solution is found without modifying the RDF data model, potentially the WG could adapt some syntactic sugar to extend the JSON-LD value object to represent text direction more natively.</p><p>So far, three implementations (Ruby, JavaScript and Python) are targeted to be updated to 1.1, and we’d like to see more. One implementation area of specific interest is C++, and developers are sought.</p>"
 }

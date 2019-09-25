@@ -11,5 +11,6 @@
   "possibleSlots": [0],
   "capacity": "big",
   "track": "privacy",
-  "remote": "Dial in: <a href='https://meet.google.com/tel/aoe-vzqz-stt'>Phone</a>; <a href='https://meet.google.com/aoe-vzqz-stt'>Computer</a>"
+  "remote": "Dial in: <a href='https://meet.google.com/tel/aoe-vzqz-stt'>Phone</a>; <a href='https://meet.google.com/aoe-vzqz-stt'>Computer</a>",
+  "report": "<p>We found broad consensus to build a target privacy threat model in PING, starting from <a href='https://jyasskin.github.io/privacy-threat-model/'>https://jyasskin.github.io/privacy-threat-model/</a>. We also got several concrete suggestions for things to ensure that document covers, which are recorded in the notes.</p><p><a href='https://youtu.be/PFfGhyhKk_Y'>Video recording</a></p>"
 }

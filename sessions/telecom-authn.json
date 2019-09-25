@@ -10,5 +10,6 @@
   "goals": "Introduce Telecom Authentication to the global web community, to help a better understanding of Telecom Authentication and how the Telecom Authentication is applied by telecom operators. From those teams who are interested in Telecom Authentication standardization, hope to share visions and experiences. Any advices is favourable. ",
   "others": [],
   "capacity": "small",
-  "track": "telco"
+  "track": "telco",
+  "report": "The host introduced an authentication method implemented by Mobile Network Operator, which utilizes network ability to recognize mobile phone numbers, and uses it as an authn factor to complete the authentication together with service provider. This authentication method could help app users faster login process (only one click). Participants raised concerns during the discussion, which include relationship with GSMA Mobile Connect, integration into the web authentication framework, application scenarios, and security concerns about privacy and SIM-swap attacks, etc."
 }

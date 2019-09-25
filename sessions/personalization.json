@@ -12,5 +12,6 @@
   "remote": true,
   "capacity": "small",
   "possibleSlots": [5,6],
-  "track": "accessibility"
+  "track": "accessibility",
+  "report": "Presented an overview of the prototyping data-symbol attribute for personalization of web content.  Showed a demo using a Chrome Browser Extension that could switch depending on the users personal preferences between using BLISS or ARASAAC symbols which would show up as images above the text they represent.  Also shown was how the personal preference could show only the critical sections of the authored page and not render those portions of the page below a certain threshold also set by the user's \"data-distraction\" level of which there are three choices (low/med/critical)."
 }

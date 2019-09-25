@@ -9,5 +9,6 @@
   "type": "Open discussion",
   "goals": "Determine interest level from implementers, discuss concerns.",
   "capacity": "medium",
-  "track": "privacy"
+  "track": "privacy",
+  "report": "Overall tenor: Deep skepticism.  If you want to support something like ads today, then FLoC and PIGIN do seem like the right ways to do it, but that goal is not widely held."
 }

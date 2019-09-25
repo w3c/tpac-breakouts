@@ -9,5 +9,6 @@
   "type": "talk and open discussion",
   "goals": "To advance the DataCue API design between media experts and browser developers, and discuss how to improve synchronisation of media and associated content on the web",
   "capacity": "medium",
-  "track": "media"
+  "track": "media",
+  "report": "<p>The group discussed how to expose timed events and timed metadata within media streams, e.g., ID3 tags or emsg events in CMAF. The discussion focused on whether the API should simply expose an ArrayBuffer, per the HTML5 specification, or expose structured data according to the scheme of the event. Next step is to continue the discussion in a session in the Media Working Group TPAC meeting.</p><P>The group also discussed the accuracy of firing of TextTrackCue events during media playback, when seeking, and when adjusting the timing of cues. The HTML spec does not specify a timing accuracy, and implementations vary. The conclusion was to report issues to improve particular implementations, and also add a note to the HTML specification on accuracy.</p><p><a href='https://docs.google.com/presentation/d/1p_2wdeGpZ0-gcUv6ogZesZoOueNhj2UofhkCq6e0mfQ/edit'>slides</a></p>"
 }

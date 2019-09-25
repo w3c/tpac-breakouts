@@ -9,5 +9,6 @@
   "type": "discussion",
   "goals": "Rationalize existing proposals to ensure we're on the same page for primitives that should be exposed to the Web.",
   "others": [],
-  "capacity": "small"
+  "capacity": "small",
+  "report": "<p>Discussed the Window Segments proposal and the foldables problem space. Attendees provided great feedback:</p><ul><li>It would be more useful to see the device targeted for these scenarios (help validate use cases)</li><li>CSS/declarative solutions should be explored in more depth, with an eye towards prior art (circular display)</li><li>Insight into how in-market devices work</li><li>Relatively clear that multi-display for Desktop is a separate problem, but what’s the right way to express this in an API surface?</li></ul><p>Next steps:</p><ul><li>Address feedback</li><li>Get a draft into WICG and solicit issues there</li></ul></p>"
 }
