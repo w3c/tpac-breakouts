@@ -17,5 +17,6 @@
   "goals": ["motivate the need for a network-based WebAuthn transport", "discuss how this might look as part of the specification", "discuss phishing resistance and proximity"],
   "others": [],
   "capacity": "medium",
-  "track": "security"
+  "track": "security",
+  "report": "We discussed the feasibility of a network transport for WebAuthn, and found that version 2 of Google's caBLE proposal also solves many of the same problems. We got clarity on our understanding of the properties provided by authenticator proximity, and decided that we would attempt to extend caBLE to support a network transport once a cryptographic binding has been established."
 }
