@@ -139,6 +139,14 @@ JSDOM.fromFile("./lib/template.html").then(dom => {
             dd.appendChild(minutesLink);
             sessionEl.querySelector("dl").appendChild(dt);
             sessionEl.querySelector("dl").appendChild(dd);
+            if (session.report) {
+              const reportDt = document.createElement("dt");
+              reportDt.textContent = "Summarized report";
+              const reportDd = document.createElement("dd");
+              reportDd.innerHTML = session.report;
+              sessionEl.querySelector("dl").appendChild(reportDt);
+              sessionEl.querySelector("dl").appendChild(reportDd);
+            }
           }
           slotEl.appendChild(sessionEl);
         } else {

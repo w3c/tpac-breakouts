@@ -18,7 +18,8 @@
      { "type": "array", "items": {"$ref": "#/definitions/proposer"}},
      { "$ref": "#/definitions/proposer"}
    ]},
-   "summary": {"type": "string"},
+    "summary": {"type": "string"},
+    "report": {"type": "string"},
    "goals": {"oneOf": [
      { "type": "array", "items": {"type": "string"} },
      { "type": "string" }
