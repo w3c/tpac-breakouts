@@ -10,5 +10,6 @@
   "goals": "Highlight new capabilities of wpt and wpt.fyi, gather feedback about top pain points for users.",
   "others": [],
   "capacity": "medium",
+  "minutes": "https://www.w3.org/2019/09/18-testing-minutes.html",
   "track": "tool"
 }
