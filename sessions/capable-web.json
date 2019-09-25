@@ -1,25 +1,25 @@
 {
-  "title": "For a More Capable Web—Project Fugu",
-  "proposer": [
-    {
-      "login": "tsteiner",
-      "name": "Thomas Steiner",
-      "email": "tomac@google.com"
-    },
-    {
-      "login": "akostiai",
-      "name": "Anssi Kostiainen",
-      "email": "anssi.kostiainen@intel.com"
-    },
-    {
-      "login": "jjansen3",
-      "name": "John Jansen",
-      "email": "john.jansen@microsoft.com"
-    }
-  ],
-  "summary": "To remain relevant with native/hybrid/mini apps, web apps, too, need access to a comparable set of APIs. In this session, we briefly touch upon the APIs being worked on by the cross-company Capabilities Project (aka. Project Fugu), and then open the floor for an open discussion on why we see the browser-accessible web in danger if we don’t move it forward now, despite all fully acknowledged challenges around privacy, security, and compatibility.",
-  "type": "open discussion",
-  "goals": "The session strives to explain our sense of urgency for keeping the web an attractive application platform given fierce competition. The main objective is building an understanding of the arguments of multiple sides: those who argue the web can’t compete if it’s not equally capable, and those who argue this is not an option for reasons including, but not limited to, privacy or security.",
-  "capacity": "medium",
-  "track": "core"
+	"title": "For a More Capable Web—Project Fugu",
+	"proposer": [{
+			"login": "tsteiner",
+			"name": "Thomas Steiner",
+			"email": "tomac@google.com"
+		},
+		{
+			"login": "akostiai",
+			"name": "Anssi Kostiainen",
+			"email": "anssi.kostiainen@intel.com"
+		},
+		{
+			"login": "jjansen3",
+			"name": "John Jansen",
+			"email": "john.jansen@microsoft.com"
+		}
+	],
+	"summary": "To remain relevant with native/hybrid/mini apps, web apps, too, need access to a comparable set of APIs. In this session, we briefly touch upon the APIs being worked on by the cross-company Capabilities Project (aka. Project Fugu), and then open the floor for an open discussion on why we see the browser-accessible web in danger if we don’t move it forward now, despite all fully acknowledged challenges around privacy, security, and compatibility.",
+	"type": "open discussion",
+	"goals": "The session strives to explain our sense of urgency for keeping the web an attractive application platform given fierce competition. The main objective is building an understanding of the arguments of multiple sides: those who argue the web can’t compete if it’s not equally capable, and those who argue this is not an option for reasons including, but not limited to, privacy or security.",
+	"capacity": "medium",
+	"track": "core",
+	"report": "<p>Together with <a href=\"https://twitter.com/anssik\">Anssi Kostiainen</a> from Intel, <a href=\"https://twitter.com/thejohnjansen\">John Jansen</a> from Microsoft, and <a href=\"https://twitter.com/tomayac\">Thomas Steiner</a> from Google, we jointly organized a breakout session <a href=\"https://w3c.github.io/tpac-breakouts/sessions.html#capable-web\">for a more capable web</a> under the umbrella of Project Fugu 🐡. You can see our <a href=\"https://docs.google.com/presentation/d/e/2PACX-1vSBOBqz_UiNBce-HxpS8EC2lVSeAbzn2lrreesUhhnNaF-3zSieO8A5RaqVc-YhbuuZN0MFKOBsKf7g/embed?start=false&amp;loop=false&amp;delayms=3000\">slides</a> online. In the session, we argued that to remain relevant with native, hybrid, or mini apps, web apps, too, need access to a comparable set of APIs. We briefly touched upon the APIs being worked on by the cross-company project partners, and then opened the floor for an open discussion on why we see the browser-accessible web in danger if we don't move it forward now, despite all fully acknowledged challenges around privacy, security, and compatibility. You can follow the discussion in the excellent(!) <a href=\"https://www.w3.org/2019/09/18-capable-web-minutes.html\">session minutes</a>, courtesy of Anssi.</p>"
 }
