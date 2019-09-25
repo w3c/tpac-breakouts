@@ -19,6 +19,7 @@
      { "$ref": "#/definitions/proposer"}
    ]},
     "summary": {"type": "string"},
+    "minutes": {"type": "string", "format": "uri"},
     "report": {"type": "string"},
    "goals": {"oneOf": [
      { "type": "array", "items": {"type": "string"} },

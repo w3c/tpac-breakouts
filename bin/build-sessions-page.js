@@ -134,8 +134,13 @@ JSDOM.fromFile("./lib/template.html").then(dom => {
             dt.textContent = "Minutes";
             const dd = document.createElement("dd");
             const minutesLink = document.createElement("a");
-            minutesLink.href = "https://www.w3.org/2019/09/18-" + sessionId + "-minutes.html";
-            minutesLink.textContent = "Notes taken on #" + sessionId;
+            if (!session.minutes) {
+              minutesLink.href = "https://www.w3.org/2019/09/18-" + sessionId + "-minutes.html";
+              minutesLink.textContent = "Notes taken on #" + sessionId;
+            } else {
+              minutesLink.href = session.minutes;
+              minutesLink.textContent = "Notes";
+            }
             dd.appendChild(minutesLink);
             sessionEl.querySelector("dl").appendChild(dt);
             sessionEl.querySelector("dl").appendChild(dd);
