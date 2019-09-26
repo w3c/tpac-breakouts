@@ -10,5 +10,6 @@
   "goals": "Introduce a proposal for the UndoManager API, which allows web applications to modify and inspect the platform’s undo stack. This has implications for all types of web apps, with particular relevance to editing and productivity apps. We hope to establish context for the UndoManager API, demo a prototype of the API, and gain feedback for our proposal.",
   "others": ["megangardner"],
   "capacity": "small",
-  "track": "core"
+  "track": "core",
+  "report": "We agreed that the ability to add, inspect, and modify the platform undo stack is of high value to web apps — particularly rich text editors. We also discussed the proposed API and agree in its general shape, though some concerns were raised regarding (1) localization of the undo label, (2) adoption of this API by rich text editors that only know (at any given time) whether there is an immediate undoable or redoable action, and (3) whether these APIs may be used by malicious web content to exploit pathological behaviors in the platform undo stack."
 }
