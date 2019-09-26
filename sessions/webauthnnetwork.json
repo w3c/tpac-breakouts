@@ -18,5 +18,5 @@
   "others": [],
   "capacity": "medium",
   "track": "security",
-  "report": "We discussed the feasibility of a network transport for WebAuthn, and found that version 2 of Google's caBLE proposal also solves many of the same problems. We got clarity on our understanding of the properties provided by authenticator proximity, and decided that we would attempt to extend caBLE to support a network transport once a cryptographic binding has been established."
+  "report": "<p>We discussed the feasibility of a network transport for WebAuthn, and found that version 2 of Google's caBLE proposal also solves many of the same problems. We got clarity on our understanding of the properties provided by authenticator proximity, and decided that we would attempt to extend caBLE to support a network transport once a cryptographic binding has been established.</p>"
 }
