@@ -10,5 +10,6 @@
   "goals": ["Ensure everyone knows the state of the IETF discussion and the Chromium implementation", "Recruit collaborators", "Discover concerns and needed changes", "Get advice about what route through the W3C/WHATWG processes to follow"],
   "others": ["kyasuda2"],
   "capacity": "medium",
-  "track": "packaging"
+  "track": "packaging",
+  "report": "<p>Jeffrey gave an overview of the Web Packaging proposals, implementation, and deployment, and answered questions from the attendees.</p><p><a href='https://docs.google.com/presentation/d/1NZeUbnZqtoOfPMG-V8K5ntj_9snhwfFekLVQoEk9MsM/edit'>Slides</a></p>"
 }
