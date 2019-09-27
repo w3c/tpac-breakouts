@@ -8,8 +8,9 @@
   "summary": "We're developing a standard for micropayments in the browser. Join us to discuss the proposed standard, raise questions, concerns, or requirements and bring us closer to getting Web Monetization on the standards track.",
   "type": "Talk & discussion",
   "goals": "",
-  "others": ["tobie"],
+  "others": ["tobie", "brucel"],
   "sponsor": "Coil",
   "span": 2,
-  "capacity": "medium"
+  "capacity": "medium",
+  "report": "<p>Bruce Lawson presented slides describing the problem statement and motivations for creating a standard.</p><p>Following this, Adrian Hope-Bailie walked through some slides describing the proposed API and the architectural decisions that are still being discussed ito how the feature should be deployed to browsers.</p><p>This was followed by discussion between the proposers and audience. All of the discussion has been captured as <a href=\"https://github.com/adrianhopebailie/web-monetization/issues\">issues</a> against the explainer.</p>"
 }
