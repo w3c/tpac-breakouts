@@ -1,9 +1,11 @@
 {
   "title": "FedCM: where we are and what comes next",
+  "calendar": "https://www.w3.org/events/meetings/0644a559-8a4a-480c-bf04-12f042e527cb",
   "proposer": {
     "login": "",
     "name": "Sam Goto",
-    "email": "goto@google.com"
+    "email": "goto@google.com",
+    "id": 50308
   },
   "summary": "a report on where things are (production experience, browser interoperability, ecosystem feedback), some immediate next steps (the timing attack problem, multiple IDP account choosers) and some paths we could take (e.g. same party federation?) ",
   "type": "presentation followed by open discussion",

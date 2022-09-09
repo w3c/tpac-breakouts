@@ -1,9 +1,11 @@
 {
   "title": "Page transitions in the browser (Shared Element Transitions)",
+  "calendar": "https://www.w3.org/events/meetings/68a3ec0e-715b-4415-ac23-0d41fa569ea8",
   "proposer": {
     "login": "",
     "name": "Jake Archibald",
-    "email": "jakearchibald@google.com"
+    "email": "jakearchibald@google.com",
+    "id": 76394 
   },
   "summary": "Chromium folks have been working within the CSSWG to give developers an easy way to create page transitions. We'd like to show how it works, and get feedback from implementers, spec folks, and other interested parties.",
   "type": "Open discussion, but can be a talk if the audience would rather.",

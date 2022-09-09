@@ -1,15 +1,18 @@
 {
   "title": "Network State/Cache Partitioning Designs",
+  "calendar": "https://www.w3.org/events/meetings/7da06094-981c-4837-a967-666f3704e95f",
   "proposer": [
     {
       "login": "",
       "name": "Mike Taylor,",
-      "email": ""
+      "email": "",
+      "id": 90704 
     },
     {
       "login": "",
       "name": "Artur Janc",
-      "email": ""
+      "email": "",
+      "id": 88199 	
     }
   ],
   "summary": "Network State/Cache Partitioning Designs",

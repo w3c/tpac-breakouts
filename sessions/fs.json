@@ -1,13 +1,15 @@
 {
   "title": "File System",
+  "calendar": "https://www.w3.org/events/meetings/1873ebb8-1207-428c-8f34-f2f4f5b6693f",
   "proposer": {
     "login": "asully",
     "name": "Austin Sullivan",
-    "email": "asully@google.com"
+    "email": "asully@google.com",
+    "id": 126126 
   },
-  "summary": "Discussion of current and upcoming work on the <a href='https://github.com/whatwg/fs'>File System Standard</a>, including the high-performance Access Handles API.",
+  "summary": "Discussion of current and upcoming work on the [File System Standard](https://github.com/whatwg/fs), including the high-performance Access Handles API.",
   "type": "Open discussion",
-  "goals": ["<a href='https://github.com/whatwg/fs/issues/45'>https://github.com/whatwg/fs/issues/45</a>"] ,
+  "goals": ["https://github.com/whatwg/fs/issues/45"] ,
   "capacity": "medium",
   "track": "core"
 }

@@ -1,13 +1,17 @@
 {
   "title": "WebViews - Usages & Challenges",
+  "calendar": "https://www.w3.org/events/meetings/93376b45-77db-4261-8183-bc4721ae10b2",
   "proposer": [
     {
       "login": "",
       "name": "Rayan Kanso",
-      "email": "rayankans@google.com"
+      "email": "rayankans@google.com",
+      "id": 115452 
     },
     {
-      "email": "anqing.aq@alibaba-inc.com"
+      "name": "An Qing",
+      "email": "anqing.aq@alibaba-inc.com",
+      "id": 76701 
     }
   ],
   "summary": "Present the findings of the WebView CG & have an open discussion on further use-cases and challenges",

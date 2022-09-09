@@ -1,15 +1,18 @@
 {
   "title": "Fenced Frames API",
+  "calendar": "https://www.w3.org/events/meetings/c587cd33-78b4-4b3e-ba76-42cd7e53ec54",
   "proposer": [
     {
     "login": "",
     "name": "Dominic Farolino",
-    "email": "dom@chromium.org"
+      "email": "dom@chromium.org",
+      "id": 102763
     },
     {
     "login": "",
     "name": "Shivani Sharma ",
-    "email": ""
+      "email": "",
+      "id": 122863
     }
   ],
   "summary": "A new web API for framing web content in a manner that's isolated from its embedder",

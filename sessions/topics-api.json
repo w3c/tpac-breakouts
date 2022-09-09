@@ -1,8 +1,10 @@
 {
   "title": "Topics API",
+  "calendar": "https://www.w3.org/events/meetings/dfc0564d-e1ba-43f2-b15f-fe02fd5b3085",
   "proposer": {
     "name": "Josh Karlin",
-    "email": "jkarlin@google.com"
+    "email": "jkarlin@google.com",
+    "id": 75713 
   },
   "summary": "Brief overview of Interest Based Advertising use case and the proposed Topics API as a solution. Informational. Most of the discussion focused on Q/A and driving thorny issues forward. ",
   "type": "Short presentation followed by open discussion.",

@@ -1,9 +1,11 @@
 {
   "title": "Web-based Digital Twins for Smart Cities",
+  "calendar": "https://www.w3.org/events/meetings/f243730c-747a-4966-9b43-b18a6e53c44f",
   "proposer": {
     "login": "ashimura",
     "name": "Kazuyuki Ashimura",
-    "email": "ashimura@w3.org"
+    "email": "ashimura@w3.org",
+    "id": 37442 
   },
   "summary": "Discussion on Digital-twin services for Smart Cities specifilally about (1) what is already done by whom (SDOs, vendors, governments, etc.) in which area, (2) what is still missing for expected Web-based Smart Cities, and (3) who and how to lead the discussion to resolve the gaps.",
   "type": "talk + open discussion",

@@ -1,11 +1,13 @@
 {
   "title": "Multicast",
+  "calendar": "https://www.w3.org/events/meetings/527d52eb-f8df-4875-844b-09a27a67d772",
   "proposer": {
     "login": "",
     "name": "Jake Holland",
-    "email": "jholland@akamai.com"
+    "email": "jholland@akamai.com",
+    "id": 131094
   },
-  "summary": "Update on the Multicast Community Group activities: brief review of motivation and purpose, an overview of <a href='https://grumpyoldtroll.github.io/draft-jholland-quic-multicast/draft-jholland-quic-multicast.html'>draft-jholland-quic-multicast</a> and status on the <a href='https://github.com/MaxF12/aioquic'>aioquic</a> implementation, and discussion of the path to browser adoption.",
+  "summary": "Update on the Multicast Community Group activities: brief review of motivation and purpose, an overview of [draft-jholland-quic-multicast](https://grumpyoldtroll.github.io/draft-jholland-quic-multicast/draft-jholland-quic-multicast.html) and status on the [aioquic](https://github.com/MaxF12/aioquic) implementation, and discussion of the path to browser adoption.",
   "type": "Talk followed by open discussion.",
   "goals": ["give a status update, gather feedback"] ,
   "capacity": "medium",

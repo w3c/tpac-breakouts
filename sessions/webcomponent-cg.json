@@ -1,20 +1,24 @@
 {
   "title": "Web Components Community Group API and Specs Report 2022",
+  "calendar": "https://www.w3.org/events/meetings/2f1bb21d-1d51-4528-9729-9da2bc611176",
   "proposer": [
     {
       "login": "",
       "name": "Westbrook Johnson",
-      "email": ""
+      "email": "",
+      "id": 127922 
     },
     {
       "login": "",
       "name": "Owen Buckley",
-      "email": ""
+      "email": "",
+      "id":  85952 
     },
     {
       "login": "",
       "name": "Rob Eisenberg",
-      "email": ""
+      "email": "",
+      "id": 68101 
     }
   ],
   "summary": "The Web Components CG will facilitate a discussion with implementers and community members about filling browser gaps in agreed upon features and moving forward with the next wave of top priority features.",

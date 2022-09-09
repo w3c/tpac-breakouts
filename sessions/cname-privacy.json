@@ -1,15 +1,18 @@
 {
   "title": "CNAMEs as a privacy tool for the web",
+  "calendar": "https://www.w3.org/events/meetings/d25ef248-1af8-4277-a601-d519f986b8fd",
   "proposer": [
     {
     "login": "",
     "name": "Johann Hofmann",
-    "email": "johannhof@chromium.org"
+      "email": "johannhof@chromium.org",
+      "id": 120436
     },
     {
     "login": "",
     "name": "Greg Whitworth",
-    "email": ""
+      "email": "",
+      "id": 69511 
     }
   ],
   "summary": " CNAME records have a reputation as a tool to circumvent resource-blocking and specific privacy measures. However, if used properly, they can help websites integrate third-party services without requiring third-party cookies, providing a great privacy benefit. We want to discuss how browsers could support privacy-preserving usage of CNAMEs while preventing potential abuse.",

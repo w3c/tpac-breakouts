@@ -1,35 +1,43 @@
 {
   "title": "W3C Member Support",
+  "calendar": "https://www.w3.org/events/meetings/75e41010-dfc6-4509-94f3-8df6ecd71b5e",
   "proposer": [
     {
       "login": "naomi",
       "name": "Naomi Yoshizawa",
-      "email": "naomi@w3.org"
+      "email": "naomi@w3.org",
+      "id": 45063
     },
     {
       "login": "",
       "name": "Giorgio Mazzucchelli",
-      "email": ""
+      "email": "",
+      "id": 97189 
     },
     {
       "login": "",
       "name": "Amanda Mace",
-      "email": ""
+      "email": "",
+      "id": 97690 
     },
     {
       "login": "",
       "name": "Rachel Yager",
-      "email": ""
+      "email": "",
+      "id": 106854 
     },
     {
       "login": "",
       "name": "Wonsuk Lee",
-      "email": ""
+      "email": "",
+      "id": 34457 
     },
     {
       "login": "",
       "name": "Xiaoqian Wu",
-      "email": ""
+      "email": "",
+      "id": 34457 
+      
     }
   ],
   "summary": "Introducing W3C member support activities to date and brainstorm what type of member support will be required at the new W3C to hear members' voices.",

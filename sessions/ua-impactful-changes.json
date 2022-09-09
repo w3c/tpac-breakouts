@@ -1,10 +1,12 @@
 {
   "title": "Breaking the web responsibly",
+  "calendar": "https://www.w3.org/events/meetings/212ac825-4b7a-42db-a903-96e452d8ed93",
   "proposer": [
     {
       "login": "",
       "name": "Greg Whitworth",
-      "email": "gwhitworth@salesforce.com"
+      "email": "gwhitworth@salesforce.com",
+      "id": 69511
     }
   ],
   "summary": "Go over how User Agent breaking changes can have adverse effects on users due to the time needed for sites to adjust to the changes.",

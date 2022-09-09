@@ -1,14 +1,16 @@
 {
   "title": "Device APIs (Bluetooth, HID, Serial, USB)",
+  "calendar": "https://www.w3.org/events/meetings/61d3cce7-63df-49cc-bd7d-e1dba886dd59",
   "proposer": {
     "login": "",
     "name": "Vincent Scheib",
-    "email": "scheib@google.com"
+    "email": "scheib@google.com",
+    "id": 49724 
   },
-  "summary": "Low level <a href='https://web.dev/devices/'>device APIs</a> in incubation address a range of needs in education, industrial, small business, and enterprise. Many peripherals people expect to work with computers have become available to web applications. Chrome, Edge, and Samsung browsers have enabled Bluetooth, HID, Serial, and USB. We will discuss the <a href='https://developer.chrome.com/blog/fugu-showcase/?api=webbluetooth'>adoption</a> & <a href='https://twitter.com/Vincent_Scheib/timelines/1207046778916237312'>developer interest</a> to date, answer questions, and discuss opportunities for the web to serve more needs.",
+  "summary": "Low level [device APIs](https://web.dev/devices/) in incubation address a range of needs in education, industrial, small business, and enterprise. Many peripherals people expect to work with computers have become available to web applications. Chrome, Edge, and Samsung browsers have enabled Bluetooth, HID, Serial, and USB. We will discuss the [adoption](https://developer.chrome.com/blog/fugu-showcase/?api=webbluetooth) & [developer interest](https://twitter.com/Vincent_Scheib/timelines/1207046778916237312) to date, answer questions, and discuss opportunities for the web to serve more needs.",
   "type": "Presentation and discussion.",
   "goals": ["Build awareness, share what has been learned, answer questions. Solicit working group interest."] ,
-  "capacity": "",
+  "capacity": "medium",
   "track": "apis",
   "possibleSlots": [0]
 }

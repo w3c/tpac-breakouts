@@ -1,18 +1,19 @@
 {
   "title": "Documenting the Web platform: Open Web Docs and MDN",
+  "calendar": "https://www.w3.org/events/meetings/1651724a-9414-42f0-b787-08b3e93cc57c",
   "proposer": [
-    {
-      "login": "",
-      "name": "Will Bamberg",
-      "email": ""
-    },
     {
       "login": "dom",
       "name": "Dominique Hazael-Massieux",
-      "email": "dom@w3.org"
+      "email": "dom@w3.org",
+      "id": 16289
+    },
+    {
+      "name": "Will Bamberg",
+      "email": "will@openwebdocs.org"
     }
   ],
-  "summary": "What <a href='http://openwebdocs.org/'>Open Web Docs</a> is and how we document the Web on <a href='https://developer.mozilla.org/en-US/docs/'>MDN</a>.",
+  "summary": "What [Open Web Docs](https://openwebdocs.org/) is and how we document the Web on [MDN](https://developer.mozilla.org/en-US/docs/).",
   "type": "talk and open discussion",
   "goals": ["Learn about what Open Web Docs is, what we do, how you can help us document the web platform, and how we can help you get your work documented on MDN"] ,
   "capacity": "medium",

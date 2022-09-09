@@ -1,30 +1,35 @@
 {
   "title": "Accessibility at the Edge",
+  "calendar": "https://www.w3.org/events/meetings/db1d22ce-6ee4-46e8-a81b-b88f1cb54b37",
   "proposer": [
     {
     "login": "",
     "name": "Janina Sajka",
-    "email": "janina@rednote.net"
+      "email": "janina@rednote.net",
+      "id": 33688
     },
     {
     "login": "",
     "name": "Lionel Wolberger",
-    "email": ""
+      "email": "",
+      "id": 106386
     },
     {
     "login": "",
     "name": "Manu Sporny",
-    "email": ""
+      "email": "",
+      "id": 41758
     },
     {
     "login": "",
     "name": "Ken Nakata",
-    "email": ""
+    "id": 3607
     },
     {
     "login": "",
     "name": "Alisa Smith",
-    "email": ""
+      "email": "",
+      "id": 113416 
     }
   ],
   "summary": "A fearless overview of current and prospective edge technologies application to enhance accessibility (including those highly controversial overlays)",

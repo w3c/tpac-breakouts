@@ -1,9 +1,11 @@
 {
   "title": "U.S. Digital Accessibility Apprenticeship Program",
+  "calendar": "https://www.w3.org/events/meetings/b78a4b0d-d663-44a8-af9b-222a78010e6a",
   "proposer": {
     "login": "",
     "name": "David Fazio",
-    "email": "dfazio@helixopp.com"
+    "email": "dfazio@helixopp.com",
+    "id": 113247 
   },
   "summary": "Presentation & tutorial on the ne Digital Accessibility Apprenticeship Program, funded, and governed by the U.S. Department of Labor. ",
   "type": "Presentation, Tutorial, and Open Discussion ",

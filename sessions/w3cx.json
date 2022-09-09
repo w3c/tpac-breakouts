@@ -1,5 +1,6 @@
 {
   "title": "W3Cx and edX: Embracing Digital Partnership to Serve Learners Around the World",
+  "calendar": "https://www.w3.org/events/meetings/eae88e69-2f91-43f9-a698-e1f5040cf78e",
   "proposer": [
     {
       "login": "",
@@ -9,12 +10,14 @@
     {
       "login": "mcf",
       "name": "Marie-Claire Forgue",
-      "email": "mcf@w3.org"
+      "email": "mcf@w3.org",
+      "id": 22978 
     },
     {
       "login": "abird",
       "name": "Alan Bird",
-      "email": "abird@w3.org"
+      "email": "abird@w3.org",
+      "id":  46019 
     }
   ],
   "summary": "W3Cx is W3C's partnership with edX since 2015. This is where we offer MOOCs on core Web technologies. W3Cx’s catalog is composed of 7 MOOCs: in addition to the Front-End Web Developer program (5 courses on HTML5, CSS and JS), W3C produced “Introduction to Web Accessibility” (available until 31 December 2022) and “Introduction to Web Authentication” (new session to be launched on 8 Nov. 2022, in partnership with Yubico). edX/2U offer a leading global online learning platform. To date, we serve over 44 million learners with access to world-class education in partnership with more than 230 colleges, universities, and corporations. Our people and technology are powering more than 3,600 digital education offerings—from free courses to full degrees—and helping unlock human potential.",

@@ -1,23 +1,28 @@
 {
   "title": "Open UI update on style-able & extensible HTML controls/components",
+  "calendar": "https://www.w3.org/events/meetings/2190eee8-b2fa-4652-be78-b2cd2e74a9b8",
   "proposer": [
     {
       "login": "",
       "name": "Greg Whitworth",
-    "email": "gwhitworth@salesforce.com"
+      "email": "gwhitworth@salesforce.com",
+      "id": 69511 
     },
     {
       "login": "",
-      "name": "Mason Freed"
+      "name": "Mason Freed",
+      "id": 112990 
     },
     {
       "login": "",
-      "name": "Brian Kardell"
+      "name": "Brian Kardell",
+      "id": 50653 
 
     },
     {
       "login": "",
-      "name": "Daniel Clark"
+      "name": "Daniel Clark",
+      "id": 113024 
     }
   ],
   "summary": "One of the largest developer pain points is styling/modifying the content of the controls/components that ship natively with the user-agent. Open UI will provide an update on the progress on new elements and primitives to improve this.",

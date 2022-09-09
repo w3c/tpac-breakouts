@@ -1,20 +1,23 @@
 {
   "title": "W3C Accessibility Maturity Model",
+  "calendar": "https://www.w3.org/events/meetings/4a5a5bcb-45c2-4ba5-b5e0-7b3d3ceb1fc9",
   "proposer": [
     {
       "login": "helixopp",
       "name": "David Fazio",
-      "email": "dfazio@helixopp.com"
+      "email": "dfazio@helixopp.com",
+      "id": 113247
     },
     {
       "login": "",
       "name": "Janina Sajka",
-      "email": ""
+      "email": "",
+      "id": 33688
     },
     {
       "login": "",
       "name": "Sheri Byrne-Haber",
-      "email": ""
+      "id": 123872
     }
   ],
   "summary": "Presentation of the W3C Accessibility Maturity Model First Public Working Draft. ",

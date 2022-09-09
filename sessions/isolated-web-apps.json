@@ -1,13 +1,17 @@
 {
   "title": "Isolated Web Apps",
+  "calendar": "https://www.w3.org/events/meetings/66edb1cf-2e01-47f3-af05-bc9d69c43ef3",
   "proposer": [
     {
       "login": "",
       "name": "Reilly Grant",
-      "email": "reillyg@google.com"
+      "email": "reillyg@google.com",
+      "id": 83788 
+      
     },
     {
-      "name": "Penny McLachlan"
+      "name": "Penny McLachlan",
+      "id": 127123 
     }
   ],
   "summary": "Some developers need stronger security guarantees than can be provided by HTTPS and platforms like Electron show that building apps with HTML, CSS and JavaScript but packaging them like native apps is a popular pattern. Are there opportunities for standardization? ",

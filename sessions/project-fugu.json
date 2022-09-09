@@ -1,14 +1,17 @@
 {
   "title": "Project Fugu 🐡: What we have enabled",
+  "calendar": "https://www.w3.org/events/meetings/3b43f7a6-caf4-4e07-a8e6-564741465618",
   "proposer": [
     {
       "login": "tsteiner",
       "name": "Thomas Steiner",
-      "email": "tomac@google.com"
+      "email": "tomac@google.com",
+      "id": 44965 	
     },
     {
       "name": "Ben Morss",
-      "login": "benmorss"
+      "login": "benmorss",
+      "id": 133495
     }
   ],
   "summary": "A reflection of the apps that Project Fugu APIs have enabled, including a brief exploration of the present, the future of some of the enabling APIs, and our vision and dreams for the future.",

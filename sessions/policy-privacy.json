@@ -1,19 +1,23 @@
 {
   "title": "Policy Protected Data Access for Untrusted Components",
+  "calendar": "https://www.w3.org/events/meetings/ae6e737e-4e63-4490-9358-22cca8b1244f",
   "proposer": [
     {
       "login": "sarahheimlich",
       "name": "Sarah Heimlich",
-      "email": "sarahheimlich@google.com"
+      "email": "sarahheimlich@google.com",
+      "id": 139401 
     },
     {
       "name": "Maria Kleiner"
     },
     {
-      "name": "Ray Cromwell"
+      "name": "Ray Cromwell",
+      "id": 139158
     },
     {
-      "name": "Bernhard Seefeld"
+      "name": "Bernhard Seefeld",
+      "id": 134153 
     }
   ],
   "summary": "Discussion on a system where untrusted modular components can access private user data through policy protection and enforcement. Join us to play with prototypes and learn more!",

@@ -1,9 +1,11 @@
 {
   "title": "The Future of Cookies (in Web Standards)",
+  "calendar": "https://www.w3.org/events/meetings/3c22aa6a-5530-4bb4-887c-60f3db7be98a",
   "proposer": {
     "login": "johannh",
     "name": "Johann Hofmann",
-    "email": "johannhof@chromium.org"
+    "email": "johannhof@chromium.org",
+    "id": 120436
   },
   "summary": "Some big changes to how cookies work in browsers make us rethink how Fetch and HTML integrate with the cookies RFC and whether more cookie behavior could be defined in browser land. Join us to learn about and discuss the future of cookies in standards!",
   "type": "Short talk + open discussion",

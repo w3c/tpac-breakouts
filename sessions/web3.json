@@ -1,9 +1,11 @@
 {
   "title": "Where's the Web in Web3?",
+  "calendar": "https://www.w3.org/events/meetings/41a4acd9-7790-4743-9a2f-da9db7141766",
   "proposer": {
     "login": "",
     "name": "Erik Lagerway",
-    "email": ""
+    "email": "elagerway@gmail.com",
+    "id": 64753 
   },
   "summary": "TBD",
   "type": "panel",
