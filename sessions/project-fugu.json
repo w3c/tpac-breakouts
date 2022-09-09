@@ -1,0 +1,19 @@
+{
+  "title": "Project Fugu 🐡: What we have enabled",
+  "proposer": [
+    {
+      "login": "tsteiner",
+      "name": "Thomas Steiner",
+      "email": "tomac@google.com"
+    },
+    {
+      "name": "Ben Morss",
+      "login": "benmorss"
+    }
+  ],
+  "summary": "A reflection of the apps that Project Fugu APIs have enabled, including a brief exploration of the present, the future of some of the enabling APIs, and our vision and dreams for the future.",
+  "type": "talk, followed by open discussion.",
+  "goals": ["Reflect back and look forward."] ,
+  "capacity": "medium",
+  "track": "apis"
+}

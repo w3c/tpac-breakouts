@@ -1,0 +1,25 @@
+{
+  "title": "The upcoming navigation and session history rewrite",
+  "proposer": [
+    {
+      "login": "",
+      "name": "Domenic Denicola",
+      "email": "d@domenic.me"
+    },
+    {
+      "login": "",
+      "name": "Dominic Farolino",
+      "email": ""
+    },
+    {
+      "login": "",
+      "name": "Jake Archibald",
+      "email": ""
+    }
+  ],
+  "summary": "Foundational parts of the HTML Standard, regarding navigation and session history, <a href='https://github.com/whatwg/html/pull/6315'>are being rewritten</a>. Come find out why this is necessary, and what it means for your specs. If you've ever dealt with browsing contexts, iframes, etc., this might be relevant!",
+  "type": "brief talk with slides, followed by open discussion.",
+  "goals": ["Make people familiar with these upcoming changes, and disseminate knowledge about these difficult areas."] ,
+  "capacity": "medium",
+  "track": "core"
+}

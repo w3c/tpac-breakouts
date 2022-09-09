@@ -1,0 +1,21 @@
+{
+  "title": "Same Party Federation (SSO)",
+  "proposer": [
+    {
+    "login": "",
+    "name": "Sam Goto",
+    "email": "goto@google.com"
+    },
+    {
+    "login": "",
+    "name": "Johann Hofmann",
+    "email": ""
+    }
+  ],
+  "summary": "Short and long term, how should login to X with (an associated) Y work? e.g. login to instagram.com with facebook.com, audible.com with amazon.com, youtube.com with google.com and xbox.com/office.com with microsoft.com. Explicitly out of scope of the discussion: ccTLDs X/Y (e.g. login to example.ca with example.co.uk) and other FPS subsets.",
+  "type": "open discussion",
+  "goals": ["gather UX considerations (prompts? auto-grant?), API considerations (e.g. Storage Access API?, First Party Sets?, FedCM?) and deployment considerations (e.g. what's the cardinality of these sets?)."] ,
+  "capacity": "medium",
+  "track": "identity",
+  "possibleSlots": [1]
+}

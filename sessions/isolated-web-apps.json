@@ -1,0 +1,18 @@
+{
+  "title": "Isolated Web Apps",
+  "proposer": [
+    {
+      "login": "",
+      "name": "Reilly Grant",
+      "email": "reillyg@google.com"
+    },
+    {
+      "name": "Penny McLachlan"
+    }
+  ],
+  "summary": "Some developers need stronger security guarantees than can be provided by HTTPS and platforms like Electron show that building apps with HTML, CSS and JavaScript but packaging them like native apps is a popular pattern. Are there opportunities for standardization? ",
+  "type": "Short presentation followed by open discussion",
+  "goals": ["Introduce the challenges being addressed by the Isolated Web Apps proposal and elicit a discussion about this and other potential solutions."] ,
+  "capacity": "medium",
+  "track": "packaging"
+}

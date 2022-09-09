@@ -1,0 +1,19 @@
+{
+  "title": "WebViews - Usages & Challenges",
+  "proposer": [
+    {
+      "login": "",
+      "name": "Rayan Kanso",
+      "email": "rayankans@google.com"
+    },
+    {
+      "email": "anqing.aq@alibaba-inc.com"
+    }
+  ],
+  "summary": "Present the findings of the WebView CG & have an open discussion on further use-cases and challenges",
+  "type": "brief presentation + open discussion",
+  "goals": ["Collect opinions & feedback on the report."] ,
+  "capacity": "medium",
+  "track": "packaging",
+  "possibleSlots": [0, 3]
+}

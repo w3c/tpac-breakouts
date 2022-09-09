@@ -1,0 +1,12 @@
+{
+  "title": "Topics API",
+  "proposer": {
+    "name": "Josh Karlin",
+    "email": "jkarlin@google.com"
+  },
+  "summary": "Brief overview of Interest Based Advertising use case and the proposed Topics API as a solution. Informational. Most of the discussion focused on Q/A and driving thorny issues forward. ",
+  "type": "Short presentation followed by open discussion.",
+  "goals": ["Learn about concerns from other browsers, look for places we can align."] ,
+  "capacity": "medium",
+  "track": "pat"
+}

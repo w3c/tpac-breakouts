@@ -1,0 +1,21 @@
+{
+  "title": "Trusted Internet",
+  "proposer": [
+    {
+      "login": "takuya",
+      "name": "Takuya Sakamoto",
+      "email": "takuya@fujitsu.com"
+    },
+    {
+      "login": "shigeya",
+      "name": "Shigeya Suzuki",
+      "email": "shigeya@wide.ad.jp"
+    }
+  ],
+  "summary": "Give short presentation of overview on Trusted Internet that makes arbitrary data verifiable on the Internet, discuss and gather feedback.",
+  "type": "Presentation and Open Discussion ",
+  "goals": ["To find partners to discuss it with."] ,
+  "capacity": "medium",
+  "track": "trust",
+  "possibleSlots": [3]
+}

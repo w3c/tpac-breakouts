@@ -1,0 +1,14 @@
+{
+  "title": "Maximising Back/Forward Cache hit-rate",
+  "proposer": {
+    "login": "",
+    "name": "Fergal Daly",
+    "email": "fergal@chromium.org"
+  },
+  "summary": "<a href='https://web.dev/bfcache'>BFCache</a> provides a big performance win for navigation but there are obstacles to pages successfully being cached - Cache-Control: no-store header, unload handlers, in-the-wild telemetry for cache misses. This covers proposals for solving these.",
+  "type": "presentation and open discussion",
+  "goals": ["Get feedback on proposals for <a href='https://github.com/w3c/webappsec-permissions-policy/issues/444'>unload</a>, <a href='https://github.com/fergald/explainer-bfcache-ccns/'>Cache-control: no-store</a> and <a href='https://github.com/rubberyuzu/bfcache-not-retored-reason/blob/main/NotRestoredReason.md'>not-restored reasons</a> and any other ideas to improve hit-rate."] ,
+  "capacity": "medium",
+  "track": "performance",
+  "possibleSlots": [3]
+}

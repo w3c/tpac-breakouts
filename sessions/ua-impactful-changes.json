@@ -1,0 +1,16 @@
+{
+  "title": "Breaking the web responsibly",
+  "proposer": [
+    {
+      "login": "",
+      "name": "Greg Whitworth",
+      "email": "gwhitworth@salesforce.com"
+    }
+  ],
+  "summary": "Go over how User Agent breaking changes can have adverse effects on users due to the time needed for sites to adjust to the changes.",
+  "type": "Talk + Open Discussion",
+  "goals": ["How can the community work together to responsibly rollout impactful changes"] ,
+  "capacity": "big",
+  "track": "core",
+  "possibleSlots": [1]
+}

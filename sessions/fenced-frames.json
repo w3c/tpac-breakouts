@@ -1,0 +1,20 @@
+{
+  "title": "Fenced Frames API",
+  "proposer": [
+    {
+    "login": "",
+    "name": "Dominic Farolino",
+    "email": "dom@chromium.org"
+    },
+    {
+    "login": "",
+    "name": "Shivani Sharma ",
+    "email": ""
+    }
+  ],
+  "summary": "A new web API for framing web content in a manner that's isolated from its embedder",
+  "type": "Brief talk with slides, followed by open discussion and opinion gathering",
+  "goals": ["Make the community aware of fenced frames/its API shape, discuss the difficulties in this area, and and collect feedback from other engineers & partners"] ,
+  "capacity": "medium",
+  "track": "core"
+}

@@ -1,0 +1,20 @@
+{
+  "title": "VTT-based Audio Descriptions for Media Accessibility",
+  "proposer": [
+    {
+      "login": "",
+      "name": "Eric Carlson",
+      "email": ""
+    },
+    {
+      "login": "jcraig",
+      "name": "James Craig",
+      "email": ""
+    }
+  ],
+  "summary": "Both Chromium and WebKit are prototyping support for text-based audio descriptions published as VTT. Come view a demo, discuss known issues, and share your feedback, opinions, and advice on this emerging technology.",
+  "type": "Brief preso and prototype demo, followed by open discussion.",
+  "goals": ["Seeking opinions on technology and implementation, including usability feedback and opinions from regular users of audio description."] ,
+  "capacity": "medium",
+  "track": "media"
+}

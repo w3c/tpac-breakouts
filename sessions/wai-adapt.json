@@ -1,0 +1,13 @@
+{
+  "title": "WAI-Adapt Candidate Recommendation of Content Module 1.0: Overview",
+  "proposer": {
+    "login": "lwolberg",
+    "name": "Lionel Wolberger",
+    "email": "lionel@userway.org"
+  },
+  "summary": "WAI-Adapt Content specification enables web content authors to support persons with various cognitive and learning disabilities, including users who need from more familiar icons (and other graphical symbols) in order to comprehend page content, require a simplified page in order to interact successfully, and/or communicate using symbolic languages generally known as Augmentative and Alternative Communications (AAC).",
+  "type": "short talk followed by discussion",
+  "goals": ["ocialize the specification as we are in Candidate Recommendation status"] ,
+  "capacity": "medium",
+  "track": "a11y"
+}

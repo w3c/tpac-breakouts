@@ -1,0 +1,20 @@
+{
+  "title": "Network State/Cache Partitioning Designs",
+  "proposer": [
+    {
+      "login": "",
+      "name": "Mike Taylor,",
+      "email": ""
+    },
+    {
+      "login": "",
+      "name": "Artur Janc",
+      "email": ""
+    }
+  ],
+  "summary": "Network State/Cache Partitioning Designs",
+  "type": "presenting some data from recent triple-key experiments for network state partitioning in Chrome followed by discussion",
+  "goals": ["discuss the security, privacy, and performance implications from partitioning the HTTP cache and shared network connections, and seek input from other implementer's experience"] ,
+  "capacity": "medium",
+  "track": "security"
+}

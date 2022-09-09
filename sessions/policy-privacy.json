@@ -1,0 +1,24 @@
+{
+  "title": "Policy Protected Data Access for Untrusted Components",
+  "proposer": [
+    {
+      "login": "sarahheimlich",
+      "name": "Sarah Heimlich",
+      "email": "sarahheimlich@google.com"
+    },
+    {
+      "name": "Maria Kleiner"
+    },
+    {
+      "name": "Ray Cromwell"
+    },
+    {
+      "name": "Bernhard Seefeld"
+    }
+  ],
+  "summary": "Discussion on a system where untrusted modular components can access private user data through policy protection and enforcement. Join us to play with prototypes and learn more!",
+  "type": "Open discussion",
+  "goals": ["Give an overview of the system through demos/prototypes and get feedback on our ideas for a policy-driven privacy framework."] ,
+  "capacity": "medium",
+  "track": "security"
+}

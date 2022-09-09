@@ -1,0 +1,13 @@
+{
+  "title": "Trusted Web",
+  "proposer": {
+    "login": "shigeya",
+    "name": "Shigeya Suzuki",
+    "email": "shigeya@wide.ad.jp"
+  },
+  "summary": "Introduce the ongoing activity of the Trusted Web Promotion Council (TWPC) in Japan, which tries to promote a concept of broadening “trust” in cyberspace by using privacy-enabled data security technology such as DID/VC. (TWPC is organized by the Secretariat of the Headquarters for Digital Market Competition, Cabinet Secretariat, Japan)",
+  "type": "",
+  "goals": ["Inform participants on the activity, get feedbacks, etc."] ,
+  "capacity": "medium",
+  "track": "trust"
+}

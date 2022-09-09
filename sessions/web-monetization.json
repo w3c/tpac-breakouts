@@ -1,0 +1,14 @@
+{
+  "title": "Web Monetization",
+  "proposer": {
+    "login": "laka",
+    "name": "Alex Lakatos",
+    "email": "alex@interledger.org"
+  },
+  "summary": "Very short presentation of the changes to the Web Monetization community specification draft and gather feedback.",
+  "type": "Short Presentation and Open Discussion ",
+  "goals": ["Consulting W3C Members & gathering feedback for the new spec."] ,
+  "capacity": "medium",
+  "track": "payment",
+  "possibleSlots": [0]
+}

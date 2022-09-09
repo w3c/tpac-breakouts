@@ -1,0 +1,13 @@
+{
+  "title": "Antifraud Discussion",
+  "proposer": {
+    "login": "",
+    "name": "Steven Valdez",
+    "email": "svaldez@google.com"
+  },
+  "summary": "The Antifraud CG will use this breakout for further discussion about ad and payments fraud on the Web that arises during the joint meeting of multiple groups on Tuesday; details to follow.",
+  "type": "open discussion",
+  "goals": ["Continue discussion from joint session"] ,
+  "capacity": "medium",
+  "track": "privacy"
+}

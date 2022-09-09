@@ -1,0 +1,14 @@
+{
+  "title": "Common Impact Data Standard",
+  "proposer": {
+    "login": "",
+    "name": "Alicia Richins",
+    "email": "alicia.richins@commonapproach.org"
+  },
+  "summary": "An introduction to the Common Impact Data Standard (CIDS), including an overview of the impact measurement space, the social purpose ecosystem and the challenges that CIDS is designed to solve. We will discuss the technical specification and the possibility of a dedicated Working Group.",
+  "type": "presentation + open discussion",
+  "goals": ["Gathering input and feedback on the standard;", "Drumming up interest in our proposed draft Working Group Charter;", "Identifying synergies with other W3C work/groups"] ,
+  "capacity": "small",
+  "track": "data",
+  "possibleSlots": [0, 1]
+}

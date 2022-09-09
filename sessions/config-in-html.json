@@ -1,0 +1,13 @@
+{
+  "title": "Document Configuration in HTML",
+  "proposer": {
+    "login": "",
+    "name": "Ian Clelland",
+    "email": "iclelland@google.com"
+  },
+  "summary": "A potentially crazy idea to move (some) document configuration out of HTTP header space into HTML, in a way that allows document authors to set configuration for their own documents, while (hopefully) avoiding most of the concerns around XSS / injection that existing mechanisms have.",
+  "type": "Talk followed by open discussion.",
+  "goals": ["Determine whether this idea is too crazy to succeed, or just crazy enough"] ,
+  "capacity": "medium",
+  "track": "security"
+}

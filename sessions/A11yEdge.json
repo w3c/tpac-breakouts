@@ -1,0 +1,36 @@
+{
+  "title": "Accessibility at the Edge",
+  "proposer": [
+    {
+    "login": "",
+    "name": "Janina Sajka",
+    "email": "janina@rednote.net"
+    },
+    {
+    "login": "",
+    "name": "Lionel Wolberger",
+    "email": ""
+    },
+    {
+    "login": "",
+    "name": "Manu Sporny",
+    "email": ""
+    },
+    {
+    "login": "",
+    "name": "Ken Nakata",
+    "email": ""
+    },
+    {
+    "login": "",
+    "name": "Alisa Smith",
+    "email": ""
+    }
+  ],
+  "summary": "A fearless overview of current and prospective edge technologies application to enhance accessibility (including those highly controversial overlays)",
+  "type": " Brief panel remarks followed by open discussion",
+  "goals": ["Kick-off event for the new A11yEdge Community Group; What we will address, what we hope to achieve" ] ,
+  "capacity": "medium",
+  "track": "a11y",
+  "possibleSlots": [0]
+}

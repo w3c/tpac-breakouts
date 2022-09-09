@@ -1,0 +1,13 @@
+{
+  "title": "Multicast",
+  "proposer": {
+    "login": "",
+    "name": "Jake Holland",
+    "email": "jholland@akamai.com"
+  },
+  "summary": "Update on the Multicast Community Group activities: brief review of motivation and purpose, an overview of <a href='https://grumpyoldtroll.github.io/draft-jholland-quic-multicast/draft-jholland-quic-multicast.html'>draft-jholland-quic-multicast</a> and status on the <a href='https://github.com/MaxF12/aioquic'>aioquic</a> implementation, and discussion of the path to browser adoption.",
+  "type": "Talk followed by open discussion.",
+  "goals": ["give a status update, gather feedback"] ,
+  "capacity": "medium",
+  "track": "media"
+}

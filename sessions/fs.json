@@ -1,0 +1,13 @@
+{
+  "title": "File System",
+  "proposer": {
+    "login": "asully",
+    "name": "Austin Sullivan",
+    "email": "asully@google.com"
+  },
+  "summary": "Discussion of current and upcoming work on the <a href='https://github.com/whatwg/fs'>File System Standard</a>, including the high-performance Access Handles API.",
+  "type": "Open discussion",
+  "goals": ["<a href='https://github.com/whatwg/fs/issues/45'>https://github.com/whatwg/fs/issues/45</a>"] ,
+  "capacity": "medium",
+  "track": "core"
+}

@@ -1,0 +1,14 @@
+{
+  "title": "Allowing public resources to opt-out of privacy protections",
+  "proposer": {
+    "login": "",
+    "name": "Noam Rosenthal",
+    "email": "nrosenthal@chromium.org"
+  },
+  "summary": "The abundance of privacy protection mechanisms (CORS, TAO & CORP to name a few) are great for protecting private user data, but make services jump through hoops when they want to serve resources that do not require privacy protection at all - public resources, such as free-for-all images on CDNs. This is an open discussion on how to make serving such content easier and more future proof.",
+  "type": "",
+  "goals": ["Get feedback on <a href='https://github.com/whatwg/html/issues/8143'>CORS, CORP, TAO and 'public static resource' metadata</a>.", "Reach a consensus on direction."] ,
+  "capacity": "small",
+  "track": "privacy",
+  "possibleSlots": [0, 1]
+}

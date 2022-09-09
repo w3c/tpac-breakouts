@@ -1,0 +1,13 @@
+{
+  "title": "Migrating Multi-Screen Window Placement Spec Content",
+  "proposer": {
+    "login": "msw",
+    "name": "Mike Wasserman",
+    "email": "msw@google.com"
+  },
+  "summary": "The <ahr ef='https://w3c.github.io/window-placement/'>Multi-Screen Window Placement</a> spec extends CSSOM-View, Fullscreen, and HTML definitions for multi-screen visual workspace support. We'll discuss alignment and migration of spec content to existing established specifications",
+  "type": "short presentation and open discussion",
+  "goals": ["Socialize <a href='https://w3c.github.io/window-placement'>multi-screen window placement</a> spec content, explore alignment with established specs, define followup work items and opportunities."] ,
+  "capacity": "medium",
+  "track": "core"
+}

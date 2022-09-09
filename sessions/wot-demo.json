@@ -1,0 +1,14 @@
+{
+  "title": "Web of Things (WoT) Status Update and Demos",
+  "proposer": {
+    "login": "mmccool",
+    "name": "Michael McCool",
+    "email": "michael.mccool@intel.com"
+  },
+  "summary": "Present the current status of the Web of Things in the WoT IG/WG and CGs, and showcase a number of application demonstrations.",
+  "type": "Sequence of short presentations (status, then 3-4 demos)",
+  "goals": [" Introduce people to WoT and showcase application experience."] ,
+  "capacity": "medium",
+  "track": "wot",
+  "possibleSlots": [2]
+}

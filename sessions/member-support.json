@@ -1,0 +1,41 @@
+{
+  "title": "W3C Member Support",
+  "proposer": [
+    {
+      "login": "naomi",
+      "name": "Naomi Yoshizawa",
+      "email": "naomi@w3.org"
+    },
+    {
+      "login": "",
+      "name": "Giorgio Mazzucchelli",
+      "email": ""
+    },
+    {
+      "login": "",
+      "name": "Amanda Mace",
+      "email": ""
+    },
+    {
+      "login": "",
+      "name": "Rachel Yager",
+      "email": ""
+    },
+    {
+      "login": "",
+      "name": "Wonsuk Lee",
+      "email": ""
+    },
+    {
+      "login": "",
+      "name": "Xiaoqian Wu",
+      "email": ""
+    }
+  ],
+  "summary": "Introducing W3C member support activities to date and brainstorm what type of member support will be required at the new W3C to hear members' voices.",
+  "type": "short talks followed by panel and open discussion",
+  "goals": ["Discover the form of member support that W3C, a membership organization, should achieve."] ,
+  "capacity": "medium",
+  "track": "w3c",
+  "access": "tpac"
+}

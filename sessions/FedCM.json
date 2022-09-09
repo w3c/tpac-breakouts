@@ -1,0 +1,15 @@
+{
+  "title": "FedCM: where we are and what comes next",
+  "proposer": {
+    "login": "",
+    "name": "Sam Goto",
+    "email": "goto@google.com"
+  },
+  "summary": "a report on where things are (production experience, browser interoperability, ecosystem feedback), some immediate next steps (the timing attack problem, multiple IDP account choosers) and some paths we could take (e.g. same party federation?) ",
+  "type": "presentation followed by open discussion",
+  "goals": ["raise awareness and discussions across community groups (Storage Access API, First Party Sets, Login Status API, mDL API, VCs, DIDs, etc)",
+	    "understand where browser vendors stand (e.g. mozilla started implementing, safari is generally supportive - what's next, edge/brave/opera?)",
+	    "how to help each other (e.g. any concerns? suggestions? recommendations? web platform tests?)"],
+  "capacity": "medium",
+  "track": "identity"
+}

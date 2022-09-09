@@ -1,0 +1,25 @@
+{
+  "title": "IP address privacy",
+  "proposer": [
+    {
+      "login": "",
+      "name": "Shubhie Panicker",
+      "email": "panicker@google.com"
+    },
+    {
+      "login": "",
+      "name": "",
+      "email": "dschinazi@google.com"
+    },
+    {
+      "login": "",
+      "name": "",
+      "email": "jongibson@google.com"
+    }
+  ],
+  "summary": "IP address is a highly identifiable signal used for cross-site identity joining i.e. tracking users. How can we mitigate this privacy risk? Discuss relevant technologies",
+  "type": "brief context setting, followed by open discussion",
+  "goals": ["gather feedback on IP Privacy and relevant tech ideas"] ,
+  "capacity": "medium",
+  "track": "privacy"
+}

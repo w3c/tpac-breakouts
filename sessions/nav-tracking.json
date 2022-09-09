@@ -1,0 +1,19 @@
+{
+  "title": "Navigational Tracking Mitigations",
+  "proposer": [
+    {
+      "login": "",
+      "name": "Ben Kelly",
+      "email": "wanderview@google.com"
+    },
+    {
+      "name": "Brian Lefler"
+    }
+  ],
+  "summary": "Brief overview of existing and proposed navigational tracking mitigations. Will include discussion of chrome's new work on <a href='https://github.com/wanderview/bounce-tracking-mitigations/blob/main/explainer.md'>bounce tracking mitigations</a>. Follow-on discussion will be collaborative to discuss use cases, what is working or not working, and ideas for the future.",
+  "type": "",
+  "goals": ["Capture the current state of navigational tracking and highlight future proposals. Solicit problems and use cases from site operators."] ,
+  "capacity": "medium",
+  "track": "privacy",
+  "possibleSlots": [1]
+}

@@ -1,85 +1,70 @@
 {
-  "argos-df": {
-    "floor": 1,
-    "capacity": 50,
+  "grand-d": {
     "size": "big",
-    "name": "Argos D-F",
-    "remote": true
+    "name": "Grand D"
   },
-  "navis-a": {
-    "floor": 1,
-    "capacity": 50,
+  "junior-a": {
+    "size": "medium",
+    "name": "Junior A"
+  },
+  "junior-b": {
+    "size": "medium",
+    "name": "Junior B"
+  },
+  "junior-cd": {
     "size": "big",
-    "name": "Navis-A",
-    "remote": true
+    "name": "Junior CD"
   },
-  "navis-b": {
-    "floor": 1,
-    "capacity": 70,
-    "size": "big",
-    "name": "Navis-B",
-    "remote": true
+  "parksville": {
+    "size": "medium",
+    "name": "Parksville"
   },
-  "navis-c": {
-    "floor": 1,
-    "capacity": 56,
-    "size": "big",
-    "name": "Navis-C",
-    "remote": true
-  },
-  "kashi": {
-    "floor": 1,
-    "capacity": 17,
+  "port-hardy": {
     "size": "small",
-    "name": "Kashi",
-    "remote": true
+    "name": "Port Hardy"
   },
-  "sumire": {
-    "floor": 3,
-    "capacity": 24,
+  "port-mcneill": {
     "size": "medium",
-    "name": "Sumire",
-    "remote": true
+    "name": "Port McNeill"
   },
-  "sakura": {
-    "floor": 3,
-    "capacity": 24,
+  "port-alberni": {
     "size": "medium",
-    "name": "Sakura",
-    "remote": true
+    "name": "Port Alberni"
   },
-  "hishi": {
-    "floor": 3,
-    "capacity": 22,
+  "galiano": {
     "size": "medium",
-    "name": "Hishi",
-    "remote": true
+    "name": "Galiano"
   },
-  "kei": {
-    "floor": 3,
-    "capacity": 24,
-    "size": "medium",
-    "name": "Kei"
+  "hudson": {
+    "size":  "small",
+    "name": "Hudson"
   },
-  "yoh": {
-    "floor": 3,
-    "capacity": 24,
-    "size": "medium",
-    "name": "Yoh",
-    "remote": true
+  "columbia": {
+    "size": "small",
+    "name": "Columbia"
   },
-  "boardroom": {
-    "floor": 3,
-    "capacity": 30,
-    "size": "medium",
-    "name": "Boardroom",
-    "remote": true
+  "granville": {
+    "size": "small",
+    "name": "Granville"
   },
-  "bay": {
-    "floor": 34,
-    "capacity": 30,
+  "burrard": {
+    "size": "small",
+    "name": "Burrard"
+  },
+  "vancouver": {
+    "size": "small",
+    "name": "Vancouver"
+  },
+  "beluga": {
+    "size": "small",
+    "name": "Beluga"
+  },
+  "finback": {
     "size": "medium",
-    "name": "Bay Penthouse",
-    "remote": true
+    "name": "Finback"
+  },
+  "orca": {
+    "size": "medium",
+    "name": "Orca"
   }
 }

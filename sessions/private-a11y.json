@@ -1,0 +1,13 @@
+{
+  "title": "Architecting for Privacy, Media Accessibility and Product development: the video element",
+  "proposer": {
+    "login": "nigelmegitt",
+    "name": "Nigel Megitt",
+    "email": "nigel.megitt@bbc.co.uk"
+  },
+  "summary": "Think about architectural models for allowing user accessibility choices while maintaining privacy and providing data to support product development, with reference to the video element in particular.",
+  "type": "Short talk and presentation followed by open discussion",
+  "goals": ["Understand what architectural pattern(s) can allow user choices without exposing additional fingerprinting vectors or increasing privacy risks, while also providing usable product data."] ,
+  "capacity": "medium",
+  "track": "media"
+}

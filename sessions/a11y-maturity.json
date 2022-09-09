@@ -1,0 +1,25 @@
+{
+  "title": "W3C Accessibility Maturity Model",
+  "proposer": [
+    {
+      "login": "helixopp",
+      "name": "David Fazio",
+      "email": "dfazio@helixopp.com"
+    },
+    {
+      "login": "",
+      "name": "Janina Sajka",
+      "email": ""
+    },
+    {
+      "login": "",
+      "name": "Sheri Byrne-Haber",
+      "email": ""
+    }
+  ],
+  "summary": "Presentation of the W3C Accessibility Maturity Model First Public Working Draft. ",
+  "type": "Presentation and Open Discussion ",
+  "goals": [] ,
+  "capacity": "small",
+  "track": "a11y"
+}

@@ -1,0 +1,28 @@
+{
+  "title": "Web Components Community Group API and Specs Report 2022",
+  "proposer": [
+    {
+      "login": "",
+      "name": "Westbrook Johnson",
+      "email": ""
+    },
+    {
+      "login": "",
+      "name": "Owen Buckley",
+      "email": ""
+    },
+    {
+      "login": "",
+      "name": "Rob Eisenberg",
+      "email": ""
+    }
+  ],
+  "summary": "The Web Components CG will facilitate a discussion with implementers and community members about filling browser gaps in agreed upon features and moving forward with the next wave of top priority features.",
+  "type": "open discussion",
+  "goals": [     "Getting APIs missing full x-browser support into the “Interop 2023” campaign?",
+		 "Discuss how we can work more closely on high important capabilities: cross shadow root Aria, scoped registries, DSD",
+		 "Expand implementer and developer partnerships around bringing APIs & specs to the browser."] ,
+  "capacity": "medium",
+  "track": "components",
+  "possibleSlots": [3]
+}

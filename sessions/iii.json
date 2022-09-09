@@ -1,0 +1,19 @@
+{
+  "title": "Independent Interoperable Implementation and going beyond Candidate Recommendation",
+  "proposer": [
+    {
+      "login": "plh",
+      "name": "Philippe Le Hegaret",
+      "email": "plh@w3.org"
+    },
+    {
+      "name": "Nigel Megitt",
+      "login": "nigelmegitt"
+    }
+  ],
+  "summary": "The W3C Process requires adequate implementation experience to be able to transition a document beyond Candidate Recommendation. Some of the past transitions raised concerns about how this should be interpreted. This session is intended to help the community get a better grip on the 3 Big Is – interoperable, independent, implementation.",
+  "type": "open discussion",
+  "goals": ["Continue discussion from joint session"] ,
+  "capacity": "medium",
+  "track": "process"
+}

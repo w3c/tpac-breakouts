@@ -1,0 +1,14 @@
+{
+  "title": "Device APIs (Bluetooth, HID, Serial, USB)",
+  "proposer": {
+    "login": "",
+    "name": "Vincent Scheib",
+    "email": "scheib@google.com"
+  },
+  "summary": "Low level <a href='https://web.dev/devices/'>device APIs</a> in incubation address a range of needs in education, industrial, small business, and enterprise. Many peripherals people expect to work with computers have become available to web applications. Chrome, Edge, and Samsung browsers have enabled Bluetooth, HID, Serial, and USB. We will discuss the <a href='https://developer.chrome.com/blog/fugu-showcase/?api=webbluetooth'>adoption</a> & <a href='https://twitter.com/Vincent_Scheib/timelines/1207046778916237312'>developer interest</a> to date, answer questions, and discuss opportunities for the web to serve more needs.",
+  "type": "Presentation and discussion.",
+  "goals": ["Build awareness, share what has been learned, answer questions. Solicit working group interest."] ,
+  "capacity": "",
+  "track": "apis",
+  "possibleSlots": [0]
+}
