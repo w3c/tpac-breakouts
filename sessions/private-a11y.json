@@ -10,6 +10,8 @@
   "summary": "Think about architectural models for allowing user accessibility choices while maintaining privacy and providing data to support product development, with reference to the video element in particular.",
   "type": "Short talk and presentation followed by open discussion",
   "goals": ["Understand what architectural pattern(s) can allow user choices without exposing additional fingerprinting vectors or increasing privacy risks, while also providing usable product data."] ,
+  "slides": "https://www.w3.org/2022/Talks/TPAC/breakout-sessions/private-a11y/private_a11y_breakout.html",
   "capacity": "medium",
-  "track": "media"
+  "track": "media",
+  "minutes": "https://www.w3.org/2022/09/14-private-a11y-minutes.html"
 }

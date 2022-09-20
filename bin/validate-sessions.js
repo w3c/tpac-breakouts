@@ -42,7 +42,7 @@ loadDir("./sessions/").then(() => {
       uniquelyAcceptable[session.possibleSlots[0]]++;
     }
 
-    session.proposer.map(p => p.login).concat(session.others || []).forEach(p => {
+    session.proposer.map(p => p.name).concat(session.others || []).forEach(p => {
       if (!criticalParties[p])
         criticalParties[p] = 0;
       criticalParties[p]++;

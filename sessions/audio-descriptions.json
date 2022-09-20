@@ -19,5 +19,6 @@
   "type": "Brief preso and prototype demo, followed by open discussion.",
   "goals": ["Seeking opinions on technology and implementation, including usability feedback and opinions from regular users of audio description."] ,
   "capacity": "medium",
-  "track": "media"
+  "track": "media",
+  "minutes": "https://www.w3.org/2022/09/14-audio-descriptions-minutes.html"
 }

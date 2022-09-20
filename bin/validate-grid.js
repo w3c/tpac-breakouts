@@ -54,6 +54,7 @@ loadDir("./sessions/").then(() => {
         return errors.push(`In slot #${i}, unknown room ${roomId}`);
       const sessionId = slot[roomId];
 
+      if (!sessionId) return;
       // Fail if a room is assigned to an unknown session
       if (!sessions[sessionId])
         return errors.push(`In slot #${i}, unknown session ${slot[roomId]}`);
@@ -71,7 +72,7 @@ loadDir("./sessions/").then(() => {
         warnings.push(`Room ${roomId} is ${room.capacity} and hosts session ${sessionId} which needs ${session.capacity}`);
 
       // Warn if a session has conflicts in critical parties
-      for (let p of session.proposer.map(p => p.login).concat(session.others || [])) {
+      for (let p of session.proposer.map(p => p.name).concat(session.others || [])) {
         if (criticalParties.has(p))
           warnings.push(`Session ${sessionId} scheduled in slot #${i}, but ${p} is critical in another session of that slot`);
         criticalParties.add(p);

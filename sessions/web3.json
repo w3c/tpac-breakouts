@@ -7,9 +7,11 @@
     "email": "elagerway@gmail.com",
     "id": 64753 
   },
-  "summary": "TBD",
-  "type": "panel",
-  "goals": ["TBD"] ,
+  "summary": "Web3 means many things to many people. Some see Web3 as a collection of existing technology that is used to scam many newcomers of their wallet contents. Others see this as a means to a future state where the world's transactions are made on a distributed ledger or blockchain. In this session, we will be exploring what Web3 means to those building in the space and where the intersection of Internet standards might occur, if at all. Think of this as an exploratory conversation with participants in the field and those that are curious about the future of this technology.",
+  "type": "open discussion",
+  "goals": ["Exploration"] ,
   "capacity": "medium",
-  "track": "payment"
+  "industry": ["web-payments"],
+  "track": "payment",
+  "minutes": "https://www.w3.org/2022/09/14-web3-minutes.html"
 }

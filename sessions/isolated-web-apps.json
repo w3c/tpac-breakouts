@@ -18,5 +18,8 @@
   "type": "Short presentation followed by open discussion",
   "goals": ["Introduce the challenges being addressed by the Isolated Web Apps proposal and elicit a discussion about this and other potential solutions."] ,
   "capacity": "medium",
-  "track": "packaging"
+  "track": "packaging",
+  "slides": "https://goo.gle/tpac2022-isolated-web-apps",
+  "minutes": "https://www.w3.org/2022/09/14-isolated-web-apps-minutes.html",
+  "slidespdf": "https://lists.w3.org/Archives/Public/www-archive/2022Sep/att-0020/isolated-web-apps.pdf"
 }

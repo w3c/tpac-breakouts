@@ -25,5 +25,7 @@
   "goals": ["After short presentations related to the W3Cx program, the recent edX/2U merge and what is edX for business, we invite discussions on what skills/Web technos/W3Cx courses are missing from the platform for the benefit of millions of future developers and designers."] ,
   "capacity": "medium",
   "track": "w3c",
-  "possibleSlots": [0, 1]
+  "possibleSlots": [0, 1],
+  "slides": "https://docs.google.com/presentation/d/12mpqgAlHUN1pPvvEx3e6KOaNit4rpI3C4-kCozAjYEQ/",
+  "slidespdf": "https://lists.w3.org/Archives/Public/www-archive/2022Sep/att-0016/w3cx.pdf"
 }

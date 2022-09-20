@@ -18,5 +18,8 @@
   "type": "talk, followed by open discussion.",
   "goals": ["Reflect back and look forward."] ,
   "capacity": "medium",
-  "track": "apis"
+  "track": "apis",
+  "possibleSlots": [0,1],
+  "slides": "https://docs.google.com/presentation/d/1Uv7WfCXDLYAb9fbDG4iVZeBSp4aMYSqwYctrJaXLhnU/edit?usp=sharing",
+  "slidespdf": "https://lists.w3.org/Archives/Public/www-archive/2022Sep/att-0016/project-fugu.pdf"
 }

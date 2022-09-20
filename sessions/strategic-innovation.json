@@ -11,5 +11,6 @@
   "type": "Invited Panel Speakers with Open Discussion.",
   "goals": ["Innovation best practices and strategies."] ,
   "capacity": "medium",
-  "track": "w3c"
+  "track": "w3c",
+  "minutes": "https://www.w3.org/2022/09/14-strategic-innovation-minutes.html"
 }

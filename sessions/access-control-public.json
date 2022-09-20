@@ -12,5 +12,7 @@
   "goals": ["Get feedback on [CORS, CORP, TAO and 'public static resource' metadata](https://github.com/whatwg/html/issues/8143).", "Reach a consensus on direction."] ,
   "capacity": "small",
   "track": "privacy",
-  "possibleSlots": [0, 1]
+  "possibleSlots": [0, 1],
+  "slides": "https://docs.google.com/presentation/d/1aguEXrLWLS4gnNpWILZ7OM1qtVKdopWIAKT2FENVgwo/edit#slide=id.g15860407126_1_11",
+  "slidespdf": "https://lists.w3.org/Archives/Public/www-archive/2022Sep/att-0016/access-control-public.pdf"
 }

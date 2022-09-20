@@ -12,5 +12,7 @@
   "goals": ["Consulting W3C Members & gathering feedback for the new spec."] ,
   "capacity": "medium",
   "track": "payment",
-  "possibleSlots": [0]
+  "industry": ["web-payments"],
+  "possibleSlots": [0],
+  "minutes": "https://www.w3.org/2022/09/14-web-monetization-minutes.html"
 }

@@ -11,5 +11,7 @@
   "type": "Open discussion, but can be a talk if the audience would rather.",
   "goals": ["Get feedback." ],
   "capacity": "medium",
-  "track": "core"
+  "track": "core",
+  "minutes": "https://www.w3.org/2022/09/14-pagetransitions-minutes.html",
+  "slides": "https://lists.w3.org/Archives/Public/www-archive/2022Sep/att-0007/set-slides.pdf"
 }

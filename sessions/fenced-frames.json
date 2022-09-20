@@ -19,5 +19,6 @@
   "type": "Brief talk with slides, followed by open discussion and opinion gathering",
   "goals": ["Make the community aware of fenced frames/its API shape, discuss the difficulties in this area, and and collect feedback from other engineers & partners"] ,
   "capacity": "medium",
-  "track": "core"
+  "track": "core",
+  "minutes": "https://docs.google.com/document/d/1PCAABzoGV09u5LPOe4A6y1TAEMixLcH2cXwOjX5-Zpg/edit#heading=h.eltjik5eoit7"
 }

@@ -24,12 +24,6 @@
     "login": "",
     "name": "Ken Nakata",
     "id": 3607
-    },
-    {
-    "login": "",
-    "name": "Alisa Smith",
-      "email": "",
-      "id": 113416 
     }
   ],
   "summary": "A fearless overview of current and prospective edge technologies application to enhance accessibility (including those highly controversial overlays)",
@@ -37,5 +31,6 @@
   "goals": ["Kick-off event for the new A11yEdge Community Group; What we will address, what we hope to achieve" ] ,
   "capacity": "medium",
   "track": "a11y",
-  "possibleSlots": [0]
+  "possibleSlots": [0],
+  "minutes": "https://www.w3.org/2022/09/14-A11yEdge-minutes.html"
 }

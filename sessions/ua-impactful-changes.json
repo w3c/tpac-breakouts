@@ -14,5 +14,6 @@
   "goals": ["How can the community work together to responsibly rollout impactful changes"] ,
   "capacity": "big",
   "track": "core",
-  "possibleSlots": [1]
+  "possibleSlots": [1],
+  "minutes": "https://www.w3.org/2022/09/14-ua-impactful-changes-minutes.html"
 }

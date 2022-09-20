@@ -28,5 +28,6 @@
 		 "Expand implementer and developer partnerships around bringing APIs & specs to the browser."] ,
   "capacity": "medium",
   "track": "components",
-  "possibleSlots": [3]
+  "possibleSlots": [3],
+  "minutes": "https://www.w3.org/2022/09/14-webcomponent-cg-minutes.html"
 }

@@ -20,5 +20,7 @@
   "goals": ["To find partners to discuss it with."] ,
   "capacity": "medium",
   "track": "trust",
-  "possibleSlots": [3]
+  "possibleSlots": [3],
+  "minutes": "https://www.w3.org/2022/09/14-trusted-internet-minutes.html",
+  "slides": "https://www.w3.org/wiki/images/5/5d/Trusted_Internet.pdf"
 }

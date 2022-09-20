@@ -12,5 +12,7 @@
   "goals": ["Give an overview of recent and upcoming cookies changes and get feedback on our ideas for evolving cookie specification across organizations."] ,
   "capacity": "big",
   "track": "privacy",
-  "possibleSlots": [2]
+  "possibleSlots": [2],
+  "slides": "https://docs.google.com/presentation/d/1RWEEt3eO7hfQF5jkm3GdpkCEeR6yBWmbnlg_uaGkwwE/edit",
+  "slidespdf": "https://lists.w3.org/Archives/Public/www-archive/2022Sep/att-0016/cookie-future.pdf"
 }

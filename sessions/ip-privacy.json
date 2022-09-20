@@ -25,5 +25,7 @@
   "type": "brief context setting, followed by open discussion",
   "goals": ["gather feedback on IP Privacy and relevant tech ideas"] ,
   "capacity": "medium",
-  "track": "privacy"
+  "industry": ["networks-communications"],
+  "track": "privacy",
+  "minutes": "https://docs.google.com/document/d/12Mc5VESkiE_pWk9eU1_W-Px7a7Ii1_bAh_2k-KzvxjA/edit"
 }

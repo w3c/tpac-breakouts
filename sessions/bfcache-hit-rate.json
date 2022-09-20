@@ -12,5 +12,8 @@
   "goals": ["Get feedback on proposals for [unload](https://github.com/w3c/webappsec-permissions-policy/issues/444), [Cache-control: no-store](https://github.com/fergald/explainer-bfcache-ccns/) and [not-restored reasons](https://github.com/rubberyuzu/bfcache-not-retored-reason/blob/main/NotRestoredReason.md) and any other ideas to improve hit-rate."] ,
   "capacity": "medium",
   "track": "performance",
-  "possibleSlots": [3]
+  "possibleSlots": [3],
+  "slides": "https://docs.google.com/presentation/d/1Sj1OtX3r_ULsQVAz4hNeYsmx23wcqsgDN6DTc33VWMk/edit",
+  "minutes": "https://docs.google.com/document/d/1YZvkd0nMk0VlaikLCcBtzX0CCUo9lLxoOUtEPbK2IYk/edit?usp=sharing",
+  "slidespdf": "https://lists.w3.org/Archives/Public/www-archive/2022Sep/att-0016/bfcache-hit-rate.pdf"
 }

@@ -3,12 +3,13 @@
     "proposer": {
       "type": "object",
       "properties": {
+	"id": {"type": "number"},
         "name": {"type": "string"},
         "login": {"type": "string"},
-        "email": {"type": "string", "pattern": ".+@.+\\..+"},
+        "email": {"type": "string"},
         "annotation": {"type": "string"}
       },
-      "required": ["name", "email", "login"]
+      "required": ["name", "id"]
     }
   },
   "type": "object",
@@ -37,8 +38,13 @@
    "track": {"type": "string"},
    "sponsor": {"type": "string"},
    "span": {"type": "number"},
-    "remote": {"oneOf": [{"type": "boolean"}, {"type": "string"}]}
- },
+    "remote": {"oneOf": [{"type": "boolean"}, {"type": "string"}]},
+    "access": {"type": "string"},
+    "calendar": {"type": "string", "format": "uri"},
+    "industry": {"type": "array", "items": {"type": "string", "enum": ["wot", "networks-communications", "media", "web-payments"]} },
+    "slides": {"type": "string", "format": "uri"},
+    "slidespdf": {"type": "string", "format": "uri"}
+  },
  "required": ["title", "proposer", "summary", "goals"],
  "additionalProperties": false
 }

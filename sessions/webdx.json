@@ -19,5 +19,7 @@
   "type": "short presentation and open discussion",
   "goals": ["Sketch a shared understanding of the current limitations of the Web Developer Experience", " Identify opportunities for collaboration on improving the Web Developer Experience"] ,
   "capacity": "medium",
-  "track": "devrel"
+  "track": "devrel",
+  "slides": "https://lists.w3.org/Archives/Public/www-archive/2022Sep/att-0004/Developer_Experience__TPAC_breakout_2022.pdf",
+  "minutes": "https://www.w3.org/2022/09/14-webdx-minutes.html"
 }

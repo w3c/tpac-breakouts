@@ -24,5 +24,6 @@
   "type": "Presentation and Open Discussion ",
   "goals": [] ,
   "capacity": "small",
-  "track": "a11y"
+  "track": "a11y",
+  "minutes": "https://www.w3.org/2022/09/14-a11y-maturity-minutes.html"
 }

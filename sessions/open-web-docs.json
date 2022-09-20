@@ -17,5 +17,7 @@
   "type": "talk and open discussion",
   "goals": ["Learn about what Open Web Docs is, what we do, how you can help us document the web platform, and how we can help you get your work documented on MDN"] ,
   "capacity": "medium",
-  "track": "devrel"
+  "track": "devrel",
+  "slides": "https://wbamberg.github.io/tpac-owd-2022/",
+  "minutes": "https://www.w3.org/2022/09/14-open-web-docs-minutes.html"
 }

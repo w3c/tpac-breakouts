@@ -45,5 +45,8 @@
   "goals": ["Discover the form of member support that W3C, a membership organization, should achieve."] ,
   "capacity": "medium",
   "track": "w3c",
-  "access": "tpac"
+  "access": "tpac",
+  "possibleSlots": [0],
+  "minutes": "https://www.w3.org/2022/09/14-member-support-minutes.html",
+  "slides": "https://www.w3.org/2022/09/14-member-support-tpac-2022.pdf"
 }

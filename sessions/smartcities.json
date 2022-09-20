@@ -12,5 +12,8 @@
   "goals": ["Identify the most important categories of problems to implement actual Smart Cities based on the exisitng and near future Web standards"] ,
   "capacity": "medium",
   "track": "wot",
-  "possibleSlots": [3]
+  "industry": ["wot"],
+  "possibleSlots": [3],
+  "minutes": "https://www.w3.org/2022/09/14-smartcities-minutes.html",
+  "slides": "https://www.w3.org/2022/Talks/0914-smartcities-ka/20220914-dt-sc-ka.pdf"
 }

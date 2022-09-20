@@ -30,5 +30,8 @@
   "goals": ["Give an overview of Open UI it's goals and the progress over the past year."] ,
   "capacity": "medium",
   "track": "components",
-  "possibleSlots": [2]
+  "possibleSlots": [2],
+  "slides": "https://1drv.ms/p/s!AhG1j1eK4stagbv4WX8NhgDiDmD1j-M?e=0gbJvP",
+  "slidespdf": "https://lists.w3.org/Archives/Public/www-archive/2022Sep/att-0019/openui.pdf",
+  "minutes": "https://www.w3.org/2022/09/14-openui-minutes.html"
 }

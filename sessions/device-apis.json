@@ -12,5 +12,7 @@
   "goals": ["Build awareness, share what has been learned, answer questions. Solicit working group interest."] ,
   "capacity": "medium",
   "track": "apis",
-  "possibleSlots": [0]
+  "possibleSlots": [0],
+  "slides": "http://goo.gle/tpac2022-device-apis",
+  "slidespdf": "https://lists.w3.org/Archives/Public/www-archive/2022Sep/att-0017/device-apis.pdf"
 }

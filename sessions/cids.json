@@ -12,5 +12,6 @@
   "goals": ["Gathering input and feedback on the standard;", "Drumming up interest in our proposed draft Working Group Charter;", "Identifying synergies with other W3C work/groups"] ,
   "capacity": "small",
   "track": "data",
-  "possibleSlots": [0, 1]
+  "possibleSlots": [0, 1],
+  "minutes": "https://www.w3.org/2022/09/14-cids-minutes.html"
 }

@@ -11,5 +11,7 @@
   "type": "short talk followed by discussion",
   "goals": ["ocialize the specification as we are in Candidate Recommendation status"] ,
   "capacity": "medium",
-  "track": "a11y"
+  "track": "a11y",
+  "slides": "https://w3c.github.io/adapt/TPAC/2021/",
+  "minutes": "https://www.w3.org/2022/09/14-wai-adapt-minutes.html"
 }

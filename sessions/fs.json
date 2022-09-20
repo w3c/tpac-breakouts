@@ -11,5 +11,7 @@
   "type": "Open discussion",
   "goals": ["https://github.com/whatwg/fs/issues/45"] ,
   "capacity": "medium",
-  "track": "core"
+  "track": "core",
+  "slides": "https://docs.google.com/presentation/d/12jqBnFuTxnTCrmKsUIZJxQyxAsf0yc6Uz7nKF15JzPw/edit?usp=sharing&resourcekey=0-3xJaumMcgsko818iftYRcA",
+  "slidespdf": "https://lists.w3.org/Archives/Public/www-archive/2022Sep/att-0018/fs.pdf"
 }

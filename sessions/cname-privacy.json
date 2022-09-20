@@ -1,5 +1,5 @@
 {
-  "title": "CNAMEs as a privacy tool for the web",
+  "title": "CNAMEs as a privacy tool for the web / / Bounce Tracking Mitigations",
   "calendar": "https://www.w3.org/events/meetings/d25ef248-1af8-4277-a601-d519f986b8fd",
   "proposer": [
     {
@@ -13,11 +13,22 @@
     "name": "Greg Whitworth",
       "email": "",
       "id": 69511 
+    },
+    {
+      "login": "",
+      "name": "Ben Kelly",
+      "email": "wanderview@google.com",
+      "id": 82162 
+    },
+    {
+      "name": "Brian Lefler",
+      "id": 132994 
     }
+
   ],
-  "summary": " CNAME records have a reputation as a tool to circumvent resource-blocking and specific privacy measures. However, if used properly, they can help websites integrate third-party services without requiring third-party cookies, providing a great privacy benefit. We want to discuss how browsers could support privacy-preserving usage of CNAMEs while preventing potential abuse.",
+  "summary": " CNAME records have a reputation as a tool to circumvent resource-blocking and specific privacy measures. However, if used properly, they can help websites integrate third-party services without requiring third-party cookies, providing a great privacy benefit. We want to discuss how browsers could support privacy-preserving usage of CNAMEs while preventing potential abuse. Joint session with a brief overview of chrome's proposed [bounce tracking mitigations](https://github.com/wanderview/bounce-tracking-mitigations/blob/main/explainer.md) following the CNAME discussion.",
   "type": " open discussion",
-  "goals": [" Hear about developer use cases and user concerns, kick off an open-minded discussion on the utility of CNAMEs. Maybe get some agreement across browsers on next steps."] ,
+  "goals": [" Hear about developer use cases and user concerns, kick off an open-minded discussion on the utility of CNAMEs. Maybe get some agreement across browsers on next steps.", "Increase awareness of bounce tracking mitigations and solicit feedback on the proposal."] ,
   "capacity": "medium",
   "track": "privacy",
   "possibleSlots": [3]

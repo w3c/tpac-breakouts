@@ -1,70 +1,98 @@
 {
   "grand-d": {
-    "size": "big",
-    "name": "Grand D"
+    "capacity": "big",
+    "name": "Grand D",
+    "floor": "North Tower Grand Ballroom Level",
+    "zoom": "https://us02web.zoom.us/j/4929080639?pwd=VXN3ODE0U2x4TFhRK1RhODVBeW9ndz09"
   },
   "junior-a": {
-    "size": "medium",
-    "name": "Junior A"
+    "capacity": "medium",
+    "name": "Junior A",
+    "floor": "North Tower 3rd floor",
+    "zoom": "https://us02web.zoom.us/j/3461096425?pwd=OUN6UkducnIxSmplWG9jNXdPSkZTUT09"
   },
   "junior-b": {
-    "size": "medium",
-    "name": "Junior B"
+    "capacity": "medium",
+    "floor": "North Tower 3rd floor",
+    "name": "Junior B",
+    "zoom": "https://us02web.zoom.us/j/4415985829?pwd=cEJHcm95S1A2NEhPQXBycHZlZHpNUT09"
   },
   "junior-cd": {
-    "size": "big",
-    "name": "Junior CD"
+    "capacity": "big",
+    "floor": "North Tower 3rd floor",
+    "name": "Junior CD",
+    "zoom": "https://us02web.zoom.us/j/7729314923?pwd=Q0hIbWVQUFRqU1V6cWhYV1BXUHI1QT09"
   },
   "parksville": {
-    "size": "medium",
-    "name": "Parksville"
+    "capacity": "medium",
+    "floor": "North Tower 3rd floor",
+    "name": "Parksville",
+    "zoom": "https://us02web.zoom.us/j/6736011120?pwd=Njhqam13TWwrUzE2d0owRjF6Zlhqdz09"
   },
   "port-hardy": {
-    "size": "small",
-    "name": "Port Hardy"
+    "capacity": "small",
+    "floor": "North Tower 4th floor",
+    "name": "Port Hardy",
+    "zoom": "https://us02web.zoom.us/j/6548158906?pwd=MFNTK1NQRmI5S1oxYzZyKzdkaE5WZz09"
   },
   "port-mcneill": {
-    "size": "medium",
-    "name": "Port McNeill"
+    "capacity": "medium",
+    "floor": "North Tower 4th floor",
+    "name": "Port McNeill",
+    "zoom": "https://us02web.zoom.us/j/2442125179?pwd=bUEzK3c4Ykl5Zk1ZNHYxeTdvcFU2Zz09"
   },
   "port-alberni": {
-    "size": "medium",
-    "name": "Port Alberni"
+    "capacity": "medium",
+    "floor": "North Tower 4th floor",
+    "name": "Port Alberni",
+    "zoom": "https://us02web.zoom.us/j/9321684963?pwd=ck1EeTg3aWFHMkx4Y3UwUDlaemJpQT09"
   },
   "galiano": {
-    "size": "medium",
-    "name": "Galiano"
+    "capacity": "medium",
+    "floor": "South Tower 4th floor",
+    "name": "Galiano",
+    "zoom": "https://us02web.zoom.us/j/9051227671?pwd=dG8zZ0dzYVdDZHQ2QXVQaFhqSWw4UT09"
   },
   "hudson": {
-    "size":  "small",
-    "name": "Hudson"
+    "capacity":  "small",
+    "floor": "South Tower 4th floor",
+    "name": "Hudson",
+    "zoom": "https://us02web.zoom.us/j/6560356040?pwd=cG1IWEVvejdUdUVjQVMzTHpPVjQ0UT09"
   },
   "columbia": {
-    "size": "small",
-    "name": "Columbia"
+    "capacity": "small",
+    "floor": "South Tower 4th floor",
+    "name": "Columbia",
+    "zoom": "https://us02web.zoom.us/j/4149386414?pwd=QjROTVBaL0Z3bkRmOEVySXY3Yk90Zz09"
   },
   "granville": {
-    "size": "small",
-    "name": "Granville"
+    "capacity": "small",
+    "floor": "South Tower 4th floor",
+    "name": "Granville",
+    "zoom": "https://us02web.zoom.us/j/5896324424?pwd=SlI4YnpzY2tENG1MRVFjbHY0RzlFUT09"
   },
   "burrard": {
-    "size": "small",
-    "name": "Burrard"
-  },
-  "vancouver": {
-    "size": "small",
-    "name": "Vancouver"
+    "capacity": "small",
+    "floor": "South Tower 4th floor",
+    "name": "Burrard",
+    "zoom": "https://us02web.zoom.us/j/5606146353?pwd=UW43YWxLLzI2bGtXZjJRZzFXN0ZzZz09"
   },
   "beluga": {
-    "size": "small",
-    "name": "Beluga"
+    "capacity": "small",
+    "floor": "3rd floor Concourse",
+    "name": "Beluga",
+    "zoom": "https://us02web.zoom.us/j/6757378785?pwd=OHdxWXlwZG15dGNIT3VrNS9Cek0zZz09"
   },
   "finback": {
-    "size": "medium",
-    "name": "Finback"
+    "floor": "3rd floor Concourse",
+    "capacity": "medium",
+    "name": "Finback",
+    "zoom": "https://us02web.zoom.us/j/3919679751?pwd=SGY5WFpSSFBRN0lyVFo0MGhFT1R3QT09"
   },
   "orca": {
-    "size": "medium",
-    "name": "Orca"
+    "capacity": "medium",
+    "floor": "3rd floor Concourse",
+    "name": "Orca",
+    "zoom": "https://us02web.zoom.us/j/9020046588?pwd=MkxMamZpMlFkR0ZZWFI1ZUd2OUdYUT09"
   }
 }

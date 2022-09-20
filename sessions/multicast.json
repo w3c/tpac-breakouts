@@ -11,5 +11,8 @@
   "type": "Talk followed by open discussion.",
   "goals": ["give a status update, gather feedback"] ,
   "capacity": "medium",
-  "track": "media"
+  "track": "media",
+  "minutes": "https://www.w3.org/2022/09/14-multicast-minutes.html",
+  "slides": "https://docs.google.com/presentation/d/11dnGTxKtmSbjo8Wc6eR39v7l_8kcHzu84wt3VMh93Oo/edit#slide=id.g152a8dcf135_0_219",
+  "slidespdf": "https://lists.w3.org/Archives/Public/www-archive/2022Sep/att-0016/multicast.pdf"
 }

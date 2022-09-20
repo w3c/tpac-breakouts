@@ -12,5 +12,7 @@
   "goals": [" Introduce people to WoT and showcase application experience."] ,
   "capacity": "medium",
   "track": "wot",
-  "possibleSlots": [2]
+  "industry": ["wot"],
+  "possibleSlots": [2],
+  "minutes": "https://www.w3.org/2022/09/14-wot-demo-minutes.html"
 }
