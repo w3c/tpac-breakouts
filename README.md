@@ -1,3 +1,5 @@
+Tooling to manage breakout sessions at **TPAC 2019**. The [`main` branch](https://github.com/w3c/tpac-breakouts/) contains last versions of the tools. GitHub Pages still point to the `2019` branch because the `w3c.github.io` URL was used to link to the resulting session page.
+
 # For TPAC session organizers
 
 The `sessions/` contains one JSON file per proposed breakout, with a name matching the proposed shortname of the session. That JSON file contains the following fields (mandatory unless stated otherwise):
