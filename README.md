@@ -7,6 +7,10 @@ Tooling has evolved since then, but we are still using this repo as the home for
 * [Good Practices for Session Chairs](wiki/Good_Practices_for_Session_Chairs)
 * [TPAC Breakout Policies](wiki/Policies)
 
+Starting in 2023 we anticipate the creation of one repo par TPAC. Please see:
+
+* [TPAC 2023 Breakouts](https://github.com/w3c/tpac2023-breakouts/)
+
 ## About the Issues List
 
 Please use the issues list of this repo for general questions or suggestions about TPAC breakout management.
