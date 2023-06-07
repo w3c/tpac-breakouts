@@ -11,4 +11,4 @@ Tooling has evolved since then, but we are still using this repo as the home for
 
 Please use the issues list of this repo for general questions or suggestions about TPAC breakout management.
 
-Please '''do not''' use the issues list of this repo to propose TPAC breakout sessions.
+Please **do not** use the issues list of this repo to propose TPAC breakout sessions.
