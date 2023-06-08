@@ -9,7 +9,7 @@ Tooling has evolved since then, but we are still using this repo as the home for
 
 Starting in 2023 we anticipate the creation of one repo par TPAC. Please see:
 
-* [TPAC 2023 Breakouts](https://github.com/w3c/tpac2023-breakouts/)
+* [TPAC 2023 Breakouts](https://github.com/w3c/tpac2023-breakouts/README.md)
 
 ## About the Issues List
 
