@@ -4,7 +4,7 @@ This repo was originally used to help organize tooling for [TPAC 2019 breakout s
 
 Tooling has evolved since then, but we are still using this repo as the home for documentation about tooling to help manage TPAC breakouts, including:
 
-* [Good Practices for Session Chairs](wiki/Good_Practices_for_Session_Chairs)
+* [Good Practices for Session Chairs](wiki/Good-Practices-for-Session-Chairs)
 * [TPAC Breakout Policies](wiki/Policies)
 
 Starting in 2023 we anticipate the creation of one repo par TPAC. Please see:
