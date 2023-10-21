@@ -1,0 +1,50 @@
+{
+  "name": "tpac-breakouts",
+  "version": "0.9.0",
+  "description": "A set of tools to organize breakouts during W3C TPAC event. The package should only be useful for that purpose!",
+  "license": "SEE LICENSE IN 'LICENSE' file",
+  "author": {
+    "name": "tidoust",
+    "email": "fd@w3.org"
+  },
+  "contributors": [
+    {
+      "name": "ianbjacobs",
+      "email": "ij@w3.org"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/w3c/tpac-breakouts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/w3c/tpac-breakouts/issues"
+  },
+  "files": [
+    "tools/"
+  ],
+  "bin": {
+    "add-minutes": "./tools/add-minutes.mjs",
+    "create-recording-pages": "./tools/create-recording-pages.mjs",
+    "init-repo-labels": "./tools/init-repo-labels.mjs",
+    "init-room-zoom": "./tools/init-room-zoom.mjs",
+    "list-chairs": "./tools/list-chairs.mjs",
+    "minutes-to-w3c": "./tools/minutes-to-w3c.mjs",
+    "setup-irc": "./tools/setup-irc.mjs",
+    "suggest-grid": "./tools/suggest-grid.mjs",
+    "update-calendar": "./tools/update-calendar.mjs",
+    "upload-grid": "./tools/upload-grid.mjs",
+    "validate-grid": "./tools/validate-grid.mjs",
+    "validate-session": "./tools/validate-session.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "irc": "^0.5.2",
+    "puppeteer": "^21.4.0",
+    "seedrandom": "^3.0.5",
+    "webvtt-parser": "^2.2.0",
+    "yaml": "^2.3.3"
+  }
+}
