@@ -64,7 +64,7 @@ export async function initSectionHandlers() {
     return;
   }
   const yamlTemplate = await readFile(
-    path.join(__dirname, '..', '..', '.github', 'ISSUE_TEMPLATE', 'session.yml'),
+    path.join(process.cwd(), '.github', 'ISSUE_TEMPLATE', 'session.yml'),
     'utf8');
   const template = YAML.parse(yamlTemplate);
   sectionHandlers = template.body
