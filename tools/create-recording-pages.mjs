@@ -134,13 +134,13 @@ async function main() {
         url: recording.githubIssue
       }
     ];
-    if (desc.materials.slides && !todoStrings.includes(desc.materials.slides.toUpperCase())) {
+    if (desc.materials?.slides && !todoStrings.includes(desc.materials.slides.toUpperCase())) {
       links.push({
         title: 'Slides',
         url: desc.materials.slides
       });
     }
-    if (desc.materials.minutes && !todoStrings.includes(desc.materials.minutes.toUpperCase())) {
+    if (desc.materials?.minutes && !todoStrings.includes(desc.materials.minutes.toUpperCase())) {
       links.push({
         title: 'Session minutes',
         url: desc.materials.minutes

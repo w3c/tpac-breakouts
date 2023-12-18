@@ -288,14 +288,14 @@ async function main({ number, onlyCommands, dismissBots } = {}) {
 
     await say(channel, `Meeting: ${session.title}`);
     await say(channel, `Chair: ${session.chairs.map(c => c.name).join(', ')}`);
-    if (session.description.materials.agenda &&
+    if (session.description.materials?.agenda &&
         !todoStrings.includes(session.description.materials.agenda)) {
       await say(channel, `Agenda: ${session.description.materials.agenda}`);
     }
     else {
       await say(channel, `Agenda: https://github.com/${session.repository}/issues/${session.number}`);
     }
-    if (session.description.materials.slides &&
+    if (session.description.materials?.slides &&
         !todoStrings.includes(session.description.materials.slides)) {
       await say(channel, `Slideset: ${session.description.materials.slides}`);
     }

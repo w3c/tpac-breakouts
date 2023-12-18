@@ -52,7 +52,7 @@ async function main(number) {
     if (sessions.length === 0) {
       throw new Error(`Session ${number} contains errors that need fixing`);
     }
-    else if (sessions[0].description.materials.minutes &&
+    else if (sessions[0].description.materials?.minutes &&
         !todoStrings.includes(session.description.materials.minutes)) {
       console.log(`- session already has a link to minutes`);
       return;
@@ -60,6 +60,7 @@ async function main(number) {
   }
   else {
     sessions = sessions.filter(s =>
+      !s.description.materials ||
       !s.description.materials.minutes ||
       todoStrings.includes(s.description.materials.minutes));
     if (sessions.length === 0) {
@@ -89,6 +90,9 @@ async function main(number) {
     }
     else {
       console.log(`- link session ${session.number} to minutes at ${url}`);
+      if (!session.description.materials) {
+        session.description.materials = {};
+      }
       session.description.materials.minutes = url;
       await updateSessionDescription(session);
     }

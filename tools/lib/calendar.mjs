@@ -249,14 +249,14 @@ async function fillCalendarEntry({ page, session, project, status, zoom }) {
 
   await fillTextInput('input#event_chat',
     `https://irc.w3.org/?channels=${encodeURIComponent(session.description.shortname)}`);
-  const agendaUrl = todoStrings.includes(session.description.materials.agenda) ?
-    undefined : session.description.materials.agenda;
+  const agendaMaterial = session.description.materials?.agenda ?? '@@';
+  const agendaUrl = todoStrings.includes(agendaMaterial) ? undefined : agendaMaterial;
   await fillTextInput('input#event_agendaUrl', agendaUrl);
 
   await fillTextInput('textarea#event_agenda', formatAgenda(session));
 
-  const minutesUrl = todoStrings.includes(session.description.materials.minutes) ?
-    undefined : session.description.materials.minutes;
+  const minutesMaterial = session.description.materials?.minutes ?? '@@';
+  const minutesUrl = todoStrings.includes(minutesMaterial) ? undefined : minutesMaterial;
   await fillTextInput('input#event_minutesUrl', minutesUrl);
 
   // Big meeting is "TPAC 2023", not the actual option value
@@ -301,7 +301,7 @@ export async function convertSessionToCalendarEntry(
     }
   }
 
-  const calendarUrl = session.description.materials.calendar ?? undefined;
+  const calendarUrl = session.description.materials?.calendar ?? undefined;
   const pageUrl = calendarUrl ? 
     `${calendarUrl.replace(/www\.w3\.org/, calendarServer)}edit/` :
     `https://${calendarServer}/events/meetings/new/`;

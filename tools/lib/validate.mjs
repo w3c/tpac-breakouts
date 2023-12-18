@@ -249,7 +249,8 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   }
 
   function isMaterialMissing(name) {
-    return !session.description.materials[name] ||
+    return !session.description.materials ||
+      !session.description.materials[name] ||
       todoStrings.includes(session.description.materials[name].toUpperCase());
   }
 

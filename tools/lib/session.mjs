@@ -67,12 +67,27 @@ export async function initSectionHandlers() {
     path.join(process.cwd(), '.github', 'ISSUE_TEMPLATE', 'session.yml'),
     'utf8');
   const template = YAML.parse(yamlTemplate);
-  sectionHandlers = template.body
-    .filter(section => !!section.id)
+  const sections = template.body
+    .filter(section => !!section.id);
+
+  // The "materials" section is not part of the template. We'll add it manually
+  // when need arises. For the purpose of validation and serialization, we need
+  // to add it to the list of sections (as a custom "auto hide" section that
+  // only gets displayed when it is not empty).
+  sections.push({
+    id: 'materials',
+    attributes: {
+      label: 'Materials',
+      autoHide: true
+    },
+  });
+
+  sectionHandlers = sections
     .map(section => {
       const handler = {
         id: section.id,
         title: section.attributes.label.replace(/ \(Optional\)$/, ''),
+        autoHide: !!section.attributes.autoHide,
         required: !!section.validations?.required,
         validate: value => true,
         parse: value => value,
@@ -307,6 +322,10 @@ export function serializeSessionDescription(description) {
     throw new Error('Need to call `initSectionHandlers` first!');
   }
   return sectionHandlers
+    .filter(handler =>
+      !handler.autoHide ||
+      description[handler.id] ||
+      description[handler.id] === 0)
     .map(handler => `### ${handler.title}${handler.required ? '' : ' (Optional)'}
 
 ${(description[handler.id] || description[handler.id] === 0) ?
