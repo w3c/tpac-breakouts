@@ -20,6 +20,35 @@ async function fetchChairName({ chair, browser, login, password }) {
   }
 }
 
+
+/**
+ * Helper function to retrieve the URL of the session agenda, if defined.
+ *
+ * The function first parses the agenda section. If it consists of a single
+ * link, that link is the agenda URL. Otherwise, the function looks for a
+ * possible agenda URL in the materials section (mainly for historical reason
+ * because that is where we used to store the agenda URL).
+ *
+ * The function returns an empty string if it cannot find an agenda URL.
+ */
+function getAgendaUrl(session) {
+  const agendaDesc = (session.description.agenda ?? '').trim();
+  const match =
+    agendaDesc.match(/^\[(.+)\]\((.*)\)$/i) ||
+    agendaDesc.match(/^([^:]+):\s*(.*)$/i);
+  if (match && !todoStrings.includes(match[2].toUpperCase())) {
+    try {
+      const url = new URL(match[2]);
+      return url.toString();
+    }
+    catch (err) {
+    }
+  }
+  const agendaMaterial = session.description.materials?.agenda ?? '@@';
+  return todoStrings.includes(agendaMaterial) ? '' : agendaMaterial;
+}
+
+
 /**
  * Helper function to format calendar entry description from the session's info
  */
@@ -39,9 +68,17 @@ function formatAgenda(session) {
 **Track(s):**
 ${tracks.join('\n')}` :
     '';
+
   const attendanceStr = session.description.attendance === 'restricted' ? `
 **Attendance:**
 This session is restricted to TPAC registrants.` :
+    '';
+
+  const agendaUrl = getAgendaUrl(session);
+  const detailedAgenda = agendaUrl ? null : session.description.agenda;
+  const detailedAgendaStr = detailedAgenda ? `
+**Agenda:**
+${detailedAgenda}` :
     '';
 
   return `**Chairs:**
@@ -53,6 +90,7 @@ ${session.description.description}
 **Goal(s):**
 ${session.description.goal}
 ${attendanceStr}
+${detailedAgendaStr}
 
 **Materials:**
 ${materials.join('\n')}
@@ -249,10 +287,7 @@ async function fillCalendarEntry({ page, session, project, status, zoom }) {
 
   await fillTextInput('input#event_chat',
     `https://irc.w3.org/?channels=${encodeURIComponent(session.description.shortname)}`);
-  const agendaMaterial = session.description.materials?.agenda ?? '@@';
-  const agendaUrl = todoStrings.includes(agendaMaterial) ? undefined : agendaMaterial;
-  await fillTextInput('input#event_agendaUrl', agendaUrl);
-
+  await fillTextInput('input#event_agendaUrl', getAgendaUrl(session));
   await fillTextInput('textarea#event_agenda', formatAgenda(session));
 
   const minutesMaterial = session.description.materials?.minutes ?? '@@';
