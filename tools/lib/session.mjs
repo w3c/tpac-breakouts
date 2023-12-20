@@ -70,16 +70,24 @@ export async function initSectionHandlers() {
   const sections = template.body
     .filter(section => !!section.id);
 
-  // The "materials" section is not part of the template. We'll add it manually
-  // when need arises. For the purpose of validation and serialization, we need
-  // to add it to the list of sections (as a custom "auto hide" section that
-  // only gets displayed when it is not empty).
+  // The "calendar" and "materials" sections are not part of the template.
+  // They are added manually or automatically when need arises. For the
+  // purpose of validation and serialization, we need to add them to the list
+  // of sections (as custom "auto hide" sections that only get displayed when
+  // they are not empty).
+  sections.push({
+    id: 'calendar',
+    attributes: {
+      label: 'Link to calendar',
+      autoHide: true
+    }
+  });
   sections.push({
     id: 'materials',
     attributes: {
-      label: 'Materials',
+      label: 'Meeting materials',
       autoHide: true
-    },
+    }
   });
 
   sectionHandlers = sections
@@ -185,6 +193,27 @@ export async function initSectionHandlers() {
           case 50: return 'More than 45 people';
           }
         }
+        break;
+
+      case 'calendar':
+        handler.parse = value => {
+          const match = value.match(/^\[(.+)\]\((.*)\)$/i);
+          return match[2];
+        };
+        handler.validate = value => {
+          const match = value.match(/^\[(.+)\]\((.*)\)$/i);
+          if (!match) {
+            return false;
+          }
+          try {
+            new URL(match[2]);
+            return true;
+          }
+          catch (err) {
+            return false;
+          }
+        };
+        handler.serialize = value => `[Calendar entry](${value})`;
         break;
 
       case 'materials':

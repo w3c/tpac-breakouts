@@ -336,7 +336,13 @@ export async function convertSessionToCalendarEntry(
     }
   }
 
-  const calendarUrl = session.description.materials?.calendar ?? undefined;
+  // Note we keep on looking at a calendar entry under materials for
+  // historical reasons, but the calendar URL is now stored under a
+  // dedicated property.
+  const calendarUrl =
+    session.description.calendar ??
+    session.description.materials?.calendar ??
+    undefined;
   const pageUrl = calendarUrl ? 
     `${calendarUrl.replace(/www\.w3\.org/, calendarServer)}edit/` :
     `https://${calendarServer}/events/meetings/new/`;
@@ -362,10 +368,7 @@ export async function convertSessionToCalendarEntry(
     // Update session's materials with calendar URL if needed
     if (newCalendarUrl && !calendarUrl) {
       console.log(`- add calendar URL to session description`);
-      if (!session.description.materials) {
-        session.description.materials = {};
-      }
-      session.description.materials.calendar = newCalendarUrl;
+      session.description.calendar = newCalendarUrl;
       await updateSessionDescription(session);
     }
   }
