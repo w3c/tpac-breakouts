@@ -283,6 +283,25 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
     }
   }
 
+  // Check that there is no plenary session scheduled at the same time as this
+  // session
+  if (sessions.slot) {
+    const plenaryWarnings = project.sessions
+      .filter(s => s !== session && s.slot && s.description.type === 'plenary')
+      .filter(s => s.slot === session.slot)
+      .map(other => {
+        return `Same slot "${session.slot}" as plenary session "${other.title}" (#${other.number})`;
+      });
+    if (plenaryWarnings.length > 0) {
+      errors.push({
+        session: sessionNumber,
+        severity: 'warning',
+        type: 'plenary',
+        messages: plenaryWarnings
+      });
+    }
+  }
+
   // No two sessions can use the same IRC channel during the same slot
   if (session.description.shortname) {
     const ircConflicts = project.sessions
