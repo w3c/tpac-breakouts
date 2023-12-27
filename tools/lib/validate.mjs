@@ -39,6 +39,16 @@ export async function validateSession(sessionNumber, project) {
 ${projectErrors.map(error => '- ' + error).join('\n')}`);
   }
 
+  // Retrieve name of plenary room and maximum number of sessions per plenary
+  const plenaryRoom = (project.metadata['plenary room'] ?? 'plenary').toLowerCase();
+  let plenaryHolds;
+  if (project.metadata['plenary holds']?.match(/^\d+$/)) {
+    plenaryHolds = parseInt(project.metadata['plenary holds'], 10);
+  }
+  else {
+    plenaryHolds = 5;
+  }
+
   // Look for session in the list of issues in the project
   const session = project.sessions.find(s => s.number === sessionNumber);
   if (!session) {
@@ -82,18 +92,27 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   // Make sure sessions identified as conflicting actually exist
   let hasConflictErrors = false;
   if (session.description.conflicts) {
-    const conflictErrors = session.description.conflicts
-      .map(number => {
-        if (number === sessionNumber) {
-          return `Session cannot conflict with itself`;
-        }
-        const conflictingSession = project.sessions.find(s => s.number === number);
-        if (!conflictingSession) {
-          return `Conflicting session ${number} is not in the project`;
-        }
-        return null;
-      })
-      .filter(error => !!error);
+    let conflictErrors = null;
+    if (session.description.type === 'plenary') {
+      // Plenary sessions cannot conflict with anything
+      // (Note: this will need to be adjusted if two or more "plenary" rooms
+      // get used at once)
+      conflictErrors = ['Plenary session cannot conflict with any other session'];
+    }
+    else {
+      conflictErrors = session.description.conflicts
+        .map(number => {
+          if (number === sessionNumber) {
+            return `Session cannot conflict with itself`;
+          }
+          const conflictingSession = project.sessions.find(s => s.number === number);
+          if (!conflictingSession) {
+            return `Conflicting session ${number} is not in the project`;
+          }
+          return null;
+        })
+        .filter(error => !!error);
+    }
     hasConflictErrors = conflictErrors.length > 0;
     if (hasConflictErrors) {
       errors.push({
@@ -105,9 +124,38 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
     }
   }
 
-  // Make sure there is no session scheduled at the same time in the same room
+  // Make sure that a plenary session is scheduled in a plenary room, and that
+  // a breakout session is scheduled in a breakout room.
+  // (Note: this will need to be relaxed if two or more "plenary" rooms get
+  // used at once, and/or if the plenary room can be reused for breakouts.
+  if (session.room) {
+    if (session.description.type === 'plenary') {
+      if (session.room.toLowerCase() !== plenaryRoom) {
+        errors.push({
+          session: sessionNumber,
+          severity: 'error',
+          type: 'scheduling',
+          messages: ['Plenary session must be scheduled in plenary room']
+        });
+      }
+    }
+    else {
+      if (session.room.toLowerCase() === plenaryRoom) {
+        errors.push({
+          session: sessionNumber,
+          severity: 'error',
+          type: 'scheduling',
+          messages: ['Breakout session must not be scheduled in plenary room']
+        });
+      }
+    }
+  }
+
+  // Make sure there is no session scheduled at the same time in the same room,
+  // skipping plenary sessions since they are, by definition, scheduled at the
+  // same time and in the same room.
   const scheduled = session.room && session.slot;
-  if (scheduled) {
+  if (scheduled && (session.description.type !== 'plenary')) {
     const schedulingErrors = project.sessions
       .filter(s => s !== session && s.room && s.slot)
       .filter(s => s.room === session.room && s.slot === session.slot)
@@ -118,6 +166,22 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         severity: 'error',
         type: 'scheduling',
         messages: schedulingErrors
+      });
+    }
+  }
+
+  // Make sure that the number of sessions in a plenary does not exceed the
+  // maximum allowed.
+  if (scheduled && (session.description.type === 'plenary')) {
+    const plenarySessions = project.sessions
+      .filter(s => s.room && s.slot)
+      .filter(s => s.room === session.room && s.slot === session.slot);
+    if (plenarySessions.length > plenaryHolds) {
+      errors.push({
+        session: sessionNumber,
+        severity: 'error',
+        type: 'scheduling',
+        messages: ['Too many sessions scheduled in same plenary slot']
       });
     }
   }
@@ -136,9 +200,11 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   }
 
   // Check absence of conflict with sessions with same chair(s)
+  // Note: It's fine to have two plenary sessions with same chair(s) scheduled
+  // in the same room and at the same time.
   if (session.slot) {
     const chairConflictErrors = project.sessions
-      .filter(s => s !== session && s.slot === session.slot)
+      .filter(s => s !== session && s.slot === session.slot && s.room !== session.room)
       .filter(s => {
         try {
           const sdesc = parseSessionBody(s.body);
@@ -190,6 +256,8 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   }
 
   // Check absence of conflict with sessions in the same track(s)
+  // Note: It's fine to have two plenary sessions in the same track(s)
+  // scheduled in the same room and at the same time.
   if (session.slot) {
     const tracks = session.labels.filter(label => label.startsWith('track: '));
     let tracksWarnings = [];
@@ -197,7 +265,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
       const sessionsInSameTrack = project.sessions.filter(s => s !== session && s.labels.includes(track));
       const trackWarnings = sessionsInSameTrack
         .map(other => {
-          if (other.slot === session.slot) {
+          if (other.slot === session.slot && other.room !== session.room) {
             return `Same slot "${session.slot}" as session in same track "${track}": "${other.title}" (#${other.number})`;
           }
           return null;

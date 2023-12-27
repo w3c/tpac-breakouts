@@ -164,6 +164,11 @@ export async function initSectionHandlers() {
         handler.serialize = value => value === 30 ? '30 minutes' : '60 minutes (Default)';
         break;
 
+      case 'type':
+        handler.parse = value => value.toLowerCase() === 'plenary' ? 'plenary' : 'breakout';
+        handler.serialize = value => value === 'plenary' ? 'Plenary' : 'Breakout (Default)';
+        break;
+
       case 'conflicts':
         // List of GitHub issues
         handler.parse = value => parseList(value, { spaceSeparator: true, prefix: '#' })

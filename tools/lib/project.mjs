@@ -318,7 +318,7 @@ function parseProjectDescription(desc) {
   if (desc) {
     desc.split(/,/)
       .map(param => param.trim())
-      .map(param => param.split(/:/).map(val => val.trim()))
+      .map(param => param.split(/:/).map(val => val.trim().toLowerCase()))
       .map(param => metadata[param[0]] = param[1]);
   }
   return metadata;
