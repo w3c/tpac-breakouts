@@ -128,6 +128,14 @@ async function main({ preserve, except, changesFile, apply, seed }) {
 
   const rooms = project.rooms;
   const slots = project.slots;
+  const plenaryRoom = project.metadata['plenary room'] ?? 'Plenary';
+  let plenaryHolds;
+  if (project.metadata['plenary holds']?.match(/^\d+$/)) {
+    plenaryHolds = parseInt(project.metadata['plenary holds'], 10);
+  }
+  else {
+    plenaryHolds = 5;
+  }
 
   seed = seed ?? makeseed();
 
@@ -220,7 +228,11 @@ async function main({ preserve, except, changesFile, apply, seed }) {
   }
 
   // Initialize the list of tracks
+  // Note: for the purpose of scheduling, a "_plenary" track gets artificially
+  // created so that plenary sessions get scheduled first. That's needed to
+  // avoid scheduling breakout sessions in parallel to plenary sessions.
   const tracks = new Set();
+  tracks.add('_plenary');
   for (const session of sessions) {
     session.tracks = session.labels
       .filter(label => label.startsWith('track: '))
@@ -245,7 +257,9 @@ async function main({ preserve, except, changesFile, apply, seed }) {
   // Return next session to process (and flag it as processed)
   function selectNextSession(track) {
     const session = sessions.find(s => !s.processed &&
-      (track === '' || s.tracks.includes(track)));
+      ((track === '_plenary' && s.description.type === 'plenary') ||
+        track === '' ||
+        s.tracks.includes(track)));
     if (session) {
       session.processed = true;
     }
@@ -253,6 +267,10 @@ async function main({ preserve, except, changesFile, apply, seed }) {
   }
 
   function chooseTrackRoom(track) {
+    if (track === '_plenary') {
+      // Plenary room is imposed
+      return plenaryRoom;
+    }
     if (!track) {
       // No specific room by default for sessions in the main track
       return null;
@@ -290,6 +308,20 @@ async function main({ preserve, except, changesFile, apply, seed }) {
     return room;
   }
 
+  function isRoomAndSlotAvailableForSession(session, room, slotName) {
+    if (session.description.type === 'plenary') {
+      const breakoutSlot = room.sessions.find(s => s !== session &&
+        s.slot === slotName && s.description.type !== 'plenary');
+      const alreadyScheduled =
+        room.sessions.find(s => s !== session && s.slot === slotName);
+      return (!breakoutSlot && alreadyScheduled.length < plenaryHolds);
+    }
+    else {
+      return room.sessions.find(s => s !== session && s.slot === slotName) &&
+        !sessions.find(s => s !== session && s.slot === slotName &&
+          s.description.type === 'plenary');
+    }
+  }
 
   function setRoomAndSlot(session, {
     trackRoom, strictDuration, meetDuration, meetCapacity, meetConflicts
@@ -335,20 +367,34 @@ async function main({ preserve, except, changesFile, apply, seed }) {
       // - Otherwise, all the slots that are still available in the room are
       // possible.
       // If we're dealing with a real track, we'll consider possible slots in
-      // order. If we're dealing with a session that is not in a track,
-      // possible slots are ordered so that less used ones get considered first
-      // (to avoid gaps).
+      // order. If we're dealing with plenary sessions, we'll fill possible
+      // slots in order before moving to the next one. If we're dealing with a
+      // session that is not in a track, possible slots are ordered so that
+      // less used ones get considered first (to avoid gaps).
       const possibleSlots = [];
       if (session.slot) {
-        const slot = slots.find(slot => slot.name === session.slot);
-        if (!room.sessions.find(s => s !== session && s.slot === session.slot)) {
+        if (isRoomAndSlotAvailableForSession(session, room, session.slot)) {
+          const slot = slots.find(slot => slot.name === session.slot);
           possibleSlots.push(slot);
         }
       }
       else {
         possibleSlots.push(...slots
-          .filter(slot => !room.sessions.find(session => session.slot === slot.name)));
-        if (!trackRoom) {
+          .filter(slot => isRoomAndSlotAvailableForSession(session, room, slot.name));
+        if (session.description.type === 'plenary') {
+          // For plenary sessions, fill slot fully before moving to another slot
+          possibleSlots.sort((s1, s2) => {
+            const s1len = s1.sessions.filter(s => s.room === plenaryRoom).length;
+            const s2len = s2.sessions.filter(s => s.room === plenaryRoom).length;
+            if (s1len === s2len) {
+              return s2.pos - s1.pos;
+            }
+            else {
+              return s2len - s1len;
+            }
+          });
+        }
+        else if (!trackRoom) {
           // When not considering a specific track, fill slots in turn,
           // starting with least busy ones
           possibleSlots.sort((s1, s2) => {
@@ -372,9 +418,12 @@ async function main({ preserve, except, changesFile, apply, seed }) {
       // - Session is scheduled in a slot that does not meet the duration
       // requirement.
       // ... Unless these constraints have been relaxed!
+      // ... Also note plenary sessions adjust these rules slightly (two
+      // sessions in the same plenary in the same track or chaired by the same
+      // person are totally fine)
       function nonConflictingSlot(slot) {
         const potentialConflicts = sessions.filter(s =>
-          s !== session && s.slot === slot.name);
+          s !== session && s.slot === slot.name && s.room !== session.room);
         // There must be no session in the same track at that time
         const trackConflict = potentialConflicts.find(s =>
           s.tracks.find(track => session.tracks.includes(track)));
@@ -601,8 +650,8 @@ async function main({ preserve, except, changesFile, apply, seed }) {
   for (const slot of slots) {
     const tablerow = [slot.name];
     for (const room of rooms) {
-      const session = sessions.filter(s => s.slot === slot.name && s.room === room.name).pop();
-      tablerow.push(session);
+      const roomSessions = sessions.filter(s => s.slot === slot.name && s.room === room.name);
+      tablerow.push(roomSessions);
     }
     tablerows.push(tablerow);
   }
@@ -614,28 +663,43 @@ async function main({ preserve, except, changesFile, apply, seed }) {
     logIndent(5, row[0]);
 
     // Warn of any conflicting chairs in this slot (in first column)
-     let allchairnames = row.filter((s,i) => i > 0).filter((s) => typeof(s) === 'object').map((s) => s.chairs).flat(1).map(c => c.name);
-     let duplicates = allchairnames.filter((e, i, a) => a.indexOf(e) !== i);
-     if (duplicates.length) {
-       logIndent(5, '<p class="conflict-error">Chair conflicts: ' + duplicates.join(', ') + '</p>');
-     }
+    // Note: There may be multiple sessions in a plenary with the same chair.
+    const allchairnames = row
+      .slice(1)
+      .map(roomSessions => {
+        const chairs = roomSessions.map(s => s.chairs).flat().map(c => c.name);
+        return [...new Set(chairs)];
+      })
+      .flat();
+    const duplicates = allchairnames.filter((e, i, a) => a.indexOf(e) !== i);
+    if (duplicates.length) {
+      logIndent(5, '<p class="conflict-error">Chair conflicts: ' + duplicates.join(', ') + '</p>');
+    }
 
     // Warn if two sessions from the same track are scheduled in this slot
-    const alltracks = row.filter((s, i) => i > 0 && !!s).map(s => s.tracks).flat(1);
+    // Note: There may be multiple sessions in a plenary in the same track.
+    const alltracks = row
+      .slice(1)
+      .map(roomSessions => {
+        const tracks = roomSessions.map(s => s.tracks).flat();
+        return [...new Set(tracks)];
+      })
+      .flat();
     const trackdups = [...new Set(alltracks.filter((e, i, a) => a.indexOf(e) !== i))];
     if (trackdups.length) {
       logIndent(5, '<p class="track-error">Same track: ' + trackdups.join(', ') + '</p>');
     }
     logIndent(4, '</th>');
+
     // Format rest of row
-    for (let i = 1; i<row.length; i++) {
-      const session = row[i];
-      if (!session) {
+    for (let i = 1; i < row.length; i++) {
+      const roomSessions = row[i];
+      if (roomSessions.length === 0) {
         logIndent(4, '<td></td>');
       } else {
         // Warn if session capacity estimate exceeds room capacity
         const sloterrors = [];
-        if (session.description.capacity > rooms[i-1].capacity) {
+        if (roomSessions.find(s => s.description.capacity > rooms[i-1].capacity)) {
           sloterrors.push('capacity-error');
         }
         if (trackdups.length && trackdups.some(r => session.tracks.includes(r))) {
@@ -646,42 +710,45 @@ async function main({ preserve, except, changesFile, apply, seed }) {
         } else {
           logIndent(4, '<td>');
         }
-        const url= 'https://github.com/' + session.repository + '/issues/' + session.number;
-        // Format session number (with link to GitHub) and name
-        logIndent(5, `<a href="${url}">#${session.number}</a>: ${session.title}`);
 
-        // Format chairs
-        logIndent(5, '<p>');
-        logIndent(6, '<i>' + session.chairs.map(x => x.name).join(',<br/>') + '</i>');
-        logIndent(5, '</p>');
+        for (const session of roomSessions) {
+          const url = 'https://github.com/' + session.repository + '/issues/' + session.number;
+          // Format session number (with link to GitHub) and name
+          logIndent(5, `<a href="${url}">#${session.number}</a>: ${session.title}`);
 
-        // Add tracks if needed
-        if (session.tracks?.length > 0) {
-          for (const track of session.tracks) {
-            logIndent(5, `<p class="track">${track}</p>`);
-          }
-        }
+          // Format chairs
+          logIndent(5, '<p>');
+          logIndent(6, '<i>' + session.chairs.map(x => x.name).join(',<br/>') + '</i>');
+          logIndent(5, '</p>');
 
-        // List session conflicts to avoid and highlight where there is a conflict.
-        if (Array.isArray(session.description.conflicts)) {
-          const confs = [];
-          for (const conflict of session.description.conflicts) {
-            for (const v of row) {
-              if (!!v && v.number === conflict) {
-                confs.push(conflict);
-              }
+          // Add tracks if needed
+          if (session.tracks?.length > 0) {
+            for (const track of session.tracks) {
+              logIndent(5, `<p class="track">${track}</p>`);
             }
           }
-          if (confs.length) {
-            logIndent(5, '<p><b>Conflicts with</b>: ' + confs.map(s => '<span class="conflict-error">#' + s + '</span>').join(', ') + '</p>');
+
+          // List session conflicts to avoid and highlight where there is a conflict.
+          if (Array.isArray(session.description.conflicts)) {
+            const confs = [];
+            for (const conflict of session.description.conflicts) {
+              for (const v of row) {
+                if (!!v && v.number === conflict) {
+                  confs.push(conflict);
+                }
+              }
+            }
+            if (confs.length) {
+              logIndent(5, '<p><b>Conflicts with</b>: ' + confs.map(s => '<span class="conflict-error">#' + s + '</span>').join(', ') + '</p>');
+            }
+            // This version prints all conflict info if we want that
+            // logIndent(5, '<p><b>Conflicts</b>: ' + session.description.conflicts.map(s => confs.includes(s) ? '<span class="conflict-error">' + s + '</span>' : s).join(', ') + '</p>');
           }
-          // This version prints all conflict info if we want that
-          // logIndent(5, '<p><b>Conflicts</b>: ' + session.description.conflicts.map(s => confs.includes(s) ? '<span class="conflict-error">' + s + '</span>' : s).join(', ') + '</p>');
+          if (session.description.capacity > rooms[i-1].capacity) {
+            logIndent(5, '<p><b>Capacity</b>: ' + session.description.capacity + '</p>');
+          }
+          logIndent(4, '</td>');
         }
-        if (sloterrors.includes('capacity-error')) {
-          logIndent(5, '<p><b>Capacity</b>: ' + session.description.capacity + '</p>');
-        }
-        logIndent(4, '</td>');
       }
     }
     logIndent(3, '</tr>');
