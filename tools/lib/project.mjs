@@ -198,18 +198,21 @@ export async function fetchProject(login, id) {
   }`);
   const sessions = sessionsResponse.data[type].projectV2.items.nodes;
 
-  const repository = sessions[0].content.repository;
-  const labelsResponse = await sendGraphQLRequest(`query {
-    repository(owner: "${repository.owner.login}", name: "${repository.name}") {
-      labels(first: 50) {
-        nodes {
-          id
-          name
+  let labels = [];
+  if (sessions.length > 0) {
+    const repository = sessions[0].content.repository;
+    const labelsResponse = await sendGraphQLRequest(`query {
+      repository(owner: "${repository.owner.login}", name: "${repository.name}") {
+        labels(first: 50) {
+          nodes {
+            id
+            name
+          }
         }
       }
-    }
-  }`);
-  const labels = labelsResponse.data.repository.labels.nodes;
+    }`);
+    labels = labelsResponse.data.repository.labels.nodes;
+  }
 
   // Let's combine and flatten the information a bit
   return {
