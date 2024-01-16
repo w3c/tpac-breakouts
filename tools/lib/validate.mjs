@@ -285,7 +285,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
 
   // Check that there is no plenary session scheduled at the same time as this
   // session
-  if (sessions.slot) {
+  if (session.slot) {
     const plenaryWarnings = project.sessions
       .filter(s => s !== session && s.slot && s.description.type === 'plenary')
       .filter(s => s.slot === session.slot)
