@@ -3,6 +3,9 @@ import { updateSessionDescription } from './session.mjs';
 import { todoStrings } from './todostrings.mjs';
 
 
+/**
+ * Retrieve the name of a chair from their W3C ID
+ */
 async function fetchChairName({ chair, browser, login, password }) {
   console.log(`- fetch chair name for ${chair.login}`);
   const page = await browser.newPage();
@@ -105,7 +108,8 @@ ${tracksStr}`;
 function formatPlenaryDescription(sessions) {
   const agendaItems = sessions.map(session => {
     const issueUrl = `https://github.com/${session.repository}/issues/${session.number}`;
-    return `- [${session.title.replace(/(\[\])/g, '\\$1')}](${issueUrl})`;
+    const chairs = ${session.chairs.map(chair => chair.name ?? '@' + chair.login).join(', ')};
+    return `- [${session.title.replace(/(\[\])/g, '\\$1')}](${issueUrl}) *(${chairs})*`;
   });
   return `The following proposals will be briefly presented:
 ${agendaItems.join('\n')}`;
@@ -127,7 +131,8 @@ ${agendaItems.join('\n')}`;
 function formatPlenaryAgenda(sessions) {
   const agendaItems = sessions.map(session => {
     const issueUrl = `https://github.com/${session.repository}/issues/${session.number}`;
-    return `- [${session.title.replace(/([])/g, '\\$1')}](${issueUrl})`;
+    const chairs = ${session.chairs.map(chair => chair.name ?? '@' + chair.login).join(', ')};
+    return `- [${session.title.replace(/([])/g, '\\$1')}](${issueUrl}) *(${chairs})*`;
   });
 
   return `**Description:**
@@ -547,6 +552,11 @@ export async function convertSessionToCalendarEntry(
         .filter(error => error.severity === 'error');
       if (errors.length > 0) {
         throw new Error(`Session ${session.number} is in the same plenary as session ${s.number}, which contains errors that need fixing`);
+      }
+      for (const chair of s.chairs) {
+        if (chair.name === chair.login && chair.w3cId) {
+          await fetchChairName({ chair, browser, login, password });
+        }
       }
     }
   }
