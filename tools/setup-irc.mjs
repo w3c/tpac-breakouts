@@ -88,6 +88,9 @@ async function main({ number, onlyCommands, dismissBots } = {}) {
     console.log(`- found ${sessions.length} sessions assigned to slots: ${sessions.map(s => s.number).join(', ')}`);
   }
   sessions = await Promise.all(sessions.map(async session => {
+    if (session.description.type === 'plenary') {
+      return null;
+    }
     const sessionErrors = (await validateSession(session.number, project))
       .filter(error => error.severity === 'error');
     if (sessionErrors.length > 0) {

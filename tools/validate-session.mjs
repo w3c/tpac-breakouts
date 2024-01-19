@@ -38,6 +38,24 @@ function generateShortname(session) {
     .replace(/\s+/g, '-');
 }
 
+/**
+ * Retrieve the name of the IRC channel to use for plenary sessions. That name
+ * can be defined in the project's description on GitHub. If the name is not
+ * specified, `#plenary` is used.
+ */
+function getProjectPlenaryShortname(project) {
+  const channel = project.metadata['plenary channel'];
+  if (channel && channel.startsWith('#')) {
+    return channel;
+  }
+  else if (channel) {
+    return '#' + channel;
+  }
+  else {
+    return '#plenary';
+  }
+}
+
 async function main(sessionNumber, changesFile) {
   // First, retrieve known information about the project and the session
   const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER');
@@ -116,7 +134,8 @@ async function main(sessionNumber, changesFile) {
   // No IRC channel provided, one will be created, let's add a
   // "check: irc channel" flag
   if (!report.find(err => err.severity === 'error' && err.type === 'format') &&
-      !session.description.shortname) {
+      !session.description.shortname &&
+      (session.description.type !== 'plenary')) {
     report.push({
       session: sessionNumber,
       severity: 'check',
@@ -168,8 +187,19 @@ async function main(sessionNumber, changesFile) {
     console.log(`Add '#' prefix to IRC channel... done`);
   }
 
-  // Or generate IRC channel if it was not provided.
+  // Or force IRC channel to the plenary one if session is a plenary session
+  const plenaryShortname = getProjectPlenaryShortname(project);
   if (!report.find(err => err.severity === 'error' && err.type === 'format') &&
+      (session.description.type === 'plenary') &&
+      (session.description.shortname !== plenaryShortname)) {
+    console.log();
+    console.log(`Associate session with plenary IRC channel...`);
+    session.description.shortname = plenaryShortname;
+    await updateSessionDescription(session);
+    console.log(`Associate session with plenary IRC channel... done`);
+  }
+  // Or generate IRC channel if it was not provided
+  else if (!report.find(err => err.severity === 'error' && err.type === 'format') &&
       !session.description.shortname) {
     console.log();
     console.log(`Generate IRC channel...`);
