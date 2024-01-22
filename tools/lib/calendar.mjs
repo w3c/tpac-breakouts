@@ -148,6 +148,24 @@ ${agendaItems.join('\n')}`;
 
 
 /**
+ * Return the order of the session in its plenary meeting if one exists, 999999
+ * otherwise (to put the session last).
+ *
+ * The order of the session may be specified through an "order:x" note in the
+ * project's "Note" field.
+ */
+function getPlenaryOrder(session) {
+  const match = session.validation.note?.match(/order[:=]\s*(\d+)(?:\s|,|$)/);
+  if (match) {
+    return parseInt(match[1], 10);
+  }
+  else {
+    return 999999;
+  }
+}
+
+
+/**
  * Retrieve the Zoom meeting link. Zoom info may be a string or an object
  * with a `link` property.
  */
@@ -355,7 +373,17 @@ async function fillCalendarEntry({ page, session, project, status, zoom }) {
   }
 
   if (session.description.type === 'plenary') {
-    const sessions = project.sessions.filter(s => s.room === session.room && s.slot === session.slot);
+    const sessions = project.sessions
+      .filter(s => s.room === session.room && s.slot === session.slot)
+      .sort((session1, session2) => {
+        const order1 = getPlenaryOrder(session1);
+        const order2 = getPlenaryOrder(session2);
+        const compare = order1 - order2;
+        if (compare === 0) {
+          compare = session1.number - session2.number;
+        }
+        return compare;
+      });
     await fillTextInput('input#event_title', 'Plenary session');
     await fillTextInput('textarea#event_description', formatPlenaryDescription(sessions));
     await fillTextInput('input#event_chat',
