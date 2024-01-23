@@ -53,6 +53,22 @@ function getAgendaUrl(session) {
 
 
 /**
+ * Converts GitHub Flavoured Markdown to the markdown supported by the calendar
+ * system and Bert's markdown to HTML converter.
+ *
+ * The function may need to be completed over time. So far, the only thing it
+ * does is converting inline tabulations to spaces, because the conversion to
+ * HTML would turn these tabulations into blockquotes otherwise.
+ */
+function convertToCalendarMarkdown(text) {
+  if (!text) {
+    return text;
+  }
+  return text.replace(/(\S)\t+/g, '$1 ');
+}
+
+
+/**
  * Helper function to format calendar entry description from the session's info
  */
 function formatAgenda(session) {
@@ -88,10 +104,10 @@ ${detailedAgenda}` :
 ${session.chairs.map(chair => chair.name ?? '@' + chair.login).join(', ')}
 
 **Description:**
-${session.description.description}
+${convertToCalendarMarkdown(session.description.description)}
 
 **Goal(s):**
-${session.description.goal}
+${convertToCalendarMarkdown(session.description.goal)}
 ${attendanceStr}
 ${detailedAgendaStr}
 
@@ -393,7 +409,7 @@ async function fillCalendarEntry({ page, session, project, status, zoom }) {
   }
   else {
     await fillTextInput('input#event_title', session.title);
-    await fillTextInput('textarea#event_description', session.description.description);
+    await fillTextInput('textarea#event_description', convertToCalendarMarkdown(session.description.description));
     await fillTextInput('input#event_chat',
       `https://irc.w3.org/?channels=${encodeURIComponent(session.description.shortname)}`);
     await fillTextInput('input#event_agendaUrl', getAgendaUrl(session));
