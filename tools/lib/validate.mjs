@@ -320,7 +320,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         session: sessionNumber,
         severity: 'error',
         type: 'irc',
-        messages: ircConflicts.map(s => `Same IRC channel "${s.description.shortname}" as session #${s.number} ${s.title}`)
+        messages: ircConflicts.map(s => `Same IRC channel "${session.description.shortname}" as session #${s.number} ${s.title}`)
       });
     }
   }
