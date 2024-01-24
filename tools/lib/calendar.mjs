@@ -155,8 +155,8 @@ function formatPlenaryAgenda(sessions) {
 During this plenary meeting, proposals will be briefly presented back to back.
 Discussions will be limited to a couple of questions and answers, if time allows.
 
-**Goal:**
-Raise awareness about the proposals.
+**Goals:**
+Raise awareness, identify venue(s) for ongoing discussion.
 
 **Agenda:**
 ${agendaItems.join('\n')}`;
