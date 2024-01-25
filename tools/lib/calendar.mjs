@@ -124,7 +124,7 @@ ${tracksStr}`;
 function formatPlenaryDescription(sessions) {
   const agendaItems = sessions.map(session => {
     const issueUrl = `https://github.com/${session.repository}/issues/${session.number}`;
-    const chairs = ${session.chairs.map(chair => chair.name ?? '@' + chair.login).join(', ')};
+    const chairs = session.chairs.map(chair => chair.name ?? '@' + chair.login).join(', ');
     return `- [${session.title.replace(/(\[\])/g, '\\$1')}](${issueUrl}) *(${chairs})*`;
   });
   return `The following proposals will be briefly presented:
@@ -147,7 +147,7 @@ ${agendaItems.join('\n')}`;
 function formatPlenaryAgenda(sessions) {
   const agendaItems = sessions.map(session => {
     const issueUrl = `https://github.com/${session.repository}/issues/${session.number}`;
-    const chairs = ${session.chairs.map(chair => chair.name ?? '@' + chair.login).join(', ')};
+    const chairs = session.chairs.map(chair => chair.name ?? '@' + chair.login).join(', ');
     return `- [${session.title.replace(/([])/g, '\\$1')}](${issueUrl}) *(${chairs})*`;
   });
 
