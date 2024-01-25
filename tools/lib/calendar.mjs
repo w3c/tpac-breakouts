@@ -283,7 +283,7 @@ async function assessCalendarEntry(page, session) {
  * Note that the function returns false if the calendar entry is for a plenary
  * meeting that only links to one session.
  */
-function isSharedCalendarEntry(page, session) {
+async function isSharedCalendarEntry(page, session) {
   const desc = await page.$eval('textarea#event_agenda', el => el.value);
   if (!desc) {
     throw new Error('No detailed agenda in calendar entry');
