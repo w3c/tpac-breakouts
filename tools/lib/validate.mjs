@@ -287,8 +287,17 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   // session
   if (session.slot) {
     const plenaryWarnings = project.sessions
-      .filter(s => s !== session && s.slot && s.description.type === 'plenary')
-      .filter(s => s.slot === session.slot)
+      .filter(s => s !== session && s.slot && s.room)
+      .filter(s => s.slot === session.slot && s.room !== session.room)
+      .filter(s => {
+        try {
+          const desc = parseSessionBody(s.body);
+          return desc.type === 'plenary';
+        }
+        catch {
+          return false;
+        }
+      })
       .map(other => {
         return `Same slot "${session.slot}" as plenary session "${other.title}" (#${other.number})`;
       });
