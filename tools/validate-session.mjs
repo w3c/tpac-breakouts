@@ -21,6 +21,7 @@
  * The JSON file typically matches github.event.issue.changes in a GitHub job.
  */
 
+import path from 'path';
 import { getEnvKey } from './lib/envkeys.mjs';
 import { fetchProject, saveSessionValidationResult } from './lib/project.mjs'
 import { validateSession } from './lib/validate.mjs';
@@ -99,8 +100,10 @@ async function main(sessionNumber, changesFile) {
 
     // Read JSON file that describes changes if one was given
     // (needs to contain a dump of `github.event.changes` when run in a job)
+    const changesFileUrl = 'file:///' +
+        path.join(process.cwd(), changesFile).replace(/\\/g, '/');
     const { default: changes } = await import(
-      ['..', changesFile].join('/'),
+      changesFileUrl,
       { assert: { type: 'json' } }
     );
     if (!changes.body?.from) {
