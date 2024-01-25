@@ -302,14 +302,16 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
     }
   }
 
-  // No two sessions can use the same IRC channel during the same slot
+  // No two sessions can use the same IRC channel during the same slot,
+  // unless both sessions are part of the same plenary meeting.
   if (session.description.shortname) {
     const ircConflicts = project.sessions
       .filter(s => s.number !== session.number && s.slot === session.slot)
       .filter(s => {
         try {
           const desc = parseSessionBody(s.body);
-          return desc.shortname === session.shortname;
+          return desc.shortname === session.description.shortname &&
+            (desc.type !== 'plenary' || session.description.type !== 'plenary');
         }
         catch {
           return false;
