@@ -149,7 +149,8 @@ export async function initSectionHandlers() {
         break;
 
       case 'shortname':
-        handler.validate = value => value.match(/^#?[A-Za-z0-9\-_]+$/);
+        handler.parse = value => value.replace(/^\`(.*)\`$/, '$1');
+        handler.validate = value => value.match(/^(\`#?[A-Za-z0-9\-_]+\`|#?[A-Za-z0-9\-_]+)$/);
         break;
 
       case 'attendance':
