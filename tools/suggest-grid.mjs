@@ -703,10 +703,10 @@ async function main({ preserve, except, changesFile, apply, seed }) {
       } else {
         // Warn if session capacity estimate exceeds room capacity
         const sloterrors = [];
-        if (roomSessions.find(s => s.description.capacity > rooms[i-1].capacity)) {
+        if (roomSessions.find(s => (s.description.capacity ?? 0) > rooms[i-1].capacity)) {
           sloterrors.push('capacity-error');
         }
-        if (trackdups.length && trackdups.some(r => session.tracks.includes(r))) {
+        if (trackdups.length && trackdups.some(r => roomSessions.find(s => s.tracks.includes(r)))) {
           sloterrors.push('track-error');
         }
         if (sloterrors.length) {
