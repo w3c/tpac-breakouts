@@ -269,7 +269,7 @@ async function main({ preserve, except, changesFile, apply, seed }) {
   function chooseTrackRoom(track) {
     if (track === '_plenary') {
       // Plenary room is imposed
-      return plenaryRoom;
+      return rooms.find(room => room.name === plenaryRoom);
     }
     if (!track) {
       // No specific room by default for sessions in the main track
@@ -313,11 +313,11 @@ async function main({ preserve, except, changesFile, apply, seed }) {
       const breakoutSlot = room.sessions.find(s => s !== session &&
         s.slot === slotName && s.description.type !== 'plenary');
       const alreadyScheduled =
-        room.sessions.find(s => s !== session && s.slot === slotName);
+        room.sessions.filter(s => s !== session && s.slot === slotName);
       return (!breakoutSlot && alreadyScheduled.length < plenaryHolds);
     }
     else {
-      return room.sessions.find(s => s !== session && s.slot === slotName) &&
+      return !room.sessions.find(s => s !== session && s.slot === slotName) &&
         !sessions.find(s => s !== session && s.slot === slotName &&
           s.description.type === 'plenary');
     }
@@ -347,11 +347,13 @@ async function main({ preserve, except, changesFile, apply, seed }) {
     else {
       // All rooms that have enough capacity are candidate rooms
       possibleRooms.push(...rooms
-        .filter(room => room.capacity >= session.description.capacity)
+        .filter(room => room.name !== plenaryRoom || session.description.type === 'plenary')
+        .filter(room => room.capacity >= (session.description.capacity ?? 0))
         .sort(byCapacity));
       if (!meetCapacity) {
         possibleRooms.push(...rooms
-          .filter(room => room.capacity < session.description.capacity)
+          .filter(room => room.name !== plenaryRoom || session.description.type === 'plenary')
+          .filter(room => room.capacity < (session.description.capacity ?? +Infinity))
           .sort(byCapacityDesc));
       }
     }
@@ -452,7 +454,7 @@ async function main({ preserve, except, changesFile, apply, seed }) {
         }
 
         // Meet duration preference unless we don't care
-        if (meetDuration) {
+        if (meetDuration && session.description.duration) {
           if ((strictDuration && slot.duration !== session.description.duration) ||
               (!strictDuration && slot.duration < session.description.duration)) {
             return false;
@@ -518,7 +520,7 @@ async function main({ preserve, except, changesFile, apply, seed }) {
         meetConflicts: ['session', 'track']
       };
       while (!setRoomAndSlot(session, constraints)) {
-        if (constraints.strictDuration) {
+        if (constraints.strictDuration && session.description.duration) {
           console.warn(`- relax duration comparison for #${session.number}`);
           constraints.strictDuration = false;
         }
@@ -526,7 +528,7 @@ async function main({ preserve, except, changesFile, apply, seed }) {
           console.warn(`- relax track constraint for #${session.number}`);
           constraints.trackRoom = null;
         }
-        else if (constraints.meetDuration) {
+        else if (constraints.meetDuration && session.description.duration) {
           console.warn(`- forget duration constraint for #${session.number}`);
           constraints.meetDuration = false;
         }
