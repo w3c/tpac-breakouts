@@ -299,7 +299,9 @@ async function main({ preserve, except, changesFile, apply, seed }) {
       .map(name => rooms.find(room => room.name === name));
     const allRooms = []
       .concat(requestedRooms.sort(byAvailability))
-      .concat(rooms.filter(room => !requestedRooms.includes(room)).sort(byAvailability))
+      .concat(rooms.filter(room =>
+        room.name !== plenaryRoom &&
+        !requestedRooms.includes(room)).sort(byAvailability));
     const room =
       allRooms.find(meetAll) ??
       allRooms.find(meetCapacity) ??
