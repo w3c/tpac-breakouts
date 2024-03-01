@@ -14,7 +14,7 @@ async function fetchChairName({ chair, browser, login, password }) {
     await page.goto(url);
     await authenticate(page, login, password, url);
     chair.name = await page.evaluate(() => {
-      const el = document.querySelector('main article h1');
+      const el = document.querySelector('main h1');
       return el.textContent.trim();
     });
   }
