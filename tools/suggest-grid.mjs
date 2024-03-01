@@ -380,7 +380,7 @@ async function main({ preserve, except, changesFile, apply, seed }) {
       }
       else {
         possibleSlots.push(...slots
-          .filter(slot => isRoomAndSlotAvailableForSession(session, room, slot.name));
+          .filter(slot => isRoomAndSlotAvailableForSession(session, room, slot.name)));
         if (session.description.type === 'plenary') {
           // For plenary sessions, fill slot fully before moving to another slot
           possibleSlots.sort((s1, s2) => {
