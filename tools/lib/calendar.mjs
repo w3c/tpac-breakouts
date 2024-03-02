@@ -433,7 +433,7 @@ async function fillCalendarEntry({ page, session, project, status, zoom }) {
     'button#event_no_notif');
   await page.waitForNavigation();
   const calendarUrl = await page.evaluate(() => window.location.href);
-  if (calendarUrl.endsWith('/new') || calendarUrl.endsWith('/edit/')) {
+  if (calendarUrl.endsWith('/new/') || calendarUrl.endsWith('/edit/')) {
     throw new Error('Calendar entry submission failed');
   }
   return calendarUrl;
