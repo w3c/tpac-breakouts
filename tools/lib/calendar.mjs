@@ -511,8 +511,7 @@ function getCalendarUrl(session) {
   // Note we keep on looking at a calendar entry under materials for
   // historical reasons, but the calendar URL is now stored under a
   // dedicated property.
-  return
-    session.description.calendar ??
+  return session.description.calendar ??
     session.description.materials?.calendar ??
     null;
 }
