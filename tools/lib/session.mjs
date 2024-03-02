@@ -275,7 +275,7 @@ function splitIntoSections(body) {
     .filter(section => !!section)
     .map(section => section.split(/\r?\n/))
     .map(section => {
-      let value = section.slice(1).join('\n\n').trim();
+      let value = section.slice(1).join('\n').trim();
       if (value.replace(/^_(.*)_$/, '$1') === 'No response') {
         value = null;
       }
