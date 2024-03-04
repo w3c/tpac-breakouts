@@ -89,6 +89,7 @@ function makeseed() {
 }
 
 async function main({ preserve, except, changesFile, apply, seed }) {
+  seed = seed ?? makeseed();
   const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER');
   const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
   const CHAIR_W3CID = await getEnvKey('CHAIR_W3CID', {}, true);
@@ -136,8 +137,6 @@ async function main({ preserve, except, changesFile, apply, seed }) {
   else {
     plenaryHolds = 5;
   }
-
-  seed = seed ?? makeseed();
 
   // Load changes to apply locally if so requested
   let changes = [];
@@ -815,7 +814,7 @@ if (process.argv[2]) {
     preserve = [];
   }
   else {
-    preserve = process.argv[2].map(n => parseInt(n, 10));
+    preserve = process.argv[2].split(',').map(n => parseInt(n, 10));
   }
 }
 
@@ -832,7 +831,9 @@ if (process.argv[3]) {
 }
 
 const apply = process.argv[4] === 'apply';
-const changesFile = apply ? undefined : (process.argv[4] ?? undefined);
+const changesFile = (apply || !process.argv[4] || !process.argv[4].match(/\./)) ?
+  undefined :
+  process.argv[4];
 const seed = process.argv[5] ?? undefined;
 
 main({ preserve, except, changesFile, apply, seed })
