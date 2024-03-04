@@ -624,7 +624,7 @@ async function main({ preserve, except, changesFile, apply, seed }) {
   logIndent(0, `<html>
   <head>
     <meta charset="utf-8">
-    <title>TPAC schedule</title>
+    <title>Breakouts schedule</title>
     <style>
       td { padding: .25em; vertical-align: top; }
       .conflict-error { color: red; background-color: yellow; }
