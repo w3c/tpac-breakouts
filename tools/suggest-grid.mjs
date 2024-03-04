@@ -426,10 +426,11 @@ async function main({ preserve, except, changesFile, apply, seed }) {
       // person are totally fine)
       function nonConflictingSlot(slot) {
         const potentialConflicts = sessions.filter(s =>
-          s !== session && s.slot === slot.name && s.room !== session.room);
+          s !== session && s.slot === slot.name);
         // There must be no session in the same track at that time
         const trackConflict = potentialConflicts.find(s =>
-          s.tracks.find(track => session.tracks.includes(track)));
+          s.tracks.find(track => session.tracks.includes(track)) &&
+          (s.description.type !== 'plenary' || session.description.type !== 'plenary'));
         if (trackConflict && meetConflicts.includes('track')) {
           return false;
         }
@@ -438,7 +439,8 @@ async function main({ preserve, except, changesFile, apply, seed }) {
         const chairConflict = potentialConflicts.find(s =>
           s.chairs.find(c1 => session.chairs.find(c2 =>
             (c1.login && c1.login === c2.login) ||
-            (c1.name && c1.name === c2.name)))
+            (c1.name && c1.name === c2.name))) &&
+          (s.description.type !== 'plenary' || session.description.type !== 'plenary')
         );
         if (chairConflict) {
           return false;
