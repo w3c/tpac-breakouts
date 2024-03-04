@@ -738,9 +738,11 @@ async function main({ preserve, except, changesFile, apply, seed }) {
           if (Array.isArray(session.description.conflicts)) {
             const confs = [];
             for (const conflict of session.description.conflicts) {
-              for (const v of row) {
-                if (!!v && v.number === conflict) {
-                  confs.push(conflict);
+              for (const rowSessions of row.slice(1)) {
+                for (const v of rowSessions) {
+                  if (!!v && v.number === conflict) {
+                    confs.push(conflict);
+                  }
                 }
               }
             }
