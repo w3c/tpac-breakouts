@@ -624,6 +624,7 @@ async function main({ preserve, except, changesFile, apply, seed }) {
     <meta charset="utf-8">
     <title>TPAC schedule</title>
     <style>
+      td { padding: .25em; vertical-align: top; }
       .conflict-error { color: red; background-color: yellow; }
       .capacity-error { background-color: yellow; }
       .track-error { background-color: orange; }
