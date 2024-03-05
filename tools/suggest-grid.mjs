@@ -4,7 +4,7 @@
  *
  * To run the tool:
  *
- *  node tools/suggest-grid.mjs [preservelist or all or none] [exceptlist or none] [apply] [seed]
+ *  npx suggest-grid [preservelist or all or none] [exceptlist or none] [apply] [seed]
  *
  * where [preservelist or all] is a comma-separated (no spaces) list of session
  * numbers whose assigned slots and rooms must be preserved. Or "all" to
@@ -24,8 +24,47 @@
  * was specified, it may be followed by another space, followed by a room name.
  * (Room name cannot be specified before the slot).
  *
+ * [seed] is the seed string to shuffle the array of sessions. Note that the
+ * how much shuffling happens depends on other parameters which take
+ * precedence (e.g., the preserve list).
  * 
- * [seed] is the seed string to shuffle the array of sessions.
+ * Examples:
+ *
+ * To generate a grid leveraging constraints identified by the
+ * session chairs (e.g., avoid conflicts with identified sessions):
+ *   npx suggest-grid
+ *
+ * To generate a grid leveraging constraints identified by the
+ * session chairs and also any hard-coded rooms or time slots in
+ * the project:
+ *   npx suggest-grid all
+ *
+ * To generate a grid leveraging constraints identified by the
+ * session chairs and also any hard-coded rooms or time slots in
+ * the project, except specifically ignoring what has been
+ * hard-coded for sessions 6 and 14 (while leaving the Project intact):
+ *   npx suggest-grid all 6,14
+ * 
+ * To generate a grid leveraging constraints identified by the
+ * session chairs and also any hard-coded rooms or time slots in
+ * the project, except [without modifying the project] trying out
+ * a schedule achieved by swapping session times for sessions 7 and 9:
+ *
+ * 1) Create a file (e.g., changes.txt) that includes, for example:
+ *    7 13:00
+ *    9 14:00
+ * 
+ * 2) Run npx suggest-grid all none changes.txt
+ * 
+ * To do the same thing but change the state of the Project to
+ * reflect the results:
+ *
+ * Run npx suggest-grid all none changes.txt apply
+ *
+ * To generate a grid that has been previously generated (ignoring
+ * any hard-coded project information) with seed "dfwla":
+ *
+ * npx suggest-grid none none false dfwla
  *
  * Assumptions:
  * - All rooms are of equal quality
