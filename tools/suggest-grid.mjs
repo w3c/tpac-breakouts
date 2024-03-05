@@ -214,7 +214,7 @@ async function main({ preserve, except, changesFile, apply, seed }) {
     preserve = sessions.filter(s => s.slot || s.room).map(s => s.number);
   }
   if (except) {
-    preserve = preserve.filter(s => !except.includes(s.number));
+    preserve = preserve.filter(nb => !except.includes(nb));
   }
   if (!preserve) {
     preserve = [];
