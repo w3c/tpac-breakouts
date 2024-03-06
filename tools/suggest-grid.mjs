@@ -56,10 +56,6 @@
  * 
  * 2) Run npx suggest-grid all none changes.txt
  * 
- * To do the same thing but change the state of the Project to
- * reflect the results:
- *
- * Run npx suggest-grid all none changes.txt apply
  *
  * To generate a grid that has been previously generated (ignoring
  * any hard-coded project information) with seed "dfwla":
