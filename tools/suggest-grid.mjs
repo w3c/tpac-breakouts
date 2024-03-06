@@ -24,8 +24,8 @@
  * was specified, it may be followed by another space, followed by a room name.
  * (Room name cannot be specified before the slot).
  *
- * [seed] is the seed string to shuffle the array of sessions. Note that the
- * how much shuffling happens depends on other parameters which take
+ * [seed] is the seed string to shuffle the array of sessions. How much
+ * shuffling happens depends on other parameters which take
  * precedence (e.g., the preserve list).
  * 
  * Examples:
