@@ -391,11 +391,11 @@ async function main({ number, onlyCommands, dismissBots } = {}) {
       }
       else {
         await setTopic(session);
-        if (!channelUsers.includes('RRSAgent')) {
+        if (onlyCommands || !channelUsers.includes('RRSAgent')) {
           await inviteBot(session, 'RRSAgent');
         }
         await setupRRSAgent(session);
-        if (!channelUsers.includes('Zakim')) {
+        if (onlyCommands || !channelUsers.includes('Zakim')) {
           await inviteBot(session, 'Zakim');
         }
         await setupZakim(session);
