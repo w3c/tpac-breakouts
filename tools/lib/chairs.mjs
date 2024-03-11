@@ -76,7 +76,15 @@ export async function fetchSessionChairs(session, chairs2W3CID) {
       else if (lcChairs2W3CID[chair.name.toLowerCase()]) {
         chair.w3cId = lcChairs2W3CID[chair.name.toLowerCase()];
       }
-      chairs.push(chair);
+      // Proposers sometimes add themselves as "additional" chairs,
+      // creating duplicates. This makes the calendar code sad, because it
+      // cannot add the same person twice to an event. Let's skip duplicates.
+      const dupl = chairs.find(c =>
+        (chair.login && c.login && chair.login === c.login) ||
+        (chair.name && c.name && chair.name.toLowerCase() === c.name.toLowerCase()));
+      if (!dupl) {
+        chairs.push(chair);
+      }
     }
   }
   return chairs;
