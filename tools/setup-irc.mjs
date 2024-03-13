@@ -267,7 +267,7 @@ async function main({ number, onlyCommands, dismissBots } = {}) {
     const channel = getChannel(session);
     const room = project.rooms.find(r => r.name === session.room);
     const roomLabel = room ? `- ${room.label} ` : '';
-    const topic = `TPAC breakout: ${session.title} ${roomLabel}- ${session.slot}`;
+    const topic = `Breakout: ${session.title} ${roomLabel}- ${session.slot}`;
     console.log(`/topic ${channel} ${topic}`);
     if (!onlyCommands) {
       bot.send('TOPIC', channel, topic);
