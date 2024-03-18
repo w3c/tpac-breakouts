@@ -102,7 +102,7 @@ async function main(sessionNumber, trimStart, trimEnd, prefix) {
   await ffmpeg([
     '-i', path.join(RECORDING_FOLDER, folder, videoFile),
     '-filter_complex', '"' + [
-      `[0:v] fps=25, scale=width=1920:height=1080, format=yuv420p, ${trimFilter} setsar=1, setpts=PTS-STARTPTS [v]`,
+      `[0:v] fps=25, scale=width=1920:height=1080:force_original_aspect_ratio=decrease, pad=width=1920:height=1080:x=(ow-iw)/2:y=(oh-ih)/2, format=yuv420p, ${trimFilter} setsar=1, setpts=PTS-STARTPTS [v]`,
       `[0:a] aformat=channel_layouts=stereo:sample_rates=44100, ${atrimFilter} asetpts=PTS-STARTPTS [a]`
     ].join(';') + '"',
     '-map "[v]" -map "[a]"',
