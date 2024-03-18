@@ -35,7 +35,8 @@
     "update-calendar": "./tools/update-calendar.mjs",
     "upload-grid": "./tools/upload-grid.mjs",
     "validate-grid": "./tools/validate-grid.mjs",
-    "validate-session": "./tools/validate-session.mjs"
+    "validate-session": "./tools/validate-session.mjs",
+    "truncate-recording": "./tools/truncate-recording.mjs"
   },
   "engines": {
     "node": ">=18"
