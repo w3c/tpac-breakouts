@@ -16,7 +16,6 @@
 import { getEnvKey } from './lib/envkeys.mjs';
 import { fetchProject, saveSessionValidationResult } from './lib/project.mjs'
 import { validateGrid } from './lib/validate.mjs';
-import { sendGraphQLRequest } from './lib/graphql.mjs';
 
 const schedulingErrors = [
   'error: chair conflict',

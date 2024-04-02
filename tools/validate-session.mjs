@@ -26,7 +26,6 @@ import { getEnvKey } from './lib/envkeys.mjs';
 import { fetchProject, saveSessionValidationResult } from './lib/project.mjs'
 import { validateSession } from './lib/validate.mjs';
 import { parseSessionBody, updateSessionDescription } from './lib/session.mjs';
-import { sendGraphQLRequest } from './lib/graphql.mjs';
 
 /**
  * Helper function to generate a shortname from the session's title
