@@ -28,7 +28,7 @@ async function main(number) {
     throw new Error(`Project ${PROJECT_OWNER}/${PROJECT_NUMBER} could not be retrieved`);
   }
   project.chairsToW3CID = CHAIR_W3CID;
-  let sessions = project.sessions.filter(s => s.slot && s.room &&
+  let sessions = project.sessions.filter(s => s.day && s.slot && s.room &&
     (!number || s.number === number));
   sessions.sort((s1, s2) => s1.number - s2.number);
   if (number) {
@@ -72,17 +72,16 @@ async function main(number) {
   }
   console.log(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER} and session(s)... done`);
 
-  // TODO: date is in the timezone of the TPAC even but actual dated URL
-  // is on Boston time. No big deal for TPAC meetings in US / Europe, but
-  // problematic when TPAC is in Asia.
-  const date = project.metadata.date;
-  const year = date.substring(0, 4);
-  const month = date.substring(5, 7);
-  const day = date.substring(8, 10);
-
   console.log();
   console.log('Link to minutes...');
   for (const session of sessions) {
+    // TODO: date is in the timezone of the TPAC event but actual dated URL
+    // is on Boston time. No big deal for TPAC meetings in US / Europe, but
+    // problematic when TPAC is in Asia.
+    const day = project.days.find(day => day.name === session.day);
+    const year = day.date.substring(0, 4);
+    const month = day.date.substring(5, 7);
+    const day = day.date.substring(8, 10);
     const url = `https://www.w3.org/${year}/${month}/${day}-${session.description.shortname.substring(1)}-minutes.html`;
     const response = await fetch(url);
     if ((response.status !== 200) && (response.status !== 401)) {

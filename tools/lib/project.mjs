@@ -454,6 +454,7 @@ const timezones = [
  *
  * This includes:
  * - the list of rooms and their capacity
+ * - the list of days
  * - the list of slots and their duration
  * - the detailed list of breakout sessions associated with the project
  * - the room and slot that may already have been associated with each session
@@ -563,6 +564,27 @@ export async function fetchProject(login, id) {
     }
   }`);
   const slots = slotsResponse.data[type].projectV2.field;
+
+  // Similar request to list event days
+  const daysResponse = await sendGraphQLRequest(`query {
+    ${type}(login: "${login}"){
+      projectV2(number: ${id}) {
+        field(name: "Day") {
+          ... on ProjectV2SingleSelectField {
+            id
+            name
+            options {
+              ... on ProjectV2SingleSelectFieldOption {
+                id
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }`);
+  const days = daysResponse.data[type].projectV2.field;
 
   // Similar requests to get the ids of the custom fields used for validation
   const severityFieldIds = {};
@@ -715,6 +737,21 @@ export async function fetchProject(login, id) {
       };
     }),
 
+    // List of days. For single-day events, there will be only one day, and
+    // all sessions will be associated with it.
+    daysFieldId: days.id,
+    days: days.options.map(day => {
+      const match =
+        day.name.match(/(.*) \((\d{4}\-\d{2}\-\d{2})\)$/) ??
+        [day.name, day.name, day.name];
+      return {
+        id: day.id,
+        name: match[0],
+        label: match[1],
+        date: match[2]
+      };
+    }),
+
     // List of open sessions linked to the project (in other words, all of the
     // issues that have been associated with the project). For each session, we
     // return detailed information, including its title, full body, author,
@@ -780,6 +817,25 @@ function parseProjectDescription(desc) {
  * Record the slot and room assignment for the provided session
  */
 export async function assignSessionsToSlotAndRoom(session, project) {
+  const day = project.days.find(day => session.day === day.name);
+  const resDay = await sendGraphQLRequest(`mutation {
+    updateProjectV2ItemFieldValue(input: {
+      clientMutationId: "mutatis mutandis",
+      fieldId: "${project.daysFieldId}",
+      itemId: "${session.projectItemId}",
+      projectId: "${project.id}",
+      value: {
+        singleSelectOptionId: "${day.id}"
+      }
+    }) {
+      clientMutationId
+    }
+  }`);
+  if (!resDay?.data?.updateProjectV2ItemFieldValue?.clientMutationId) {
+    console.log(JSON.stringify(resDay, null, 2));
+    throw new Error(`GraphQL error, could not assign session #${session.number} to day ${session.day}`);
+  }
+
   const slot = project.slots.find(slot => session.slot === slot.name);
   const resSlot = await sendGraphQLRequest(`mutation {
     updateProjectV2ItemFieldValue(input: {
@@ -861,12 +917,6 @@ export function validateProject(project) {
     if (!project.metadata.meeting) {
       errors.push('The "meeting" info in the short description is missing. Should be something like "meeting: TPAC 2023"');
     }
-    if (!project.metadata.date) {
-      errors.push('The "date" info in the short description is missing. Should be something like "date: 2023-09-13"');
-    }
-    else if (!project.metadata.date.match(/^\d{4}-\d{2}-\d{2}$/)) {
-      errors.push('The "date" info in the short description must follow the YYYY-MM-DD format');
-    }
     if (!project.metadata.timezone) {
       errors.push('The "timezone" info in the short description is missing. Should be something like "timezone: Europe/Madrid"');
     }
@@ -881,6 +931,12 @@ export function validateProject(project) {
     }
     if (slot.duration !== 30 && slot.duration !== 60) {
       errors.push(`Unexpected slot duration ${slot.duration}. Duration should be 30 or 60 minutes.`);
+    }
+  }
+
+  for (const day of project.days) {
+    if (!day.date.match(/^\d{4}\-\d{2}\-\d{2}$/)) {
+      errors.push(`Invalid day name "${day.name}". Format should be either "YYYY-MM-DD" or "[label] (YYYY-MM-DD)`);
     }
   }
 

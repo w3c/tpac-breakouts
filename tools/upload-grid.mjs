@@ -30,23 +30,28 @@ async function main({ filename, apply }) {
   console.warn(`Extract grid from HTML page...`);
   const rooms = project.rooms;
   const slots = project.slots;
+  const days = project.days;
   const configs = readconfig(filename);
   console.warn(`Extract grid from HTML page... done`);
 
   console.warn(`Assign sessions to rooms and slots...`);
   const updated = [];
   for (const config of configs) {
-    if (!sessions.map(s => s.number === config.number)) {
+    if (!sessions.find(s => s.number === config.number)) {
       throw new Error('Unknown session ' + config.number);
     }
-    if (!slots.map(s => s.name === config.slot)) {
+    if (!days.find(s => s.name === config.day)) {
+      throw new Error('Unknown day ' + config.slot + ' in ' + config.number);
+    }
+    if (!slots.find(s => s.name === config.slot)) {
       throw new Error('Unknown slot ' + config.slot + ' in ' + config.number);
     }
-    if (!rooms.map(s => s.name === config.room)) {
+    if (!rooms.find(s => s.name === config.room)) {
       throw new Error('Unknown room ' + config.room + ' in ' + config.number);
     }
     let session = sessions.find(s => s.number === config.number);
-    if (session.room !== config.room || session.slot !== config.slot) {
+    if (session.room !== config.room || session.day !== config.day || session.slot !== config.slot) {
+      session.day = config.day;
       session.room = config.room;
       session.slot = config.slot;
       updated.push(session);
