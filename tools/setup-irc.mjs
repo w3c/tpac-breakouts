@@ -73,14 +73,14 @@ async function main({ number, onlyCommands, dismissBots } = {}) {
     throw new Error(`Project ${PROJECT_OWNER}/${PROJECT_NUMBER} could not be retrieved`);
   }
   project.chairsToW3CID = CHAIR_W3CID;
-  let sessions = project.sessions.filter(s => s.slot &&
+  let sessions = project.sessions.filter(s => s.day && s.slot &&
     (!number || s.number === number));
   sessions.sort((s1, s2) => s1.number - s2.number);
   if (number) {
     if (sessions.length === 0) {
       throw new Error(`Session ${number} not found in project ${PROJECT_OWNER}/${PROJECT_NUMBER}`);
     }
-    else if (!sessions[0].slot) {
+    else if (!sessions[0].day || !sessions[0].slot) {
       throw new Error(`Session ${number} not assigned to a slot in project ${PROJECT_OWNER}/${PROJECT_NUMBER}`);
     }
   }
@@ -118,9 +118,16 @@ async function main({ number, onlyCommands, dismissBots } = {}) {
     }
     channels[channel].push(session);
     channels[channel].sort((s1, s2) => {
-      const slot1 = project.slots.findIndex(slot => slot.name === s1.slot);
-      const slot2 = project.slots.findIndex(slot => slot.name === s2.slot);
-      return slot1 - slot2;
+      const day1 = project.days.findIndex(day => day.name === s1.day);
+      const day2 = project.days.findIndex(day => day.name === s2.day);
+      if (day1 !== day2) {
+        return day1 - day2;
+      }
+      else {
+        const slot1 = project.slots.findIndex(slot => slot.name === s1.slot);
+        const slot2 = project.slots.findIndex(slot => slot.name === s2.slot);
+        return slot1 - slot2;
+      }
     });
   }
   sessions = Object.values(channels).map(sessions => sessions[0]);

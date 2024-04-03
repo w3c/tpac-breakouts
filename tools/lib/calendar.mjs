@@ -350,7 +350,8 @@ async function fillCalendarEntry({ page, session, project, status, zoom }) {
   // All events are visible to everyone
   await clickOnElement('input#event_visibility_0');
 
-  await page.evaluate(`window.tpac_breakouts_date = "${project.metadata.date}";`);
+  const day = project.days.find(day => day.name === session.day);
+  await page.evaluate(`window.tpac_breakouts_date = "${day.date}";`);
   await page.$eval('input#event_start_date', el => el.value = window.tpac_breakouts_date);
   await page.$eval('input#event_start_date', el => el.value = window.tpac_breakouts_date);
 
@@ -390,7 +391,7 @@ async function fillCalendarEntry({ page, session, project, status, zoom }) {
 
   if (session.description.type === 'plenary') {
     const sessions = project.sessions
-      .filter(s => s.room === session.room && s.slot === session.slot)
+      .filter(s => s.room === session.room && s.day === session.day && s.slot === session.slot)
       .sort((session1, session2) => {
         const order1 = getPlenaryOrder(session1);
         const order2 = getPlenaryOrder(session2);
@@ -528,7 +529,7 @@ function getNewPlenaryCalendarUrl(session, project) {
     return null;
   }
   const plenaryCalendarUrl = project.sessions
-    .filter(s => s !== session && s.room === session.room && s.slot === session.slot)
+    .filter(s => s !== session && s.room === session.room && s.day === session.day && s.slot === session.slot)
     .map(s => getCalendarUrl(s))
     .find(url => !!url);
   if (plenaryCalendarUrl && plenaryCalendarUrl !== getCalendarUrl(session)) {
@@ -541,10 +542,12 @@ function getNewPlenaryCalendarUrl(session, project) {
 
 
 /**
- * Retrieve the name of the project's slot that the calendar entry currently
- * targets, e.g., '13:00 - 14:00'.
+ * Retrieve the names of the project's day and slot that the calendar entry
+ * currently targets, e.g., { day: 'Wednesday (2024-09-25)', slot: '13:00 - 14:00' }.
  */
-async function getCalendarEntrySlotName(page, project) {
+async function getCalendarEntrySlot(page, project) {
+  const startDate = await page.$eval('select#event_start_date', el => el.value);
+  const day = project.days.find(day => day.date === startDate);
   const startHourStr = await page.$eval('select#event_start_time_hour', el => el.value);
   const startMinutesStr = await page.$eval('select#event_start_time_minute', el => el.value);
   const startHour = parseInt(startHourStr, 10);
@@ -552,7 +555,10 @@ async function getCalendarEntrySlotName(page, project) {
   const slot = project.slots.find(slot =>
     parseInt(slot.start.split(':')[0], 10) === startHour &&
     parseInt(slot.start.split(':')[1], 10) === startMinutes);
-  return slot ? slot.name : '';
+  return {
+    day: day?.name ?? '',
+    slot: slot?.name ?? ''
+  };
 }
 
 
@@ -580,7 +586,7 @@ export async function convertSessionToCalendarEntry(
 
   // If session does not have an assigned slot, stop here
   // (unless we have to adjust an existing calendar entry first)
-  if (!session.slot && !calendarUrl) {
+  if ((!session.day || !session.slot) && !calendarUrl) {
     return;
   }
 
@@ -589,7 +595,7 @@ export async function convertSessionToCalendarEntry(
   // we'll throw if one of these sessions has an error that needs fixing.
   if (session.description.type === 'plenary') {
     const sessions = project.sessions
-      .filter(s => s !== session && s.room === session.room && s.slot === session.slot);
+      .filter(s => s !== session && s.room === session.room && s.day === session.day && s.slot === session.slot);
     for (const s of sessions) {
       const errors = (await validateSession(s, project))
         .filter(error => error.severity === 'error');
@@ -645,11 +651,11 @@ export async function convertSessionToCalendarEntry(
         console.log('- calendar entry is specific to this session');
       }
 
-      const calendarEntrySlotName = await getCalendarEntrySlotName(page, project);
+      const calendarEntrySlot = await getCalendarEntrySlot(page, project);
       if (plenaryCalendarUrl ||
           (sharedCalendarEntry && session.description.type !== 'plenary') ||
-          (sharedCalendarEntry && session.slot !== calendarEntrySlotName) ||
-          !session.slot) {
+          (sharedCalendarEntry && (session.day !== calendarEntrySlot.day || session.slot !== calendarEntrySlot.slot)) ||
+          !session.day || !session.slot) {
         if (sharedCalendarEntry) {
           console.log('- remove session from calendar entry');
           await removeFromCalendarEntry({ page, session, status });
@@ -659,7 +665,7 @@ export async function convertSessionToCalendarEntry(
           await cancelCalendarEntry({ page });
         }
 
-        if (!session.slot) {
+        if (!session.day || !session.slot) {
           return;
         }
 

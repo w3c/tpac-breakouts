@@ -154,12 +154,12 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   // Make sure there is no session scheduled at the same time in the same room,
   // skipping plenary sessions since they are, by definition, scheduled at the
   // same time and in the same room.
-  const scheduled = session.room && session.slot;
+  const scheduled = session.room && session.day && session.slot;
   if (scheduled && (session.description.type !== 'plenary')) {
     const schedulingErrors = project.sessions
-      .filter(s => s !== session && s.room && s.slot)
-      .filter(s => s.room === session.room && s.slot === session.slot)
-      .map(s => `Session scheduled in same room (${s.room}) and same slot (${s.slot}) as session "${s.title}" (${s.number})`);
+      .filter(s => s !== session && s.room && s.day && s.slot)
+      .filter(s => s.room === session.room && s.day === session.day && s.slot === session.slot)
+      .map(s => `Session scheduled in same room (${s.room}) and same day/slot (${s.day} ${s.slot}) as session "${s.title}" (${s.number})`);
     if (schedulingErrors.length > 0) {
       errors.push({
         session: sessionNumber,
@@ -174,8 +174,8 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   // maximum allowed.
   if (scheduled && (session.description.type === 'plenary')) {
     const plenarySessions = project.sessions
-      .filter(s => s.room && s.slot)
-      .filter(s => s.room === session.room && s.slot === session.slot);
+      .filter(s => s.room && s.day && s.slot)
+      .filter(s => s.room === session.room && s.day === session.day && s.slot === session.slot);
     if (plenarySessions.length > plenaryHolds) {
       errors.push({
         session: sessionNumber,
@@ -202,9 +202,9 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   // Check absence of conflict with sessions with same chair(s)
   // Note: It's fine to have two plenary sessions with same chair(s) scheduled
   // in the same room and at the same time.
-  if (session.slot) {
+  if (session.day && session.slot) {
     const chairConflictErrors = project.sessions
-      .filter(s => s !== session && s.slot === session.slot && s.room !== session.room)
+      .filter(s => s !== session && s.day === session.day && s.slot === session.slot && s.room !== session.room)
       .filter(s => {
         try {
           const sdesc = parseSessionBody(s.body);
@@ -235,12 +235,12 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
 
   // Check assigned slot is different from conflicting sessions
   // (skipped if the list of conflicting sessions is invalid)
-  if (!hasConflictErrors && session.slot && session.description.conflicts) {
+  if (!hasConflictErrors && session.day && session.slot && session.description.conflicts) {
     const conflictWarnings = session.description.conflicts
       .map(number => {
         const conflictingSession = project.sessions.find(s => s.number === number);
-        if (conflictingSession.slot === session.slot) {
-          return `Same slot "${session.slot}" as conflicting session "${conflictingSession.title}" (#${conflictingSession.number})`;
+        if (conflictingSession.day === session.day && conflictingSession.slot === session.slot) {
+          return `Same day/slot "${session.day} ${session.slot}" as conflicting session "${conflictingSession.title}" (#${conflictingSession.number})`;
         }
         return null;
       })
@@ -258,15 +258,15 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   // Check absence of conflict with sessions in the same track(s)
   // Note: It's fine to have two plenary sessions in the same track(s)
   // scheduled in the same room and at the same time.
-  if (session.slot) {
+  if (session.day && session.slot) {
     const tracks = session.labels.filter(label => label.startsWith('track: '));
     let tracksWarnings = [];
     for (const track of tracks) {
       const sessionsInSameTrack = project.sessions.filter(s => s !== session && s.labels.includes(track));
       const trackWarnings = sessionsInSameTrack
         .map(other => {
-          if (other.slot === session.slot && other.room !== session.room) {
-            return `Same slot "${session.slot}" as session in same track "${track}": "${other.title}" (#${other.number})`;
+          if (other.day === session.day && other.slot === session.slot && other.room !== session.room) {
+            return `Same day/slot "${session.day} ${session.slot}" as session in same track "${track}": "${other.title}" (#${other.number})`;
           }
           return null;
         })
@@ -285,10 +285,10 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
 
   // Check that there is no plenary session scheduled at the same time as this
   // session
-  if (session.slot) {
+  if (session.day && session.slot) {
     const plenaryWarnings = project.sessions
-      .filter(s => s !== session && s.slot && s.room)
-      .filter(s => s.slot === session.slot && s.room !== session.room)
+      .filter(s => s !== session && s.day && s.slot && s.room)
+      .filter(s => s.day === session.day && s.slot === session.slot && s.room !== session.room)
       .filter(s => {
         try {
           const desc = parseSessionBody(s.body);
@@ -299,7 +299,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         }
       })
       .map(other => {
-        return `Same slot "${session.slot}" as plenary session "${other.title}" (#${other.number})`;
+        return `Same time/slot "${session.day} ${session.slot}" as plenary session "${other.title}" (#${other.number})`;
       });
     if (plenaryWarnings.length > 0) {
       errors.push({
@@ -315,7 +315,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   // unless both sessions are part of the same plenary meeting.
   if (session.description.shortname) {
     const ircConflicts = project.sessions
-      .filter(s => s.number !== session.number && s.slot === session.slot)
+      .filter(s => s.number !== session.number && s.day === session.day && s.slot === session.slot)
       .filter(s => {
         try {
           const desc = parseSessionBody(s.body);
@@ -354,10 +354,11 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
 
   // If breakout session took place more than 2 days ago,
   // time to add a link to the minutes
+  const day = project.days.find(d => d.name === session.day);
   const twoDaysInMs = 48 * 60 * 60 * 1000;
   const atLeastTwoDaysOld = (
       (new Date()).getTime() -
-      (new Date(project.metadata.date)).getTime()
+      (new Date(day.date)).getTime()
     ) > twoDaysInMs;
   if (scheduled && isMaterialMissing('minutes') && atLeastTwoDaysOld) {
     errors.push({

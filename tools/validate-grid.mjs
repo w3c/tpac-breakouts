@@ -40,8 +40,6 @@ async function main(validation) {
   }
   project.chairsToW3CID = CHAIR_W3CID;
   console.log(`- ${project.sessions.length} sessions`);
-  console.log(`- ${project.rooms.length} rooms`);
-  console.log(`- ${project.slots.length} slots`);
   console.log(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER}... done`);
 
   console.log();

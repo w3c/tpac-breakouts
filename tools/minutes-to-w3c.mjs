@@ -24,7 +24,7 @@ async function main(number) {
   if (!project) {
     throw new Error(`Project ${PROJECT_OWNER}/${PROJECT_NUMBER} could not be retrieved`);
   }
-  let sessions = project.sessions.filter(s => s.slot && s.room &&
+  let sessions = project.sessions.filter(s => s.day && s.slot && s.room &&
     (!number || s.number === number));
   sessions.sort((s1, s2) => s1.number - s2.number);
   if (number) {

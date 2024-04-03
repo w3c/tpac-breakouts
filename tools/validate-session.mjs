@@ -72,8 +72,6 @@ async function main(sessionNumber, changesFile) {
     throw new Error(`Session ${sessionNumber} not found in project ${PROJECT_OWNER}/${PROJECT_NUMBER}`);
   }
   console.log(`- ${project.sessions.length} sessions`);
-  console.log(`- ${project.rooms.length} rooms`);
-  console.log(`- ${project.slots.length} slots`);
   project.chairsToW3CID = CHAIR_W3CID;
   console.log(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER}... done`);
 
