@@ -46,6 +46,6 @@
     "puppeteer": "^22.6.1",
     "seedrandom": "^3.0.5",
     "webvtt-parser": "^2.2.0",
-    "yaml": "^2.3.4"
+    "yaml": "^2.4.1"
   }
 }
