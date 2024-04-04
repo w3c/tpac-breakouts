@@ -17,7 +17,7 @@ const cache = {};
  */
 export async function sendGraphQLRequest(query, acceptHeader = '') {
   if (cache[query]) {
-    return Object.assign({}, cache[query]);
+    return JSON.parse(JSON.stringify(cache[query]));
   }
   const GRAPHQL_TOKEN = await getEnvKey('GRAPHQL_TOKEN');
   const res = await fetch('https://api.github.com/graphql', {
@@ -39,5 +39,5 @@ export async function sendGraphQLRequest(query, acceptHeader = '') {
     throw new Error(`GraphQL server returned an unexpected HTTP status ${res.status}`);
   }
   cache[query] = await res.json();
-  return cache[query];
+  return JSON.parse(JSON.stringify(cache[query]));
 }
