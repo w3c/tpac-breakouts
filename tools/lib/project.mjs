@@ -777,6 +777,8 @@ export async function fetchProject(login, id) {
           lastEditedAt: session.content.lastEditedAt,
           room: session.fieldValues.nodes
             .find(value => value.field?.name === 'Room')?.name,
+          day: session.fieldValues.nodes
+            .find(value => value.field?.name === 'Day')?.name,
           slot: session.fieldValues.nodes
             .find(value => value.field?.name === 'Slot')?.name,
           validation: {
