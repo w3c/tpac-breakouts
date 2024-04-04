@@ -35,11 +35,13 @@ export async function getEnvKey(key, defaultValue, json) {
 
   // Retrieve variables from the GitHub repo directly through the "gh" CLI.
   try {
-    const repoVariablesStr = execSync(`gh variable list --json name,value`);
-    const repoVariables = JSON.parse(repoVariablesStr);
-    repoConfig = {};
-    for (const variable of repoVariables) {
-      repoConfig[variable.name] = variable.value;
+    if (!repoConfig) {
+      const repoVariablesStr = execSync(`gh variable list --json name,value`);
+      const repoVariables = JSON.parse(repoVariablesStr);
+      repoConfig = {};
+      for (const variable of repoVariables) {
+        repoConfig[variable.name] = variable.value;
+      }
     }
   }
   catch {
