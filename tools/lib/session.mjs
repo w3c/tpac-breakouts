@@ -65,7 +65,7 @@ export async function initSectionHandlers() {
     return;
   }
   const templateDefault = path.join('.github', 'ISSUE_TEMPLATE', 'session.yml');
-  const templateFile = getEnvKey('ISSUE_TEMPLATE', templateDefault);
+  const templateFile = await getEnvKey('ISSUE_TEMPLATE', templateDefault);
   const templateYaml = await readFile(
     path.join(process.cwd(), templateFile),
     'utf8');

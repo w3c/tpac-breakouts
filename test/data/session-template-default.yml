@@ -1,0 +1,74 @@
+name: Session proposal
+description: Propose to chair a breakout session at W3C Breakouts Day
+labels: ["session"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Session description
+      description: |
+        Simple markdown only please (inline formatting, links, lists).
+    validations:
+      required: true
+
+  - type: input
+    id: goal
+    attributes:
+      label: Session goal
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Session type
+      description: |
+        Please choose a type of session. A **breakout session** (smaller set of participants, deep dive on a topic, at most 50 minutes) will be scheduled in parallel with other breakout sessions. A **plenary session** (larger and broader audience, raising awareness, at most 10 minutes) will not be scheduled in parallel with any other sessions.
+      options:
+        - Breakout (Default)
+        - Plenary
+    validations:
+      required: true
+
+  - type: textarea
+    id: chairs
+    attributes:
+      label: Additional session chairs (Optional)
+      description: |
+        GitHub identities of additional session chairs other than you (e.g., `@tidoust, @ianbjacobs`). Space- or comma-separated list.
+    validations:
+      required: false
+
+  - type: input
+    id: shortname
+    attributes:
+      label: IRC channel (Optional)
+      description: |
+        Shortname for the irc.w3.org channel (e.g., `#my-fav-session`). If not provided, shortname will be generated from title. For plenary sessions, please do not provide a value (as it will be overridden by the channel selected by the meeting planners).
+    validations:
+      required: false
+
+  - type: textarea
+    id: conflicts
+    attributes:
+      label: Other sessions where we should avoid scheduling conflicts (Optional)
+      description: |
+        Identify sessions by their issue number in this GitHub repo (e.g., `#32, #18`). Space- or comma-separated list of isssue numbers. If you are chairing more than one session there is no need to mention it here; we will take it into account when scheduling. For any other instructions beyond issue numbers, please use the section below on instructions for meeting planners.
+    validations:
+      required: false
+
+  - type: textarea
+    id: comments
+    attributes:
+      label: Instructions for meeting planners (Optional)
+      description: |
+        Any information for the meeting planners, including timing constraints. This information will not be exported to the event calendar.
+    validations:
+      required: false
+
+  - type: textarea
+    id: agenda
+    attributes:
+      label: Agenda (link or inline)
+      description: |
+        In this section, either **add a link** to an external agenda, or **provide the agenda inline** using simple markdown. This section may be completed closer to the meeting. 

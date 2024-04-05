@@ -47,5 +47,8 @@
     "seedrandom": "^3.0.5",
     "webvtt-parser": "^2.2.0",
     "yaml": "^2.4.1"
+  },
+  "devDependencies": {
+    "mocha": "^10.4.0"
   }
 }
