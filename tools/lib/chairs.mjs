@@ -29,7 +29,6 @@ export async function fetchSessionChairs(session, chairs2W3CID) {
       const w3cAccount = await fetchW3CAccount(session.author.databaseId);
       const chair = {
         databaseId: session.author.databaseId,
-        avatarUrl: session.author.avatarUrl,
         login: session.author.login
       };
       if (w3cAccount) {
@@ -55,12 +54,10 @@ export async function fetchSessionChairs(session, chairs2W3CID) {
           user(login: "${chair.login}") {
             databaseId
             login
-            avatarUrl
           }
         }`);
         if (githubAccount.data.user) {
           chair.databaseId = githubAccount.data.user.databaseId;
-          chair.avatarUrl = githubAccount.data.user.avatarUrl;
           const w3cAccount = await fetchW3CAccount(chair.databaseId);
           if (w3cAccount) {
             chair.w3cId = w3cAccount.w3cId;

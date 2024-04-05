@@ -4,6 +4,7 @@ import * as YAML from 'yaml';
 import { fileURLToPath } from 'url';
 import { sendGraphQLRequest } from './graphql.mjs';
 import { todoStrings } from './todostrings.mjs';
+import { getEnvKey } from './envkeys.mjs';
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 
@@ -63,10 +64,12 @@ export async function initSectionHandlers() {
   if (sectionHandlers) {
     return;
   }
-  const yamlTemplate = await readFile(
-    path.join(process.cwd(), '.github', 'ISSUE_TEMPLATE', 'session.yml'),
+  const templateDefault = path.join('.github', 'ISSUE_TEMPLATE', 'session.yml');
+  const templateFile = getEnvKey('ISSUE_TEMPLATE', templateDefault);
+  const templateYaml = await readFile(
+    path.join(process.cwd(), templateFile),
     'utf8');
-  const template = YAML.parse(yamlTemplate);
+  const template = YAML.parse(templateYaml);
   const sections = template.body
     .filter(section => !!section.id);
 

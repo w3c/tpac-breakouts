@@ -489,12 +489,8 @@ const timezones = [
  *       "labels": [ "session", ... ],
  *       "author": {
  *         "databaseId": 1122927,
- *         "login": "tidoust",
- *         "avatarUrl": "https://avatars.githubusercontent.com/u/1122927?v=4"
+ *         "login": "tidoust"
  *       },
- *       "createdAt": "2023-05-10T12:55:17Z",
- *       "updatedAt": "2023-05-10T13:12:11Z",
- *       "lastEditedAt": "2023-05-10T13:12:11Z",
  *       "room": "Salon Ecija (30)",
  *       "slot": "9:30 - 10:30"
  *     },
@@ -541,7 +537,7 @@ export async function fetchProject(login, id) {
       }
     }
   }`);
-  const project = roomsResponse.data[type].projectV2
+  const project = roomsResponse.data[type].projectV2;
   const rooms = project.field;
 
   // Similar request to list time slots
@@ -635,11 +631,7 @@ export async function fetchProject(login, id) {
                     databaseId
                   }
                   login
-                  avatarUrl
                 }
-                createdAt
-                updatedAt
-                lastEditedAt
               }
             }
             fieldValues(first: 10) {
@@ -769,12 +761,8 @@ export async function fetchProject(login, id) {
           labels: session.content.labels.nodes.map(label => label.name),
           author: {
             databaseId: session.content.author.databaseId,
-            login: session.content.author.login,
-            avatarUrl: session.content.author.avatarUrl
+            login: session.content.author.login
           },
-          createdAt: session.content.createdAt,
-          updatedAt: session.content.updatedAt,
-          lastEditedAt: session.content.lastEditedAt,
           room: session.fieldValues.nodes
             .find(value => value.field?.name === 'Room')?.name,
           day: session.fieldValues.nodes

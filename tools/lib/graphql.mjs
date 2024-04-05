@@ -19,6 +19,7 @@ export async function sendGraphQLRequest(query, acceptHeader = '') {
   if (cache[query]) {
     return JSON.parse(JSON.stringify(cache[query]));
   }
+
   const GRAPHQL_TOKEN = await getEnvKey('GRAPHQL_TOKEN');
   const res = await fetch('https://api.github.com/graphql', {
     method: 'POST',
