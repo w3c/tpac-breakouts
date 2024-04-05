@@ -34,7 +34,12 @@ async function getTestData(testDataId) {
   }
 
   function toGraphQLAuthor(login) {
-    return { databaseId: uid++, login };
+    let user = userCache.find(user => user.login === login);
+    if (!user) {
+      user = { login, databaseId: uid++ };
+      userCache.push(user);
+    }
+    return Object.assign({}, user);
   }
 
   function toGraphQLSessions(arr) {

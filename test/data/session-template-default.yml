@@ -39,6 +39,18 @@ body:
     validations:
       required: false
 
+  - type: dropdown
+    id: capacity
+    attributes:
+      label: Estimated number of in-person attendees
+      options:
+        - Don't know (Default)
+        - Fewer than 20 people
+        - 20-45 people
+        - More than 45 people
+    validations:
+      required: false
+
   - type: input
     id: shortname
     attributes:

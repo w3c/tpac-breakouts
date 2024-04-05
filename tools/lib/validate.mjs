@@ -107,7 +107,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
           }
           const conflictingSession = project.sessions.find(s => s.number === number);
           if (!conflictingSession) {
-            return `Conflicting session ${number} is not in the project`;
+            return `Conflicting session #${number} is not in the project`;
           }
           return null;
         })
@@ -208,8 +208,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
       .filter(s => {
         try {
           const sdesc = parseSessionBody(s.body);
-          const sAuthorExcluded = sdesc.chairs
-            .find(c => c.name?.toLowerCase() === 'author-');
+          const sAuthorExcluded = sdesc.chairs?.find(c => c.name?.toLowerCase() === 'author-');
           if (!sAuthorExcluded && session.chairs.find(c => c.login === s.author.login)) {
             return true;
           }
@@ -331,7 +330,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         session: sessionNumber,
         severity: 'error',
         type: 'irc',
-        messages: ircConflicts.map(s => `Same IRC channel "${session.description.shortname}" as session #${s.number} ${s.title}`)
+        messages: ircConflicts.map(s => `Same IRC channel "${session.description.shortname}" as session #${s.number} "${s.title}"`)
       });
     }
   }

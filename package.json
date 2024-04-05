@@ -38,6 +38,9 @@
     "validate-session": "./tools/validate-session.mjs",
     "truncate-recording": "./tools/truncate-recording.mjs"
   },
+  "scripts": {
+    "test": "mocha"
+  },
   "engines": {
     "node": ">=18"
   },

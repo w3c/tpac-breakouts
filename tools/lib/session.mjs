@@ -274,7 +274,7 @@ export async function initSectionHandlers() {
  * Helper function to split a session issue body (in markdown) into sections
  */
 function splitIntoSections(body) {
-  return body.split(/^### /m)
+  return body.trim().split(/^### /m)
     .filter(section => !!section)
     .map(section => section.split(/\r?\n/))
     .map(section => {
