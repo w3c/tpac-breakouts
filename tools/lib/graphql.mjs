@@ -6,6 +6,13 @@ import { getEnvKey } from './envkeys.mjs';
  */
 const cache = {};
 
+/**
+ * In test mode, use a stub. Note an ES6 module cannot be stubbed directly
+ * because "import" statements make things immutable, so the module itself
+ * needs to have "test code".
+ */
+let stubs = null;
+
 
 /**
  * Wrapper function to send an GraphQL request to the GitHub GraphQL endpoint,
@@ -17,6 +24,18 @@ const cache = {};
  */
 export async function sendGraphQLRequest(query, acceptHeader = '') {
   if (cache[query]) {
+    return JSON.parse(JSON.stringify(cache[query]));
+  }
+
+  // Use stub version when running tests
+  // Note the function cannot be stubbed from an external perspective, due to
+  // it being an ES6 module.
+  const STUB_REQUESTS = await getEnvKey('STUB_REQUESTS', '');
+  if (STUB_REQUESTS) {
+    if (!stubs) {
+      stubs = await import(`../../test/stubs.mjs`);
+    }
+    cache[query] = await stubs.sendGraphQLRequest(query);
     return JSON.parse(JSON.stringify(cache[query]));
   }
 

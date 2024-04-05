@@ -354,19 +354,21 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
 
   // If breakout session took place more than 2 days ago,
   // time to add a link to the minutes
-  const day = project.days.find(d => d.name === session.day);
-  const twoDaysInMs = 48 * 60 * 60 * 1000;
-  const atLeastTwoDaysOld = (
-      (new Date()).getTime() -
-      (new Date(day.date)).getTime()
-    ) > twoDaysInMs;
-  if (scheduled && isMaterialMissing('minutes') && atLeastTwoDaysOld) {
-    errors.push({
-      session: sessionNumber,
-      severity: 'warning',
-      type: 'minutes',
-      messages: ['Session needs a link to the minutes']
-    });
+  if (scheduled) {
+    const day = project.days.find(d => d.name === session.day);
+    const twoDaysInMs = 48 * 60 * 60 * 1000;
+    const atLeastTwoDaysOld = (
+        (new Date()).getTime() -
+        (new Date(day.date)).getTime()
+      ) > twoDaysInMs;
+    if (scheduled && isMaterialMissing('minutes') && atLeastTwoDaysOld) {
+      errors.push({
+        session: sessionNumber,
+        severity: 'warning',
+        type: 'minutes',
+        messages: ['Session needs a link to the minutes']
+      });
+    }
   }
 
   // Minutes should ideally be stored on www.w3.org

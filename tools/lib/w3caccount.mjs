@@ -1,8 +1,18 @@
+import { getEnvKey } from './envkeys.mjs';
+
 /**
  * Internal memory cache to avoid sending the same request more than once
  * (same author may be associated with multiple sessions!)
  */
 const cache = {};
+
+
+/**
+ * In test mode, use a stub. Note an ES6 module cannot be stubbed directly
+ * because "import" statements make things immutable, so the module itself
+ * needs to have "test code".
+ */
+let stubs = null;
 
 
 /**
@@ -16,6 +26,18 @@ export async function fetchW3CAccount(databaseId) {
   // Only fetch accounts once
   if (cache[databaseId]) {
     return Object.assign({}, cache[databaseId]);
+  }
+
+  // Use stub version when running tests
+  // Note the function cannot be stubbed from an external perspective, due to
+  // it being an ES6 module.
+  const STUB_REQUESTS = await getEnvKey('STUB_REQUESTS', '');
+  if (STUB_REQUESTS) {
+    if (!stubs) {
+      stubs = await import(`../../test/stubs.mjs`);
+    }
+    cache[databaseId] = await stubs.fetchW3CAccount(databaseId);
+    return cache[databaseId];
   }
 
   const res = await fetch(
