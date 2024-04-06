@@ -32,6 +32,15 @@ export default {
     'track: debug'
   ],
 
+  // Specify associations with W3C accounts
+  w3cAccounts: {
+    testbot: 4242,
+    tidoust: 45538,
+    ianbjacobs: 78996,
+    someone: 11111,
+    anyone: 99999
+  },
+
   // Long list of sessions, each having some sort of validation issue,
   // except number #42, which is super valid
   sessions: [
@@ -433,6 +442,21 @@ Breakout (Default)`,
       room: 'Main (25)',
       day: '2020-02-11',
       slot: '9:00 - 10:00'
+    },
+
+    {
+      number: 27,
+      title: 'Unknown chairs',
+      author: 'johndoe',
+      body: `
+### Session description
+My session is rich.
+### Session goal
+Uncover bugs.
+### Session type
+Breakout (Default)
+### Additional session chairs
+Jane Doe, John Doe`
     }
   ]
 };

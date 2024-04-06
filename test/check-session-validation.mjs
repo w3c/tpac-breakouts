@@ -22,7 +22,7 @@ describe('Session validation', function () {
     const project = await fetchProject('test', 0);
     const sessionNumber = 1;
     const errors = await validateSession(sessionNumber, project);
-    assert.strictEqual(errors.length, 1);
+    assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
     assert.deepStrictEqual(errors[0], {
       session: sessionNumber,
       severity: 'error',
@@ -39,7 +39,7 @@ describe('Session validation', function () {
     const project = await fetchProject('test', 0);
     const sessionNumber = 2;
     const errors = await validateSession(sessionNumber, project);
-    assert.strictEqual(errors.length, 1);
+    assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
     assert.deepStrictEqual(errors[0], {
       session: sessionNumber,
       severity: 'error',
@@ -52,7 +52,7 @@ describe('Session validation', function () {
     const project = await fetchProject('test', 0);
     const sessionNumber = 3;
     const errors = await validateSession(sessionNumber, project);
-    assert.strictEqual(errors.length, 1);
+    assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
     assert.deepStrictEqual(errors[0], {
       session: sessionNumber,
       severity: 'error',
@@ -65,7 +65,7 @@ describe('Session validation', function () {
     const project = await fetchProject('test', 0);
     const sessionNumber = 4;
     const errors = await validateSession(sessionNumber, project);
-    assert.strictEqual(errors.length, 1);
+    assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
     assert.deepStrictEqual(errors[0], {
       session: sessionNumber,
       severity: 'error',
@@ -78,7 +78,7 @@ describe('Session validation', function () {
     const project = await fetchProject('test', 0);
     const sessionNumber = 5;
     const errors = await validateSession(sessionNumber, project);
-    assert.strictEqual(errors.length, 1);
+    assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
     assert.deepStrictEqual(errors[0], {
       session: sessionNumber,
       severity: 'error',
@@ -91,7 +91,7 @@ describe('Session validation', function () {
     const project = await fetchProject('test', 0);
     const sessionNumber = 6;
     const errors = await validateSession(sessionNumber, project);
-    assert.strictEqual(errors.length, 1);
+    assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
     assert.deepStrictEqual(errors[0], {
       session: sessionNumber,
       severity: 'error',
@@ -104,7 +104,7 @@ describe('Session validation', function () {
     const project = await fetchProject('test', 0);
     const sessionNumber = 7;
     const errors = await validateSession(sessionNumber, project);
-    assert.strictEqual(errors.length, 1);
+    assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
     assert.deepStrictEqual(errors[0], {
       session: sessionNumber,
       severity: 'error',
@@ -117,7 +117,7 @@ describe('Session validation', function () {
     const project = await fetchProject('test', 0);
     const sessionNumber = 9;
     const errors = await validateSession(sessionNumber, project);
-    assert.strictEqual(errors.length, 1);
+    assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
     assert.deepStrictEqual(errors[0], {
       session: sessionNumber,
       severity: 'error',
@@ -130,7 +130,7 @@ describe('Session validation', function () {
     const project = await fetchProject('test', 0);
     const sessionNumber = 13;
     const errors = await validateSession(sessionNumber, project);
-    assert.strictEqual(errors.length, 1);
+    assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
     assert.deepStrictEqual(errors[0], {
       session: sessionNumber,
       severity: 'warning',
@@ -143,7 +143,7 @@ describe('Session validation', function () {
     const project = await fetchProject('test', 0);
     const sessionNumber = 14;
     const errors = await validateSession(sessionNumber, project);
-    assert.strictEqual(errors.length, 1);
+    assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
     assert.deepStrictEqual(errors[0], {
       session: sessionNumber,
       severity: 'error',
@@ -156,7 +156,7 @@ describe('Session validation', function () {
     const project = await fetchProject('test', 0);
     const sessionNumber = 16;
     const errors = await validateSession(sessionNumber, project);
-    assert.strictEqual(errors.length, 1);
+    assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
     assert.deepStrictEqual(errors[0], {
       session: sessionNumber,
       severity: 'warning',
@@ -169,7 +169,7 @@ describe('Session validation', function () {
     const project = await fetchProject('test', 0);
     const sessionNumber = 18;
     const errors = await validateSession(sessionNumber, project);
-    assert.strictEqual(errors.length, 1);
+    assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
     assert.deepStrictEqual(errors[0], {
       session: sessionNumber,
       severity: 'warning',
@@ -182,7 +182,7 @@ describe('Session validation', function () {
     const project = await fetchProject('test', 0);
     const sessionNumber = 20;
     const errors = await validateSession(sessionNumber, project);
-    assert.strictEqual(errors.length, 1);
+    assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
     assert.deepStrictEqual(errors[0], {
       session: sessionNumber,
       severity: 'warning',
@@ -195,7 +195,7 @@ describe('Session validation', function () {
     const project = await fetchProject('test', 0);
     const sessionNumber = 22;
     const errors = await validateSession(sessionNumber, project);
-    assert.strictEqual(errors.length, 1);
+    assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
     assert.deepStrictEqual(errors[0], {
       session: sessionNumber,
       severity: 'error',
@@ -208,7 +208,7 @@ describe('Session validation', function () {
     const project = await fetchProject('test', 0);
     const sessionNumber = 24;
     const errors = await validateSession(sessionNumber, project);
-    assert.strictEqual(errors.length, 1);
+    assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
     assert.deepStrictEqual(errors[0], {
       session: sessionNumber,
       severity: 'check',
@@ -221,7 +221,7 @@ describe('Session validation', function () {
     const project = await fetchProject('test', 0);
     const sessionNumber = 25;
     const errors = await validateSession(sessionNumber, project);
-    assert.strictEqual(errors.length, 1);
+    assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
     assert.deepStrictEqual(errors[0], {
       session: sessionNumber,
       severity: 'warning',
@@ -234,12 +234,29 @@ describe('Session validation', function () {
     const project = await fetchProject('test', 0);
     const sessionNumber = 26;
     const errors = await validateSession(sessionNumber, project);
-    assert.strictEqual(errors.length, 1);
+    assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
     assert.deepStrictEqual(errors[0], {
       session: sessionNumber,
       severity: 'warning',
       type: 'minutes',
       messages: ['Session needs a link to the minutes']
+    });
+  });
+
+  it('reports an error when chairs are unknown', async function () {
+    const project = await fetchProject('test', 0);
+    const sessionNumber = 27;
+    const errors = await validateSession(sessionNumber, project);
+    assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
+    assert.deepStrictEqual(errors[0], {
+      session: sessionNumber,
+      severity: 'error',
+      type: 'chairs',
+      messages: [
+        'No W3C account linked to the "@johndoe" GitHub account',
+        'No W3C account linked to "Jane Doe"',
+        'No W3C account linked to "John Doe"'
+      ]
     });
   });
 });

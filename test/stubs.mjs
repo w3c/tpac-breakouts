@@ -29,6 +29,14 @@ async function getTestData(testDataId) {
     return JSON.parse(JSON.stringify(testDataCache[testDataId]));
   }
 
+  let custom;
+  try {
+    custom = (await import(`./data/${testDataId}.mjs`)).default;
+  }
+  catch {
+    custom = {};
+  }
+
   function toGraphQLNameList(arr) {
     return arr.map(name => Object.assign({ id: `id_${uid++}`, name }));
   }
@@ -36,7 +44,7 @@ async function getTestData(testDataId) {
   function toGraphQLAuthor(login) {
     let user = userCache.find(user => user.login === login);
     if (!user) {
-      user = { login, databaseId: uid++ };
+      user = { login, databaseId: custom.w3cAccounts?.[login] ?? uid++ };
       userCache.push(user);
     }
     return Object.assign({}, user);
@@ -92,14 +100,6 @@ async function getTestData(testDataId) {
     }
   };
 
-  let custom;
-  try {
-    custom = (await import(`./data/${testDataId}.mjs`)).default;
-  }
-  catch {
-    custom = {};
-  }
-
   const testData = {
     url: `https://github.com/orgs/w3c/projects/${testDataId}`,
     id: `id_project_${testDataId}`,
@@ -111,17 +111,9 @@ async function getTestData(testDataId) {
     labels: toGraphQLNameList(custom.labels ?? ['session']),
     sessions: toGraphQLSessions(custom.sessions ?? [
       { number: 1, title: 'A test session' }
-    ])
+    ]),
+    w3cAccounts: custom.w3cAccounts
   };
-
-  for (const session of testData.sessions) {
-    const login = session.content.author.login;
-    if (!userCache.find(user => user.login === login)) {
-      userCache.push({
-        login, databaseId: session.content.author.databaseId
-      });
-    }
-  }
 
   testDataCache[testDataId] = testData;
   return JSON.parse(JSON.stringify(testData));
@@ -238,15 +230,35 @@ export async function sendGraphQLRequest(query, acceptHeader = '') {
  * Stub for the fetchW3CAccount function
  */
 export async function fetchW3CAccount(databaseId) {
+  const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
+  const testData = await getTestData(PROJECT_NUMBER);
+
   const user = userCache.find(user => user.databaseId === databaseId);
   if (!user) {
     throw new Error(`Unexpected databaseId requested: ${databaseId}`);
   }
 
-  // TODO: get real w3cId test data?
-  return {
-    githubId: databaseId,
-    w3cId: databaseId,
-    name: user.login
-  };
+  if (testData.w3cAccounts) {
+    // The test data uses explicit mapping, let's use that
+    const w3cAccount = testData.w3cAccounts[user.login];
+    if (w3cAccount) {
+      return {
+        githubId: databaseId,
+        w3cId: testData.w3cAccounts[user.login],
+        name: user.login
+      };
+    }
+    else {
+      return null;
+    }
+  }
+  else {
+    // "Everyone is awesome" mode, pretend that all accounts can be linked to
+    // a W3C account.
+    return {
+      githubId: databaseId,
+      w3cId: databaseId,
+      name: user.login
+    };
+  }
 }
