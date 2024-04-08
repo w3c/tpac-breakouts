@@ -75,3 +75,13 @@ export async function getEnvKey(key, defaultValue, json) {
 export async function setEnvKey(key, value, json) {
   localConfig[key] = json ? JSON.stringify(value) : value;
 }
+
+
+/**
+ * Reset the local runtime environment (useful in tests)
+ */
+export async function resetEnvKeys() {
+  localConfig = {};
+  fileConfig = {};
+  repoConfig = {};
+}

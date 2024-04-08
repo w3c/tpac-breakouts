@@ -54,6 +54,16 @@ function parseList(value, { spaceSeparator = false, prefix = null }) {
 
 
 /**
+ * Reset the list of section handlers
+ *
+ * The function should be only useful to reset state between tests.
+ */
+export async function resetSectionHandlers() {
+  sectionHandlers = null;
+}
+
+
+/**
  * Populate the list of section handlers from the info in `session.yml`.
  *
  * The function needs to be called once before `parseSessionBody` or

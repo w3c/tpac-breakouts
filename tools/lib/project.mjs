@@ -919,8 +919,8 @@ export function validateProject(project) {
     if (!slot.name.match(/^(\d+):(\d+)\s*-\s*(\d+):(\d+)$/)) {
       errors.push(`Invalid slot name "${slot.name}". Format should be "HH:mm - HH:mm"`);
     }
-    if (slot.duration !== 30 && slot.duration !== 60) {
-      errors.push(`Unexpected slot duration ${slot.duration}. Duration should be 30 or 60 minutes.`);
+    if (slot.duration < 30 || slot.duration > 120) {
+      errors.push(`Unexpected slot duration ${slot.duration}. Duration should be between 30 and 120 minutes.`);
     }
   }
 

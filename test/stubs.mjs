@@ -16,14 +16,14 @@ let uid = 0;
  * for them as needed. To ensure consistency across tests, we'll cache these
  * assignments.
  */
-const userCache = [];
+let userCache = [];
 
 /**
  * Prepare the test data from the given test data identifier. Note we'll do
  * things only once and cache the response, so that identifiers don't change
  * from one function call to the next.
  */
-const testDataCache = {};
+let testDataCache = {};
 async function getTestData(testDataId) {
   if (testDataCache[testDataId]) {
     return JSON.parse(JSON.stringify(testDataCache[testDataId]));
@@ -261,4 +261,13 @@ export async function fetchW3CAccount(databaseId) {
       name: user.login
     };
   }
+}
+
+/**
+ * Reset internal memory caches
+ */
+export async function resetCaches() {
+  uid = 0;
+  userCache = [];
+  testDataCache = {};
 }

@@ -4,7 +4,7 @@ import { getEnvKey } from './envkeys.mjs';
  * Internal memory cache to avoid sending the same request more than once
  * (same author may be associated with multiple sessions!)
  */
-const cache = {};
+let cache = {};
 
 /**
  * In test mode, use a stub. Note an ES6 module cannot be stubbed directly
@@ -12,6 +12,24 @@ const cache = {};
  * needs to have "test code".
  */
 let stubs = null;
+
+
+/**
+ * Reset internal memory cache.
+ *
+ * The function should only be useful to reset state between tests.
+ */
+export async function resetGraphQLCache() {
+  cache = {};
+
+  const STUB_REQUESTS = await getEnvKey('STUB_REQUESTS', '');
+  if (STUB_REQUESTS) {
+    if (!stubs) {
+      stubs = await import(`../../test/stubs.mjs`);
+    }
+    stubs.resetCaches();
+  }
+}
 
 
 /**

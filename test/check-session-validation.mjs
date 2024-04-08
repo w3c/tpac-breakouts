@@ -1,25 +1,31 @@
-import { setEnvKey } from '../tools/lib/envkeys.mjs';
+import { initTestEnv } from './init-test-env.mjs';
+import { getEnvKey, setEnvKey } from '../tools/lib/envkeys.mjs';
 import { fetchProject } from '../tools/lib/project.mjs';
 import { validateSession } from '../tools/lib/validate.mjs';
 import * as assert from 'node:assert';
 
+async function fetchTestProject() {
+  return fetchProject(
+    await getEnvKey('PROJECT_OWNER'),
+    await getEnvKey('PROJECT_NUMBER'));
+}
+
 describe('Session validation', function () {
-  before(async function () {
-    setEnvKey('STUB_REQUESTS', true);
-    setEnvKey('PROJECT_OWNER', 'w3c');
+  before(function () {
+    initTestEnv();
     setEnvKey('PROJECT_NUMBER', 'validation-issues');
     setEnvKey('ISSUE_TEMPLATE', 'test/data/session-template-default.yml');
   });
 
   it('validates a valid session', async function () {
-    const project = await fetchProject('test', 0);
+    const project = await fetchTestProject();
     const sessionNumber = 42;
     const errors = await validateSession(sessionNumber, project);
     assert.strictEqual(errors.length, 0);
   });
 
   it('reports formatting errors', async function () {
-    const project = await fetchProject('test', 0);
+    const project = await fetchTestProject();
     const sessionNumber = 1;
     const errors = await validateSession(sessionNumber, project);
     assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
@@ -36,7 +42,7 @@ describe('Session validation', function () {
   });
 
   it('reports an error when a session conflicts with itself', async function () {
-    const project = await fetchProject('test', 0);
+    const project = await fetchTestProject();
     const sessionNumber = 2;
     const errors = await validateSession(sessionNumber, project);
     assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
@@ -49,7 +55,7 @@ describe('Session validation', function () {
   });
 
   it('reports an error when a session conflicts with an unknown session', async function () {
-    const project = await fetchProject('test', 0);
+    const project = await fetchTestProject();
     const sessionNumber = 3;
     const errors = await validateSession(sessionNumber, project);
     assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
@@ -62,7 +68,7 @@ describe('Session validation', function () {
   });
 
   it('reports an error when a plenary session says it has a conflict', async function () {
-    const project = await fetchProject('test', 0);
+    const project = await fetchTestProject();
     const sessionNumber = 4;
     const errors = await validateSession(sessionNumber, project);
     assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
@@ -75,7 +81,7 @@ describe('Session validation', function () {
   });
 
   it('reports an error when a plenary session is not scheduled in plenary room', async function () {
-    const project = await fetchProject('test', 0);
+    const project = await fetchTestProject();
     const sessionNumber = 5;
     const errors = await validateSession(sessionNumber, project);
     assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
@@ -88,7 +94,7 @@ describe('Session validation', function () {
   });
 
   it('reports an error when a breakout session is scheduled in plenary room', async function () {
-    const project = await fetchProject('test', 0);
+    const project = await fetchTestProject();
     const sessionNumber = 6;
     const errors = await validateSession(sessionNumber, project);
     assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
@@ -101,7 +107,7 @@ describe('Session validation', function () {
   });
 
   it('reports an error when two sessions are scheduled in the same room at the same time', async function () {
-    const project = await fetchProject('test', 0);
+    const project = await fetchTestProject();
     const sessionNumber = 7;
     const errors = await validateSession(sessionNumber, project);
     assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
@@ -114,7 +120,7 @@ describe('Session validation', function () {
   });
 
   it('reports an error when too many sessions are scheduled in a plenary slot', async function () {
-    const project = await fetchProject('test', 0);
+    const project = await fetchTestProject();
     const sessionNumber = 9;
     const errors = await validateSession(sessionNumber, project);
     assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
@@ -127,7 +133,7 @@ describe('Session validation', function () {
   });
 
   it('warns about capacity problems', async function () {
-    const project = await fetchProject('test', 0);
+    const project = await fetchTestProject();
     const sessionNumber = 13;
     const errors = await validateSession(sessionNumber, project);
     assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
@@ -140,7 +146,7 @@ describe('Session validation', function () {
   });
 
   it('reports an error when a chair needs to be at two places at once', async function () {
-    const project = await fetchProject('test', 0);
+    const project = await fetchTestProject();
     const sessionNumber = 14;
     const errors = await validateSession(sessionNumber, project);
     assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
@@ -153,7 +159,7 @@ describe('Session validation', function () {
   });
 
   it('warns when conflicting sessions are scheduled at the same time', async function () {
-    const project = await fetchProject('test', 0);
+    const project = await fetchTestProject();
     const sessionNumber = 16;
     const errors = await validateSession(sessionNumber, project);
     assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
@@ -166,7 +172,7 @@ describe('Session validation', function () {
   });
 
   it('warns when sessions in same track are scheduled at the same time', async function () {
-    const project = await fetchProject('test', 0);
+    const project = await fetchTestProject();
     const sessionNumber = 18;
     const errors = await validateSession(sessionNumber, project);
     assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
@@ -179,7 +185,7 @@ describe('Session validation', function () {
   });
 
   it('warns when a breakout session is scheduled at the same time as a plenary', async function () {
-    const project = await fetchProject('test', 0);
+    const project = await fetchTestProject();
     const sessionNumber = 20;
     const errors = await validateSession(sessionNumber, project);
     assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
@@ -192,7 +198,7 @@ describe('Session validation', function () {
   });
 
   it('reports an error when two sessions use the same IRC channel at the same time', async function () {
-    const project = await fetchProject('test', 0);
+    const project = await fetchTestProject();
     const sessionNumber = 22;
     const errors = await validateSession(sessionNumber, project);
     assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
@@ -205,7 +211,7 @@ describe('Session validation', function () {
   });
 
   it('informs about instructions for meeting planners', async function () {
-    const project = await fetchProject('test', 0);
+    const project = await fetchTestProject();
     const sessionNumber = 24;
     const errors = await validateSession(sessionNumber, project);
     assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
@@ -218,7 +224,7 @@ describe('Session validation', function () {
   });
 
   it('warns about external minutes', async function () {
-    const project = await fetchProject('test', 0);
+    const project = await fetchTestProject();
     const sessionNumber = 25;
     const errors = await validateSession(sessionNumber, project);
     assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
@@ -231,7 +237,7 @@ describe('Session validation', function () {
   });
 
   it('warns about missing minutes', async function () {
-    const project = await fetchProject('test', 0);
+    const project = await fetchTestProject();
     const sessionNumber = 26;
     const errors = await validateSession(sessionNumber, project);
     assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
@@ -244,7 +250,7 @@ describe('Session validation', function () {
   });
 
   it('reports an error when chairs are unknown', async function () {
-    const project = await fetchProject('test', 0);
+    const project = await fetchTestProject();
     const sessionNumber = 27;
     const errors = await validateSession(sessionNumber, project);
     assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
