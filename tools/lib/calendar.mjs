@@ -363,18 +363,35 @@ async function fillCalendarEntry({ page, session, project, status, zoom }) {
 
   await chooseOption('select#event_timezone', project.metadata.timezone);
 
-  // Add chairs as individual attendees
+  // Add groups/chairs as individual attendees
   // Note: the select field is hidden so attendees will only appear once
   // calendar entry has been submitted.
-  const chairs = session.chairs.filter(chair => chair.w3cId && chair.w3cId !== -1);
-  if (chairs.length > 0) {
-    await page.evaluate(`window.tpac_breakouts_chairs = ${JSON.stringify(chairs, null, 2)};`);
-    await page.$eval('select#event_individuals', el => el.innerHTML +=
-      window.tpac_breakouts_chairs
-        .filter(chair => !el.querySelector(`option[selected][value="${chair.w3cId}"]`))
-        .map(chair => `<option value="${chair.w3cId}" selected="selected">${chair.name}</option>`)
-        .join('\n')
-    );
+  // Note: we preserve the former list of individual attendees because people
+  // may subscribe to an event at any time, but don't preserve the former list
+  // of group attendees
+  if (project.metadata.type === 'groups') {
+    const groups = session.groups.filter(group => group.w3cId && group.w3cId !== -1);
+    if (groups.length > 0) {
+      await page.evaluate(`window.tpac_groups = ${JSON.stringify(groups, null, 2)};`);
+      await page.$eval('select#event_groups', el => el.innerHTML =
+        window.tpac_groups
+          .filter(group => !el.querySelector(`option[selected][value="${group.w3cId}"]`))
+          .map(group => `<option value="${group.w3cId}" selected="selected">${group.name}</option>`)
+          .join('\n')
+      );
+    }
+  }
+  else {
+    const chairs = session.chairs.filter(chair => chair.w3cId && chair.w3cId !== -1);
+    if (chairs.length > 0) {
+      await page.evaluate(`window.tpac_breakouts_chairs = ${JSON.stringify(chairs, null, 2)};`);
+      await page.$eval('select#event_individuals', el => el.innerHTML +=
+        window.tpac_breakouts_chairs
+          .filter(chair => !el.querySelector(`option[selected][value="${chair.w3cId}"]`))
+          .map(chair => `<option value="${chair.w3cId}" selected="selected">${chair.name}</option>`)
+          .join('\n')
+      );
+    }
   }
 
   // Show joining information to "Holders of a W3C account", unless session is restricted
@@ -421,11 +438,12 @@ async function fillCalendarEntry({ page, session, project, status, zoom }) {
   const minutesUrl = todoStrings.includes(minutesMaterial) ? undefined : minutesMaterial;
   await fillTextInput('input#event_minutesUrl', minutesUrl);
 
-  // Big meeting is "TPAC 2023", not the actual option value
+  // Big meeting is something like "TPAC 2023", not the actual option value
   await page.evaluate(`window.tpac_breakouts_meeting = "${project.metadata.meeting}";`);
   await page.$$eval('select#event_big_meeting option', options => options.forEach(el =>
     el.selected = el.innerText.startsWith(window.tpac_breakouts_meeting)));
-  await chooseOption('select#event_category', 'breakout-sessions');
+  await chooseOption('select#event_category',
+    project.metadata.type === 'groups' ? 'group-meetings' : 'breakout-sessions');
 
   // Click on "Create/Update but don't send notifications" button
   // and return URL of the calendar entry

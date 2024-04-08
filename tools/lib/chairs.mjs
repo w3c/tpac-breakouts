@@ -1,5 +1,5 @@
 import { sendGraphQLRequest } from './graphql.mjs';
-import { fetchW3CAccount } from './w3caccount.mjs';
+import { fetchW3CAccount } from './w3c.mjs';
 
 /**
  * Retrieve information about session chairs in an array

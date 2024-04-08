@@ -1,0 +1,1544 @@
+[
+  {
+    "w3cId": 61259,
+    "name": "Automotive and Transportation Business Group",
+    "type": "bg",
+    "abbrName": "automotive and transportation"
+  },
+  {
+    "w3cId": 103226,
+    "name": "Improving Web Advertising Business Group",
+    "type": "bg",
+    "abbrName": "improving web advertising"
+  },
+  {
+    "w3cId": 97159,
+    "name": "Publishing Business Group",
+    "type": "bg",
+    "abbrName": "publishing"
+  },
+  {
+    "w3cId": 138124,
+    "name": "Accessibility at the Edge Community Group",
+    "type": "cg",
+    "abbrName": "accessibility at the edge"
+  },
+  {
+    "w3cId": 134546,
+    "name": "Accessibility Discoverability Vocabulary for Schema.org Community Group",
+    "type": "cg",
+    "abbrName": "accessibility discoverability vocabulary for schema.org"
+  },
+  {
+    "w3cId": 119612,
+    "name": "Accessibility for Children Community Group",
+    "type": "cg",
+    "abbrName": "accessibility for children"
+  },
+  {
+    "w3cId": 154193,
+    "name": "Accessibility Internationalization Community Group",
+    "type": "cg",
+    "abbrName": "accessibility internationalization"
+  },
+  {
+    "w3cId": 114156,
+    "name": "ACT Rules Community Group",
+    "type": "cg",
+    "abbrName": "act rules"
+  },
+  {
+    "w3cId": 108226,
+    "name": "AI KR (Artificial Intelligence Knowledge Representation) Community Group",
+    "type": "cg",
+    "abbrName": "ai kr (artificial intelligence knowledge representation)"
+  },
+  {
+    "w3cId": 134685,
+    "name": "Anti-Fraud Community Group",
+    "type": "cg",
+    "abbrName": "anti-fraud"
+  },
+  {
+    "w3cId": 111355,
+    "name": "ARIA and Assistive Technologies Community Group",
+    "type": "cg",
+    "abbrName": "aria and assistive technologies"
+  },
+  {
+    "w3cId": 110716,
+    "name": "Audio Community Group",
+    "type": "cg",
+    "abbrName": "audio"
+  },
+  {
+    "w3cId": 106721,
+    "name": "Audio Description Community Group",
+    "type": "cg",
+    "abbrName": "audio description"
+  },
+  {
+    "w3cId": 139357,
+    "name": "Audiovisual Media Formats for Browsers Community Group",
+    "type": "cg",
+    "abbrName": "audiovisual media formats for browsers"
+  },
+  {
+    "w3cId": 78250,
+    "name": "Automotive Ontology Community Group",
+    "type": "cg",
+    "abbrName": "automotive ontology"
+  },
+  {
+    "w3cId": 151951,
+    "name": "Automotive Privacy Principles Community Group",
+    "type": "cg",
+    "abbrName": "automotive privacy principles"
+  },
+  {
+    "w3cId": 143201,
+    "name": "Autonomous Agents on the Web Community Group",
+    "type": "cg",
+    "abbrName": "autonomous agents on the web"
+  },
+  {
+    "w3cId": 62563,
+    "name": "Best Practices for Multilingual Linked Open Data Community Group",
+    "type": "cg",
+    "abbrName": "best practices for multilingual linked open data"
+  },
+  {
+    "w3cId": 111423,
+    "name": "Bibframe2Schema.org Community Group",
+    "type": "cg",
+    "abbrName": "bibframe2schema.org"
+  },
+  {
+    "w3cId": 97665,
+    "name": "Bioschemas for lifesciences Community Group",
+    "type": "cg",
+    "abbrName": "bioschemas for lifesciences"
+  },
+  {
+    "w3cId": 117993,
+    "name": "Bitcoin Hypermedia Community Group",
+    "type": "cg",
+    "abbrName": "bitcoin hypermedia"
+  },
+  {
+    "w3cId": 120533,
+    "name": "Building Device Naming Standards Community Group",
+    "type": "cg",
+    "abbrName": "building device naming standards"
+  },
+  {
+    "w3cId": 114998,
+    "name": "Chemistry for the Web and Publishing Community Group",
+    "type": "cg",
+    "abbrName": "chemistry for the web and publishing"
+  },
+  {
+    "w3cId": 147167,
+    "name": "Chinese DID & VC Community Group",
+    "type": "cg",
+    "abbrName": "chinese did & vc"
+  },
+  {
+    "w3cId": 143581,
+    "name": "Civic Technology Community Group",
+    "type": "cg",
+    "abbrName": "civic technology"
+  },
+  {
+    "w3cId": 132913,
+    "name": "Cognitive Accessibility Community Group",
+    "type": "cg",
+    "abbrName": "cognitive accessibility"
+  },
+  {
+    "w3cId": 119681,
+    "name": "Cognitive AI Community Group",
+    "type": "cg",
+    "abbrName": "cognitive ai"
+  },
+  {
+    "w3cId": 96574,
+    "name": "Color on the Web Community Group",
+    "type": "cg",
+    "abbrName": "color on the web"
+  },
+  {
+    "w3cId": 49289,
+    "name": "Community Council",
+    "type": "cg",
+    "abbrName": "community council"
+  },
+  {
+    "w3cId": 148595,
+    "name": "Computational Intelligence Community Group",
+    "type": "cg",
+    "abbrName": "computational intelligence"
+  },
+  {
+    "w3cId": 127555,
+    "name": "Consent Community Group",
+    "type": "cg",
+    "abbrName": "consent"
+  },
+  {
+    "w3cId": 135891,
+    "name": "Consent Name System Community Group",
+    "type": "cg",
+    "abbrName": "consent name system"
+  },
+  {
+    "w3cId": 72898,
+    "name": "Credentials Community Group",
+    "type": "cg",
+    "abbrName": "credentials"
+  },
+  {
+    "w3cId": 103073,
+    "name": "Credible Web Community Group",
+    "type": "cg",
+    "abbrName": "credible web"
+  },
+  {
+    "w3cId": 121427,
+    "name": "CSS4 Community Group",
+    "type": "cg",
+    "abbrName": "css4"
+  },
+  {
+    "w3cId": 85874,
+    "name": "CSV on the Web Community Group",
+    "type": "cg",
+    "abbrName": "csv on the web"
+  },
+  {
+    "w3cId": 107442,
+    "name": "Data Privacy Vocabularies and Controls Community Group",
+    "type": "cg",
+    "abbrName": "data privacy vocabularies and controls"
+  },
+  {
+    "w3cId": 143005,
+    "name": "Data-Centric Digital Rights (DCDR) Framework Community Group",
+    "type": "cg",
+    "abbrName": "data-centric digital rights (dcdr) framework"
+  },
+  {
+    "w3cId": 140390,
+    "name": "Decentralized Identifier and Verifiable Credentials Applications Community Group",
+    "type": "cg",
+    "abbrName": "decentralized identifier and verifiable credentials applications"
+  },
+  {
+    "w3cId": 47948,
+    "name": "Declarative 3D for the Web Architecture Community Group",
+    "type": "cg",
+    "abbrName": "declarative 3d for the web architecture"
+  },
+  {
+    "w3cId": 116753,
+    "name": "Design Tokens Community Group",
+    "type": "cg",
+    "abbrName": "design tokens"
+  },
+  {
+    "w3cId": 103139,
+    "name": "Educational and Occupational Credentials in schema.org Community Group",
+    "type": "cg",
+    "abbrName": "educational and occupational credentials in schema.org"
+  },
+  {
+    "w3cId": 108411,
+    "name": "Educational Exercises and Activities Community Group",
+    "type": "cg",
+    "abbrName": "educational exercises and activities"
+  },
+  {
+    "w3cId": 115641,
+    "name": "Entity Reconciliation Community Group",
+    "type": "cg",
+    "abbrName": "entity reconciliation"
+  },
+  {
+    "w3cId": 96810,
+    "name": "EPUB 3 Community Group",
+    "type": "cg",
+    "abbrName": "epub 3"
+  },
+  {
+    "w3cId": 142395,
+    "name": "Equity Community Group",
+    "type": "cg",
+    "abbrName": "equity"
+  },
+  {
+    "w3cId": 54697,
+    "name": "EXPath Community Group",
+    "type": "cg",
+    "abbrName": "expath"
+  },
+  {
+    "w3cId": 132274,
+    "name": "Federated Identity Community Group",
+    "type": "cg",
+    "abbrName": "federated identity"
+  },
+  {
+    "w3cId": 134965,
+    "name": "Federated Learning Community Group",
+    "type": "cg",
+    "abbrName": "federated learning"
+  },
+  {
+    "w3cId": 84521,
+    "name": "Financial Industry Business Ontology Community Group",
+    "type": "cg",
+    "abbrName": "financial industry business ontology"
+  },
+  {
+    "w3cId": 49726,
+    "name": "Games Community Group",
+    "type": "cg",
+    "abbrName": "games"
+  },
+  {
+    "w3cId": 148246,
+    "name": "Generative AI Community Group",
+    "type": "cg",
+    "abbrName": "generative ai"
+  },
+  {
+    "w3cId": 96877,
+    "name": "GPU for the Web Community Group",
+    "type": "cg",
+    "abbrName": "gpu for the web"
+  },
+  {
+    "w3cId": 78701,
+    "name": "Healthcare Schema Vocabulary Community Group",
+    "type": "cg",
+    "abbrName": "healthcare schema vocabulary"
+  },
+  {
+    "w3cId": 143541,
+    "name": "Human Centric AI Community Group",
+    "type": "cg",
+    "abbrName": "human centric ai"
+  },
+  {
+    "w3cId": 71940,
+    "name": "Human Services Community Group",
+    "type": "cg",
+    "abbrName": "human services"
+  },
+  {
+    "w3cId": 64267,
+    "name": "Hydra Community Group",
+    "type": "cg",
+    "abbrName": "hydra"
+  },
+  {
+    "w3cId": 117874,
+    "name": "Immersive Captions Community Group",
+    "type": "cg",
+    "abbrName": "immersive captions"
+  },
+  {
+    "w3cId": 87846,
+    "name": "Immersive Web Community Group",
+    "type": "cg",
+    "abbrName": "immersive web"
+  },
+  {
+    "w3cId": 60884,
+    "name": "Information Architecture Community Group",
+    "type": "cg",
+    "abbrName": "information architecture"
+  },
+  {
+    "w3cId": 143566,
+    "name": "Inter-Platform Validation for Confidential Computing Community Group",
+    "type": "cg",
+    "abbrName": "inter-platform validation for confidential computing"
+  },
+  {
+    "w3cId": 83380,
+    "name": "Interledger Payments Community Group",
+    "type": "cg",
+    "abbrName": "interledger payments"
+  },
+  {
+    "w3cId": 130021,
+    "name": "Invisible Markup Community Group",
+    "type": "cg",
+    "abbrName": "invisible markup"
+  },
+  {
+    "w3cId": 49174,
+    "name": "JSON for Linking Data Community Group",
+    "type": "cg",
+    "abbrName": "json for linking data"
+  },
+  {
+    "w3cId": 152176,
+    "name": "JSX as markup language Community Group",
+    "type": "cg",
+    "abbrName": "jsx as markup language"
+  },
+  {
+    "w3cId": 112120,
+    "name": "Knowledge Graph Construction Community Group",
+    "type": "cg",
+    "abbrName": "knowledge graph construction"
+  },
+  {
+    "w3cId": 72291,
+    "name": "Linked Building Data Community Group",
+    "type": "cg",
+    "abbrName": "linked building data"
+  },
+  {
+    "w3cId": 68293,
+    "name": "Linked Data for Language Technology Community Group",
+    "type": "cg",
+    "abbrName": "linked data for language technology"
+  },
+  {
+    "w3cId": 68812,
+    "name": "Linked Data Models for Emotion and Sentiment Analysis Community Group",
+    "type": "cg",
+    "abbrName": "linked data models for emotion and sentiment analysis"
+  },
+  {
+    "w3cId": 136751,
+    "name": "Low Vision Community Group",
+    "type": "cg",
+    "abbrName": "low vision"
+  },
+  {
+    "w3cId": 145679,
+    "name": "Managed Components Community Group",
+    "type": "cg",
+    "abbrName": "managed components"
+  },
+  {
+    "w3cId": 70543,
+    "name": "Maps For HTML Community Group",
+    "type": "cg",
+    "abbrName": "maps for html"
+  },
+  {
+    "w3cId": 130919,
+    "name": "Metaverse Interoperability Community Group",
+    "type": "cg",
+    "abbrName": "metaverse interoperability"
+  },
+  {
+    "w3cId": 117923,
+    "name": "MiniApps Ecosystem Community Group",
+    "type": "cg",
+    "abbrName": "miniapps ecosystem"
+  },
+  {
+    "w3cId": 76245,
+    "name": "Multi-device Timing Community Group",
+    "type": "cg",
+    "abbrName": "multi-device timing"
+  },
+  {
+    "w3cId": 81249,
+    "name": "Music Notation Community Group",
+    "type": "cg",
+    "abbrName": "music notation"
+  },
+  {
+    "w3cId": 136094,
+    "name": "Nordic Accessibility Community Group",
+    "type": "cg",
+    "abbrName": "nordic accessibility"
+  },
+  {
+    "w3cId": 136159,
+    "name": "Nordic Chapter Smart City / Web of Things Community Group",
+    "type": "cg",
+    "abbrName": "nordic chapter smart city / web of things"
+  },
+  {
+    "w3cId": 137192,
+    "name": "Nordic Web of Data Community Group",
+    "type": "cg",
+    "abbrName": "nordic web of data"
+  },
+  {
+    "w3cId": 144015,
+    "name": "nostr Community Group",
+    "type": "cg",
+    "abbrName": "nostr"
+  },
+  {
+    "w3cId": 111290,
+    "name": "Notation 3 (N3) Community Group",
+    "type": "cg",
+    "abbrName": "notation 3 (n3)"
+  },
+  {
+    "w3cId": 47956,
+    "name": "ODRL Community Group",
+    "type": "cg",
+    "abbrName": "odrl"
+  },
+  {
+    "w3cId": 48038,
+    "name": "Ontology-Lexica Community Group",
+    "type": "cg",
+    "abbrName": "ontology-lexica"
+  },
+  {
+    "w3cId": 148948,
+    "name": "Open Cloud Mesh Community Group",
+    "type": "cg",
+    "abbrName": "open cloud mesh"
+  },
+  {
+    "w3cId": 122250,
+    "name": "Open UI Community Group",
+    "type": "cg",
+    "abbrName": "open ui"
+  },
+  {
+    "w3cId": 89827,
+    "name": "OpenActive Community Group",
+    "type": "cg",
+    "abbrName": "openactive"
+  },
+  {
+    "w3cId": 96642,
+    "name": "OpenTrack Community Group",
+    "type": "cg",
+    "abbrName": "opentrack"
+  },
+  {
+    "w3cId": 125912,
+    "name": "Performing Arts Information Representation Community Group",
+    "type": "cg",
+    "abbrName": "performing arts information representation"
+  },
+  {
+    "w3cId": 61141,
+    "name": "Permanent Identifier Community Group",
+    "type": "cg",
+    "abbrName": "permanent identifier"
+  },
+  {
+    "w3cId": 109278,
+    "name": "Positive Work Environment Community Group",
+    "type": "cg",
+    "abbrName": "positive work environment"
+  },
+  {
+    "w3cId": 120428,
+    "name": "Privacy Community Group",
+    "type": "cg",
+    "abbrName": "privacy"
+  },
+  {
+    "w3cId": 134161,
+    "name": "Private Advertising Technology Community Group",
+    "type": "cg",
+    "abbrName": "private advertising technology"
+  },
+  {
+    "w3cId": 110591,
+    "name": "Publishing Community Group",
+    "type": "cg",
+    "abbrName": "publishing"
+  },
+  {
+    "w3cId": 69802,
+    "name": "Quick-fix support for XML Community Group",
+    "type": "cg",
+    "abbrName": "quick-fix support for xml"
+  },
+  {
+    "w3cId": 66773,
+    "name": "RDF JavaScript Libraries Community Group",
+    "type": "cg",
+    "abbrName": "rdf javascript libraries"
+  },
+  {
+    "w3cId": 65231,
+    "name": "RDF Stream Processing Community Group",
+    "type": "cg",
+    "abbrName": "rdf stream processing"
+  },
+  {
+    "w3cId": 141415,
+    "name": "RDF Surfaces Community Group",
+    "type": "cg",
+    "abbrName": "rdf surfaces"
+  },
+  {
+    "w3cId": 82552,
+    "name": "RDF Test Suite Curation Community Group",
+    "type": "cg",
+    "abbrName": "rdf test suite curation"
+  },
+  {
+    "w3cId": 110458,
+    "name": "RDF-DEV Community Group",
+    "type": "cg",
+    "abbrName": "rdf-dev"
+  },
+  {
+    "w3cId": 121942,
+    "name": "Rights Automation for Market Data Community Group",
+    "type": "cg",
+    "abbrName": "rights automation for market data"
+  },
+  {
+    "w3cId": 80620,
+    "name": "Schema Architypes Community Group",
+    "type": "cg",
+    "abbrName": "schema architypes"
+  },
+  {
+    "w3cId": 57667,
+    "name": "Schema Bib Extend Community Group",
+    "type": "cg",
+    "abbrName": "schema bib extend"
+  },
+  {
+    "w3cId": 85246,
+    "name": "Schema Course extension Community Group",
+    "type": "cg",
+    "abbrName": "schema course extension"
+  },
+  {
+    "w3cId": 112462,
+    "name": "Schema Extensions for IoT Community Group",
+    "type": "cg",
+    "abbrName": "schema extensions for iot"
+  },
+  {
+    "w3cId": 77375,
+    "name": "Schema.org Community Group",
+    "type": "cg",
+    "abbrName": "schema.org"
+  },
+  {
+    "w3cId": 95453,
+    "name": "Schema.org for datasets Community Group",
+    "type": "cg",
+    "abbrName": "schema.org for datasets"
+  },
+  {
+    "w3cId": 141487,
+    "name": "Screen Capture Community Group",
+    "type": "cg",
+    "abbrName": "screen capture"
+  },
+  {
+    "w3cId": 67710,
+    "name": "Second Screen Community Group",
+    "type": "cg",
+    "abbrName": "second screen"
+  },
+  {
+    "w3cId": 138327,
+    "name": "Semantic HTML-vocabulary Community Group",
+    "type": "cg",
+    "abbrName": "semantic html-vocabulary"
+  },
+  {
+    "w3cId": 92610,
+    "name": "Semantic Web in Health Care and Life Sciences Community Group",
+    "type": "cg",
+    "abbrName": "semantic web in health care and life sciences"
+  },
+  {
+    "w3cId": 100368,
+    "name": "SHACL Community Group",
+    "type": "cg",
+    "abbrName": "shacl"
+  },
+  {
+    "w3cId": 95701,
+    "name": "Shape Expressions Community Group",
+    "type": "cg",
+    "abbrName": "shape expressions"
+  },
+  {
+    "w3cId": 97795,
+    "name": "Silver Community Group",
+    "type": "cg",
+    "abbrName": "silver"
+  },
+  {
+    "w3cId": 95188,
+    "name": "Social Web Incubator Community Group",
+    "type": "cg",
+    "abbrName": "social web incubator"
+  },
+  {
+    "w3cId": 110151,
+    "name": "Solid Community Group",
+    "type": "cg",
+    "abbrName": "solid"
+  },
+  {
+    "w3cId": 114009,
+    "name": "SPARQL-dev Community Group",
+    "type": "cg",
+    "abbrName": "sparql-dev"
+  },
+  {
+    "w3cId": 130562,
+    "name": "Spec Editors Community Group",
+    "type": "cg",
+    "abbrName": "spec editors"
+  },
+  {
+    "w3cId": 80261,
+    "name": "Sport Schema Community Group",
+    "type": "cg",
+    "abbrName": "sport schema"
+  },
+  {
+    "w3cId": 137496,
+    "name": "Sustainability Community Group",
+    "type": "cg",
+    "abbrName": "sustainability"
+  },
+  {
+    "w3cId": 62441,
+    "name": "Sustainable Web Design Community Group",
+    "type": "cg",
+    "abbrName": "sustainable web design"
+  },
+  {
+    "w3cId": 104525,
+    "name": "Synchronized Multimedia for Publications Community Group",
+    "type": "cg",
+    "abbrName": "synchronized multimedia for publications"
+  },
+  {
+    "w3cId": 112823,
+    "name": "Talent Marketplace Signaling Community Group",
+    "type": "cg",
+    "abbrName": "talent marketplace signaling"
+  },
+  {
+    "w3cId": 128834,
+    "name": "Text and Data Mining Reservation Protocol Community Group",
+    "type": "cg",
+    "abbrName": "text and data mining reservation protocol"
+  },
+  {
+    "w3cId": 85190,
+    "name": "The Tourism Structured Web Data Community Group",
+    "type": "cg",
+    "abbrName": "the tourism structured web data"
+  },
+  {
+    "w3cId": 67497,
+    "name": "Touch Events Community Group",
+    "type": "cg",
+    "abbrName": "touch events"
+  },
+  {
+    "w3cId": 143412,
+    "name": "TREE hypermedia Community Group",
+    "type": "cg",
+    "abbrName": "tree hypermedia"
+  },
+  {
+    "w3cId": 49276,
+    "name": "Unhosted Web Community Group",
+    "type": "cg",
+    "abbrName": "unhosted web"
+  },
+  {
+    "w3cId": 152802,
+    "name": "Update robots.txt standards Community Group",
+    "type": "cg",
+    "abbrName": "update robots.txt standards"
+  },
+  {
+    "w3cId": 91376,
+    "name": "Voice Interaction Community Group",
+    "type": "cg",
+    "abbrName": "voice interaction"
+  },
+  {
+    "w3cId": 50503,
+    "name": "W3C Process Community Group",
+    "type": "cg",
+    "abbrName": "w3c process"
+  },
+  {
+    "w3cId": 54291,
+    "name": "WAI-Engage: Web Accessibility Community Group",
+    "type": "cg",
+    "abbrName": "wai-engage: web accessibility"
+  },
+  {
+    "w3cId": 72794,
+    "name": "Web Bluetooth Community Group",
+    "type": "cg",
+    "abbrName": "web bluetooth"
+  },
+  {
+    "w3cId": 127974,
+    "name": "Web Components Community Group",
+    "type": "cg",
+    "abbrName": "web components"
+  },
+  {
+    "w3cId": 55590,
+    "name": "Web History Community Group",
+    "type": "cg",
+    "abbrName": "web history"
+  },
+  {
+    "w3cId": 110166,
+    "name": "Web Machine Learning Community Group",
+    "type": "cg",
+    "abbrName": "web machine learning"
+  },
+  {
+    "w3cId": 93489,
+    "name": "Web Media API Community Group",
+    "type": "cg",
+    "abbrName": "web media api"
+  },
+  {
+    "w3cId": 49808,
+    "name": "Web Media Text Tracks Community Group",
+    "type": "cg",
+    "abbrName": "web media text tracks"
+  },
+  {
+    "w3cId": 76978,
+    "name": "Web NFC Community Group",
+    "type": "cg",
+    "abbrName": "web nfc"
+  },
+  {
+    "w3cId": 63991,
+    "name": "Web of Things Community Group",
+    "type": "cg",
+    "abbrName": "web of things"
+  },
+  {
+    "w3cId": 129080,
+    "name": "Web of Things Japanese Community Group",
+    "type": "cg",
+    "abbrName": "web of things japanese"
+  },
+  {
+    "w3cId": 80485,
+    "name": "Web Platform Incubator Community Group",
+    "type": "cg",
+    "abbrName": "web platform incubator"
+  },
+  {
+    "w3cId": 117875,
+    "name": "Web Thing Protocol Community Group",
+    "type": "cg",
+    "abbrName": "web thing protocol"
+  },
+  {
+    "w3cId": 111466,
+    "name": "Web Video Map Tracks (WebVMT) Community Group",
+    "type": "cg",
+    "abbrName": "web video map tracks (webvmt)"
+  },
+  {
+    "w3cId": 137557,
+    "name": "Web-interoperable Runtimes Community Group",
+    "type": "cg",
+    "abbrName": "web-interoperable runtimes"
+  },
+  {
+    "w3cId": 78073,
+    "name": "WebAssembly Community Group",
+    "type": "cg",
+    "abbrName": "webassembly"
+  },
+  {
+    "w3cId": 122873,
+    "name": "WebAuthn Adoption Community Group",
+    "type": "cg",
+    "abbrName": "webauthn adoption"
+  },
+  {
+    "w3cId": 140537,
+    "name": "WebDX Community Group",
+    "type": "cg",
+    "abbrName": "webdx"
+  },
+  {
+    "w3cId": 131613,
+    "name": "WebExtensions Community Group",
+    "type": "cg",
+    "abbrName": "webextensions"
+  },
+  {
+    "w3cId": 51933,
+    "name": "WebID Community Group",
+    "type": "cg",
+    "abbrName": "webid"
+  },
+  {
+    "w3cId": 136852,
+    "name": "WebView Community Group",
+    "type": "cg",
+    "abbrName": "webview"
+  },
+  {
+    "w3cId": 53549,
+    "name": "XForms Users Community Group",
+    "type": "cg",
+    "abbrName": "xforms users"
+  },
+  {
+    "w3cId": 101103,
+    "name": "XProc Next Community Group",
+    "type": "cg",
+    "abbrName": "xproc next"
+  },
+  {
+    "w3cId": 122875,
+    "name": "XSLT Extensions Community Group",
+    "type": "cg",
+    "abbrName": "xslt extensions"
+  },
+  {
+    "w3cId": 109611,
+    "name": "Chinese Web Interest Group",
+    "type": "ig",
+    "abbrName": "chinese web"
+  },
+  {
+    "w3cId": 72665,
+    "name": "Internationalization Interest Group",
+    "type": "ig",
+    "abbrName": "internationalization"
+  },
+  {
+    "w3cId": 46300,
+    "name": "Media and Entertainment Interest Group",
+    "type": "ig",
+    "abbrName": "media and entertainment"
+  },
+  {
+    "w3cId": 42434,
+    "name": "Patents and Standards Interest Group",
+    "type": "ig",
+    "abbrName": "patents and standards"
+  },
+  {
+    "w3cId": 52497,
+    "name": "Privacy Interest Group",
+    "type": "ig",
+    "abbrName": "privacy"
+  },
+  {
+    "w3cId": 72669,
+    "name": "WAI Interest Group",
+    "type": "ig",
+    "abbrName": "wai"
+  },
+  {
+    "w3cId": 115035,
+    "name": "Web & Networks Interest Group",
+    "type": "ig",
+    "abbrName": "web & networks"
+  },
+  {
+    "w3cId": 75874,
+    "name": "Web of Things Interest Group",
+    "type": "ig",
+    "abbrName": "web of things"
+  },
+  {
+    "w3cId": 113649,
+    "name": "Web Payment Security Interest Group",
+    "type": "ig",
+    "abbrName": "web payment security"
+  },
+  {
+    "w3cId": 35532,
+    "name": "Accessibility Education and Outreach Working Group (EOWG)",
+    "type": "wg",
+    "abbrName": "accessibility education and outreach working group (eowg)"
+  },
+  {
+    "w3cId": 35422,
+    "name": "Accessibility Guidelines Working Group",
+    "type": "wg",
+    "abbrName": "accessibility guidelines"
+  },
+  {
+    "w3cId": 83907,
+    "name": "Accessible Platform Architectures Working Group",
+    "type": "wg",
+    "abbrName": "accessible platform architectures"
+  },
+  {
+    "w3cId": 83726,
+    "name": "Accessible Rich Internet Applications Working Group",
+    "type": "wg",
+    "abbrName": "accessible rich internet applications"
+  },
+  {
+    "w3cId": 46884,
+    "name": "Audio Working Group",
+    "type": "wg",
+    "abbrName": "audio"
+  },
+  {
+    "w3cId": 49799,
+    "name": "Browser Testing and Tools Working Group",
+    "type": "wg",
+    "abbrName": "browser testing and tools"
+  },
+  {
+    "w3cId": 32061,
+    "name": "Cascading Style Sheets (CSS) Working Group",
+    "type": "wg",
+    "abbrName": "cascading style sheets (css)"
+  },
+  {
+    "w3cId": 99375,
+    "name": "Dataset Exchange Working Group",
+    "type": "wg",
+    "abbrName": "dataset exchange"
+  },
+  {
+    "w3cId": 117488,
+    "name": "Decentralized Identifier Working Group",
+    "type": "wg",
+    "abbrName": "decentralized identifier"
+  },
+  {
+    "w3cId": 43696,
+    "name": "Devices and Sensors Working Group",
+    "type": "wg",
+    "abbrName": "devices and sensors"
+  },
+  {
+    "w3cId": 108594,
+    "name": "Distributed Tracing Working Group",
+    "type": "wg",
+    "abbrName": "distributed tracing"
+  },
+  {
+    "w3cId": 154550,
+    "name": "Federated Identity Working Group",
+    "type": "wg",
+    "abbrName": "federated identity"
+  },
+  {
+    "w3cId": 125519,
+    "name": "GPU for the Web Working Group",
+    "type": "wg",
+    "abbrName": "gpu for the web"
+  },
+  {
+    "w3cId": 115520,
+    "name": "HTML Working Group",
+    "type": "wg",
+    "abbrName": "html"
+  },
+  {
+    "w3cId": 109735,
+    "name": "Immersive Web Working Group",
+    "type": "wg",
+    "abbrName": "immersive web"
+  },
+  {
+    "w3cId": 32113,
+    "name": "Internationalization Working Group",
+    "type": "wg",
+    "abbrName": "internationalization"
+  },
+  {
+    "w3cId": 107714,
+    "name": "JSON-LD Working Group",
+    "type": "wg",
+    "abbrName": "json-ld"
+  },
+  {
+    "w3cId": 35549,
+    "name": "Math Working Group",
+    "type": "wg",
+    "abbrName": "math"
+  },
+  {
+    "w3cId": 115198,
+    "name": "Media Working Group",
+    "type": "wg",
+    "abbrName": "media"
+  },
+  {
+    "w3cId": 128558,
+    "name": "MiniApps Working Group",
+    "type": "wg",
+    "abbrName": "miniapps"
+  },
+  {
+    "w3cId": 59096,
+    "name": "Pointer Events Working Group",
+    "type": "wg",
+    "abbrName": "pointer events"
+  },
+  {
+    "w3cId": 133210,
+    "name": "Portable Network Graphics (PNG) Working Group",
+    "type": "wg",
+    "abbrName": "portable network graphics (png)"
+  },
+  {
+    "w3cId": 144835,
+    "name": "Publishing Maintenance Working Group",
+    "type": "wg",
+    "abbrName": "publishing maintenance"
+  },
+  {
+    "w3cId": 138751,
+    "name": "RDF Dataset Canonicalization and Hash Working Group",
+    "type": "wg",
+    "abbrName": "rdf dataset canonicalization and hash"
+  },
+  {
+    "w3cId": 139681,
+    "name": "RDF-star Working Group",
+    "type": "wg",
+    "abbrName": "rdf-star"
+  },
+  {
+    "w3cId": 74168,
+    "name": "Second Screen Working Group",
+    "type": "wg",
+    "abbrName": "second screen"
+  },
+  {
+    "w3cId": 101220,
+    "name": "Service Workers Working Group",
+    "type": "wg",
+    "abbrName": "service workers"
+  },
+  {
+    "w3cId": 75471,
+    "name": "Spatial Data on the Web Working Group",
+    "type": "wg",
+    "abbrName": "spatial data on the web"
+  },
+  {
+    "w3cId": 19480,
+    "name": "SVG Working Group",
+    "type": "wg",
+    "abbrName": "svg"
+  },
+  {
+    "w3cId": 34314,
+    "name": "Timed Text Working Group",
+    "type": "wg",
+    "abbrName": "timed text"
+  },
+  {
+    "w3cId": 98922,
+    "name": "Verifiable Credentials Working Group",
+    "type": "wg",
+    "abbrName": "verifiable credentials"
+  },
+  {
+    "w3cId": 49309,
+    "name": "Web Application Security Working Group",
+    "type": "wg",
+    "abbrName": "web application security"
+  },
+  {
+    "w3cId": 114929,
+    "name": "Web Applications Working Group",
+    "type": "wg",
+    "abbrName": "web applications"
+  },
+  {
+    "w3cId": 87227,
+    "name": "Web Authentication Working Group",
+    "type": "wg",
+    "abbrName": "web authentication"
+  },
+  {
+    "w3cId": 131776,
+    "name": "Web Editing Working Group",
+    "type": "wg",
+    "abbrName": "web editing"
+  },
+  {
+    "w3cId": 44556,
+    "name": "Web Fonts Working Group",
+    "type": "wg",
+    "abbrName": "web fonts"
+  },
+  {
+    "w3cId": 130674,
+    "name": "Web Machine Learning Working Group",
+    "type": "wg",
+    "abbrName": "web machine learning"
+  },
+  {
+    "w3cId": 95969,
+    "name": "Web of Things Working Group",
+    "type": "wg",
+    "abbrName": "web of things"
+  },
+  {
+    "w3cId": 83744,
+    "name": "Web Payments Working Group",
+    "type": "wg",
+    "abbrName": "web payments"
+  },
+  {
+    "w3cId": 45211,
+    "name": "Web Performance Working Group",
+    "type": "wg",
+    "abbrName": "web performance"
+  },
+  {
+    "w3cId": 47318,
+    "name": "Web Real-Time Communications Working Group",
+    "type": "wg",
+    "abbrName": "web real-time communications"
+  },
+  {
+    "w3cId": 101196,
+    "name": "WebAssembly Working Group",
+    "type": "wg",
+    "abbrName": "webassembly"
+  },
+  {
+    "w3cId": 125908,
+    "name": "WebTransport Working Group",
+    "type": "wg",
+    "abbrName": "webtransport"
+  },
+  {
+    "w3cId": 7756,
+    "name": "Advisory Board",
+    "type": "other",
+    "abbrName": "advisory board"
+  },
+  {
+    "w3cId": 33280,
+    "name": "Advisory Committee",
+    "type": "other",
+    "abbrName": "advisory committee"
+  },
+  {
+    "w3cId": 140563,
+    "name": "Board of Directors",
+    "type": "other",
+    "abbrName": "board of directors"
+  },
+  {
+    "w3cId": 34270,
+    "name": "Technical Architecture Group",
+    "type": "other",
+    "abbrName": "technical architecture group"
+  },
+  {
+    "w3cId": 93339,
+    "name": "Accessibility Conformance Testing (ACT) Task Force",
+    "type": "tf",
+    "abbrName": "accessibility conformance testing (act)"
+  },
+  {
+    "w3cId": 147348,
+    "name": "Advisory Board Elected Members",
+    "type": "tf",
+    "abbrName": "advisory board elected members"
+  },
+  {
+    "w3cId": 113779,
+    "name": "African Layout Task Force",
+    "type": "tf",
+    "abbrName": "african layout"
+  },
+  {
+    "w3cId": 81089,
+    "name": "Arabic Layout Task Force",
+    "type": "tf",
+    "abbrName": "arabic layout"
+  },
+  {
+    "w3cId": 102172,
+    "name": "ARIA Authoring Practices Task Force",
+    "type": "tf",
+    "abbrName": "aria authoring practices"
+  },
+  {
+    "w3cId": 140270,
+    "name": "ARIA Editors",
+    "type": "tf",
+    "abbrName": "aria editors"
+  },
+  {
+    "w3cId": 101081,
+    "name": "Automotive Payments Task Force",
+    "type": "tf",
+    "abbrName": "automotive payments"
+  },
+  {
+    "w3cId": 78932,
+    "name": "Automotive Privacy and Security Task Force",
+    "type": "tf",
+    "abbrName": "automotive privacy and security"
+  },
+  {
+    "w3cId": 149084,
+    "name": "Board Audit Committee",
+    "type": "tf",
+    "abbrName": "board audit committee"
+  },
+  {
+    "w3cId": 152308,
+    "name": "Board Development Committee",
+    "type": "tf",
+    "abbrName": "board development committee"
+  },
+  {
+    "w3cId": 145360,
+    "name": "Board Directors",
+    "type": "tf",
+    "abbrName": "board directors"
+  },
+  {
+    "w3cId": 141775,
+    "name": "Board Finance Committee",
+    "type": "tf",
+    "abbrName": "board finance committee"
+  },
+  {
+    "w3cId": 141774,
+    "name": "Board Governance Committee",
+    "type": "tf",
+    "abbrName": "board governance committee"
+  },
+  {
+    "w3cId": 147347,
+    "name": "Board Officers",
+    "type": "tf",
+    "abbrName": "board officers"
+  },
+  {
+    "w3cId": 141773,
+    "name": "Board Personnel Committee",
+    "type": "tf",
+    "abbrName": "board personnel committee"
+  },
+  {
+    "w3cId": 76983,
+    "name": "Chinese Text Layout Task Force | 中文排版需求",
+    "type": "tf",
+    "abbrName": "chinese text layout task force | 中文排版需求"
+  },
+  {
+    "w3cId": 67703,
+    "name": "Cognitive and Learning Disabilities Accessibility Task Force",
+    "type": "tf",
+    "abbrName": "cognitive and learning disabilities accessibility"
+  },
+  {
+    "w3cId": 132930,
+    "name": "DCAT Task Force",
+    "type": "tf",
+    "abbrName": "dcat"
+  },
+  {
+    "w3cId": 81824,
+    "name": "Ethiopic Layout Task Force",
+    "type": "tf",
+    "abbrName": "ethiopic layout"
+  },
+  {
+    "w3cId": 113780,
+    "name": "European Layout Task Force",
+    "type": "tf",
+    "abbrName": "european layout"
+  },
+  {
+    "w3cId": 144058,
+    "name": "FAST Task Force",
+    "type": "tf",
+    "abbrName": "fast"
+  },
+  {
+    "w3cId": 96702,
+    "name": "Hebrew Layout Task Force",
+    "type": "tf",
+    "abbrName": "hebrew layout"
+  },
+  {
+    "w3cId": 104979,
+    "name": "India International Program",
+    "type": "tf",
+    "abbrName": "india international program"
+  },
+  {
+    "w3cId": 109193,
+    "name": "Japanese Layout Task Force | 日本語組版タスクフォース",
+    "type": "tf",
+    "abbrName": "japanese layout task force | 日本語組版タスクフォース"
+  },
+  {
+    "w3cId": 81151,
+    "name": "Low Vision Accessibility Task Force",
+    "type": "tf",
+    "abbrName": "low vision accessibility"
+  },
+  {
+    "w3cId": 141517,
+    "name": "Maturity Model Task Force",
+    "type": "tf",
+    "abbrName": "maturity model"
+  },
+  {
+    "w3cId": 66524,
+    "name": "Mobile Accessibility Task Force",
+    "type": "tf",
+    "abbrName": "mobile accessibility"
+  },
+  {
+    "w3cId": 109474,
+    "name": "Mongolian Layout Task Force",
+    "type": "tf",
+    "abbrName": "mongolian layout"
+  },
+  {
+    "w3cId": 145018,
+    "name": "PM Working Group Chairs",
+    "type": "tf",
+    "abbrName": "pm working group chairs"
+  },
+  {
+    "w3cId": 144308,
+    "name": "Privacy Principles Task Force",
+    "type": "tf",
+    "abbrName": "privacy principles"
+  },
+  {
+    "w3cId": 145539,
+    "name": "Publishing Steering Committee task force",
+    "type": "tf",
+    "abbrName": "publishing steering committee"
+  },
+  {
+    "w3cId": 139586,
+    "name": "RDF Dataset Canonicalization and Hash Working Group Chairs",
+    "type": "tf",
+    "abbrName": "rdf dataset canonicalization and hash working group chairs"
+  },
+  {
+    "w3cId": 143336,
+    "name": "RDF-star Editors",
+    "type": "tf",
+    "abbrName": "rdf-star editors"
+  },
+  {
+    "w3cId": 143337,
+    "name": "RDF-star Semantics",
+    "type": "tf",
+    "abbrName": "rdf-star semantics"
+  },
+  {
+    "w3cId": 143338,
+    "name": "RDF-star Use Cases",
+    "type": "tf",
+    "abbrName": "rdf-star use cases"
+  },
+  {
+    "w3cId": 143171,
+    "name": "RDF-star WG chairs",
+    "type": "tf",
+    "abbrName": "rdf-star wg chairs"
+  },
+  {
+    "w3cId": 91497,
+    "name": "Research Questions Task Force",
+    "type": "tf",
+    "abbrName": "research questions"
+  },
+  {
+    "w3cId": 94845,
+    "name": "Silver Task Force",
+    "type": "tf",
+    "abbrName": "silver"
+  },
+  {
+    "w3cId": 106744,
+    "name": "Southeast Asian Layout Task Force",
+    "type": "tf",
+    "abbrName": "southeast asian layout"
+  },
+  {
+    "w3cId": 110437,
+    "name": "Spoken Presentation Task Force",
+    "type": "tf",
+    "abbrName": "spoken presentation"
+  },
+  {
+    "w3cId": 85121,
+    "name": "SVG Accessibility Task Force",
+    "type": "tf",
+    "abbrName": "svg accessibility"
+  },
+  {
+    "w3cId": 97249,
+    "name": "Tibetan Layout Task Force",
+    "type": "tf",
+    "abbrName": "tibetan layout"
+  },
+  {
+    "w3cId": 121208,
+    "name": "Transportation Ontology Coordination Committee",
+    "type": "tf",
+    "abbrName": "transportation ontology coordination committee"
+  },
+  {
+    "w3cId": 133097,
+    "name": "Verifiable Credentials Working Group Chairs",
+    "type": "tf",
+    "abbrName": "verifiable credentials working group chairs"
+  },
+  {
+    "w3cId": 144306,
+    "name": "Vision Task Force",
+    "type": "tf",
+    "abbrName": "vision"
+  },
+  {
+    "w3cId": 101569,
+    "name": "WAI Adapt Task Force",
+    "type": "tf",
+    "abbrName": "wai adapt"
+  },
+  {
+    "w3cId": 150942,
+    "name": "WCAG 2.x Backlog Task Force",
+    "type": "tf",
+    "abbrName": "wcag 2.x backlog"
+  },
+  {
+    "w3cId": 55145,
+    "name": "WCAG2ICT Task Force",
+    "type": "tf",
+    "abbrName": "wcag2ict"
+  }
+]

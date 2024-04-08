@@ -1,6 +1,7 @@
 import { fetchProject, validateProject } from './project.mjs';
 import { initSectionHandlers, validateSessionBody, parseSessionBody } from './session.mjs';
 import { fetchSessionChairs, validateSessionChairs } from './chairs.mjs';
+import { fetchSessionGroups, validateSessionGroups } from './groups.mjs';
 import { todoStrings } from './todostrings.mjs';
 
 
@@ -75,18 +76,61 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
     session.description = parseSessionBody(session.body);
   }
 
-  // Retrieve information about chairs, unless that was already done
-  if (!session.chairs) {
-    session.chairs = await fetchSessionChairs(session, project.chairsToW3CID);
+  if (project.metadata.type === 'groups') {
+    // Retrieve information about groups for all sessions
+    for (const s of project.sessions) {
+      s.groups = await fetchSessionGroups(s, project.groupsToW3CID);
+    }
+    const groupsErrors = validateSessionGroups(session.groups);
+    if (groupsErrors.length > 0) {
+      errors.push({
+        session: sessionNumber,
+        severity: 'error',
+        type: 'groups',
+        messages: groupsErrors
+      });
+    }
+    else if (session.title.match(/ Joint Meeting$/i)) {
+      // TODO: validate that groups appear no more than once in the list
+      if (session.groups.length === 1) {
+        errors.push({
+          session: sessionNumber,
+          severity: 'error',
+          type: 'groups',
+          messages: ['Group cannot have a joint meeting with itself']
+        });
+      }
+    }
+    else if (session.groups.length === 1) {
+      const duplSessions = project.sessions.filter(s =>
+        s !== session &&
+        s.groups.length === 1 &&
+        s.groups[0].type === session.groups[0].type &&
+        s.groups[0].abbrName === session.groups[0].abbrName);
+      if (duplSessions.length > 0) {
+        errors.push({
+          session: sessionNumber,
+          severity: 'error',
+          type: 'groups',
+          messages: duplSessions.map(dupl => `Another issue #${dupl.number} found for the "${session.groups[0].label}"`)
+        });
+      }
+    }
   }
-  const chairsErrors = validateSessionChairs(session.chairs);
-  if (chairsErrors.length > 0) {
-    errors.push({
-      session: sessionNumber,
-      severity: 'error',
-      type: 'chairs',
-      messages: chairsErrors
-    });
+  else {
+    // Retrieve information about chairs, unless that was already done
+    if (!session.chairs) {
+      session.chairs = await fetchSessionChairs(session, project.chairsToW3CID);
+    }
+    const chairsErrors = validateSessionChairs(session.chairs);
+    if (chairsErrors.length > 0) {
+      errors.push({
+        session: sessionNumber,
+        severity: 'error',
+        type: 'chairs',
+        messages: chairsErrors
+      });
+    }
   }
 
   // Make sure sessions identified as conflicting actually exist
@@ -199,34 +243,44 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
     }
   }
 
-  // Check absence of conflict with sessions with same chair(s)
+  // Check absence of conflict with sessions with same group(s) or chair(s)
   // Note: It's fine to have two plenary sessions with same chair(s) scheduled
   // in the same room and at the same time.
   if (session.day && session.slot) {
+    const chairOrGroup = (project.metadata.type === 'groups') ?
+      'group' : 'chair';
+
     const chairConflictErrors = project.sessions
       .filter(s => s !== session && s.day === session.day && s.slot === session.slot && s.room !== session.room)
       .filter(s => {
         try {
-          const sdesc = parseSessionBody(s.body);
-          const sAuthorExcluded = sdesc.chairs?.find(c => c.name?.toLowerCase() === 'author-');
-          if (!sAuthorExcluded && session.chairs.find(c => c.login === s.author.login)) {
-            return true;
+          if (project.metadata.type === 'groups') {
+            const inboth = s.groups.find(group => session.groups.find(g =>
+              g.type === group.type && g.abbrName === group.abbrName));
+            return !!inboth;
           }
-          const inboth = sdesc.chairs.find(chair => session.chairs.find(c =>
-            (c.login && c.login.toLowerCase() === chair.login?.toLowerCase()) ||
-            (c.name && c.name.toLowerCase() === chair.name?.toLowerCase())));
-          return !!inboth;
+          else {
+            const sdesc = parseSessionBody(s.body);
+            const sAuthorExcluded = sdesc.chairs?.find(c => c.name?.toLowerCase() === 'author-');
+            if (!sAuthorExcluded && session.chairs.find(c => c.login === s.author.login)) {
+              return true;
+            }
+            const inboth = sdesc.chairs.find(chair => session.chairs.find(c =>
+              (c.login && c.login.toLowerCase() === chair.login?.toLowerCase()) ||
+              (c.name && c.name.toLowerCase() === chair.name?.toLowerCase())));
+            return !!inboth;
+          }
         }
         catch {
           return false;
         }
       })
-      .map(s => `Same slot as session "${s.title}" (#${s.number}), which share a common chair`);
+      .map(s => `Same slot as session "${s.title}" (#${s.number}), which shares a common ${chairOrGroup}`);
     if (chairConflictErrors.length > 0) {
       errors.push({
         session: sessionNumber,
         severity: 'error',
-        type: 'chair conflict',
+        type: `${chairOrGroup} conflict`,
         messages: chairConflictErrors
       });
     }

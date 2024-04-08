@@ -5,6 +5,7 @@
  */
 
 import { getEnvKey } from '../tools/lib/envkeys.mjs';
+import defaultGroups from './data/w3cgroups.json' with { type: 'json' };
 
 /**
  * A unique ID counter
@@ -112,7 +113,8 @@ async function getTestData(testDataId) {
     sessions: toGraphQLSessions(custom.sessions ?? [
       { number: 1, title: 'A test session' }
     ]),
-    w3cAccounts: custom.w3cAccounts
+    w3cAccounts: custom.w3cAccounts,
+    w3cGroups: custom.w3cGroups ?? defaultGroups
   };
 
   testDataCache[testDataId] = testData;
@@ -261,6 +263,16 @@ export async function fetchW3CAccount(databaseId) {
       name: user.login
     };
   }
+}
+
+
+/**
+ * Stub for the fetchW3CGroups function
+ */
+export async function fetchW3CGroups() {
+  const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
+  const testData = await getTestData(PROJECT_NUMBER);
+  return testData.w3cGroups ?? [];
 }
 
 /**
