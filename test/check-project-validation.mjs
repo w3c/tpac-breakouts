@@ -34,6 +34,15 @@ describe('Project validation', function () {
     ]);
   });
 
+  it('reports about an invalid type field', async function () {
+    setEnvKey('PROJECT_NUMBER', 'project-validation-type');
+    const project = await fetchTestProject();
+    const errors = await validateProject(project);
+    assert.deepStrictEqual(errors, [
+      'The "type" info must be one of "groups" or "breakouts"'
+    ]);
+  });
+
   it('reports about invalid slots', async function () {
     setEnvKey('PROJECT_NUMBER', 'project-validation-slots');
     const project = await fetchTestProject();

@@ -913,6 +913,9 @@ export function validateProject(project) {
     else if (!timezones.includes(project.metadata.timezone)) {
       errors.push('The "timezone" info in the short description is not a valid timezone. Value should be a "tz identifier" in https://en.wikipedia.org/wiki/List_of_tz_database_time_zones');
     }
+    if (!['groups', 'breakouts', undefined].includes(project.metadata?.type)) {
+      errors.push('The "type" info must be one of "groups" or "breakouts"');
+    }
   }
 
   for (const slot of project.slots) {
