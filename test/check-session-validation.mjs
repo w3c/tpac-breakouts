@@ -154,7 +154,7 @@ describe('Session validation', function () {
       session: sessionNumber,
       severity: 'error',
       type: 'chair conflict',
-      messages: ['Same slot as session "Chair common with previous one" (#15), which share a common chair']
+      messages: ['Same slot as session "Chair common with previous one" (#15), which shares a common chair']
     });
   });
 

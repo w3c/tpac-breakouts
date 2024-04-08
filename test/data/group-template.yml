@@ -1,0 +1,49 @@
+name: Group meeting proposal
+description: Schedule a W3C group meeting
+labels: ["session"]
+body:
+  - type: dropdown
+    id: capacity
+    attributes:
+      label: Estimated number of in-person attendees
+      options:
+        - Don't know (Default)
+        - Fewer than 20 people
+        - 20-45 people
+        - More than 45 people
+    validations:
+      required: false
+
+  - type: input
+    id: shortname
+    attributes:
+      label: IRC channel (Optional)
+      description: |
+        Shortname for the irc.w3.org channel (e.g., `#my-fav-session`). If not provided, shortname will be generated from title. For plenary sessions, please do not provide a value (as it will be overridden by the channel selected by the meeting planners).
+    validations:
+      required: false
+
+  - type: textarea
+    id: conflicts
+    attributes:
+      label: Other meetings where we should avoid scheduling conflicts (Optional)
+      description: |
+        Identify meetings by their issue number in this GitHub repo (e.g., `#32, #18`). Space- or comma-separated list of isssue numbers. There is no need to mention joint meetings where the group de facto must be present here; we will take it into account when scheduling. For any other instructions beyond issue numbers, please use the section below on instructions for meeting planners.
+    validations:
+      required: false
+
+  - type: textarea
+    id: comments
+    attributes:
+      label: Instructions for meeting planners (Optional)
+      description: |
+        Any information for the meeting planners, including timing constraints. This information will not be exported to the event calendar.
+    validations:
+      required: false
+
+  - type: textarea
+    id: agenda
+    attributes:
+      label: Agenda (link or inline)
+      description: |
+        In this section, either **add a link** to an external agenda, or **provide the agenda inline** using simple markdown. This section may be completed closer to the meeting. 
