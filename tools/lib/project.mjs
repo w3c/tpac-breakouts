@@ -928,6 +928,9 @@ export function validateProject(project) {
     if (!day.date.match(/^\d{4}\-\d{2}\-\d{2}$/)) {
       errors.push(`Invalid day name "${day.name}". Format should be either "YYYY-MM-DD" or "[label] (YYYY-MM-DD)`);
     }
+    else if (isNaN((new Date(day.date)).valueOf())) {
+      errors.push(`Invalid date in day name "${day.name}".`);
+    }
   }
 
   return errors;

@@ -13,7 +13,7 @@ async function fetchTestProject() {
 describe('Session validation', function () {
   before(function () {
     initTestEnv();
-    setEnvKey('PROJECT_NUMBER', 'validation-issues');
+    setEnvKey('PROJECT_NUMBER', 'session-validation');
     setEnvKey('ISSUE_TEMPLATE', 'test/data/session-template-default.yml');
   });
 
