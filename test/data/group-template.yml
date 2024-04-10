@@ -2,6 +2,15 @@ name: Group meeting proposal
 description: Schedule a W3C group meeting
 labels: ["session"]
 body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Session description
+      description: |
+        Simple markdown only please (inline formatting, links, lists).
+    validations:
+      required: false
+
   - type: dropdown
     id: capacity
     attributes:

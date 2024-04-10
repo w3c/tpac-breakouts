@@ -2,8 +2,8 @@ import { fetchProject, validateProject } from './project.mjs';
 import { initSectionHandlers, validateSessionBody, parseSessionBody } from './session.mjs';
 import { fetchSessionChairs, validateSessionChairs } from './chairs.mjs';
 import { fetchSessionGroups, validateSessionGroups } from './groups.mjs';
+import { parseSessionMeetings } from './meetings.mjs';
 import { todoStrings } from './todostrings.mjs';
-
 
 /**
  * Validate the entire grid.
@@ -34,6 +34,31 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
  * Errors in the list may be real errors or warnings.
  */
 export async function validateSession(sessionNumber, project) {
+  function meetsAt(session, meeting) {
+    const meetings = parseSessionMeetings(session, project);
+    return !!meetings.find(m =>
+      m.room === meeting.room &&
+      m.day === meeting.day &&
+      m.slot === meeting.slot);
+  }
+
+  function meetsInParallelWith(session, meeting) {
+    const meetings = parseSessionMeetings(session, project);
+    return !!meetings.find(m =>
+      ((m.room && meeting.room && m.room !== meeting.room) ||
+        !m.room ||
+        !meeting.room) &&
+      m.day === meeting.day &&
+      m.slot === meeting.slot);
+  }
+
+  function hasActualMeeting(meetings) {
+    return meetings.length > 0 &&
+      meetings[0].room &&
+      meetings[0].day &&
+      meetings[0].slot;
+  }
+
   const projectErrors = validateProject(project);
   if (projectErrors.length > 0) {
     throw new Error(`Project "${project.title}" is invalid:
@@ -168,13 +193,52 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
     }
   }
 
-  // Make sure that a plenary session is scheduled in a plenary room, and that
-  // a breakout session is scheduled in a breakout room.
-  // (Note: this will need to be relaxed if two or more "plenary" rooms get
-  // used at once, and/or if the plenary room can be reused for breakouts.
-  if (session.room) {
-    if (session.description.type === 'plenary') {
-      if (session.room.toLowerCase() !== plenaryRoom) {
+  // Look at scheduling conflicts.
+  // Note we start with building the list of meeting tuples (room, day, slot)
+  // that the session is associated with. Breakout sessions should be
+  // scheduled only once. Group meetings may be scheduled multiple times.
+  const meetings = parseSessionMeetings(session, project);
+  const meetingsErrors = meetings.filter(meeting => meeting.invalid);
+  if (meetingsErrors.length > 0) {
+    errors.push({
+      session: sessionNumber,
+      severity: 'error',
+      type: 'meeting format',
+      messages: meetingsErrors.map(m => `Invalid room, day or slot in "${m.invalid}"`)
+    });
+  }
+
+  const duplMeetingsErrors = meetings
+    .filter(meeting => meetings.find(m =>
+      m !== meeting &&
+      m.day && m.slot &&
+      m.day === meeting.day &&
+      m.slot === meeting.slot
+    ))
+    .map(m => `Scheduled more than once in day/slot ${m.day} ${m.slot}`);
+  if (duplMeetingsErrors.length > 0) {
+    errors.push({
+      session: sessionNumber,
+      severity: 'error',
+      type: 'meeting duplicate',
+      messages: [...new Set(duplMeetingsErrors)]
+    });
+  }
+
+  if (session.description.type === 'plenary') {
+    // Plenary must be scheduled in only one slot and in the plenary room
+    // (Note: this will need to be relaxed if two or more "plenary" rooms get
+    // used at once)
+    if (meetings.length > 1) {
+      errors.push({
+        session: sessionNumber,
+        severity: 'error',
+        type: 'scheduling',
+        messages: ['Plenary session must be scheduled only once']
+      });
+    }
+    else if (meetings.length === 1) {
+      if (meetings[0].room && meetings[0].room.toLowerCase() !== plenaryRoom) {
         errors.push({
           session: sessionNumber,
           severity: 'error',
@@ -182,28 +246,47 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
           messages: ['Plenary session must be scheduled in plenary room']
         });
       }
-    }
-    else {
-      if (session.room.toLowerCase() === plenaryRoom) {
-        errors.push({
-          session: sessionNumber,
-          severity: 'error',
-          type: 'scheduling',
-          messages: ['Breakout session must not be scheduled in plenary room']
-        });
+
+      // Make sure that the number of sessions in a plenary does not exceed the
+      // maximum allowed.
+      if (hasActualMeeting(meetings)) {
+        const plenarySessions = project.sessions
+          .filter(s => meetsAt(s, meetings[0]));
+        if (plenarySessions.length > plenaryHolds) {
+          errors.push({
+            session: sessionNumber,
+            severity: 'error',
+            type: 'scheduling',
+            messages: ['Too many sessions scheduled in same plenary slot']
+          });
+        }
       }
     }
   }
+  else {
+    // Non plenary sessions must be scheduled in a breakout room
+    // (Note: this will need to be relaxed if the plenary room can be reused
+    // for other types of meetings)
+    if (meetings.find(meeting => meeting.room?.toLowerCase() === plenaryRoom)) {
+      errors.push({
+        session: sessionNumber,
+        severity: 'error',
+        type: 'scheduling',
+        messages: ['Non plenary session must not be scheduled in plenary room']
+      });
+    }
 
-  // Make sure there is no session scheduled at the same time in the same room,
-  // skipping plenary sessions since they are, by definition, scheduled at the
-  // same time and in the same room.
-  const scheduled = session.room && session.day && session.slot;
-  if (scheduled && (session.description.type !== 'plenary')) {
-    const schedulingErrors = project.sessions
-      .filter(s => s !== session && s.room && s.day && s.slot)
-      .filter(s => s.room === session.room && s.day === session.day && s.slot === session.slot)
-      .map(s => `Session scheduled in same room (${s.room}) and same day/slot (${s.day} ${s.slot}) as session "${s.title}" (${s.number})`);
+    // Make sure there is no session scheduled at the same time in the same room,
+    // skipping plenary sessions since they are, by definition, scheduled at the
+    // same time and in the same room.
+    const schedulingErrors = meetings
+      .filter(meeting => meeting.room && meeting.day && meeting.slot)
+      .map(meeting => project.sessions
+        .filter(s => s !== session && meetsAt(s, meeting))
+        .map(s => `Session scheduled in same room (${meeting.room}) and same day/slot (${meeting.day} ${meeting.slot}) as session "${s.title}" (${s.number})`)
+      )
+      .flat()
+      .filter(error => !!error);
     if (schedulingErrors.length > 0) {
       errors.push({
         session: sessionNumber,
@@ -214,31 +297,24 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
     }
   }
 
-  // Make sure that the number of sessions in a plenary does not exceed the
-  // maximum allowed.
-  if (scheduled && (session.description.type === 'plenary')) {
-    const plenarySessions = project.sessions
-      .filter(s => s.room && s.day && s.slot)
-      .filter(s => s.room === session.room && s.day === session.day && s.slot === session.slot);
-    if (plenarySessions.length > plenaryHolds) {
-      errors.push({
-        session: sessionNumber,
-        severity: 'error',
-        type: 'scheduling',
-        messages: ['Too many sessions scheduled in same plenary slot']
-      });
-    }
-  }
-
   // Check assigned room matches requested capacity
-  if (session.room && session.description.capacity) {
-    const room = project.rooms.find(s => s.name === session.room);
-    if (room.capacity < session.description.capacity) {
+  if (session.description.capacity) {
+    const capacityWarnings = meetings
+      .filter(meeting => meeting.room)
+      .map(meeting => {
+        const room = project.rooms.find(s => s.name === meeting.room);
+        if (room.capacity < session.description.capacity) {
+          return `Capacity of "${room.label}" (${room.capacity}) is lower than requested capacity (${session.description.capacity})`;
+        }
+        return null;
+      })
+      .filter(warning => !!warning);
+    if (capacityWarnings.length > 0) {
       errors.push({
         session: sessionNumber,
         severity: 'warning',
         type: 'capacity',
-        messages: ['Room capacity is lower than requested capacity']
+        messages: capacityWarnings
       });
     }
   }
@@ -246,57 +322,69 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   // Check absence of conflict with sessions with same group(s) or chair(s)
   // Note: It's fine to have two plenary sessions with same chair(s) scheduled
   // in the same room and at the same time.
-  if (session.day && session.slot) {
-    const chairOrGroup = (project.metadata.type === 'groups') ?
-      'group' : 'chair';
-
-    const chairConflictErrors = project.sessions
-      .filter(s => s !== session && s.day === session.day && s.slot === session.slot && s.room !== session.room)
-      .filter(s => {
+  const chairOrGroup = (project.metadata.type === 'groups') ?
+    'group' : 'chair';
+  const chairConflictErrors = meetings
+    .filter(meeting => meeting.day && meeting.slot)
+    .map(meeting => project.sessions
+      .filter(s => s !== session && meetsInParallelWith(s, meeting))
+      .map(s => {
+        let inboth = null;
         try {
           if (project.metadata.type === 'groups') {
-            const inboth = s.groups.find(group => session.groups.find(g =>
+            inboth = s.groups.find(group => session.groups.find(g =>
               g.type === group.type && g.abbrName === group.abbrName));
-            return !!inboth;
           }
           else {
             const sdesc = parseSessionBody(s.body);
             const sAuthorExcluded = sdesc.chairs?.find(c => c.name?.toLowerCase() === 'author-');
-            if (!sAuthorExcluded && session.chairs.find(c => c.login === s.author.login)) {
-              return true;
+            if (!sAuthorExcluded) {
+              inboth = session.chairs.find(c => c.login === s.author.login);
             }
-            const inboth = sdesc.chairs.find(chair => session.chairs.find(c =>
-              (c.login && c.login.toLowerCase() === chair.login?.toLowerCase()) ||
-              (c.name && c.name.toLowerCase() === chair.name?.toLowerCase())));
-            return !!inboth;
+            else {
+              inboth = sdesc.chairs.find(chair => session.chairs.find(c =>
+                (c.login && c.login.toLowerCase() === chair.login?.toLowerCase()) ||
+                (c.name && c.name.toLowerCase() === chair.name?.toLowerCase())));
+            }
           }
         }
-        catch {
-          return false;
+        catch {}
+        if (inboth) {
+          return `Session scheduled at the same time as "${s.title}" (#${s.number}), which shares a common ${chairOrGroup} "${inboth.name}"`;
+        }
+        else {
+          return null;
         }
       })
-      .map(s => `Same slot as session "${s.title}" (#${s.number}), which shares a common ${chairOrGroup}`);
-    if (chairConflictErrors.length > 0) {
-      errors.push({
-        session: sessionNumber,
-        severity: 'error',
-        type: `${chairOrGroup} conflict`,
-        messages: chairConflictErrors
-      });
-    }
+    )
+    .flat()
+    .filter(error => !!error);
+  if (chairConflictErrors.length > 0) {
+    errors.push({
+      session: sessionNumber,
+      severity: 'error',
+      type: `${chairOrGroup} conflict`,
+      messages: chairConflictErrors
+    });
   }
 
   // Check assigned slot is different from conflicting sessions
   // (skipped if the list of conflicting sessions is invalid)
-  if (!hasConflictErrors && session.day && session.slot && session.description.conflicts) {
-    const conflictWarnings = session.description.conflicts
-      .map(number => {
-        const conflictingSession = project.sessions.find(s => s.number === number);
-        if (conflictingSession.day === session.day && conflictingSession.slot === session.slot) {
-          return `Same day/slot "${session.day} ${session.slot}" as conflicting session "${conflictingSession.title}" (#${conflictingSession.number})`;
-        }
-        return null;
-      })
+  if (!hasConflictErrors && session.description.conflicts) {
+    const conflictWarnings = meetings
+      .filter(meeting => meeting.day && meeting.slot)
+      .map(meeting => session.description.conflicts
+        .map(number => {
+          const conflictingSession = project.sessions.find(s => s.number === number);
+          if (meetsInParallelWith(conflictingSession, meeting)) {
+            return `Same day/slot "${meeting.day} ${meeting.slot}" as conflicting session "${conflictingSession.title}" (#${conflictingSession.number})`;
+          }
+          else {
+            return null;
+          }
+        })
+      )
+      .flat()
       .filter(warning => !!warning);
     if (conflictWarnings.length > 0) {
       errors.push({
@@ -311,37 +399,33 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   // Check absence of conflict with sessions in the same track(s)
   // Note: It's fine to have two plenary sessions in the same track(s)
   // scheduled in the same room and at the same time.
-  if (session.day && session.slot) {
-    const tracks = session.labels.filter(label => label.startsWith('track: '));
-    let tracksWarnings = [];
-    for (const track of tracks) {
-      const sessionsInSameTrack = project.sessions.filter(s => s !== session && s.labels.includes(track));
-      const trackWarnings = sessionsInSameTrack
-        .map(other => {
-          if (other.day === session.day && other.slot === session.slot && other.room !== session.room) {
-            return `Same day/slot "${session.day} ${session.slot}" as session in same track "${track}": "${other.title}" (#${other.number})`;
-          }
-          return null;
-        })
-        .filter(warning => !!warning);
-      tracksWarnings = tracksWarnings.concat(trackWarnings);
-    }
-    if (tracksWarnings.length > 0) {
-      errors.push({
-        session: sessionNumber,
-        severity: 'warning',
-        type: 'track',
-        messages: tracksWarnings
-      });
-    }
+  const tracks = session.labels.filter(label => label.startsWith('track: '));
+  const tracksWarnings = meetings
+    .filter(meeting => meeting.day && meeting.slot)
+    .map(meeting => tracks
+      .map(track => project.sessions
+        .filter(s => s !== session && s.labels.includes(track))
+        .filter(s => meetsInParallelWith(s, meeting))
+        .map(s => `Same day/slot "${meeting.day} ${meeting.slot}" as session in same track "${track}": "${s.title}" (#${s.number})`)
+      )
+    )
+    .flat(2)
+    .filter(warning => !!warning);
+  if (tracksWarnings.length > 0) {
+    errors.push({
+      session: sessionNumber,
+      severity: 'warning',
+      type: 'track',
+      messages: tracksWarnings
+    });
   }
 
   // Check that there is no plenary session scheduled at the same time as this
   // session
-  if (session.day && session.slot) {
-    const plenaryWarnings = project.sessions
-      .filter(s => s !== session && s.day && s.slot && s.room)
-      .filter(s => s.day === session.day && s.slot === session.slot && s.room !== session.room)
+  const plenaryWarnings = meetings
+    .filter(meeting => meeting.day && meeting.slot)
+    .map(meeting => project.sessions
+      .filter(s => s !== session && meetsInParallelWith(s, meeting))
       .filter(s => {
         try {
           const desc = parseSessionBody(s.body);
@@ -351,34 +435,39 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
           return false;
         }
       })
-      .map(other => {
-        return `Same time/slot "${session.day} ${session.slot}" as plenary session "${other.title}" (#${other.number})`;
-      });
-    if (plenaryWarnings.length > 0) {
-      errors.push({
-        session: sessionNumber,
-        severity: 'warning',
-        type: 'plenary',
-        messages: plenaryWarnings
-      });
-    }
+      .map(s => `Session scheduled at the same time as plenary session "${s.title}" (#${s.number})`)
+    )
+    .flat()
+    .filter(warning => !!warning);
+  if (plenaryWarnings.length > 0) {
+    errors.push({
+      session: sessionNumber,
+      severity: 'warning',
+      type: 'plenary',
+      messages: plenaryWarnings
+    });
   }
 
   // No two sessions can use the same IRC channel during the same slot,
   // unless both sessions are part of the same plenary meeting.
   if (session.description.shortname) {
-    const ircConflicts = project.sessions
-      .filter(s => s.number !== session.number && s.day === session.day && s.slot === session.slot)
-      .filter(s => {
-        try {
-          const desc = parseSessionBody(s.body);
-          return desc.shortname === session.description.shortname &&
-            (desc.type !== 'plenary' || session.description.type !== 'plenary');
-        }
-        catch {
-          return false;
-        }
-      });
+    const ircConflicts = meetings
+      .filter(meeting => meeting.day && meeting.slot)
+      .map(meeting => project.sessions
+        .filter(s => s.number !== session.number && meetsInParallelWith(s, meeting))
+        .filter(s => {
+          try {
+            const desc = parseSessionBody(s.body);
+            return desc.shortname === session.description.shortname &&
+              (desc.type !== 'plenary' || session.description.type !== 'plenary');
+          }
+          catch {
+            return false;
+          }
+        })
+      )
+      .flat()
+      .filter(error => !!error);
     if (ircConflicts.length > 0) {
       errors.push({
         session: sessionNumber,
@@ -407,14 +496,18 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
 
   // If breakout session took place more than 2 days ago,
   // time to add a link to the minutes
-  if (scheduled && isMaterialMissing('minutes')) {
-    const day = project.days.find(d => d.name === session.day);
-    const twoDaysInMs = 48 * 60 * 60 * 1000;
-    const atLeastTwoDaysOld = (
-        (new Date()).getTime() -
-        (new Date(day.date)).getTime()
-      ) > twoDaysInMs;
-    if (atLeastTwoDaysOld) {
+  if (hasActualMeeting(meetings) && isMaterialMissing('minutes')) {
+    const minutesNeeded = meetings
+      .filter(meeting => meeting.room && meeting.day && meeting.slot)
+      .find(meeting => {
+        const day = project.days.find(d => d.name === meeting.day);
+        const twoDaysInMs = 48 * 60 * 60 * 1000;
+        return (
+          (new Date()).getTime() -
+          (new Date(day.date)).getTime()
+        ) > twoDaysInMs;
+      });
+    if (minutesNeeded) {
       errors.push({
         session: sessionNumber,
         severity: 'warning',
