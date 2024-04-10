@@ -102,7 +102,7 @@ describe('Session validation', function () {
       session: sessionNumber,
       severity: 'error',
       type: 'scheduling',
-      messages: ['Breakout session must not be scheduled in plenary room']
+      messages: ['Non plenary session must not be scheduled in plenary room']
     });
   });
 
@@ -141,7 +141,7 @@ describe('Session validation', function () {
       session: sessionNumber,
       severity: 'warning',
       type: 'capacity',
-      messages: ['Room capacity is lower than requested capacity']
+      messages: ['Capacity of "Main" (25) is lower than requested capacity (50)']
     });
   });
 
@@ -154,7 +154,7 @@ describe('Session validation', function () {
       session: sessionNumber,
       severity: 'error',
       type: 'chair conflict',
-      messages: ['Same slot as session "Chair common with previous one" (#15), which shares a common chair']
+      messages: ['Session scheduled at the same time as "Chair common with previous one" (#15), which shares a common chair "tidoust"']
     });
   });
 
@@ -193,7 +193,7 @@ describe('Session validation', function () {
       session: sessionNumber,
       severity: 'warning',
       type: 'plenary',
-      messages: ['Same time/slot "2042-04-05 14:00 - 15:00" as plenary session "Plenary scheduled at same time as previous breakout" (#21)']
+      messages: ['Session scheduled at the same time as plenary session "Plenary scheduled at same time as previous breakout" (#21)']
     });
   });
 

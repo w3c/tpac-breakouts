@@ -74,6 +74,12 @@ async function getTestData(testDataId) {
         });
       }
     }
+    if (session.meeting) {
+      fields.push({
+        text: session.meeting,
+        field: { name: 'Meeting' }
+      });
+    }
 
     return {
       id: `id_${uid++}`,
@@ -143,10 +149,16 @@ export async function sendGraphQLRequest(query, acceptHeader = '') {
       const match = query.match(/field\(name: "([^"]+)"\) {/);
       if (match) {
         const name = match[1];
-        const field = {
-          id: `id_field_${name}`,
-          name
-        };
+        let field;
+        if ((name === 'Meeting') && !testData.allowMultipleMeetings) {
+          field = null;
+        }
+        else {
+          field = {
+            id: `id_field_${name}`,
+            name
+          };
+        }
         if (name === 'Room') {
           field.options = testData.rooms;
         }

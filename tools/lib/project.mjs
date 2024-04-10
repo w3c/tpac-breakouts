@@ -600,6 +600,23 @@ export async function fetchProject(login, id) {
     severityFieldIds[severity] = response.data[type].projectV2.field.id;
   }
 
+  // Project may also have a "Meeting" custom field when a session can be
+  // scheduled multiple times. The field contains the list of (room, day, slot)
+  // tuples that a session is associated with.
+  const meetingResponse = await sendGraphQLRequest(`query {
+    ${type}(login: "${login}"){
+      projectV2(number: ${id}) {
+        field(name: "Meeting") {
+          ... on ProjectV2FieldCommon {
+            id
+            name
+          }
+        }
+      }
+    }
+  }`);
+  const meeting = meetingResponse.data[type].projectV2.field;
+
   // Another request to retrieve the list of sessions associated with the project.
   const sessionsResponse = await sendGraphQLRequest(`query {
     ${type}(login: "${login}") {
@@ -744,6 +761,11 @@ export async function fetchProject(login, id) {
       };
     }),
 
+    // ID of the "Meeting" custom field, if it exists
+    // (it signals the fact that sessions may be scheduled more than once)
+    meetingFieldId: meeting?.id,
+    allowMultipleMeetings: !!meeting?.id,
+
     // List of open sessions linked to the project (in other words, all of the
     // issues that have been associated with the project). For each session, we
     // return detailed information, including its title, full body, author,
@@ -769,6 +791,8 @@ export async function fetchProject(login, id) {
             .find(value => value.field?.name === 'Day')?.name,
           slot: session.fieldValues.nodes
             .find(value => value.field?.name === 'Slot')?.name,
+          meeting: session.fieldValues.nodes
+            .find(value => value.field?.name === 'Meeting')?.text,
           validation: {
             check: session.fieldValues.nodes.find(value => value.field?.name === 'Check')?.text,
             warning: session.fieldValues.nodes.find(value => value.field?.name === 'Warning')?.text,
