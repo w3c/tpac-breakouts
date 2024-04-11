@@ -2,6 +2,7 @@ import { initTestEnv } from './init-test-env.mjs';
 import { getEnvKey, setEnvKey } from '../tools/lib/envkeys.mjs';
 import { fetchProject } from '../tools/lib/project.mjs';
 import { validateSession } from '../tools/lib/validate.mjs';
+import { groupSessionMeetings, computeSessionCalendarUpdates } from '../tools/lib/meetings.mjs';
 import * as assert from 'node:assert';
 
 async function fetchTestProject() {
@@ -195,5 +196,136 @@ describe('The group meetings module', function () {
       type: 'track',
       messages: ['Same day/slot "Monday (2042-02-10) 14:00 - 16:00" as session in same track "track: debug": "Generative AI CG" (#23)']
     }]);
+  });
+
+  it('merges contiguous slots for calendaring purpose', async function () {
+    const project = await fetchTestProject();
+    const sessionNumber = 24;
+    const errors = await validateSession(sessionNumber, project);
+    assert.deepStrictEqual(errors, []);
+
+    const session = project.sessions.find(s => s.number === sessionNumber);
+    const merged = groupSessionMeetings(session, project);
+    assert.deepStrictEqual(merged, [
+      // One meeting on Tuesday that spans all four slots
+      {
+        start: '9:00',
+        end: '18:00',
+        room: 'Room 6',
+        day: 'Tuesday (2042-02-11)'
+      },
+      // Two meetings on Thursday
+      // (one slot in the morning, two slots in the afternoon)
+      {
+        start: '9:00',
+        end: '11:00',
+        room: 'Room 6',
+        day: 'Thursday (2042-02-13)'
+      },
+      {
+        start: '14:00',
+        end: '18:00',
+        room: 'Room 6',
+        day: 'Thursday (2042-02-13)'
+      },
+      // Two disconnected meetings on Friday
+      {
+        start: '11:00',
+        end: '13:00',
+        room: 'Room 6',
+        day: 'Friday (2042-02-14)'
+      },
+      {
+        start: '16:00',
+        end: '18:00',
+        room: 'Room 6',
+        day: 'Friday (2042-02-14)'
+      }
+    ]);
+  });
+
+  it('computes calendar sync update actions', async function () {
+    const project = await fetchTestProject();
+    const sessionNumber = 24;
+    const errors = await validateSession(sessionNumber, project);
+    assert.deepStrictEqual(errors, []);
+
+    const session = project.sessions.find(s => s.number === sessionNumber);
+    const actions = computeSessionCalendarUpdates(session, project);
+    assert.deepStrictEqual(actions, {
+      create: [],
+      update: [
+        {
+          day: 'Tuesday (2042-02-11)',
+          start: '9:00',
+          end: '18:00',
+          url: 'https://example.com/calendar/1',
+          meeting: {
+            room: 'Room 6',
+            day: 'Tuesday (2042-02-11)',
+            start: '9:00',
+            end: '18:00'
+          }
+        },
+        {
+          day: 'Thursday (2042-02-13)',
+          start: '9:00',
+          end: '11:00',
+          url: 'https://example.com/calendar/2',
+          meeting: {
+            room: 'Room 6',
+            day: 'Thursday (2042-02-13)',
+            start: '9:00',
+            end: '11:00'
+          }
+        },
+        {
+          day: 'Thursday (2042-02-13)',
+          start: '14:00',
+          end: '18:00',
+          url: 'https://example.com/calendar/3',
+          meeting: {
+            room: 'Room 6',
+            day: 'Thursday (2042-02-13)',
+            start: '14:00',
+            end: '18:00'
+          }
+        },
+        // The last two ones are "new" calendar entries... that reuse existing
+        // calendar entries that are no longer needed!
+        {
+          day: 'Friday (2042-02-14)',
+          start: '16:00',
+          end: '18:00',
+          meeting: {
+            room: 'Room 6',
+            day: 'Friday (2042-02-14)',
+            start: '16:00',
+            end: '18:00'
+          },
+          url: 'https://example.com/calendar/4'
+        },
+        {
+          day: 'Friday (2042-02-14)',
+          start: '11:00',
+          end: '13:00',
+          meeting: {
+            room: 'Room 6',
+            day: 'Friday (2042-02-14)',
+            start: '11:00',
+            end: '13:00'
+          },
+          url: 'https://example.com/calendar/5'
+        }
+      ],
+      cancel: [
+        {
+          day: 'Monday (2042-02-10)',
+          start: '9:00',
+          end: '18:00',
+          url: 'https://example.com/calendar/6'
+        }
+      ]
+    });
   });
 });

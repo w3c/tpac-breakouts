@@ -33,10 +33,14 @@ let sectionHandlers = null;
  * GitHub identities and actual names:
  *   - @tidoust @ianbjacobs
  *   - John Doe
+ * The `linesOnly` option is only useful when `spaceSeparator` is not set. It
+ * tells the function to only split tokens on newlines (and not on commas)
  */
-function parseList(value, { spaceSeparator = false, prefix = null }) {
-  return (value || '')
-    .split(/[\n,]/)
+function parseList(value, { spaceSeparator = false, prefix = null, linesOnly = false }) {
+  const tokens = linesOnly ?
+    (value || '').split(/\n/) :
+    (value || '').split(/[\n,]/);
+  return tokens
     .map(token => token.trim())
     .map(token => token.replace(/^(?:[-\+\*]|\d+[\.\)])\s*(.*)$/, '$1'))
     .map(token => token.trim())
@@ -91,7 +95,7 @@ export async function initSectionHandlers() {
   sections.push({
     id: 'calendar',
     attributes: {
-      label: 'Link to calendar',
+      label: 'Links to calendar',
       autoHide: true
     }
   });
@@ -215,24 +219,48 @@ export async function initSectionHandlers() {
         break;
 
       case 'calendar':
+        // There can be one link... or multiple ones.
+        // The label of each link should provide some useful info about the
+        // calendar entry (day, start, end, and plenary flag)
+        const reLink = /^\[\s*(.+)\s*\]\((.*)\)$/i;
+        const reCalendarInfo = /^(.+),\s*(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})(?:,\s*(plenary))?$/i;
         handler.parse = value => {
-          const match = value.match(/^\[(.+)\]\((.*)\)$/i);
-          return match[2];
+          const matches = parseList(value, { linesOnly: true })
+            .map(line => line.match(reLink));
+          return matches.map(match => {
+            const infoMatch = match[1].match(reCalendarInfo);
+            const entry = {
+              day: infoMatch[1],
+              start: infoMatch[2],
+              end: infoMatch[3],
+              url: match[2]
+            };
+            if (infoMatch[4]) {
+              entry.type = 'plenary';
+            }
+            return entry;
+          });
         };
         handler.validate = value => {
-          const match = value.match(/^\[(.+)\]\((.*)\)$/i);
-          if (!match) {
-            return false;
-          }
-          try {
-            new URL(match[2]);
-            return true;
-          }
-          catch (err) {
-            return false;
-          }
+          const matches = parseList(value, { linesOnly: true })
+            .map(line => line.match(reLink));
+          return matches.every(match => {
+            if (!match) {
+              return false;
+            }
+            try {
+              new URL(match[2]);
+              return !!match[1].match(reCalendarInfo);
+            }
+            catch {
+              return false;
+            }
+
+          });
         };
-        handler.serialize = value => `[Calendar entry](${value})`;
+        handler.serialize = value => value
+          .map(e => `- [${e.day}, ${e.start} - ${e.end}${e.type === 'plenary' ? ', plenary' : ''}](${e.url})`)
+          .join('\n');
         break;
 
       case 'materials':

@@ -24,7 +24,7 @@
 import puppeteer from 'puppeteer';
 import { getEnvKey } from './lib/envkeys.mjs';
 import { fetchProject } from './lib/project.mjs';
-import { convertSessionToCalendarEntry } from './lib/calendar.mjs';
+import { synchronizeSessionWithCalendar } from './lib/calendar.mjs';
 import { validateSession } from './lib/validate.mjs';
 
 async function main(sessionNumber, status, options) {
@@ -112,16 +112,18 @@ async function main(sessionNumber, status, options) {
   try {
     for (const session of sessions) {
       console.log();
-      console.log(`Convert session ${session.number} to calendar entry...`);
+      console.log(`Convert session ${session.number} to calendar entries...`);
       const room = project.rooms.find(r => r.name === session.room);
       const zoom = ROOM_ZOOM[room?.label] ? ROOM_ZOOM[room.label] : undefined;
-      await convertSessionToCalendarEntry({
-        browser, session, project, status, zoom,
+      await synchronizeSessionWithCalendar({
+        browser, session, project,
         calendarServer: CALENDAR_SERVER,
         login: W3C_LOGIN,
-        password: W3C_PASSWORD
+        password: W3C_PASSWORD,
+        status,
+        roomZoom: ROOM_ZOOM
       });
-      console.log(`Convert session ${session.number} to calendar entry... done`);
+      console.log(`Convert session ${session.number} to calendar entries... done`);
     }
   }
   finally {
