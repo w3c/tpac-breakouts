@@ -221,6 +221,23 @@ Same time as previous group meeting in same track.`,
       day: 'Monday (2042-02-10)',
       slot: '14:00 - 16:00',
       meeting: 'Room 6'
+    },
+
+    {
+      number: 24,
+      title: 'GPU for the Web Community Group',
+      body: `
+### Session description
+Check contiguous slots merge and links to calendar
+### Links to calendar (Optional)
+- [Tuesday, 9:00 - 18:00](https://example.com/calendar/1)
+- [Thursday, 9:00 - 11:00](https://example.com/calendar/2)
+- [Thursday, 14:00 - 18:00](https://example.com/calendar/3)
+- [Friday, 9:00 - 11:00](https://example.com/calendar/4)
+- [Friday, 14:00 - 16:00](https://example.com/calendar/5)
+- [Monday, 9:00 - 18:00](https://example.com/calendar/6)`,
+      room: 'Room 6',
+      meeting: 'Tuesday, 14:00; Tuesday, 11:00; Tuesday, 9:00; Thursday, 9:00; Tuesday, 16:00; Thursday, 16:00; Thursday, 14:00; Friday, 11:00; Friday, 16:00'
     }
   ]
 }

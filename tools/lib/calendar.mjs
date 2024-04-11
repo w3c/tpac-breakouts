@@ -1,6 +1,7 @@
 import { validateSession } from './validate.mjs';
 import { updateSessionDescription } from './session.mjs';
 import { todoStrings } from './todostrings.mjs';
+import { computeSessionCalendarUpdates, meetsAt } from './meetings.mjs';
 
 
 /**
@@ -304,7 +305,7 @@ async function isSharedCalendarEntry(page, session) {
  *
  * The function returns the URL of the calendar entry, once created/updated.
  */
-async function fillCalendarEntry({ page, session, project, status, zoom }) {
+async function fillCalendarEntry({ page, entry, session, project, status, zoom }) {
   async function selectEl(selector) {
     const el = await page.waitForSelector(selector);
     if (!el) {
@@ -343,23 +344,22 @@ async function fillCalendarEntry({ page, session, project, status, zoom }) {
   status = status ?? 'draft';
   await page.$eval(`input[name="event[status]"][value=${status}]`, el => el.click());
 
-  const room = project.rooms.find(room => room.name === session.room);
+  const room = project.rooms.find(room => room.name === entry.room);
   const roomLocation = (room?.label ?? '') + (room?.location ? ' - ' + room.location : '');
   await fillTextInput('input#event_location', roomLocation ?? '');
 
   // All events are visible to everyone
   await clickOnElement('input#event_visibility_0');
 
-  const day = project.days.find(day => day.name === session.day);
+  const day = project.days.find(day => day.name === entry.day);
   await page.evaluate(`window.tpac_breakouts_date = "${day.date}";`);
   await page.$eval('input#event_start_date', el => el.value = window.tpac_breakouts_date);
   await page.$eval('input#event_start_date', el => el.value = window.tpac_breakouts_date);
 
-  const slot = project.slots.find(s => s.name === session.slot);
-  await chooseOption('select#event_start_time_hour', `${parseInt(slot.start.split(':')[0], 10)}`);
-  await chooseOption('select#event_start_time_minute', `${parseInt(slot.start.split(':')[1], 10)}`);
-  await chooseOption('select#event_end_time_hour', `${parseInt(slot.end.split(':')[0], 10)}`);
-  await chooseOption('select#event_end_time_minute', `${parseInt(slot.end.split(':')[1], 10)}`);
+  await chooseOption('select#event_start_time_hour', `${parseInt(entry.start.split(':')[0], 10)}`);
+  await chooseOption('select#event_start_time_minute', `${parseInt(entry.start.split(':')[1], 10)}`);
+  await chooseOption('select#event_end_time_hour', `${parseInt(entry.end.split(':')[0], 10)}`);
+  await chooseOption('select#event_end_time_minute', `${parseInt(entry.end.split(':')[1], 10)}`);
 
   await chooseOption('select#event_timezone', project.metadata.timezone);
 
@@ -408,7 +408,7 @@ async function fillCalendarEntry({ page, session, project, status, zoom }) {
 
   if (session.description.type === 'plenary') {
     const sessions = project.sessions
-      .filter(s => s.room === session.room && s.day === session.day && s.slot === session.slot)
+      .filter(s => meetsAt(s, entry, project))
       .sort((session1, session2) => {
         const order1 = getPlenaryOrder(session1);
         const order2 = getPlenaryOrder(session2);
@@ -466,7 +466,9 @@ async function fillCalendarEntry({ page, session, project, status, zoom }) {
  * The function looks for a certain pattern. It will not updated anything if
  * the agenda got customized somehow and uses a different pattern.
  */
-async function removeFromCalendarEntry({ page, session, status }) {
+async function removeFromCalendarEntry(
+    { calendarUrl, session,
+      browser, calendarServer, login, password, status }) {
   function getUpdatedList(list) {
     return list
       .split('\n')
@@ -474,30 +476,47 @@ async function removeFromCalendarEntry({ page, session, status }) {
       .join('\n');
   }
 
-  const description = await page.$eval('textarea#event_description', el => el.value);
-  const descItemsStart = description.indexOf('- ');
-  const descItems = getUpdatedList(description.substring(descItemsStart));
-  const newDescription = description.substring(descItemsStart) + descItems;
-  await fillTextInput('textarea#event_agenda', newDescription);
+  const calendarEditUrl = `${calendarUrl.replace(/www\.w3\.org/, calendarServer)}edit/`;
+  console.log(`- load calendar edit page: ${calendarEditUrl}`);
+  const page = await browser.newPage();
 
-  const agenda = await page.$eval('textarea#event_agenda', el => el.value);
-  const agendaItemsStart = agenda.indexOf('**Agenda:**\n') + '**Agenda:**\n'.length;
-  const agendaItems = getUpdatedList(agenda.substring(agendaItemsStart));
-  const newAgenda = agenda.substring(agendaItemsStart) + agendaItems;
-  await fillTextInput('textarea#event_agenda', newAgenda);
+  try {
+    await page.goto(calendarEditUrl);
+    await authenticate(page, login, password, calendarEditUrl);
 
-  const el = await page.waitForSelector(status === 'draft' ?
-    'button#event_submit' :
-    'button#event_no_notif');
-  await el.click();
-  await page.waitForNavigation();
+    const description = await page.$eval('textarea#event_description', el => el.value);
+    const descItemsStart = description.indexOf('- ');
+    const descItems = getUpdatedList(description.substring(descItemsStart));
+    const newDescription = description.substring(descItemsStart) + descItems;
+    await fillTextInput('textarea#event_agenda', newDescription);
+
+    const agenda = await page.$eval('textarea#event_agenda', el => el.value);
+    const agendaItemsStart = agenda.indexOf('**Agenda:**\n') + '**Agenda:**\n'.length;
+    const agendaItems = getUpdatedList(agenda.substring(agendaItemsStart));
+    const newAgenda = agenda.substring(agendaItemsStart) + agendaItems;
+    await fillTextInput('textarea#event_agenda', newAgenda);
+
+    const el = await page.waitForSelector(status === 'draft' ?
+      'button#event_submit' :
+      'button#event_no_notif');
+    await el.click();
+    await page.waitForNavigation();
+  }
+  finally {
+    await page.close();
+  }
 }
 
 
 /**
  * Delete or cancel the calendar entry loaded in the given browser page.
  */
-async function cancelCalendarEntry({ page }) {
+async function cancelCalendarEntry(
+    { calendarUrl, browser, calendarServer, login, password }) {
+  const calendarEditUrl = `${calendarUrl.replace(/www\.w3\.org/, calendarServer)}edit/`;
+  console.log(`- load calendar edit page: ${calendarEditUrl}`);
+  const page = await browser.newPage();
+
   let resolveDeleted;
   const deleted = new Promise(resolve => {
     resolveDeleted = resolve;
@@ -507,7 +526,11 @@ async function cancelCalendarEntry({ page }) {
     await page.waitForNavigation();
     resolveDeleted();
   });
+
   try {
+    await page.goto(calendarEditUrl);
+    await authenticate(page, login, password, calendarEditUrl);
+
     await page.$eval('input[value=DELETE]', el =>
       el.parentElement.querySelector('button').click());
     return deleted;
@@ -520,91 +543,45 @@ async function cancelCalendarEntry({ page }) {
     await el.click();
     await page.waitForNavigation();
   }
-}
-
-
-/**
- * Retrieve the URL of the calendar entry currently associated with the session
- */
-function getCalendarUrl(session) {
-  // Note we keep on looking at a calendar entry under materials for
-  // historical reasons, but the calendar URL is now stored under a
-  // dedicated property.
-  return session.description.calendar ??
-    session.description.materials?.calendar ??
-    null;
-}
-
-
-/**
- * Retrieve the URL of the plenary entry in the calendar that the session
- * should rather be associated with, if the session is a plenary session,
- * if the plenary entry exists already in the calendar, and if the session
- * is not yet associated with it.
- */
-function getNewPlenaryCalendarUrl(session, project) {
-  if (session.description.type !== 'plenary') {
-    return null;
-  }
-  const plenaryCalendarUrl = project.sessions
-    .filter(s => s !== session && s.room === session.room && s.day === session.day && s.slot === session.slot)
-    .map(s => getCalendarUrl(s))
-    .find(url => !!url);
-  if (plenaryCalendarUrl && plenaryCalendarUrl !== getCalendarUrl(session)) {
-    return plenaryCalendarUrl;
-  }
-  else {
-    return null;
+  finally {
+    await page.close();
   }
 }
 
 
 /**
- * Retrieve the names of the project's day and slot that the calendar entry
- * currently targets, e.g., { day: 'Wednesday (2024-09-25)', slot: '13:00 - 14:00' }.
+ * Synchronize session information with calendar information
+ *
+ * That synchronization is a 1-to-1 mapping for pure breakout sessions.
+ * It is a many-to-1 mapping for plenary sessions.
+ * And a 1-to-many mapping for group meetings.
+ *
+ * As much as practical, existing calendar entries will be reused, see the
+ * logic in `meetings.mjs`.
+ *
+ * Function parameters should be relatively straightforward. The `status`
+ * parameter tells whether calendar entries should be "draft", "tentative" or
+ * "confirmed". The `roomZoom` parameter provides the mapping between room
+ * names and Zoom info.
  */
-async function getCalendarEntrySlot(page, project) {
-  const startDate = await page.$eval('select#event_start_date', el => el.value);
-  const day = project.days.find(day => day.date === startDate);
-  const startHourStr = await page.$eval('select#event_start_time_hour', el => el.value);
-  const startMinutesStr = await page.$eval('select#event_start_time_minute', el => el.value);
-  const startHour = parseInt(startHourStr, 10);
-  const startMinutes = parseInt(startMinutesStr, 10);
-  const slot = project.slots.find(slot =>
-    parseInt(slot.start.split(':')[0], 10) === startHour &&
-    parseInt(slot.start.split(':')[1], 10) === startMinutes);
-  return {
-    day: day?.name ?? '',
-    slot: slot?.name ?? ''
-  };
-}
-
-
-/**
- * Create/Update calendar entry that matches given session
- */
-export async function convertSessionToCalendarEntry(
-    { browser, session, project, calendarServer, login, password, status, zoom }) {
-  // First, retrieve known information about the project and the session
+export async function synchronizeSessionWithCalendar(
+    { browser, session, project, calendarServer, login, password, status, roomZoom }) {
+  // First, retrieve known information about the project and the session,
+  // and make sure the session is valid.
   const sessionErrors = (await validateSession(session.number, project))
     .filter(error => error.severity === 'error');
   if (sessionErrors.length > 0) {
     throw new Error(`Session ${session.number} contains errors that need fixing`);
   }
 
-  // Retrieve the URL of the calendar entry currently associated with the
-  // session, if any.
-  const calendarUrl = getCalendarUrl(session);
-  if (calendarUrl) {
-    console.log(`- session currently associated with calendar entry: ${calendarUrl}`);
-  }
-  else {
-    console.log(`- session not yet associated with a calendar entry`);
-  }
-
-  // If session does not have an assigned slot, stop here
-  // (unless we have to adjust an existing calendar entry first)
-  if ((!session.day || !session.slot) && !calendarUrl) {
+  // Compute the list of calendar updates that we need to do to synchronize
+  // the session's information with the calendar. If there's nothing to do,
+  // that's cool, let's not do anything!
+  const actions = computeSessionCalendarUpdates(session, project);
+  if (actions.cancel.length === 0 &&
+      actions.update.length === 0 &&
+      actions.create.length === 0) {
+    console.log(`- no calendar updates needed`);
     return;
   }
 
@@ -612,8 +589,9 @@ export async function convertSessionToCalendarEntry(
   // sessions in the same plenary. To avoid creating a mess in the calendar,
   // we'll throw if one of these sessions has an error that needs fixing.
   if (session.description.type === 'plenary') {
+    const meeting = actions.update[0] ?? actions.create[0];
     const sessions = project.sessions
-      .filter(s => s !== session && s.room === session.room && s.day === session.day && s.slot === session.slot);
+      .filter(s => s !== session && meetsAt(s, meeting, project));
     for (const s of sessions) {
       const errors = (await validateSession(s, project))
         .filter(error => error.severity === 'error');
@@ -628,29 +606,99 @@ export async function convertSessionToCalendarEntry(
     }
   }
 
-  // Retrieve detailed information about the session's chairs.
-  for (const chair of session.chairs) {
-    if (chair.name === chair.login && chair.w3cId) {
-      await fetchChairName({ chair, browser, login, password });
+  // Retrieve detailed information about the session's chairs, unless we're
+  // dealing with a group meeting
+  if (project.metadata.type !== 'groups') {
+    for (const chair of session.chairs) {
+      if (chair.name === chair.login && chair.w3cId) {
+        await fetchChairName({ chair, browser, login, password });
+      }
     }
   }
 
-  // Retrieve the shared calendar entry that the session should be linked to
-  // if it exists and if the session needs to be linked to a shared entry.
-  const plenaryCalendarUrl = getNewPlenaryCalendarUrl(session, project);
-  if (plenaryCalendarUrl) {
-    console.log(`- session needs to be associated with plenary entry: ${plenaryCalendarUrl}`);
+  for (const entry of actions.cancel) {
+    if (session.description.type === 'plenary') {
+      // TODO: cancel instead of remove if session is the only one left in
+      // the plenary meeting.
+      console.log(`- remove from plenary calendar entry ${entry.url}`);
+      await removeFromCalendarEntry({
+        calendarUrl: entry.url, session,
+        browser, calendarServer, login, password, status
+      });
+    }
+    else {
+      console.log(`- delete/cancel calendar entry ${entry.url}`);
+      await cancelCalendarEntry({
+        calendarUrl: entry.url,
+        browser, calendarServer, login, password
+      });
+    }
   }
 
-  let calendarEditUrl = `https://${calendarServer}/events/meetings/new/`;
-  if (calendarUrl) {
-    calendarEditUrl = `${calendarUrl.replace(/www\.w3\.org/, calendarServer)}edit/`;
+  for (const entry of actions.update) {
+    console.log(`- refresh calendar entry ${entry.url}, meeting in ${entry.room} on ${entry.day} ${entry.start} - ${entry.end}`);
+    const room = project.rooms.find(room => room.name === entry.room);
+    entry.url = await updateCalendarEntry({
+      calendarUrl: entry.url,
+      entry, session, project,
+      browser, login, password, status, roomZoom[room.label]
+    });
   }
-  else if (plenaryCalendarUrl) {
-    calendarEditUrl = `${plenaryCalendarUrl.replace(/www\.w3\.org/, calendarServer)}edit/`;
+
+  for (const entry of actions.create) {
+    console.log(`- create new calendar entry, meeting in ${entry.room} on ${entry.day} ${entry.start} - ${entry.end}`);
+    const room = project.rooms.find(room => room.name === entry.room);
+    entry.url = await updateCalendarEntry({
+      calendarUrl: null,
+      entry, session, project,
+      browser, login, password, status, roomZoom[room.label]
+    });
   }
+
+  console.log(`- add calendar entries to session description`);
+  const entries = actions.update.concat(actions.create);
+  entries.sort((e1, e2) => {
+    const day1 = project.days.find(day => day.name === e1.day);
+    const day2 = project.days.find(day => day.name === e2.day);
+    if (day1.date < day2.date) {
+      return -1;
+    }
+    else if (day1.date > day2.date) {
+      return 1;
+    }
+    else {
+      return e1.start - e2.start;
+    }
+  });
+  // Same view using day labels instead of full day identifiers
+  const entriesDesc = entries.map(entry => {
+    const day = project.days.find(day => day.name === entry.day);
+    const desc = {
+      day: day.label ?? day.name,
+      start: entry.start,
+      end: entry.end,
+      url: entry.url
+    }
+    if (entry.type === 'plenary') {
+      desc.type = 'plenary';
+    }
+    return desc;
+  });
+  session.description.calendar = entriesDesc;
+  await updateSessionDescription(session);
+}
+
+/**
+ * Create/Update calendar entry for the given meeting
+ */
+async function updateCalendarEntry(
+    { calendarUrl, entry, session, project,
+      browser, login, password, status, zoom }) {
+  const calendarEditUrl = calendarUrl ?
+    `${calendarUrl.replace(/www\.w3\.org/, calendarServer)}edit/` :
+    `https://${calendarServer}/events/meetings/new/`;
   console.log(`- load calendar edit page: ${calendarEditUrl}`);
-  let page = await browser.newPage();
+  const page = await browser.newPage();
 
   try {
     await page.goto(calendarEditUrl);
@@ -668,50 +716,14 @@ export async function convertSessionToCalendarEntry(
       else {
         console.log('- calendar entry is specific to this session');
       }
-
-      const calendarEntrySlot = await getCalendarEntrySlot(page, project);
-      if (plenaryCalendarUrl ||
-          (sharedCalendarEntry && session.description.type !== 'plenary') ||
-          (sharedCalendarEntry && (session.day !== calendarEntrySlot.day || session.slot !== calendarEntrySlot.slot)) ||
-          !session.day || !session.slot) {
-        if (sharedCalendarEntry) {
-          console.log('- remove session from calendar entry');
-          await removeFromCalendarEntry({ page, session, status });
-        }
-        else {
-          console.log('- delete/cancel calendar entry');
-          await cancelCalendarEntry({ page });
-        }
-
-        if (!session.day || !session.slot) {
-          return;
-        }
-
-        await page.close();
-        calendarEditUrl = plenaryCalendarUrl ?
-          `${plenaryCalendarUrl.replace(/www\.w3\.org/, calendarServer)}edit/` :
-          `https://${calendarServer}/events/meetings/new/`;
-        console.log(`- load new calendar edit page: ${calendarEditUrl}`);
-        page = await browser.newPage();
-        await page.goto(calendarEditUrl);
-        await authenticate(page, login, password, calendarEditUrl);
-      }
-      else {
-        console.log('- calendar entry can be updated directly');
-      }
     }
 
     const newCalendarUrl = await fillCalendarEntry({
-      page, session, project, status, zoom
+      page, entry, session, project, status, zoom
     });
     console.log(`- calendar entry created/updated: ${newCalendarUrl}`);
 
-    // Update session's materials with calendar URL if needed
-    if (newCalendarUrl && !calendarUrl) {
-      console.log(`- add calendar URL to session description`);
-      session.description.calendar = newCalendarUrl;
-      await updateSessionDescription(session);
-    }
+    return newCalendarUrl;
   }
   finally {
     await page.close();

@@ -2,7 +2,7 @@ import { fetchProject, validateProject } from './project.mjs';
 import { initSectionHandlers, validateSessionBody, parseSessionBody } from './session.mjs';
 import { fetchSessionChairs, validateSessionChairs } from './chairs.mjs';
 import { fetchSessionGroups, validateSessionGroups } from './groups.mjs';
-import { parseSessionMeetings } from './meetings.mjs';
+import { parseSessionMeetings, meetsAt, meetsInParallelWith } from './meetings.mjs';
 import { todoStrings } from './todostrings.mjs';
 
 /**
@@ -34,24 +34,6 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
  * Errors in the list may be real errors or warnings.
  */
 export async function validateSession(sessionNumber, project) {
-  function meetsAt(session, meeting) {
-    const meetings = parseSessionMeetings(session, project);
-    return !!meetings.find(m =>
-      m.room === meeting.room &&
-      m.day === meeting.day &&
-      m.slot === meeting.slot);
-  }
-
-  function meetsInParallelWith(session, meeting) {
-    const meetings = parseSessionMeetings(session, project);
-    return !!meetings.find(m =>
-      ((m.room && meeting.room && m.room !== meeting.room) ||
-        !m.room ||
-        !meeting.room) &&
-      m.day === meeting.day &&
-      m.slot === meeting.slot);
-  }
-
   function hasActualMeeting(meetings) {
     return meetings.length > 0 &&
       meetings[0].room &&
@@ -251,7 +233,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
       // maximum allowed.
       if (hasActualMeeting(meetings)) {
         const plenarySessions = project.sessions
-          .filter(s => meetsAt(s, meetings[0]));
+          .filter(s => meetsAt(s, meetings[0], project));
         if (plenarySessions.length > plenaryHolds) {
           errors.push({
             session: sessionNumber,
@@ -282,7 +264,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
     const schedulingErrors = meetings
       .filter(meeting => meeting.room && meeting.day && meeting.slot)
       .map(meeting => project.sessions
-        .filter(s => s !== session && meetsAt(s, meeting))
+        .filter(s => s !== session && meetsAt(s, meeting, project))
         .map(s => `Session scheduled in same room (${meeting.room}) and same day/slot (${meeting.day} ${meeting.slot}) as session "${s.title}" (${s.number})`)
       )
       .flat()
@@ -327,7 +309,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   const chairConflictErrors = meetings
     .filter(meeting => meeting.day && meeting.slot)
     .map(meeting => project.sessions
-      .filter(s => s !== session && meetsInParallelWith(s, meeting))
+      .filter(s => s !== session && meetsInParallelWith(s, meeting, project))
       .map(s => {
         let inboth = null;
         try {
@@ -376,7 +358,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
       .map(meeting => session.description.conflicts
         .map(number => {
           const conflictingSession = project.sessions.find(s => s.number === number);
-          if (meetsInParallelWith(conflictingSession, meeting)) {
+          if (meetsInParallelWith(conflictingSession, meeting, project)) {
             return `Same day/slot "${meeting.day} ${meeting.slot}" as conflicting session "${conflictingSession.title}" (#${conflictingSession.number})`;
           }
           else {
@@ -405,7 +387,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
     .map(meeting => tracks
       .map(track => project.sessions
         .filter(s => s !== session && s.labels.includes(track))
-        .filter(s => meetsInParallelWith(s, meeting))
+        .filter(s => meetsInParallelWith(s, meeting, project))
         .map(s => `Same day/slot "${meeting.day} ${meeting.slot}" as session in same track "${track}": "${s.title}" (#${s.number})`)
       )
     )
@@ -425,7 +407,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   const plenaryWarnings = meetings
     .filter(meeting => meeting.day && meeting.slot)
     .map(meeting => project.sessions
-      .filter(s => s !== session && meetsInParallelWith(s, meeting))
+      .filter(s => s !== session && meetsInParallelWith(s, meeting, project))
       .filter(s => {
         try {
           const desc = parseSessionBody(s.body);
@@ -454,7 +436,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
     const ircConflicts = meetings
       .filter(meeting => meeting.day && meeting.slot)
       .map(meeting => project.sessions
-        .filter(s => s.number !== session.number && meetsInParallelWith(s, meeting))
+        .filter(s => s.number !== session.number && meetsInParallelWith(s, meeting, project))
         .filter(s => {
           try {
             const desc = parseSessionBody(s.body);
