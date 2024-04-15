@@ -11,6 +11,15 @@ async function fetchTestProject() {
     await getEnvKey('PROJECT_NUMBER'));
 }
 
+function stripDetails(errors) {
+  return errors.map(err => {
+    if (err.details) {
+      delete err.details;
+    }
+    return err;
+  });
+}
+
 describe('The group meetings module', function () {
   before(function () {
     initTestEnv();
@@ -117,7 +126,7 @@ describe('The group meetings module', function () {
     const project = await fetchTestProject();
     const sessionNumber = 12;
     const errors = await validateSession(sessionNumber, project);
-    assert.deepStrictEqual(errors, [{
+    assert.deepStrictEqual(stripDetails(errors), [{
       session: sessionNumber,
       severity: 'error',
       type: 'scheduling',
@@ -129,7 +138,7 @@ describe('The group meetings module', function () {
     const project = await fetchTestProject();
     const sessionNumber = 14;
     const errors = await validateSession(sessionNumber, project);
-    assert.deepStrictEqual(errors, [{
+    assert.deepStrictEqual(stripDetails(errors), [{
       session: sessionNumber,
       severity: 'warning',
       type: 'capacity',
@@ -141,11 +150,11 @@ describe('The group meetings module', function () {
     const project = await fetchTestProject();
     const sessionNumber = 15;
     const errors = await validateSession(sessionNumber, project);
-    assert.deepStrictEqual(errors, [{
+    assert.deepStrictEqual(stripDetails(errors), [{
       session: sessionNumber,
       severity: 'error',
       type: 'group conflict',
-      messages: ['Session scheduled at the same time as "Audio CG & Audio Description CG joint meeting" (#16), which shares a common group "Audio CG"']
+      messages: ['Session scheduled at the same time as "Audio CG & Audio Description CG joint meeting" (#16), which shares group Audio CG']
     }]);
   });
 
@@ -153,20 +162,19 @@ describe('The group meetings module', function () {
     const project = await fetchTestProject();
     const sessionNumber = 17;
     const errors = await validateSession(sessionNumber, project);
-    assert.strictEqual(errors.length, 1, JSON.stringify(errors, null, 2));
-    assert.deepStrictEqual(errors[0], {
+    assert.deepStrictEqual(stripDetails(errors), [{
       session: sessionNumber,
       severity: 'warning',
       type: 'conflict',
       messages: ['Same day/slot "Monday (2042-02-10) 16:00 - 18:00" as conflicting session "Color on the Web Community Group" (#18)']
-    });
+    }]);
   });
 
   it('reports an error when a group is scheduled more than once in the same slot', async function () {
     const project = await fetchTestProject();
     const sessionNumber = 19;
     const errors = await validateSession(sessionNumber, project);
-    assert.deepStrictEqual(errors, [{
+    assert.deepStrictEqual(stripDetails(errors), [{
       session: sessionNumber,
       severity: 'error',
       type: 'meeting duplicate',
@@ -190,7 +198,7 @@ describe('The group meetings module', function () {
     const project = await fetchTestProject();
     const sessionNumber = 22;
     const errors = await validateSession(sessionNumber, project);
-    assert.deepStrictEqual(errors, [{
+    assert.deepStrictEqual(stripDetails(errors), [{
       session: sessionNumber,
       severity: 'warning',
       type: 'track',

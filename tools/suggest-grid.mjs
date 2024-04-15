@@ -87,15 +87,18 @@
 
 import { readFile } from 'fs/promises';
 import { getEnvKey } from './lib/envkeys.mjs';
-import { fetchProject, assignSessionsToSlotAndRoom } from './lib/project.mjs'
+import { fetchProject, assignSessionsToSlotAndRoom } from './lib/project.mjs';
 import { validateSession } from './lib/validate.mjs';
 import { validateGrid } from './lib/validate.mjs';
+import { convertProjectToHTML } from './lib/project2html.mjs';
 import seedrandom from 'seedrandom';
 
 const schedulingErrors = [
   'error: chair conflict',
+  'error: group conflict',
   'error: scheduling',
   'error: irc',
+  'error: meeting duplicate',
   'warning: capacity',
   'warning: conflict',
   'warning: duration',
@@ -141,7 +144,10 @@ async function main({ preserve, except, changesFile, apply, seed }) {
       .filter(err =>
         err.severity === 'error' &&
         err.type !== 'chair conflict' &&
-        err.type !== 'scheduling');
+        err.type !== 'group conflict' &&
+        err.type !== 'meeting duplicate' &&
+        err.type !== 'scheduling' &&
+        err.type !== 'irc');
     if (sessionErrors.length > 0) {
       return null;
     }
@@ -662,186 +668,12 @@ async function main({ preserve, except, changesFile, apply, seed }) {
   }
   console.warn(`Validate grid... done`);
 
-  function logIndent(tab, str) {
-    let spaces = '';
-    while (tab > 0) {
-      spaces += '  ';
-      tab -= 1;
-    }
-    console.log(spaces + str);
-  }
-
-  console.warn();
-  logIndent(0, `<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Breakouts schedule</title>
-    <style>
-      td { padding: .25em; vertical-align: top; }
-      .conflict-error { color: red; background-color: yellow; }
-      .capacity-error { background-color: yellow; }
-      .track-error { background-color: orange; }
-      .track {
-        background-color: #0E8A16;
-        color: white;
-        border: 1px transparent;
-        border-radius: 1em;
-        margin-top: 0.2em;
-        margin-bottom: 0.2em;
-        padding: 3px 10px;
-        font-size: smaller;
-        white-space: nowrap;
-      }
-    </style>
-  </head>
-  <body>`);
-  for (const day of days) {
-    logIndent(2, `<h2>${day.name}</h2>`);
-    logIndent(2, `<table border=1>
-      <tr>
-        <th></th>`);
-    for (const room of rooms) {
-      logIndent(4, '<th>' + room.name + '</th>');
-    }
-    logIndent(3, '</tr>');
-    // Build individual rows
-    const tablerows = [];
-    for (const slot of slots) {
-      const tablerow = [slot.name];
-      for (const room of rooms) {
-        const roomSessions = sessions.filter(s => s.day === day.name && s.slot === slot.name && s.room === room.name);
-        tablerow.push(roomSessions);
-      }
-      tablerows.push(tablerow);
-    }
-    // Format rows (after header row)
-    for (const row of tablerows) {
-      // Format the row header (the time slot)
-      logIndent(3, '<tr>');
-      logIndent(4, '<th>');
-      logIndent(5, row[0]);
-
-      // Warn of any conflicting chairs in this slot (in first column)
-      // Note: There may be multiple sessions in a plenary with the same chair.
-      const allchairnames = row
-        .slice(1)
-        .map(roomSessions => {
-          const chairs = roomSessions.map(s => s.chairs).flat().map(c => c.name);
-          return [...new Set(chairs)];
-        })
-        .flat();
-      const duplicates = allchairnames.filter((e, i, a) => a.indexOf(e) !== i);
-      if (duplicates.length) {
-        logIndent(5, '<p class="conflict-error">Chair conflicts: ' + duplicates.join(', ') + '</p>');
-      }
-
-      // Warn if two sessions from the same track are scheduled in this slot
-      // Note: There may be multiple sessions in a plenary in the same track.
-      const alltracks = row
-        .slice(1)
-        .map(roomSessions => {
-          const tracks = roomSessions.map(s => s.tracks).flat();
-          return [...new Set(tracks)];
-        })
-        .flat();
-      const trackdups = [...new Set(alltracks.filter((e, i, a) => a.indexOf(e) !== i))];
-      if (trackdups.length) {
-        logIndent(5, '<p class="track-error">Same track: ' + trackdups.join(', ') + '</p>');
-      }
-      logIndent(4, '</th>');
-
-      // Format rest of row
-      for (let i = 1; i < row.length; i++) {
-        const roomSessions = row[i];
-        if (roomSessions.length === 0) {
-          logIndent(4, '<td></td>');
-        } else {
-          // Warn if session capacity estimate exceeds room capacity
-          const sloterrors = [];
-          if (roomSessions.find(s => (s.description.capacity ?? 0) > rooms[i-1].capacity)) {
-            sloterrors.push('capacity-error');
-          }
-          if (trackdups.length && trackdups.some(r => roomSessions.find(s => s.tracks.includes(r)))) {
-            sloterrors.push('track-error');
-          }
-          if (sloterrors.length) {
-            logIndent(4, '<td class="' + sloterrors.join(' ') + '">');
-          } else {
-            logIndent(4, '<td>');
-          }
-
-          for (const session of roomSessions) {
-            const url = 'https://github.com/' + session.repository + '/issues/' + session.number;
-            // Format session number (with link to GitHub) and name
-            logIndent(5, `<a href="${url}">#${session.number}</a>: ${session.title}`);
-
-            // Format chairs
-            logIndent(5, '<p>');
-            logIndent(6, '<i>' + session.chairs.map(x => x.name).join(',<br/>') + '</i>');
-            logIndent(5, '</p>');
-
-            // Add tracks if needed
-            if (session.tracks?.length > 0) {
-              for (const track of session.tracks) {
-                logIndent(5, `<p class="track">${track}</p>`);
-              }
-            }
-
-            // List session conflicts to avoid and highlight where there is a conflict.
-            if (Array.isArray(session.description.conflicts)) {
-              const confs = [];
-              for (const conflict of session.description.conflicts) {
-                for (const rowSessions of row.slice(1)) {
-                  for (const v of rowSessions) {
-                    if (!!v && v.number === conflict) {
-                      confs.push(conflict);
-                    }
-                  }
-                }
-              }
-              if (confs.length) {
-                logIndent(5, '<p><b>Conflicts with</b>: ' + confs.map(s => '<span class="conflict-error">#' + s + '</span>').join(', ') + '</p>');
-              }
-              // This version prints all conflict info if we want that
-              // logIndent(5, '<p><b>Conflicts</b>: ' + session.description.conflicts.map(s => confs.includes(s) ? '<span class="conflict-error">' + s + '</span>' : s).join(', ') + '</p>');
-            }
-            if (session.description.capacity > rooms[i-1].capacity) {
-              logIndent(5, '<p><b>Capacity</b>: ' + session.description.capacity + '</p>');
-            }
-            logIndent(4, '</td>');
-          }
-        }
-      }
-      logIndent(3, '</tr>');
-    }
-    logIndent(2, '</table>');
-  }
-
-  // If any sessions have not been assigned to a room, warn us.
-  const unscheduled = sessions.filter(s => !s.day || !s.slot || !s.room);
-  if (unscheduled.length) {
-    logIndent(2, '<h2>Unscheduled sessions</h2>');
-    logIndent(2, '<p>' + unscheduled.map(s => '#' + s.number).join(', ') + '</p>');
-  }
-
-  const preserveInPractice = (preserve !== 'all' && preserve.length > 0) ?
+  cli.preserveInPractice = (preserve !== 'all' && preserve.length > 0) ?
     ' (in practice: ' + preserve.sort((n1, n2) => n1 - n2).join(',') + ')' :
     '';
-  logIndent(2, '<h2>Generation parameters</h2>');
-  logIndent(2, `<ul>
-      <li>preserve: ${cli.preserve}${preserveInPractice}</li>
-      <li>except: ${cli.except}</li>
-      <li>seed: ${cli.seed}</li>
-      <li>apply: ${cli.apply}</li>
-    </ul>
-    <p>Command-line command:</p>
-    <pre><code>${cli.cmd}</code></pre>`);
-  logIndent(2, '<h2>Data for Saving/Restoring Schedule</h2>');
-  logIndent(2, '<pre id="data">');
-  console.log(JSON.stringify(sessions.map(s=> ({ number: s.number, room: s.room, day: s.day, slot: s.slot})), null, 2));
-  logIndent(2, '</pre>');  
-  logIndent(1, '</body>');
-  logIndent(0, '</html>');
+  const html = await convertProjectToHTML(project, cli);
+  console.warn();
+  console.log(html);
 
   console.warn();
   console.warn('To re-generate the grid, run:');
