@@ -236,7 +236,9 @@ Uncover bugs.
 Breakout (Default)
 ### Estimated number of in-person attendees
 More than 45 people`,
-      room: 'Main (25)'
+      room: 'Main (25)',
+      day: '2042-04-05',
+      slot: '15:00 - 16:00'
     },
 
     {

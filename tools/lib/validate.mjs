@@ -190,20 +190,19 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
     });
   }
 
-  const duplMeetingsErrors = meetings
-    .filter(meeting => meetings.find(m =>
-      m !== meeting &&
-      m.day && m.slot &&
-      m.day === meeting.day &&
-      m.slot === meeting.slot
-    ))
-    .map(m => `Scheduled more than once in day/slot ${m.day} ${m.slot}`);
+  const duplMeetingsErrors = meetings.filter(meeting => meetings.find(m =>
+    m !== meeting &&
+    m.day && m.slot &&
+    m.day === meeting.day &&
+    m.slot === meeting.slot
+  ));
   if (duplMeetingsErrors.length > 0) {
     errors.push({
       session: sessionNumber,
       severity: 'error',
       type: 'meeting duplicate',
-      messages: [...new Set(duplMeetingsErrors)]
+      messages: [...new Set(duplMeetingsErrors.map(m => `Scheduled more than once in day/slot ${m.day} ${m.slot}`))],
+      details: duplMeetingsErrors
     });
   }
 
@@ -216,7 +215,8 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         session: sessionNumber,
         severity: 'error',
         type: 'scheduling',
-        messages: ['Plenary session must be scheduled only once']
+        messages: ['Plenary session must be scheduled only once'],
+        details: meetings
       });
     }
     else if (meetings.length === 1) {
@@ -225,7 +225,8 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
           session: sessionNumber,
           severity: 'error',
           type: 'scheduling',
-          messages: ['Plenary session must be scheduled in plenary room']
+          messages: ['Plenary session must be scheduled in plenary room'],
+          details: meetings
         });
       }
 
@@ -239,7 +240,8 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
             session: sessionNumber,
             severity: 'error',
             type: 'scheduling',
-            messages: ['Too many sessions scheduled in same plenary slot']
+            messages: ['Too many sessions scheduled in same plenary slot'],
+            details: meetings.slice(0, 1)
           });
         }
       }
@@ -249,12 +251,15 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
     // Non plenary sessions must be scheduled in a breakout room
     // (Note: this will need to be relaxed if the plenary room can be reused
     // for other types of meetings)
-    if (meetings.find(meeting => meeting.room?.toLowerCase() === plenaryRoom)) {
+    const plenaryMeeting = meetings.find(meeting =>
+      meeting.room?.toLowerCase() === plenaryRoom);
+    if (plenaryMeeting) {
       errors.push({
         session: sessionNumber,
         severity: 'error',
         type: 'scheduling',
-        messages: ['Non plenary session must not be scheduled in plenary room']
+        messages: ['Non plenary session must not be scheduled in plenary room'],
+        details: [plenaryMeeting]
       });
     }
 
@@ -265,7 +270,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
       .filter(meeting => meeting.room && meeting.day && meeting.slot)
       .map(meeting => project.sessions
         .filter(s => s !== session && meetsAt(s, meeting, project))
-        .map(s => `Session scheduled in same room (${meeting.room}) and same day/slot (${meeting.day} ${meeting.slot}) as session "${s.title}" (${s.number})`)
+        .map(s => Object.assign({ meeting, session, conflictsWith: s }))
       )
       .flat()
       .filter(error => !!error);
@@ -274,7 +279,8 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         session: sessionNumber,
         severity: 'error',
         type: 'scheduling',
-        messages: schedulingErrors
+        messages: schedulingErrors.map(err => `Session scheduled in same room (${err.meeting.room}) and same day/slot (${err.meeting.day} ${err.meeting.slot}) as session "${err.conflictsWith.title}" (${err.conflictsWith.number})`),
+        details: schedulingErrors
       });
     }
   }
@@ -286,7 +292,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
       .map(meeting => {
         const room = project.rooms.find(s => s.name === meeting.room);
         if (room.capacity < session.description.capacity) {
-          return `Capacity of "${room.label}" (${room.capacity}) is lower than requested capacity (${session.description.capacity})`;
+          return { meeting, session, room };
         }
         return null;
       })
@@ -296,7 +302,8 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         session: sessionNumber,
         severity: 'warning',
         type: 'capacity',
-        messages: capacityWarnings
+        messages: capacityWarnings.map(warn => `Capacity of "${warn.room.label}" (${warn.room.capacity}) is lower than requested capacity (${session.description.capacity})`),
+        details: capacityWarnings
       });
     }
   }
@@ -311,28 +318,33 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
     .map(meeting => project.sessions
       .filter(s => s !== session && meetsInParallelWith(s, meeting, project))
       .map(s => {
-        let inboth = null;
+        let inboth = [];
         try {
           if (project.metadata.type === 'groups') {
-            inboth = s.groups.find(group => session.groups.find(g =>
-              g.type === group.type && g.abbrName === group.abbrName));
+            inboth = inboth.concat(s.groups
+              .filter(group => session.groups.find(g =>
+                g.type === group.type && g.abbrName === group.abbrName))
+              .map(group => group.name));
           }
           else {
             const sdesc = parseSessionBody(s.body);
             const sAuthorExcluded = sdesc.chairs?.find(c => c.name?.toLowerCase() === 'author-');
             if (!sAuthorExcluded) {
-              inboth = session.chairs.find(c => c.login === s.author.login);
+              const common = session.chairs.find(c => c.login === s.author.login);
+              if (common) {
+                inboth.push(common.name ?? chair.login);
+              }
             }
-            else {
-              inboth = sdesc.chairs.find(chair => session.chairs.find(c =>
+            inboth = inboth.concat(sdesc.chairs
+              .filter(chair => session.chairs.find(c =>
                 (c.login && c.login.toLowerCase() === chair.login?.toLowerCase()) ||
-                (c.name && c.name.toLowerCase() === chair.name?.toLowerCase())));
-            }
+                (c.name && c.name.toLowerCase() === chair.name?.toLowerCase())))
+              .map(chair => chair.name ?? chair.login));
           }
         }
         catch {}
-        if (inboth) {
-          return `Session scheduled at the same time as "${s.title}" (#${s.number}), which shares a common ${chairOrGroup} "${inboth.name}"`;
+        if (inboth.length > 0) {
+          return { meeting, session, conflictsWith: s, names: inboth };
         }
         else {
           return null;
@@ -346,7 +358,8 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
       session: sessionNumber,
       severity: 'error',
       type: `${chairOrGroup} conflict`,
-      messages: chairConflictErrors
+      messages: chairConflictErrors.map(err => `Session scheduled at the same time as "${err.conflictsWith.title}" (#${err.conflictsWith.number}), which shares ${chairOrGroup} ${err.names.join(', ')}`),
+      details: chairConflictErrors
     });
   }
 
@@ -359,7 +372,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         .map(number => {
           const conflictingSession = project.sessions.find(s => s.number === number);
           if (meetsInParallelWith(conflictingSession, meeting, project)) {
-            return `Same day/slot "${meeting.day} ${meeting.slot}" as conflicting session "${conflictingSession.title}" (#${conflictingSession.number})`;
+            return { meeting, session, conflictsWith: conflictingSession };
           }
           else {
             return null;
@@ -373,7 +386,8 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         session: sessionNumber,
         severity: 'warning',
         type: 'conflict',
-        messages: conflictWarnings
+        messages: conflictWarnings.map(c => `Same day/slot "${c.meeting.day} ${c.meeting.slot}" as conflicting session "${c.conflictsWith.title}" (#${c.conflictsWith.number})`),
+        details: conflictWarnings
       });
     }
   }
@@ -388,7 +402,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
       .map(track => project.sessions
         .filter(s => s !== session && s.labels.includes(track))
         .filter(s => meetsInParallelWith(s, meeting, project))
-        .map(s => `Same day/slot "${meeting.day} ${meeting.slot}" as session in same track "${track}": "${s.title}" (#${s.number})`)
+        .map(s => Object.assign({ meeting, track, session, conflictsWith: s }))
       )
     )
     .flat(2)
@@ -398,7 +412,8 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
       session: sessionNumber,
       severity: 'warning',
       type: 'track',
-      messages: tracksWarnings
+      messages: tracksWarnings.map(warn => `Same day/slot "${warn.meeting.day} ${warn.meeting.slot}" as session in same track "${warn.track}": "${warn.conflictsWith.title}" (#${warn.conflictsWith.number})`),
+      details: tracksWarnings
     });
   }
 

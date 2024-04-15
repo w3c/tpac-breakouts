@@ -36,7 +36,8 @@
     "upload-grid": "./tools/upload-grid.mjs",
     "validate-grid": "./tools/validate-grid.mjs",
     "validate-session": "./tools/validate-session.mjs",
-    "truncate-recording": "./tools/truncate-recording.mjs"
+    "truncate-recording": "./tools/truncate-recording.mjs",
+    "view-grid": "./tools/view-grid.mjs"
   },
   "scripts": {
     "test": "mocha"

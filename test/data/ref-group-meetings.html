@@ -1,0 +1,681 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Group meetings test event - Event schedule</title>
+    <style>
+      /* Table styles and colors adapted from Pure CSS:
+       * https://github.com/pure-css/pure
+       * ... under a BSD License:
+       * https://github.com/pure-css/pure/blob/master/LICENSE
+       */
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        empty-cells: show;
+        border: 1px solid #cbcbcb;
+      }
+      table caption {
+        color: #000;
+        font: italic 85%/1 arial, sans-serif;
+        padding: 1em 0;
+        text-align: center;
+      }
+      table td,
+      table th {
+        border-left: 1px solid #cbcbcb;
+        border-bottom: 1px solid #cbcbcb;
+        border-width: 0 0 1px 1px;
+        font-size: inherit;
+        margin: 0;
+        overflow: visible;
+        padding: 0.5em 1em;
+      }
+      table thead {
+        background-color: #e0e0e0;
+        color: #000;
+        text-align: left;
+        vertical-align: bottom;
+      }
+      .conflict-error { background-color: #ddaeff; color: #8156a7; }
+      .capacity-error { background-color: #fcebbd; color: #af9540; }
+      .track-error { background-color: #e1f2fa; color: #5992aa; }
+      .scheduling-error { background-color: #f5ab9e; color: #8c3a2b; }
+      .track {
+        display: inline-block;
+        background-color: #0E8A16;
+        color: white;
+        border: 1px transparent;
+        border-radius: 1em;
+        margin-top: 0.2em;
+        margin-bottom: 0.2em;
+        padding: 3px 10px;
+        font-size: smaller;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Group meetings test event</h1>
+    <section id="overview">
+      <h2>Sessions overview</h2>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Not scheduled</th>
+            <th>Scheduled</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Format errors</th>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <th>Validation errors</th>
+            <td>6</td>
+            <td>6</td>
+            <td>12</td>
+          </tr>
+          <tr>
+            <th>Validation warnings</th>
+            <td>1</td>
+            <td>4</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <th>Feel good sessions</th>
+            <td>5</td>
+            <td>2</td>
+            <td>7</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Total</th>
+            <td>12</td>
+            <td>12</td>
+            <td>24</td>
+          </tr>
+        </tfoot>
+      </table>
+    </section>
+    <section id="schedule">
+      <h2>Schedule</h2>
+      <section id="d2020-02-11">
+        <h3>2020-02-11</h3>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Room 1</th>
+              <th>Room 2</th>
+              <th>Room 3</th>
+              <th>Room 4</th>
+              <th>Room 5</th>
+              <th>Room 6</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>
+                9:00 - 11:00
+              </th>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/11">#11</a>: WebAssembly Working Group
+                  <br/><i>Group(s): WebAssembly WG</i>
+                </p>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>
+                11:00 - 13:00
+              </th>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/11">#11</a>: WebAssembly Working Group
+                  <br/><i>Group(s): WebAssembly WG</i>
+                </p>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>
+                14:00 - 16:00
+              </th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>
+                16:00 - 18:00
+              </th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <section id="d2042-02-10">
+        <h3>Monday (2042-02-10)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Room 1</th>
+              <th>Room 2</th>
+              <th>Room 3</th>
+              <th>Room 4</th>
+              <th>Room 5</th>
+              <th>Room 6</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>
+                9:00 - 11:00
+              </th>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/10">#10</a>: WebTransport Working Group
+                  <br/><i>Group(s): WebTransport WG</i>
+                </p>
+              </td>
+              <td class="scheduling-error">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/12">#12</a>: Publishing BG
+                  <br/><i>Group(s): Publishing BG</i>
+                </p>
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/13">#13</a>: Improving Web Advertising Business Group
+                  <br/><i>Group(s): Improving Web Advertising BG</i>
+                </p>
+              </td>
+              <td></td>
+              <td></td>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/22">#22</a>: Games CG
+                  <br/><i>Group(s): Games CG</i>
+                <br/><span class="track">track: debug</span>
+                </p>
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>
+                11:00 - 13:00
+              </th>
+              <td></td>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/12">#12</a>: Publishing BG
+                  <br/><i>Group(s): Publishing BG</i>
+                </p>
+              </td>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/13">#13</a>: Improving Web Advertising Business Group
+                  <br/><i>Group(s): Improving Web Advertising BG</i>
+                </p>
+              </td>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/16">#16</a>: Audio CG & Audio Description CG joint meeting
+                  <br/><i>Group(s): Audio CG, Audio Description CG</i>
+                </p>
+              </td>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/22">#22</a>: Games CG
+                  <br/><i>Group(s): Games CG</i>
+                <br/><span class="track">track: debug</span>
+                </p>
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <th>
+                14:00 - 16:00
+                <p class="conflict-error">Group conflict: Audio CG</p>
+                <p class="track-error">Same track: debug</p>
+              </th>
+              <td></td>
+              <td></td>
+              <td class="conflict-error">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/15">#15</a>: Audio Community Group
+                  <br/><i>Group(s): Audio CG</i>
+                </p>
+              </td>
+              <td class="conflict-error">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/16">#16</a>: Audio CG & Audio Description CG joint meeting
+                  <br/><i>Group(s): Audio CG, Audio Description CG</i>
+                </p>
+              </td>
+              <td class="track-error">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/22">#22</a>: Games CG
+                  <br/><i>Group(s): Games CG</i>
+                <br/><span class="track">track: debug</span>
+                </p>
+              </td>
+              <td class="track-error">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/23">#23</a>: Generative AI CG
+                  <br/><i>Group(s): Generative AI CG</i>
+                <br/><span class="track">track: debug</span>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                16:00 - 18:00
+              </th>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/17">#17</a>: Cognitive AI CG
+                  <br/><i>Group(s): Cognitive AI CG</i>
+                <br/><b>Conflicts with</b>: <span class="conflict-error">#18</span>
+                </p>
+              </td>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/18">#18</a>: Color on the Web Community Group
+                  <br/><i>Group(s): Color on the Web CG</i>
+                </p>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <section id="d2042-02-11">
+        <h3>Tuesday (2042-02-11)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Room 1</th>
+              <th>Room 2</th>
+              <th>Room 3</th>
+              <th>Room 4</th>
+              <th>Room 5</th>
+              <th>Room 6</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>
+                9:00 - 11:00
+              </th>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/11">#11</a>: WebAssembly Working Group
+                  <br/><i>Group(s): WebAssembly WG</i>
+                </p>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/24">#24</a>: GPU for the Web Community Group
+                  <br/><i>Group(s): GPU for the Web CG</i>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                11:00 - 13:00
+              </th>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/11">#11</a>: WebAssembly Working Group
+                  <br/><i>Group(s): WebAssembly WG</i>
+                </p>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/24">#24</a>: GPU for the Web Community Group
+                  <br/><i>Group(s): GPU for the Web CG</i>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                14:00 - 16:00
+              </th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/24">#24</a>: GPU for the Web Community Group
+                  <br/><i>Group(s): GPU for the Web CG</i>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                16:00 - 18:00
+              </th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/24">#24</a>: GPU for the Web Community Group
+                  <br/><i>Group(s): GPU for the Web CG</i>
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <section id="d2042-02-13">
+        <h3>Thursday (2042-02-13)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Room 1</th>
+              <th>Room 2</th>
+              <th>Room 3</th>
+              <th>Room 4</th>
+              <th>Room 5</th>
+              <th>Room 6</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>
+                9:00 - 11:00
+              </th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/24">#24</a>: GPU for the Web Community Group
+                  <br/><i>Group(s): GPU for the Web CG</i>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                11:00 - 13:00
+              </th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/24">#24</a>: GPU for the Web Community Group
+                  <br/><i>Group(s): GPU for the Web CG</i>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                14:00 - 16:00
+              </th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/24">#24</a>: GPU for the Web Community Group
+                  <br/><i>Group(s): GPU for the Web CG</i>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                16:00 - 18:00
+              </th>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/20">#20</a>: Credentials Community Group
+                  <br/><i>Group(s): Credentials CG</i>
+                </p>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/24">#24</a>: GPU for the Web Community Group
+                  <br/><i>Group(s): GPU for the Web CG</i>
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <section id="d2042-02-14">
+        <h3>Friday (2042-02-14)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Room 1</th>
+              <th>Room 2</th>
+              <th>Room 3</th>
+              <th>Room 4</th>
+              <th>Room 5</th>
+              <th>Room 6</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>
+                9:00 - 11:00
+              </th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/24">#24</a>: GPU for the Web Community Group
+                  <br/><i>Group(s): GPU for the Web CG</i>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                11:00 - 13:00
+              </th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/24">#24</a>: GPU for the Web Community Group
+                  <br/><i>Group(s): GPU for the Web CG</i>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                14:00 - 16:00
+              </th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/24">#24</a>: GPU for the Web Community Group
+                  <br/><i>Group(s): GPU for the Web CG</i>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                16:00 - 18:00
+              </th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="">
+                <p><a href="https://github.com/w3c/tpac-breakouts/issues/24">#24</a>: GPU for the Web Community Group
+                  <br/><i>Group(s): GPU for the Web CG</i>
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </section>
+    <section id="todo">
+        <h2>Sessions to look into</h2>
+      <section>
+        <h3>Unscheduled sessions</h3>
+        <ul>
+          <li><a href="https://github.com/w3c/tpac-breakouts/issues/1">#1</a>: Immersive Web WG</li>
+          <li><a href="https://github.com/w3c/tpac-breakouts/issues/2">#2</a>: Second Screen WG</li>
+          <li><a href="https://github.com/w3c/tpac-breakouts/issues/3">#3</a>: Fantasy WG</li>
+          <li><a href="https://github.com/w3c/tpac-breakouts/issues/4">#4</a>: Second Screen CG</li>
+          <li><a href="https://github.com/w3c/tpac-breakouts/issues/5">#5</a>: Second Screen CG</li>
+          <li><a href="https://github.com/w3c/tpac-breakouts/issues/6">#6</a>: Web Performance Working Group</li>
+          <li><a href="https://github.com/w3c/tpac-breakouts/issues/7">#7</a>: Media WG & Web Real-Time Communications WG joint meeting</li>
+          <li><a href="https://github.com/w3c/tpac-breakouts/issues/8">#8</a>: JSON for Linking data CG, Web Of Things WG, RDF Dataset Canonicalization and Hash Working Group Joint meeting</li>
+          <li><a href="https://github.com/w3c/tpac-breakouts/issues/9">#9</a>: Web Of Things WG Joint meeting</li>
+          <li><a href="https://github.com/w3c/tpac-breakouts/issues/14">#14</a>: Anti-Fraud Community Group</li>
+          <li><a href="https://github.com/w3c/tpac-breakouts/issues/19">#19</a>: Consent Community Group</li>
+          <li><a href="https://github.com/w3c/tpac-breakouts/issues/21">#21</a>: Credible Web Community Group</li>
+        </ul>
+        </section>
+      <section>
+        <h3>Partly scheduled</h3>
+        <ul>
+          <li><a href="https://github.com/w3c/tpac-breakouts/issues/10">#10</a>: WebTransport Working Group</li>
+        </ul>
+        </section>
+    </section>
+    
+    <section id="json">
+      <h2>Data for Saving/Restoring Schedule</h2>
+      <pre id="data">
+[
+  {
+    "number": 1
+  },
+  {
+    "number": 2
+  },
+  {
+    "number": 3
+  },
+  {
+    "number": 4
+  },
+  {
+    "number": 5
+  },
+  {
+    "number": 6
+  },
+  {
+    "number": 7
+  },
+  {
+    "number": 8
+  },
+  {
+    "number": 9
+  },
+  {
+    "number": 10,
+    "meeting": "Room 1, Monday, 9:00; Invalid room; 2042-02-10; 9:00 - 11:00"
+  },
+  {
+    "number": 11,
+    "meeting": "Room 1, 2042-02-11, 9:00; Room 1, 2020-02-11, 11:00"
+  },
+  {
+    "number": 12,
+    "room": "Room 2",
+    "day": "Monday (2042-02-10)",
+    "meeting": "9:00; 11:00"
+  },
+  {
+    "number": 13,
+    "meeting": "Room 2, Monday, 9:00; Room 3, Monday, 11:00"
+  },
+  {
+    "number": 14,
+    "meeting": "Room 1"
+  },
+  {
+    "number": 15,
+    "room": "Room 3",
+    "day": "Monday (2042-02-10)",
+    "slot": "14:00 - 16:00"
+  },
+  {
+    "number": 16,
+    "meeting": "Room 4, Monday, 11:00; Room 4, Monday, 14:00"
+  },
+  {
+    "number": 17,
+    "meeting": "Room 1, Monday, 16:00"
+  },
+  {
+    "number": 18,
+    "meeting": "Room 2, Monday, 16:00"
+  },
+  {
+    "number": 19,
+    "meeting": "Monday, 9:00; Monday, 11:00; Monday, 9:00 - 11:00"
+  },
+  {
+    "number": 20,
+    "day": "Thursday (2042-02-13)",
+    "slot": "16:00 - 18:00",
+    "meeting": "Room 1"
+  },
+  {
+    "number": 21,
+    "meeting": "Thursday, 16:00"
+  },
+  {
+    "number": 22,
+    "room": "Room 5",
+    "meeting": "Monday, 9:00 | Monday, 11:00 | Monday, 14:00 - 16:00"
+  },
+  {
+    "number": 23,
+    "day": "Monday (2042-02-10)",
+    "slot": "14:00 - 16:00",
+    "meeting": "Room 6"
+  },
+  {
+    "number": 24,
+    "room": "Room 6",
+    "meeting": "Tuesday, 14:00; Tuesday, 11:00; Tuesday, 9:00; Thursday, 9:00; Tuesday, 16:00; Thursday, 16:00; Thursday, 14:00; Friday, 11:00; Friday, 16:00"
+  }
+]
+      </pre>
+    </section>
+  </body>
+</html>
