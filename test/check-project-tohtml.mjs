@@ -12,6 +12,9 @@ async function fetchTestProject() {
 }
 
 async function getRefHtml(name) {
+  if (!name) {
+    name = await getEnvKey('PROJECT_NUMBER');
+  }
   return (await readFile(`test/data/ref-${name}.html`, 'utf8'))
     .replace(/\r/g, '');
 }
@@ -25,8 +28,8 @@ describe('The module that converts a project to HTML', function () {
     setEnvKey('ISSUE_TEMPLATE', 'test/data/session-template-default.yml');
     setEnvKey('PROJECT_NUMBER', 'session-validation');
     const project = await fetchTestProject();
+    const ref = await getRefHtml();
     const html = await convertProjectToHTML(project);
-    const ref = await getRefHtml('session-validation');
     assert.strictEqual(html, ref);
     //console.log(html);
   });
@@ -35,8 +38,8 @@ describe('The module that converts a project to HTML', function () {
     setEnvKey('ISSUE_TEMPLATE', 'test/data/group-template.yml');
     setEnvKey('PROJECT_NUMBER', 'group-meetings');
     const project = await fetchTestProject();
+    const ref = await getRefHtml();
     const html = await convertProjectToHTML(project);
-    const ref = await getRefHtml('group-meetings');
     assert.strictEqual(html, ref);
     //console.log(html);
   });
@@ -45,8 +48,8 @@ describe('The module that converts a project to HTML', function () {
     setEnvKey('ISSUE_TEMPLATE', 'test/data/session-template-default.yml');
     setEnvKey('PROJECT_NUMBER', 'breakouts-day-2024');
     const project = await fetchTestProject();
+    const ref = await getRefHtml();
     const html = await convertProjectToHTML(project);
-    const ref = await getRefHtml('breakouts-day-2024');
     assert.strictEqual(html, ref);
     //console.log(html);
   });
