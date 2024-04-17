@@ -37,7 +37,7 @@
     "validate-grid": "./tools/validate-grid.mjs",
     "validate-session": "./tools/validate-session.mjs",
     "truncate-recording": "./tools/truncate-recording.mjs",
-    "view-grid": "./tools/view-grid.mjs"
+    "view-event": "./tools/view-event.mjs"
   },
   "scripts": {
     "test": "mocha"
