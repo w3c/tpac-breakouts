@@ -1,9 +1,12 @@
+import * as assert from 'node:assert';
 import { initTestEnv } from './init-test-env.mjs';
 import { getEnvKey, setEnvKey } from '../tools/lib/envkeys.mjs';
 import { fetchProject } from '../tools/lib/project.mjs';
 import { validateSession } from '../tools/lib/validate.mjs';
-import { groupSessionMeetings, computeSessionCalendarUpdates } from '../tools/lib/meetings.mjs';
-import * as assert from 'node:assert';
+import { groupSessionMeetings,
+         computeSessionCalendarUpdates,
+         parseMeetingsChanges,
+         applyMeetingsChanges } from '../tools/lib/meetings.mjs';
 
 async function fetchTestProject() {
   return fetchProject(
@@ -335,5 +338,79 @@ describe('The group meetings module', function () {
         }
       ]
     });
+  });
+
+  it('parses a YAML file that describes meeting changes', function () {
+    const changes = parseMeetingsChanges(`
+      1:
+        reset:
+          - day
+          - slot
+        day: 2024-03-12
+        room: Room 5
+        meeting:
+          - Monday
+          - Tuesday
+      2:
+        reset: all
+        room: Room 1
+      3:
+        reset: day
+    `);
+    assert.deepStrictEqual(changes, [
+      {
+        number: 1,
+        reset: ['day', 'slot'],
+        day: '2024-03-12',
+        room: 'Room 5',
+        meeting: 'Monday; Tuesday'
+      },
+      {
+        number: 2,
+        reset: ['room', 'day', 'slot', 'meeting'],
+        room: 'Room 1'
+      },
+      {
+        number: 3,
+        reset: ['day']
+      }
+    ]);
+  });
+
+  it('can apply a list of meetings changes', function () {
+    const sessions = [
+      { number: 1, day: '2024-01-01', room: 'Room 1' },
+      { number: 2, meeting: 'Monday; Tuesday' },
+      { number: 3 },
+      { number: 4 }
+    ];
+
+    const changes = [
+      {
+        number: 1,
+        reset: ['day', 'slot'],
+        slot: '11:00-13:00',
+        meeting: 'Monday; Tuesday'
+      },
+      {
+        number: 2,
+        reset: ['room', 'day', 'slot', 'meeting'],
+        room: 'Room 1'
+      },
+      {
+        number: 3,
+        reset: ['day']
+      }
+    ];
+
+    applyMeetingsChanges(sessions, changes);
+    assert.deepStrictEqual(sessions, [
+      { number: 1, updated: true,
+        room: 'Room 1', slot: '11:00-13:00', meeting: 'Monday; Tuesday' },
+      { number: 2, updated: true,
+        room: 'Room 1' },
+      { number: 3 },
+      { number: 4 }
+    ]);
   });
 });

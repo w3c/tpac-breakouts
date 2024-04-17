@@ -91,6 +91,8 @@ import { fetchProject, assignSessionsToSlotAndRoom } from './lib/project.mjs';
 import { validateSession } from './lib/validate.mjs';
 import { validateGrid } from './lib/validate.mjs';
 import { convertProjectToHTML } from './lib/project2html.mjs';
+import { parseMeetingsChanges,
+         applyMeetingsChanges } from '../tools/lib/meetings.mjs';
 import seedrandom from 'seedrandom';
 
 const schedulingErrors = [
@@ -183,47 +185,11 @@ async function main({ preserve, except, changesFile, apply, seed }) {
   // Load changes to apply locally if so requested
   let changes = [];
   if (changesFile) {
-    try {
-      changes = (await readFile(changesFile, 'utf8'))
-        .split('\n')
-        .map(line => line.trim())
-        .filter(line => line.length && !line.startsWith(';'))
-        .map(line => {
-          const change = {
-            number: null,
-            day: null,
-            slot: null,
-            room: null
-          };
-
-          // Line needs to start with session number
-          let match = line.match(/^(\d+)(.*)$/);
-          change.number = parseInt(match[1], 10);
-
-          // Rest can contain a day, a slot and/or a room
-          const rest = match[2].trim();
-          match = rest.match(/^(\d{4}\-\d{2}\-\d{2})?\s*(\d{1,2}:\d{1,2})?\s*(.*)$/);
-          if (match[1]) {
-            // A day was specified
-            change.day = days.find(s => s.date === match[1]).name;
-          }
-          if (match[2]) {
-            // A slot was specified
-            change.slot = slots.find(s => s.name.startsWith(match[2])).name;
-          }
-          if (match[3]) {
-            // A room was specified
-            change.room = rooms.find(r => r.name.startsWith(match[3].trim())).name;
-          }
-          return change;
-        })
-        .filter(change => change.day || change.slot || change.room)
-      console.warn(changes);
-    }
-    catch (err) {
-      // Not a changes file!
-      throw err;
-    }
+    console.warn('Load changes file...');
+    const yaml = await readFile(changesFile, 'utf8');
+    changes = parseMeetingsChanges(yaml);
+    console.warn(`- ${changes.length} changes detected`);
+    console.warn('Load changes file... done');
   }
 
   // Save initial grid algorithm settings as CLI params
@@ -633,24 +599,7 @@ async function main({ preserve, except, changesFile, apply, seed }) {
   if (changes.length > 0) {
     console.warn();
     console.warn(`Apply local changes...`);
-    for (const change of changes) {
-      const session = sessions.find(s => s.number === change.number);
-      if (change.room && change.room !== session.room) {
-        console.warn(`- move #${change.number} to room ${change.room}`);
-        session.room = change.room;
-        session.updated = true;
-      }
-      if (change.day && change.day !== session.day) {
-        console.warn(`- move #${change.number} to day ${change.day}`);
-        session.day = change.day;
-        session.updated = true;
-      }
-      if (change.slot && change.slot !== session.slot) {
-        console.warn(`- move #${change.number} to slot ${change.slot}`);
-        session.slot = change.slot;
-        session.updated = true;
-      }
-    }
+    applyMeetingsChanges(sessions, changes);
     console.warn(`Apply local changes... done`);
   }
 
