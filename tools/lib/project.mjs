@@ -705,6 +705,7 @@ export async function fetchProject(login, id) {
     // - the date of the breakout sessions
     // - the timezone to use to interpret time slots
     // - the "big meeting" value to associate calendar entries to TPAC
+    description: project.shortDescription,
     metadata: parseProjectDescription(project.shortDescription),
 
     // List of rooms. For each of them, we return the exact name of the option
