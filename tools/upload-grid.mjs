@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import fs from 'fs';
 import { getEnvKey } from './lib/envkeys.mjs';
-import { fetchProject, assignSessionsToSlotAndRoom } from './lib/project.mjs'
+import { fetchProject, saveSessionMeetings } from './lib/project.mjs'
 
 function readconfig(filename) {
   if (filename) {
@@ -23,37 +23,36 @@ async function main({ filename, apply }) {
     throw new Error(`Project ${PROJECT_OWNER}/${PROJECT_NUMBER} could not be retrieved`);
   }
   console.warn(`- found ${project.sessions.length} sessions`);
-  let sessions = await Promise.all(project.sessions);
-  sessions = sessions.filter(s => !!s);
   console.warn(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER} and session(s)... done`);
 
   console.warn(`Extract grid from HTML page...`);
-  const rooms = project.rooms;
-  const slots = project.slots;
-  const days = project.days;
   const configs = readconfig(filename);
   console.warn(`Extract grid from HTML page... done`);
 
-  console.warn(`Assign sessions to rooms and slots...`);
+  console.warn(`Assign sessions to meetings...`);
   const updated = [];
   for (const config of configs) {
-    if (!sessions.find(s => s.number === config.number)) {
+    if (!project.sessions.find(s => s.number === config.number)) {
       throw new Error('Unknown session ' + config.number);
     }
-    if (!days.find(s => s.name === config.day)) {
+    if (!project.days.find(s => s.name === config.day)) {
       throw new Error('Unknown day ' + config.slot + ' in ' + config.number);
     }
-    if (!slots.find(s => s.name === config.slot)) {
+    if (!project.slots.find(s => s.name === config.slot)) {
       throw new Error('Unknown slot ' + config.slot + ' in ' + config.number);
     }
-    if (!rooms.find(s => s.name === config.room)) {
+    if (!project.rooms.find(s => s.name === config.room)) {
       throw new Error('Unknown room ' + config.room + ' in ' + config.number);
     }
-    let session = sessions.find(s => s.number === config.number);
-    if (session.room !== config.room || session.day !== config.day || session.slot !== config.slot) {
+    const session = project.sessions.find(s => s.number === config.number);
+    if (session.room !== config.room ||
+        session.day !== config.day ||
+        session.slot !== config.slot ||
+        session.meeting !== config.meeting) {
       session.day = config.day;
       session.room = config.room;
       session.slot = config.slot;
+      session.meeting = config.meeting;
       updated.push(session);
     }
   }
@@ -61,7 +60,7 @@ async function main({ filename, apply }) {
   if (apply) {
     for (const session of updated) {
       console.warn(`- updating #${session.number}...`);
-      await assignSessionsToSlotAndRoom(session, project);
+      await saveSessionMeetings(session, project);
       console.warn(`- updating #${session.number}... done`);
     }
     console.warn(updated.length ?
@@ -73,7 +72,7 @@ async function main({ filename, apply }) {
       `- ${updated.length} sessions would be updated: ${updated.map(s => s.number).join(', ')}` :
       '- no session would be updated');
   }
-  console.warn(`Assign sessions to rooms and slots... done`);
+  console.warn(`Assign sessions to meetings... done`);
 }
 
 

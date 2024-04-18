@@ -87,7 +87,7 @@
 
 import { readFile } from 'fs/promises';
 import { getEnvKey } from './lib/envkeys.mjs';
-import { fetchProject, assignSessionsToSlotAndRoom } from './lib/project.mjs';
+import { fetchProject, saveSessionMeetings } from './lib/project.mjs';
 import { validateSession } from './lib/validate.mjs';
 import { validateGrid } from './lib/validate.mjs';
 import { convertProjectToHTML } from './lib/project2html.mjs';
@@ -633,7 +633,7 @@ async function main({ preserve, except, changesFile, apply, seed }) {
     const sessionsToUpdate = sessions.filter(s => s.updated);
     for (const session of sessionsToUpdate) {
       console.warn(`- updating #${session.number}...`);
-      await assignSessionsToSlotAndRoom(session, project);
+      await saveSessionMeetings(session, project);
       console.warn(`- updating #${session.number}... done`);
     }
   }
