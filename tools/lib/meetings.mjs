@@ -59,6 +59,37 @@ export function parseSessionMeetings(session, project) {
 
 
 /**
+ * Serialize the list of meetings to a `meeting`` field string
+ *
+ * The function uses labels when possible instead of full names to increase
+ * readability of the resulting string.
+ */
+export function serializeSessionMeetings(meetings, project) {
+  if (!meetings || meetings.length === 0) {
+    return null;
+  }
+  return meetings
+    .map(meeting => {
+      const tokens = [];
+      if (meeting.day) {
+        const day = project.days.find(day => day.name === meeting.day);
+        tokens.push(day.label ?? day.name);
+      }
+      if (meeting.slot) {
+        const slot = project.slots.find(slot => slot.name === meeting.slot);
+        tokens.push(slot.start);
+      }
+      if (meeting.room) {
+        const room = project.rooms.find(room => room.name === meeting.room);
+        tokens.push(room.label ?? slot.name);
+      }
+      return tokens.join(', ');
+    })
+    .join('; ');
+}
+
+
+/**
  * Group meetings by contiguous slots to create a minimum number of calendar
  * entries for group meetings.
  */
@@ -243,6 +274,15 @@ export function meetsInParallelWith(session, meeting, project) {
       !meeting.room) &&
     m.day === meeting.day &&
     m.slot === meeting.slot);
+}
+
+
+/**
+ * Return true if session meets in the given room
+ */
+export function meetsInRoom(session, room, project) {
+  const meetings = parseSessionMeetings(session, project);
+  return !!meetings.find(m => m.room === room);
 }
 
 
