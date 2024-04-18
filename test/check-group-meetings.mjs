@@ -5,7 +5,9 @@ import { fetchProject } from '../tools/lib/project.mjs';
 import { validateSession } from '../tools/lib/validate.mjs';
 import { groupSessionMeetings,
          computeSessionCalendarUpdates,
+         parseSessionMeetings,
          parseMeetingsChanges,
+         serializeSessionMeetings,
          applyMeetingsChanges } from '../tools/lib/meetings.mjs';
 
 async function fetchTestProject() {
@@ -207,6 +209,17 @@ describe('The group meetings module', function () {
       type: 'track',
       messages: ['Same day/slot "Monday (2042-02-10) 14:00 - 16:00" as session in same track "track: debug": "Generative AI CG" (#23)']
     }]);
+  });
+
+  it('parses and serializes meetings', async function () {
+    const project = await fetchTestProject();
+    const sessionNumber = 11;
+    await validateSession(sessionNumber, project);
+    const session = project.sessions.find(s => s.number === sessionNumber);
+    const meetings = parseSessionMeetings(session, project);
+    const meetingsStr = serializeSessionMeetings(meetings, project);
+    assert.strictEqual(meetingsStr,
+      'Tuesday, 9:00, Room 1; 2020-02-11, 11:00, Room 1');
   });
 
   it('merges contiguous slots for calendaring purpose', async function () {
