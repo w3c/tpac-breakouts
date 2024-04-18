@@ -764,7 +764,7 @@ export async function fetchProject(login, id) {
 
     // ID of the "Meeting" custom field, if it exists
     // (it signals the fact that sessions may be scheduled more than once)
-    meetingFieldId: meeting?.id,
+    meetingsFieldId: meeting?.id,
     allowMultipleMeetings: !!meeting?.id,
 
     // List of open sessions linked to the project (in other words, all of the
@@ -829,64 +829,46 @@ function parseProjectDescription(desc) {
 }
 
 /**
- * Record the slot and room assignment for the provided session
+ * Record the meetings assignments for the provided session
  */
-export async function assignSessionsToSlotAndRoom(session, project) {
-  const day = project.days.find(day => session.day === day.name);
-  const resDay = await sendGraphQLRequest(`mutation {
-    updateProjectV2ItemFieldValue(input: {
-      clientMutationId: "mutatis mutandis",
-      fieldId: "${project.daysFieldId}",
-      itemId: "${session.projectItemId}",
-      projectId: "${project.id}",
-      value: {
-        singleSelectOptionId: "${day.id}"
-      }
-    }) {
-      clientMutationId
+export async function saveSessionMeetings(session, project) {
+  for (const field of ['room', 'day', 'slot', 'meeting']) {
+    // Project may not allow multiple meetings
+    if (!project[field + 'sFieldId']) {
+      continue;
     }
-  }`);
-  if (!resDay?.data?.updateProjectV2ItemFieldValue?.clientMutationId) {
-    console.log(JSON.stringify(resDay, null, 2));
-    throw new Error(`GraphQL error, could not assign session #${session.number} to day ${session.day}`);
-  }
-
-  const slot = project.slots.find(slot => session.slot === slot.name);
-  const resSlot = await sendGraphQLRequest(`mutation {
-    updateProjectV2ItemFieldValue(input: {
-      clientMutationId: "mutatis mutandis",
-      fieldId: "${project.slotsFieldId}",
-      itemId: "${session.projectItemId}",
-      projectId: "${project.id}",
-      value: {
-        singleSelectOptionId: "${slot.id}"
+    const prop = (field === 'meeting') ? 'text': 'singleSelectOptionId';
+    let value = null;
+    if (prop === 'text') {
+      // Text field
+      if (session[field]) {
+        value = session[field];
       }
-    }) {
-      clientMutationId
     }
-  }`);
-  if (!resSlot?.data?.updateProjectV2ItemFieldValue?.clientMutationId) {
-    console.log(JSON.stringify(resSlot, null, 2));
-    throw new Error(`GraphQL error, could not assign session #${session.number} to slot ${session.slot}`);
-  }
-
-  const room = project.rooms.find(room => session.room === room.name);
-  const resRoom = await sendGraphQLRequest(`mutation {
-    updateProjectV2ItemFieldValue(input: {
-      clientMutationId: "mutatis mutandis",
-      fieldId: "${project.roomsFieldId}",
-      itemId: "${session.projectItemId}",
-      projectId: "${project.id}",
-      value: {
-        singleSelectOptionId: "${room.id}"
+    else {
+      // Option in a selection field
+      const obj = project[field + 's'].find(o => o.name === session[field]);
+      if (obj) {
+        value = `"${obj.id}"`;
       }
-    }) {
-      clientMutationId
     }
-  }`);
-  if (!resRoom?.data?.updateProjectV2ItemFieldValue?.clientMutationId) {
-    console.log(JSON.stringify(resRoom, null, 2));
-    throw new Error(`GraphQL error, could not assign session #${session.number} to room ${session.room}`);
+    const resField = await sendGraphQLRequest(`mutation {
+      updateProjectV2ItemFieldValue(input: {
+        clientMutationId: "mutatis mutandis",
+        fieldId: "${project[field + 'sFieldId']}",
+        itemId: "${session.projectItemId}",
+        projectId: "${project.id}",
+        value: {
+          ${prop}: ${value}
+        }
+      }) {
+        clientMutationId
+      }
+    }`);
+    if (!resField?.data?.updateProjectV2ItemFieldValue?.clientMutationId) {
+      console.log(JSON.stringify(resField, null, 2));
+      throw new Error(`GraphQL error, could not assign session #${session.number} to ${field} value "${session[field]}"`);
+    }
   }
 }
 
