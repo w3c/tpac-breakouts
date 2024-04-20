@@ -16,10 +16,10 @@ body:
     attributes:
       label: Estimated number of in-person attendees
       options:
-        - Don't know (Default)
-        - Fewer than 20 people
-        - 20-45 people
-        - More than 45 people
+        - More than 50
+        - 31-50
+        - 16-30
+        - Less than 15
     validations:
       required: false
 

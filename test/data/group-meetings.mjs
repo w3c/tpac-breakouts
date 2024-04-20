@@ -123,7 +123,7 @@ Scheduled in same room and at the same time as previous session.`
 ### Session description
 Capacity problem.
 ### Estimated number of in-person attendees
-More than 45 people`,
+More than 50`,
       meeting: 'Room 1'
     },
 
