@@ -68,7 +68,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
 
   // Validate and parse the session body, unless that was already done
   if (!session.description) {
-    await initSectionHandlers();
+    await initSectionHandlers(project);
     const formatErrors = validateSessionBody(session.body);
     if (formatErrors.length > 0) {
       errors.push({

@@ -74,7 +74,7 @@ export async function resetSectionHandlers() {
  * `validateSessionBody` may be called (function returns immediately on
  * further calls).
  */
-export async function initSectionHandlers() {
+export async function initSectionHandlers(project) {
   if (sectionHandlers) {
     return;
   }
@@ -114,6 +114,7 @@ export async function initSectionHandlers() {
         title: section.attributes.label.replace(/ \(Optional\)$/, ''),
         autoHide: !!section.attributes.autoHide,
         required: !!section.validations?.required,
+        includeOptional: !!section.attributes.label.endsWith('(Optional)'),
         validate: value => true,
         parse: value => value,
         serialize: value => value
@@ -199,23 +200,93 @@ export async function initSectionHandlers() {
         break;
 
       case 'capacity':
-        handler.parse = value => {
-          switch (value.toLowerCase()) {
-          case 'don\'t know': return 0;
-          case 'don\'t know (default)': return 0;
-          case 'fewer than 20 people': return 15;
-          case '20-45 people': return 30;
-          case 'more than 45 people': return 50;
+        if (project.metadata.type === 'groups') {
+          handler.parse = value => {
+            switch (value.toLowerCase()) {
+            case 'less than 15': return 10;
+            case '16-30': return 20;
+            case '31-50': return 40;
+            case 'more than 50': return 50;
+            default: throw new Error(`Unexpected capacity value "${value}"`);
+            };
           };
-        };
-        handler.serialize = value => {
-          switch (value) {
-          case 0: return 'Don\'t know (Default)';
-          case 15: return 'Fewer than 20 people';
-          case 30: return '20-45 people';
-          case 50: return 'More than 45 people';
+          handler.serialize = value => {
+            switch (value) {
+            case 10: return 'Less than 15';
+            case 20: return '16-30';
+            case 40: return '31-50';
+            case 50: return 'More than 50';
+            default: throw new Error(`Unexpected capacity value "${value}"`);
+            }
           }
         }
+        else {
+          handler.parse = value => {
+            switch (value.toLowerCase()) {
+            case 'don\'t know': return 0;
+            case 'don\'t know (default)': return 0;
+            case 'fewer than 20 people': return 15;
+            case '20-45 people': return 30;
+            case 'more than 45 people': return 50;
+            default: throw new Error(`Unexpected capacity value "${value}"`);
+            };
+          };
+          handler.serialize = value => {
+            switch (value) {
+            case 0: return 'Don\'t know (Default)';
+            case 15: return 'Fewer than 20 people';
+            case 30: return '20-45 people';
+            case 50: return 'More than 45 people';
+            default: throw new Error(`Unexpected capacity value "${value}"`);
+            }
+          }
+        }
+        break;
+
+      case 'times':
+        // Each entry looks like "[x] Monday, 09:30 - 11:00"
+        const reTime = /^\[( |x)\]\s*(?:(monday|tuesday|thursday|friday),\s*(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2}))$/i;
+        handler.parse = value => parseList(value, { linesOnly: true })
+            .map(time => {
+              const match = time.match(reTime);
+              if (!match[1].trim()) {
+                return null;
+              }
+              const day = project.days.find(day => day.label.toLowerCase() === match[2].toLowerCase());
+              const slot = project.slots.find(slot => slot.start === match[3] && slot.end === match[4]);
+              return { day: day.name, slot: slot.name };
+            })
+            .filter(time => !!time);
+        handler.validate = value => parseList(value, { linesOnly: true })
+          .every(time => {
+            const match = time.match(reTime);
+            if (!match) {
+              // Not the expected format
+              return false;
+            }
+            if (!match[1].trim()) {
+              // Time not selected, we don't really care whether the line
+              // contains something valid, serialization will fix any possible
+              // hiccup in any case
+              return true;
+            }
+            const day = project.days.find(day => day.label.toLowerCase() === match[2].toLowerCase());
+            const slot = project.slots.find(slot => slot.start === match[3] && slot.end === match[4]);
+            return day && slot;
+          });
+        // Serialization lists all possible times in order, selecting those
+        // that are in the current times value.
+        const daysAndSlots = project.days
+          .map(day => project.slots.map(slot => Object.assign({ day, slot })))
+          .flat();
+        handler.serialize = value => daysAndSlots
+          .map(ds => {
+            const time = value.find(time =>
+              time.day === ds.day.name &&
+              time.slot === ds.slot.name);
+            return `- [${time ? 'X' : ' '}] ${ds.day.label}, ${ds.slot.name}`;
+          })
+          .join('\n');
         break;
 
       case 'calendar':
@@ -402,7 +473,7 @@ export function serializeSessionDescription(description) {
       !handler.autoHide ||
       description[handler.id] ||
       description[handler.id] === 0)
-    .map(handler => `### ${handler.title}${handler.required ? '' : ' (Optional)'}
+    .map(handler => `### ${handler.title}${handler.includeOptional ? ' (Optional)' : ''}
 
 ${(description[handler.id] || description[handler.id] === 0) ?
     handler.serialize(description[handler.id]) : '_No response_' }`)
