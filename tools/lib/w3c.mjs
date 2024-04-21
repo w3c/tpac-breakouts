@@ -66,8 +66,15 @@ export async function fetchW3CAccount(databaseId) {
 }
 
 
+/**
+ * Normalize the names of the group
+ *
+ * Note that the EOWG is treated as a hardcoded exception to the rule
+ * (that's the only group that ends with its acronym)
+ */
 function normalizeGroup(group) {
   group.name = group.name
+    .replace(/\s+\(EOWG\)$/i, '')
     .replace(/\s+business group$/i, ' BG')
     .replace(/\s+community group$/i, ' CG')
     .replace(/\s+interest group$/i, ' IG')

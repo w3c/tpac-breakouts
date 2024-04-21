@@ -69,13 +69,13 @@ export default {
     },
     {
       "number": 6,
-      "title": "Autonomous Agents on the Web (WebAgents) CG",
+      "title": "Autonomous Agents on the Web CG",
       "author": "ianbjacobs",
       "body": "### Estimate of in-person participants\n\nLess than 15\n\n### Select preferred dates and times (11-15 September)\n\n- [X] Monday, 09:30 - 11:00\n- [ ] Monday, 11:30 - 13:00\n- [ ] Monday, 14:30 - 16:30\n- [ ] Monday, 17:00 - 18:30\n- [ ] Tuesday, 09:30 - 11:00\n- [ ] Tuesday, 11:30 - 13:00\n- [ ] Tuesday, 14:30 - 16:30\n- [ ] Tuesday, 17:00 - 18:30\n- [ ] Thursday, 09:30 - 11:00\n- [ ] Thursday, 11:30 - 13:00\n- [ ] Thursday, 14:30 - 16:30\n- [ ] Thursday, 17:00 - 18:30\n- [ ] Friday, 09:30 - 11:00\n- [ ] Friday, 11:30 - 13:00\n- [ ] Friday, 14:30 - 16:30\n- [ ] Friday, 17:00 - 18:30\n\n### Other sessions where we should avoid scheduling conflicts (Optional)\n\n_No response_\n\n### Other instructions for meeting planners (Optional)\n\n_No response_\n\n### Discussion channel (Optional)\n\n_No response_\n\n### Agenda for the meeting.\n\n_No response_"
     },
     {
       "number": 7,
-      "title": "Autonomous Agents on the Web (WebAgents) CG & Web of Things CG/WG joint meeting",
+      "title": "Autonomous Agents on the Web CG & Web of Things WG joint meeting",
       "author": "ianbjacobs",
       "body": "### Estimate of in-person participants\n\nLess than 15\n\n### Select preferred dates and times (11-15 September)\n\n- [ ] Monday, 09:30 - 11:00\n- [X] Monday, 11:30 - 13:00\n- [ ] Monday, 14:30 - 16:30\n- [ ] Monday, 17:00 - 18:30\n- [ ] Tuesday, 09:30 - 11:00\n- [ ] Tuesday, 11:30 - 13:00\n- [ ] Tuesday, 14:30 - 16:30\n- [ ] Tuesday, 17:00 - 18:30\n- [ ] Thursday, 09:30 - 11:00\n- [ ] Thursday, 11:30 - 13:00\n- [ ] Thursday, 14:30 - 16:30\n- [ ] Thursday, 17:00 - 18:30\n- [ ] Friday, 09:30 - 11:00\n- [ ] Friday, 11:30 - 13:00\n- [ ] Friday, 14:30 - 16:30\n- [ ] Friday, 17:00 - 18:30\n\n### Other sessions where we should avoid scheduling conflicts (Optional)\n\n_No response_\n\n### Other instructions for meeting planners (Optional)\n\n_No response_\n\n### Discussion channel (Optional)\n\n_No response_\n\n### Agenda for the meeting.\n\n_No response_"
     },
@@ -93,19 +93,19 @@ export default {
     },
     {
       "number": 10,
-      "title": "Media WG & Web Real Time Communications WG joint meeting",
+      "title": "Media WG & Web Real-Time Communications WG joint meeting",
       "author": "ianbjacobs",
       "body": "### Estimate of in-person participants\n\n16-30\n\n### Select preferred dates and times (11-15 September)\n\n- [ ] Monday, 09:30 - 11:00\n- [ ] Monday, 11:30 - 13:00\n- [ ] Monday, 14:30 - 16:30\n- [ ] Monday, 17:00 - 18:30\n- [ ] Tuesday, 09:30 - 11:00\n- [ ] Tuesday, 11:30 - 13:00\n- [ ] Tuesday, 14:30 - 16:30\n- [ ] Tuesday, 17:00 - 18:30\n- [ ] Thursday, 09:30 - 11:00\n- [ ] Thursday, 11:30 - 13:00\n- [X] Thursday, 14:30 - 16:30\n- [ ] Thursday, 17:00 - 18:30\n- [ ] Friday, 09:30 - 11:00\n- [ ] Friday, 11:30 - 13:00\n- [ ] Friday, 14:30 - 16:30\n- [ ] Friday, 17:00 - 18:30\n\n### Other sessions where we should avoid scheduling conflicts (Optional)\n\n_No response_\n\n### Other instructions for meeting planners (Optional)\n\n_No response_\n\n### Discussion channel (Optional)\n\n_No response_\n\n### Agenda for the meeting.\n\n_No response_"
     },
     {
       "number": 11,
-      "title": "Internationalization (I18N) WG",
+      "title": "Internationalization WG",
       "author": "ianbjacobs",
       "body": "### Estimate of in-person participants\n\n16-30\n\n### Select preferred dates and times (11-15 September)\n\n- [X] Monday, 09:30 - 11:00\n- [X] Monday, 11:30 - 13:00\n- [X] Monday, 14:30 - 16:30\n- [X] Monday, 17:00 - 18:30\n- [X] Tuesday, 09:30 - 11:00\n- [X] Tuesday, 11:30 - 13:00\n- [X] Tuesday, 14:30 - 16:30\n- [X] Tuesday, 17:00 - 18:30\n- [ ] Thursday, 09:30 - 11:00\n- [ ] Thursday, 11:30 - 13:00\n- [ ] Thursday, 14:30 - 16:30\n- [ ] Thursday, 17:00 - 18:30\n- [ ] Friday, 09:30 - 11:00\n- [ ] Friday, 11:30 - 13:00\n- [ ] Friday, 14:30 - 16:30\n- [ ] Friday, 17:00 - 18:30\n\n### Other sessions where we should avoid scheduling conflicts (Optional)\n\n_No response_\n\n### Other instructions for meeting planners (Optional)\n\n_No response_\n\n### Discussion channel (Optional)\n\n_No response_\n\n### Agenda for the meeting.\n\n_No response_"
     },
     {
       "number": 12,
-      "title": "JSON for Linking data WG, Web Of Thing WG, RDF Dataset Canonicalization and Hash Working Group Joint meeting",
+      "title": "JSON for Linking data CG, Web Of Things WG, RDF Dataset Canonicalization and Hash Working Group Joint meeting",
       "author": "ianbjacobs",
       "body": "### Estimate of in-person participants\n\n31-50\n\n### Select preferred dates and times (11-15 September)\n\n- [ ] Monday, 09:30 - 11:00\n- [ ] Monday, 11:30 - 13:00\n- [X] Monday, 14:30 - 16:30\n- [ ] Monday, 17:00 - 18:30\n- [ ] Tuesday, 09:30 - 11:00\n- [ ] Tuesday, 11:30 - 13:00\n- [ ] Tuesday, 14:30 - 16:30\n- [ ] Tuesday, 17:00 - 18:30\n- [ ] Thursday, 09:30 - 11:00\n- [ ] Thursday, 11:30 - 13:00\n- [ ] Thursday, 14:30 - 16:30\n- [ ] Thursday, 17:00 - 18:30\n- [ ] Friday, 09:30 - 11:00\n- [ ] Friday, 11:30 - 13:00\n- [ ] Friday, 14:30 - 16:30\n- [ ] Friday, 17:00 - 18:30\n\n### Other sessions where we should avoid scheduling conflicts (Optional)\n\n_No response_\n\n### Other instructions for meeting planners (Optional)\n\n_No response_\n\n### Discussion channel (Optional)\n\n_No response_\n\n### Agenda for the meeting.\n\n_No response_"
     },
@@ -123,7 +123,7 @@ export default {
     },
     {
       "number": 15,
-      "title": "Private Advertising Technology (PAT) CG",
+      "title": "Private Advertising Technology CG",
       "author": "ianbjacobs",
       "body": "### Estimate of in-person participants\n\n31-50\n\n### Select preferred dates and times (11-15 September)\n\n- [X] Monday, 09:30 - 11:00\n- [ ] Monday, 11:30 - 13:00\n- [X] Monday, 14:30 - 16:30\n- [ ] Monday, 17:00 - 18:30\n- [ ] Tuesday, 09:30 - 11:00\n- [ ] Tuesday, 11:30 - 13:00\n- [ ] Tuesday, 14:30 - 16:30\n- [ ] Tuesday, 17:00 - 18:30\n- [ ] Thursday, 09:30 - 11:00\n- [ ] Thursday, 11:30 - 13:00\n- [ ] Thursday, 14:30 - 16:30\n- [ ] Thursday, 17:00 - 18:30\n- [ ] Friday, 09:30 - 11:00\n- [ ] Friday, 11:30 - 13:00\n- [ ] Friday, 14:30 - 16:30\n- [ ] Friday, 17:00 - 18:30\n\n### Other sessions where we should avoid scheduling conflicts (Optional)\n\n_No response_\n\n### Other instructions for meeting planners (Optional)\n\n_No response_\n\n### Discussion channel (Optional)\n\n_No response_\n\n### Agenda for the meeting.\n\n_No response_"
     },
@@ -147,7 +147,7 @@ export default {
     },
     {
       "number": 19,
-      "title": "Technical Architecture Group (TAG)",
+      "title": "Technical Architecture Group",
       "author": "ianbjacobs",
       "body": "### Estimate of in-person participants\n\n16-30\n\n### Select preferred dates and times (11-15 September)\n\n- [X] Monday, 09:30 - 11:00\n- [X] Monday, 11:30 - 13:00\n- [ ] Monday, 14:30 - 16:30\n- [ ] Monday, 17:00 - 18:30\n- [ ] Tuesday, 09:30 - 11:00\n- [ ] Tuesday, 11:30 - 13:00\n- [ ] Tuesday, 14:30 - 16:30\n- [ ] Tuesday, 17:00 - 18:30\n- [ ] Thursday, 09:30 - 11:00\n- [ ] Thursday, 11:30 - 13:00\n- [ ] Thursday, 14:30 - 16:30\n- [ ] Thursday, 17:00 - 18:30\n- [ ] Friday, 09:30 - 11:00\n- [ ] Friday, 11:30 - 13:00\n- [X] Friday, 14:30 - 16:30\n- [X] Friday, 17:00 - 18:30\n\n### Other sessions where we should avoid scheduling conflicts (Optional)\n\n_No response_\n\n### Other instructions for meeting planners (Optional)\n\n_No response_\n\n### Discussion channel (Optional)\n\n_No response_\n\n### Agenda for the meeting.\n\n_No response_"
     },
@@ -207,7 +207,7 @@ export default {
     },
     {
       "number": 29,
-      "title": " Advisory Committee Meeting",
+      "title": " Advisory Committee",
       "author": "ianbjacobs",
       "body": "### Estimate of in-person participants\n\nMore than 50\n\n### Select preferred dates and times (11-15 September)\n\n- [ ] Monday, 09:30 - 11:00\n- [ ] Monday, 11:30 - 13:00\n- [ ] Monday, 14:30 - 16:30\n- [ ] Monday, 17:00 - 18:30\n- [ ] Tuesday, 09:30 - 11:00\n- [ ] Tuesday, 11:30 - 13:00\n- [X] Tuesday, 14:30 - 16:30\n- [ ] Tuesday, 17:00 - 18:30\n- [ ] Thursday, 09:30 - 11:00\n- [ ] Thursday, 11:30 - 13:00\n- [ ] Thursday, 14:30 - 16:30\n- [ ] Thursday, 17:00 - 18:30\n- [ ] Friday, 09:30 - 11:00\n- [ ] Friday, 11:30 - 13:00\n- [ ] Friday, 14:30 - 16:30\n- [ ] Friday, 17:00 - 18:30\n\n### Other sessions where we should avoid scheduling conflicts (Optional)\n\n_No response_\n\n### Other instructions for meeting planners (Optional)\n\n_No response_\n\n### Discussion channel (Optional)\n\n_No response_\n\n### Agenda for the meeting.\n\n_No response_"
     },
@@ -291,7 +291,7 @@ export default {
     },
     {
       "number": 45,
-      "title": " Cascading Style Sheets (CSS) WG",
+      "title": " Cascading Style Sheets WG",
       "author": "ianbjacobs",
       "body": "### Estimate of in-person participants\n\n16-30\n\n### Select preferred dates and times (11-15 September)\n\n- [ ] Monday, 09:30 - 11:00\n- [ ] Monday, 11:30 - 13:00\n- [ ] Monday, 14:30 - 16:30\n- [ ] Monday, 17:00 - 18:30\n- [ ] Tuesday, 09:30 - 11:00\n- [ ] Tuesday, 11:30 - 13:00\n- [ ] Tuesday, 14:30 - 16:30\n- [ ] Tuesday, 17:00 - 18:30\n- [X] Thursday, 09:30 - 11:00\n- [X] Thursday, 11:30 - 13:00\n- [X] Thursday, 14:30 - 16:30\n- [X] Thursday, 17:00 - 18:30\n- [X] Friday, 09:30 - 11:00\n- [X] Friday, 11:30 - 13:00\n- [X] Friday, 14:30 - 16:30\n- [X] Friday, 17:00 - 18:30\n\n### Other sessions where we should avoid scheduling conflicts (Optional)\n\n_No response_\n\n### Other instructions for meeting planners (Optional)\n\n_No response_\n\n### Discussion channel (Optional)\n\n_No response_\n\n### Agenda for the meeting.\n\n_No response_"
     },
@@ -333,7 +333,7 @@ export default {
     },
     {
       "number": 52,
-      "title": " W3C Chapters and Evangelists Meeting",
+      "title": " W3C Chapters and Evangelists",
       "author": "ianbjacobs",
       "body": "### Estimate of in-person participants\n\nLess than 15\n\n### Select preferred dates and times (11-15 September)\n\n- [ ] Monday, 09:30 - 11:00\n- [ ] Monday, 11:30 - 13:00\n- [ ] Monday, 14:30 - 16:30\n- [ ] Monday, 17:00 - 18:30\n- [ ] Tuesday, 09:30 - 11:00\n- [ ] Tuesday, 11:30 - 13:00\n- [ ] Tuesday, 14:30 - 16:30\n- [ ] Tuesday, 17:00 - 18:30\n- [X] Thursday, 09:30 - 11:00\n- [X] Thursday, 11:30 - 13:00\n- [X] Thursday, 14:30 - 16:30\n- [X] Thursday, 17:00 - 18:30\n- [ ] Friday, 09:30 - 11:00\n- [ ] Friday, 11:30 - 13:00\n- [ ] Friday, 14:30 - 16:30\n- [ ] Friday, 17:00 - 18:30\n\n### Other sessions where we should avoid scheduling conflicts (Optional)\n\n_No response_\n\n### Other instructions for meeting planners (Optional)\n\n_No response_\n\n### Discussion channel (Optional)\n\n_No response_\n\n### Agenda for the meeting.\n\n_No response_"
     },
