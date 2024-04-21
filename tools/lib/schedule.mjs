@@ -83,7 +83,10 @@ export function suggestSchedule(project, { seed }) {
   // avoid scheduling breakout sessions in parallel to plenary sessions.
   // Last track in the list is "no track".
   const tracks = new Set();
-  tracks.add('_plenary');
+  if (project.rooms.find(room => room.name === plenaryRoom)) {
+    // No plenary room means no plenary!
+    tracks.add('_plenary');
+  }
   for (const session of sessions) {
     session.tracks = session.labels
       .filter(label => label.startsWith('track: '))
@@ -188,15 +191,15 @@ export function suggestSchedule(project, { seed }) {
   function isMeetingAvailableForSession(session, meeting) {
     if (session.description.type === 'plenary') {
       const alreadyScheduled = sessions.filter(s =>
-        s !== session && meetsAt(s, meeting));
+        s !== session && meetsAt(s, meeting, project));
       return !alreadyScheduled.find(s => s.description.type !== 'plenary') &&
         (alreadyScheduled.length < plenaryHolds);
     }
     else {
-      return !sessions.find(s => s !== session && meetsAt(s, meeting)) &&
+      return !sessions.find(s => s !== session && meetsAt(s, meeting, project)) &&
              !sessions.find(s => s !== session &&
                                  s.description.type === 'plenary' &&
-                                 meetsInParallelWith(s, meeting));
+                                 meetsInParallelWith(s, meeting, project));
     }
   }
 
@@ -220,7 +223,7 @@ export function suggestSchedule(project, { seed }) {
     // person are totally fine)
     function nonConflictingDayAndSlot(dayslot) {
       const potentialConflicts = sessions.filter(s =>
-        s !== session && s.day === dayslot.day.name && s.slot === dayslot.slot.name);
+        s !== session && meetsAt(s, dayslot, project));
       // There must be no session in the same track at that time
       const trackConflict = potentialConflicts.find(s =>
         s.tracks.find(track => session.tracks.includes(track)) &&
@@ -230,14 +233,28 @@ export function suggestSchedule(project, { seed }) {
       }
 
       // There must be no session chaired by the same chair at that time
-      const chairConflict = potentialConflicts.find(s =>
-        s.chairs.find(c1 => session.chairs.find(c2 =>
-          (c1.login && c1.login === c2.login) ||
-          (c1.name && c1.name === c2.name))) &&
-        (s.description.type !== 'plenary' || session.description.type !== 'plenary')
-      );
-      if (chairConflict) {
-        return false;
+      // or there must be no session for the same group at that time
+      if (project.metadata.type === 'groups') {
+        const groupConflict = potentialConflicts.find(s =>
+          s.groups.find(c1 => session.groups.find(c2 =>
+            (c1.login && c1.login === c2.login) ||
+            (c1.name && c1.name === c2.name))) &&
+          (s.description.type !== 'plenary' || session.description.type !== 'plenary')
+        );
+        if (groupConflict) {
+          return false;
+        }
+      }
+      else {
+        const chairConflict = potentialConflicts.find(s =>
+          s.chairs.find(c1 => session.chairs.find(c2 =>
+            (c1.login && c1.login === c2.login) ||
+            (c1.name && c1.name === c2.name))) &&
+          (s.description.type !== 'plenary' || session.description.type !== 'plenary')
+        );
+        if (chairConflict) {
+          return false;
+        }
       }
 
       // There must be no conflicting sessions at the same time.
@@ -339,16 +356,16 @@ export function suggestSchedule(project, { seed }) {
         // less used ones get considered first (to avoid gaps).
         const possibleDayAndSlots = [];
         if (meeting.day && meeting.slot) {
-          if (isMeetingAvailableForSession(session, { room, day: session.day, slot: session.slot }) &&
-              !meetings.find(m => m !== meeting && m.day === session.day && m.slot === session.slot)) {
-            const slot = daysAndSlots.find(ds => ds.day.name === session.day && ds.slot.name === session.slot);
+          if (isMeetingAvailableForSession(session, { room, day: meeting.day, slot: meeting.slot }) &&
+              !meetings.find(m => m !== meeting && m.day === meeting.day && m.slot === meeting.slot)) {
+            const slot = daysAndSlots.find(ds => ds.day.name === meeting.day && ds.slot.name === meeting.slot);
             possibleDayAndSlots.push(slot);
           }
         }
         else {
           possibleDayAndSlots.push(...daysAndSlots
-            .filter(ds => !session.day || ds.day.name === session.day)
-            .filter(ds => !session.slot || ds.slot.name === session.slot)
+            .filter(ds => !meeting.day || ds.day.name === meeting.day)
+            .filter(ds => !meeting.slot || ds.slot.name === meeting.slot)
             .filter(ds => isMeetingAvailableForSession(session, { room, day: ds.day.name, slot: ds.slot.name }) &&
                           !meetings.find(m => m !== meeting && m.day === ds.day.name && m.slot === ds.slot.name))
           );
@@ -403,7 +420,7 @@ export function suggestSchedule(project, { seed }) {
     if (meetings.every(m => m.room && m.day && m.slot)) {
       if (resourcesToUpdate.length > 0) {
         if (project.allowMultipleMeetings) {
-          session.meeting = serializeSessionMeetings(meetings);
+          session.meeting = serializeSessionMeetings(meetings, project);
         }
         else {
           session.room = meetings[0].room;
