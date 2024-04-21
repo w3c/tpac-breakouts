@@ -86,7 +86,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   if (project.metadata.type === 'groups') {
     // Retrieve information about groups for all sessions
     for (const s of project.sessions) {
-      s.groups = await fetchSessionGroups(s, project.groupsToW3CID);
+      s.groups = await fetchSessionGroups(s, project.chairsToW3CID);
     }
     const groupsErrors = validateSessionGroups(session.groups);
     if (groupsErrors.length > 0) {

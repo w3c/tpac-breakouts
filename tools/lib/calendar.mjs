@@ -370,7 +370,9 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
   // may subscribe to an event at any time, but don't preserve the former list
   // of group attendees
   if (project.metadata.type === 'groups') {
-    const groups = session.groups.filter(group => group.w3cId && group.w3cId !== -1);
+    const groups = session.groups.filter(group =>
+      group.w3cId && group.w3cId !== -1 &&
+      typeof group.w3cId === 'number');
     if (groups.length > 0) {
       await page.evaluate(`window.tpac_groups = ${JSON.stringify(groups, null, 2)};`);
       await page.$eval('select#event_groups', el => el.innerHTML =
@@ -382,7 +384,9 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
     }
   }
   else {
-    const chairs = session.chairs.filter(chair => chair.w3cId && chair.w3cId !== -1);
+    const chairs = session.chairs.filter(chair =>
+      chair.w3cId && chair.w3cId !== -1 &&
+      typeof chair.w3cId === 'number');
     if (chairs.length > 0) {
       await page.evaluate(`window.tpac_breakouts_chairs = ${JSON.stringify(chairs, null, 2)};`);
       await page.$eval('select#event_individuals', el => el.innerHTML +=
