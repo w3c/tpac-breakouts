@@ -115,8 +115,9 @@ function normalizeGroup(group) {
  */
 export async function fetchW3CGroups() {
   // Only fetch groups once
+  // (Note: we don't make a copy because that's super slow for the whole list)
   if (cache.w3cGroups) {
-    return JSON.parse(JSON.stringify(cache.w3cGroups));
+    return cache.w3cGroups;
   }
 
   // Use stub version when running tests

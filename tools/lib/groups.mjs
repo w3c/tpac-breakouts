@@ -54,7 +54,7 @@ export async function fetchSessionGroups(session, groups2W3CID) {
             group.w3cId = lcGroups2W3CID[name.toLowerCase()];
           }
         }
-        return group;
+        return Object.assign({}, group);
       });
   }
 
