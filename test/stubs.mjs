@@ -122,6 +122,9 @@ async function getTestData(testDataId) {
     w3cAccounts: custom.w3cAccounts,
     w3cGroups: custom.w3cGroups ?? defaultGroups
   };
+  if (custom.allowMultipleMeetings) {
+    testData.allowMultipleMeetings = custom.allowMultipleMeetings;
+  }
 
   testDataCache[testDataId] = testData;
   return JSON.parse(JSON.stringify(testData));

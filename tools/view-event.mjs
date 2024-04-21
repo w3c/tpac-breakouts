@@ -14,41 +14,8 @@
  */
 
 import { getEnvKey } from './lib/envkeys.mjs';
-import { fetchProject } from './lib/project.mjs';
+import { fetchProject, convertProjectToJSON } from './lib/project.mjs';
 import { convertProjectToHTML } from './lib/project2html.mjs';
-
-function convertToJSON(project) {
-  const toNameList = list => list.map(item => item.name);
-  const data = {
-    title: project.title,
-    description: project.description
-  };
-  if (project.allowMultipleMeetings) {
-    data.allowMultipleMeetings = true;
-  }
-  for (const list of ['days', 'rooms', 'slots', 'labels']) {
-    data[list] = toNameList(project[list]);
-  }
-
-  data.sessions = project.sessions.map(session => {
-    const simplified = {
-      number: session.number,
-      title: session.title,
-      author: session.author.login,
-      body: session.body,
-    };
-    if (session.labels.length !== 1 || session.labels[0] !== 'session') {
-      simplified.labels = session.labels;
-    }
-    for (const field of ['day', 'room', 'slot', 'meeting']) {
-      if (session[field]) {
-        simplified[field] = session[field];
-      }
-    }
-    return simplified;
-  });
-  return data;
-}
 
 async function main(format) {
   const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER');
