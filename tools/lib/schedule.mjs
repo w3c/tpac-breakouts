@@ -222,8 +222,12 @@ export function suggestSchedule(project, { seed }) {
     // sessions in the same plenary in the same track or chaired by the same
     // person are totally fine)
     function nonConflictingDayAndSlot(dayslot) {
+      const meeting = {
+        day: dayslot.day.name,
+        slot: dayslot.slot.name
+      };
       const potentialConflicts = sessions.filter(s =>
-        s !== session && meetsAt(s, dayslot, project));
+        s !== session && meetsAt(s, meeting, project));
       // There must be no session in the same track at that time
       const trackConflict = potentialConflicts.find(s =>
         s.tracks.find(track => session.tracks.includes(track)) &&
@@ -237,8 +241,7 @@ export function suggestSchedule(project, { seed }) {
       if (project.metadata.type === 'groups') {
         const groupConflict = potentialConflicts.find(s =>
           s.groups.find(c1 => session.groups.find(c2 =>
-            (c1.login && c1.login === c2.login) ||
-            (c1.name && c1.name === c2.name))) &&
+            c1.name && c1.name === c2.name)) &&
           (s.description.type !== 'plenary' || session.description.type !== 'plenary')
         );
         if (groupConflict) {
@@ -356,7 +359,7 @@ export function suggestSchedule(project, { seed }) {
         // less used ones get considered first (to avoid gaps).
         const possibleDayAndSlots = [];
         if (meeting.day && meeting.slot) {
-          if (isMeetingAvailableForSession(session, { room, day: meeting.day, slot: meeting.slot }) &&
+          if (isMeetingAvailableForSession(session, { room: room.name, day: meeting.day, slot: meeting.slot }) &&
               !meetings.find(m => m !== meeting && m.day === meeting.day && m.slot === meeting.slot)) {
             const slot = daysAndSlots.find(ds => ds.day.name === meeting.day && ds.slot.name === meeting.slot);
             possibleDayAndSlots.push(slot);
@@ -366,7 +369,7 @@ export function suggestSchedule(project, { seed }) {
           possibleDayAndSlots.push(...daysAndSlots
             .filter(ds => !meeting.day || ds.day.name === meeting.day)
             .filter(ds => !meeting.slot || ds.slot.name === meeting.slot)
-            .filter(ds => isMeetingAvailableForSession(session, { room, day: ds.day.name, slot: ds.slot.name }) &&
+            .filter(ds => isMeetingAvailableForSession(session, { room: room.name, day: ds.day.name, slot: ds.slot.name }) &&
                           !meetings.find(m => m !== meeting && m.day === ds.day.name && m.slot === ds.slot.name))
           );
           if (session.description.type === 'plenary') {
@@ -482,14 +485,6 @@ export function suggestSchedule(project, { seed }) {
           console.warn(`- relax track constraint for #${session.number}`);
           constraints.trackRoom = null;
         }
-        else if (constraints.strictTimes && (session.description.times?.length > 0)) {
-          console.warn(`- relax times constraint for #${session.number}`);
-          constraints.strictTimes = false;
-        }
-        else if (constraints.numberOfMeetings > 1) {
-          console.warn(`- decrement number of meetings for #${session.number}`);
-          constraints.numberOfMeetings -= 1;
-        }
         else if (constraints.meetDuration && session.description.duration) {
           console.warn(`- forget duration constraint for #${session.number}`);
           constraints.meetDuration = false;
@@ -509,6 +504,14 @@ export function suggestSchedule(project, { seed }) {
         else if (constraints.meetConflicts.length > 0) {
           console.warn(`- forget all conflicts for #${session.number}`);
           constraints.meetConflicts = [];
+        }
+        else if (constraints.strictTimes && (session.description.times?.length > 0)) {
+          console.warn(`- relax times constraint for #${session.number}`);
+          constraints.strictTimes = false;
+        }
+        else if (constraints.numberOfMeetings > 1) {
+          console.warn(`- decrement number of meetings for #${session.number}`);
+          constraints.numberOfMeetings -= 1;
         }
         else {
           console.warn(`- could not find a suitable meeting for #${session.number}`);
