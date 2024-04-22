@@ -344,7 +344,9 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
   status = status ?? 'draft';
   await page.$eval(`input[name="event[status]"][value=${status}]`, el => el.click());
 
-  const room = project.rooms.find(room => room.name === entry.room);
+  const room = (project.metadata.rooms === 'hide') ?
+    null :
+    project.rooms.find(room => room.name === entry.room);
   const roomLocation = (room?.label ?? '') + (room?.location ? ' - ' + room.location : '');
   await fillTextInput('input#event_location', roomLocation ?? '');
 
@@ -647,20 +649,22 @@ export async function synchronizeSessionWithCalendar(
   for (const entry of actions.update) {
     console.log(`- refresh calendar entry ${entry.url}, meeting in ${entry.room} on ${entry.day} ${entry.start} - ${entry.end}`);
     const room = project.rooms.find(room => room.name === entry.room);
+    const zoom = project.metadata.rooms === 'hide' ? null : roomZoom[room.label];
     entry.url = await updateCalendarEntry({
       calendarUrl: entry.url,
       entry, session, project,
-      browser, login, password, status, roomZoom[room.label]
+      browser, login, password, status, zoom
     });
   }
 
   for (const entry of actions.create) {
     console.log(`- create new calendar entry, meeting in ${entry.room} on ${entry.day} ${entry.start} - ${entry.end}`);
     const room = project.rooms.find(room => room.name === entry.room);
+    const zoom = project.metadata.rooms === 'hide' ? null : roomZoom[room.label];
     entry.url = await updateCalendarEntry({
       calendarUrl: null,
       entry, session, project,
-      browser, login, password, status, roomZoom[room.label]
+      browser, login, password, status, zoom
     });
   }
 
