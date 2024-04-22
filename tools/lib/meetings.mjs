@@ -257,7 +257,7 @@ export function computeSessionCalendarUpdates(session, project) {
 export function meetsAt(session, meeting, project) {
   const meetings = parseSessionMeetings(session, project);
   return !!meetings.find(m =>
-    m.room === meeting.room &&
+    (!meeting.room || m.room === meeting.room) &&
     m.day === meeting.day &&
     m.slot === meeting.slot);
 }
