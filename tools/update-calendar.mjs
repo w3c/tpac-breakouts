@@ -67,13 +67,13 @@ async function main(sessionNumber, status, options) {
   project.chairsToW3CID = CHAIR_W3CID;
   let sessions = sessionNumber ?
     project.sessions.filter(s => s.number === sessionNumber) :
-    project.sessions.filter(s => s.day && s.slot);
+    project.sessions.filter(s => s.meeting || (s.day && s.slot));
   sessions.sort((s1, s2) => s1.number - s2.number);
   if (sessionNumber) {
     if (sessions.length === 0) {
       throw new Error(`Session ${sessionNumber} not found in project ${PROJECT_OWNER}/${PROJECT_NUMBER}`);
     }
-    else if (!sessions[0].day || !sessions[0].slot) {
+    else if (!sessions[0].meeting || !sessions[0].day || !sessions[0].slot) {
       throw new Error(`Session ${sessionNumber} not assigned to a slot in project ${PROJECT_OWNER}/${PROJECT_NUMBER}`);
     }
   }
