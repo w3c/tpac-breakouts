@@ -171,6 +171,33 @@ export async function initSectionHandlers(project) {
         handler.validate = value => value.match(/^(\`#?[A-Za-z0-9\-_]+\`|#?[A-Za-z0-9\-_]+)$/);
         break;
 
+      case 'discussion':
+        handler.parse = value => {
+          const match = value.match(/^\[(.+)\]\((.*)\)$/i);
+          if (match) {
+            return match[2];
+          }
+          else {
+            return value;
+          }
+        };
+        handler.validate = value => {
+          const match = value.match(/^\[(.+)\]\((.*)\)$/i);
+          try {
+            if (match) {
+              new URL(match[2]);
+            }
+            else {
+              new URL(value);
+            }
+            return true;
+          }
+          catch (err) {
+            return false;
+          }
+        };
+        break;
+
       case 'attendance':
         handler.parse = value => value.toLowerCase() === 'restricted to tpac registrants' ?
           'restricted' : 'public';
