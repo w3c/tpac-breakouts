@@ -273,6 +273,7 @@ export async function initSectionHandlers(project) {
       case 'times':
         // Each entry looks like "[x] Monday, 09:30 - 11:00"
         const reTime = /^\[( |x)\]\s*(?:(monday|tuesday|thursday|friday),\s*(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2}))$/i;
+        handler.allowEmptyValue = true;
         handler.parse = value => parseList(value, { linesOnly: true })
             .map(time => {
               const match = time.match(reTime);
@@ -308,7 +309,7 @@ export async function initSectionHandlers(project) {
           .flat();
         handler.serialize = value => daysAndSlots
           .map(ds => {
-            const time = value.find(time =>
+            const time = value?.find(time =>
               time.day === ds.day.name &&
               time.slot === ds.slot.name);
             return `- [${time ? 'X' : ' '}] ${ds.day.label}, ${ds.slot.name}`;
@@ -478,7 +479,7 @@ export function parseSessionBody(body) {
         handler.title === section.title);
       return {
         id: sectionHandler.id,
-        value: section.value || section.value === 0 ?
+        value: section.value || section.value === 0 || sectionHandler.allowEmptyValue ?
           sectionHandler.parse(section.value) :
           null
       };
@@ -502,7 +503,7 @@ export function serializeSessionDescription(description) {
       description[handler.id] === 0)
     .map(handler => `### ${handler.title}${handler.includeOptional ? ' (Optional)' : ''}
 
-${(description[handler.id] || description[handler.id] === 0) ?
+${(description[handler.id] || description[handler.id] === 0 || handler.allowEmptyValue) ?
     handler.serialize(description[handler.id]) : '_No response_' }`)
     .join('\n\n');
 }
