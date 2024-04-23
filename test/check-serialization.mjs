@@ -161,6 +161,107 @@ _No response_`;
   });
 
 
+  it('adds times section if missing', async function () {
+    setEnvKey('PROJECT_NUMBER', 'tpac2023');
+    setEnvKey('ISSUE_TEMPLATE', 'test/data/tpac-template.yml');
+    const project = await fetchTestProject();
+    await initSectionHandlers(project);
+    const initialBody = `### Estimate of in-person participants
+
+16-30`;
+    const expectedBody = `### Estimate of in-person participants
+
+16-30
+
+### Select preferred dates and times (11-15 September)
+
+- [ ] Monday, 09:30 - 11:00
+- [ ] Monday, 11:30 - 13:00
+- [ ] Monday, 14:30 - 16:30
+- [ ] Monday, 17:00 - 18:30
+- [ ] Tuesday, 09:30 - 11:00
+- [ ] Tuesday, 11:30 - 13:00
+- [ ] Tuesday, 14:30 - 16:30
+- [ ] Tuesday, 17:00 - 18:30
+- [ ] Thursday, 09:30 - 11:00
+- [ ] Thursday, 11:30 - 13:00
+- [ ] Thursday, 14:30 - 16:30
+- [ ] Thursday, 17:00 - 18:30
+- [ ] Friday, 09:30 - 11:00
+- [ ] Friday, 11:30 - 13:00
+- [ ] Friday, 14:30 - 16:30
+- [ ] Friday, 17:00 - 18:30
+
+### Other sessions where we should avoid scheduling conflicts (Optional)
+
+_No response_
+
+### Other instructions for meeting planners (Optional)
+
+_No response_
+
+### Discussion channel (Optional)
+
+_No response_
+
+### Agenda for the meeting.
+
+_No response_`;
+    const desc = parseSessionBody(initialBody);
+    const serializedBody = serializeSessionDescription(desc);
+    assert.strictEqual(serializedBody, expectedBody);
+  });
+
+
+  it('handles times choices correctly', async function () {
+    setEnvKey('PROJECT_NUMBER', 'tpac2023');
+    setEnvKey('ISSUE_TEMPLATE', 'test/data/tpac-template.yml');
+    const project = await fetchTestProject();
+    await initSectionHandlers(project);
+    const initialBody = `### Estimate of in-person participants
+
+16-30
+
+### Select preferred dates and times (11-15 September)
+
+- [ ] Monday, 09:30 - 11:00
+- [ ] Monday, 11:30 - 13:00
+- [X] Monday, 14:30 - 16:30
+- [X] Monday, 17:00 - 18:30
+- [ ] Tuesday, 09:30 - 11:00
+- [ ] Tuesday, 11:30 - 13:00
+- [ ] Tuesday, 14:30 - 16:30
+- [ ] Tuesday, 17:00 - 18:30
+- [ ] Thursday, 09:30 - 11:00
+- [ ] Thursday, 11:30 - 13:00
+- [ ] Thursday, 14:30 - 16:30
+- [ ] Thursday, 17:00 - 18:30
+- [ ] Friday, 09:30 - 11:00
+- [ ] Friday, 11:30 - 13:00
+- [ ] Friday, 14:30 - 16:30
+- [ ] Friday, 17:00 - 18:30
+
+### Other sessions where we should avoid scheduling conflicts (Optional)
+
+_No response_
+
+### Other instructions for meeting planners (Optional)
+
+_No response_
+
+### Discussion channel (Optional)
+
+_No response_
+
+### Agenda for the meeting.
+
+_No response_`;
+    const desc = parseSessionBody(initialBody);
+    const serializedBody = serializeSessionDescription(desc);
+    assert.strictEqual(serializedBody, initialBody);
+  });
+
+
   it('parses the discussion URL correctly', async function () {
     setEnvKey('PROJECT_NUMBER', 'tpac2023');
     setEnvKey('ISSUE_TEMPLATE', 'test/data/tpac-template.yml');
