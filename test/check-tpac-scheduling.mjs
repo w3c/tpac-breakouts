@@ -6,9 +6,20 @@ import { validateSession, validateGrid } from '../tools/lib/validate.mjs';
 import { suggestSchedule } from '../tools/lib/schedule.mjs';
 
 async function fetchTestProject() {
-  return fetchProject(
+  const project = await fetchProject(
     await getEnvKey('PROJECT_OWNER'),
     await getEnvKey('PROJECT_NUMBER'));
+  project.chairsToW3CID = nonW3CGroupMeetings;
+  return project;
+}
+
+function stripDetails(errors) {
+  return errors.map(err => {
+    if (err.details) {
+      delete err.details;
+    }
+    return err;
+  });
 }
 
 function checkMeetingsAgainstTimes(project) {
@@ -23,7 +34,6 @@ function checkMeetingsAgainstTimes(project) {
     .flat()
     .map(time => `Session #${time.session.number} not scheduled on ${time.day} at ${time.slot}`);
   assert.deepStrictEqual(unscheduled, []);
-  // `session #${session.number} not scheduled on ${day.label} at ${slot.start}`);
 }
 
 // Test data contains a few meetings of groups that are not real W3C groups.
@@ -42,7 +52,6 @@ describe('Scheduling of TPAC meetings', function () {
     initTestEnv();
     setEnvKey('PROJECT_NUMBER', 'tpac2023');
     setEnvKey('ISSUE_TEMPLATE', 'test/data/tpac-template.yml');
-    setEnvKey('ISSUE_TEMPLATE', 'test/data/tpac-template.yml');
   });
 
   it('parses a group issue', async function () {
@@ -50,7 +59,6 @@ describe('Scheduling of TPAC meetings', function () {
     const sessionNumber = 61;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
-    //console.log(JSON.stringify(project.sessions.find(s => s.number === sessionNumber), null, 2));
   });
 
   it('validates the Advisory Committee meeting issue', async function () {
@@ -58,19 +66,16 @@ describe('Scheduling of TPAC meetings', function () {
     const sessionNumber = 29;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
-    //console.log(JSON.stringify(project.sessions.find(s => s.number === sessionNumber), null, 2));
   });
 
   it('validates all TPAC 2023 meetings', async function () {
     const project = await fetchTestProject();
-    project.chairsToW3CID = nonW3CGroupMeetings;
     const errors = await validateGrid(project);
     assert.deepStrictEqual(errors, []);
   });
 
   it('respects requested times', async function () {
     const project = await fetchTestProject();
-    project.chairsToW3CID = nonW3CGroupMeetings;
     const errors = await validateGrid(project);
     assert.deepStrictEqual(errors, []);
 
@@ -84,11 +89,73 @@ describe('Scheduling of TPAC meetings', function () {
 
   it('respects requested times regardless of seed', async function () {
     const project = await fetchTestProject();
-    project.chairsToW3CID = nonW3CGroupMeetings;
     const errors = await validateGrid(project);
     assert.deepStrictEqual(errors, []);
 
     suggestSchedule(project, { seed: 'another' });
     checkMeetingsAgainstTimes(project);
+  });
+
+  it('reports a validation warning when requested times cannot be respected', async function () {
+    const project = await fetchTestProject();
+    const session = project.sessions.find(s => s.number === 42);
+
+    // Create an artificial conflict between #42 and #58, with same group.
+    // (same time Thursday 17:00 - 18:30 requested)
+    session.body = `### Estimate of in-person participants
+
+Less than 15
+
+### Select preferred dates and times (11-15 September)
+
+- [ ] Monday, 09:30 - 11:00
+- [ ] Monday, 11:30 - 13:00
+- [ ] Monday, 14:30 - 16:30
+- [ ] Monday, 17:00 - 18:30
+- [ ] Tuesday, 09:30 - 11:00
+- [X] Tuesday, 11:30 - 13:00
+- [X] Tuesday, 14:30 - 16:30
+- [ ] Tuesday, 17:00 - 18:30
+- [ ] Thursday, 09:30 - 11:00
+- [ ] Thursday, 11:30 - 13:00
+- [ ] Thursday, 14:30 - 16:30
+- [X] Thursday, 17:00 - 18:30
+- [ ] Friday, 09:30 - 11:00
+- [ ] Friday, 11:30 - 13:00
+- [ ] Friday, 14:30 - 16:30
+- [ ] Friday, 17:00 - 18:30
+
+### Other sessions where we should avoid scheduling conflicts (Optional)
+
+_No response_
+
+### Other instructions for meeting planners (Optional)
+
+_No response_
+
+### Discussion channel (Optional)
+
+_No response_
+
+### Agenda for the meeting.
+
+_No response_`;
+    const errors = await validateGrid(project);
+    assert.deepStrictEqual(stripDetails(errors) , []);
+
+    suggestSchedule(project, { seed: 'schedule' });
+
+    const warnings = (await validateGrid(project))
+      .filter(error => error.severity === 'warning' && error.type === 'times');
+    assert.deepStrictEqual(stripDetails(warnings), [{
+      session: 42,
+      severity: 'warning',
+      type: 'times',
+      messages: [
+        'Session not scheduled on Tuesday (2023-09-12) at 11:30 - 13:00 as requested',
+        'Session not scheduled on Tuesday (2023-09-12) at 14:30 - 16:30 as requested',
+        'Session not scheduled on Thursday (2023-09-14) at 17:00 - 18:30 as requested'
+      ]
+    }]);
   });
 });

@@ -285,6 +285,30 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
     }
   }
 
+  // Warn when chosen meetings don't match requested times
+  if (session.description.times?.length > 0 && meetings.length > 0) {
+    const schedulingWarnings = session.description.times
+      .filter(time => !meetings.find(m => m.day === time.day && m.slot === time.slot))
+      .map(time => Object.assign({ meeting: time, session }));
+    if (schedulingWarnings.length > 0) {
+      errors.push({
+        session: sessionNumber,
+        severity: 'warning',
+        type: 'times',
+        messages: schedulingWarnings.map(w => `Session not scheduled on ${w.meeting.day} at ${w.meeting.slot} as requested`),
+        details: schedulingWarnings
+      });
+    }
+    if (session.description.times.length !== meetings.length) {
+      errors.push({
+        session: sessionNumber,
+        severity: 'warning',
+        type: 'times',
+        messages: [`Session scheduled ${meetings.length} times instead of ${session.description.times.length}`]
+      });
+    }
+  }
+
   // Check assigned room matches requested capacity
   if (session.description.capacity) {
     const capacityWarnings = meetings
