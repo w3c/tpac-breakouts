@@ -120,8 +120,11 @@ export async function initSectionHandlers(project) {
         serialize: value => value
       };
       if (section.type === 'dropdown') {
-        handler.options = section.attributes.options.map(o => o.toLowerCase());
-        handler.validate = value => handler.options.includes(value.toLowerCase());
+        handler.options = section.attributes.options.map(o => Object.assign({
+          label: o,
+          llabel: o.toLowerCase()
+        }));
+        handler.validate = value => !!handler.options.find(o => o.llabel === value.toLowerCase());
       }
       else if (section.type === 'input') {
         handler.validate = value => !value.match(/\n/)
@@ -227,47 +230,45 @@ export async function initSectionHandlers(project) {
         break;
 
       case 'capacity':
-        if (project.metadata.type === 'groups') {
-          handler.parse = value => {
-            switch (value.toLowerCase()) {
+        for (const option of handler.options) {
+          option.value = (function (label) {
+            switch (label) {
+            case 'don\'t know': return 0;
+            case 'don\'t know (default)': return 0;
+
+            // Labels used for TPAC 2023
             case 'less than 15': return 10;
             case '16-30': return 20;
             case '31-50': return 40;
             case 'more than 50': return 50;
-            default: throw new Error(`Unexpected capacity value "${value}"`);
-            };
-          };
-          handler.serialize = value => {
-            switch (value) {
-            case 10: return 'Less than 15';
-            case 20: return '16-30';
-            case 40: return '31-50';
-            case 50: return 'More than 50';
-            default: throw new Error(`Unexpected capacity value "${value}"`);
-            }
-          }
-        }
-        else {
-          handler.parse = value => {
-            switch (value.toLowerCase()) {
-            case 'don\'t know': return 0;
-            case 'don\'t know (default)': return 0;
+
+            // Labels used for TPAC 2024
+            case 'less than 20': return 15;
+            case '20 to 29': return 25;
+            case '30 to 39': return 35;
+            case 'more than 40': return 40;
+
+            // Labels used for breakouts day 2024
             case 'fewer than 20 people': return 15;
             case '20-45 people': return 30;
             case 'more than 45 people': return 50;
-            default: throw new Error(`Unexpected capacity value "${value}"`);
-            };
-          };
-          handler.serialize = value => {
-            switch (value) {
-            case 0: return 'Don\'t know (Default)';
-            case 15: return 'Fewer than 20 people';
-            case 30: return '20-45 people';
-            case 50: return 'More than 45 people';
-            default: throw new Error(`Unexpected capacity value "${value}"`);
             }
-          }
+          })(option.llabel);
         }
+        handler.parse = value => {
+          const option = handler.options.find(o => o.llabel === value.toLowerCase());
+          if (!option) {
+            throw new Error(`Unexpected capacity value "${value}"`);
+          }
+          return option.value;
+        };
+        handler.serialize = value => {
+          const option = handler.options.find(o => o.value === value);
+          if (!option) {
+            throw new Error(`Unexpected capacity value "${value}"`);
+          }
+          return option.label;
+        };
         break;
 
       case 'times':
