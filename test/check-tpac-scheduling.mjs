@@ -163,7 +163,6 @@ _No response_`;
       type: 'times',
       messages: [
         'Session not scheduled on Tuesday (2023-09-12) at 11:30 - 13:00 as requested',
-        'Session not scheduled on Tuesday (2023-09-12) at 14:30 - 16:30 as requested',
         'Session not scheduled on Thursday (2023-09-14) at 17:00 - 18:30 as requested'
       ]
     }]);

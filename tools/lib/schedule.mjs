@@ -204,7 +204,7 @@ export function suggestSchedule(project, { seed }) {
   }
 
   function chooseSessionMeetings(session, {
-    trackRoom, numberOfMeetings, strictDuration, strictTimes,
+    trackRoom, numberOfMeetings, sameRoom, strictDuration, strictTimes,
     meetDuration, meetCapacity, meetConflicts
   }) {
     const byCapacity = (r1, r2) => r1.capacity - r2.capacity;
@@ -283,14 +283,14 @@ export function suggestSchedule(project, { seed }) {
 
     // Initialize the list of meetings that we want to schedule.
     // Some may be partially or fully scheduled already.
-    let meetings = parseSessionMeetings(session, project);
-    if (meetings.length === 0 ||
-        (meetings.length === 1 && !session.meeting &&
-          !(meetings[0].room && meetings[0].day && meetings[0].slot))) {
+    let baseMeetings = parseSessionMeetings(session, project);
+    if (baseMeetings.length === 0 ||
+        (baseMeetings.length === 1 && !session.meeting &&
+          !(baseMeetings[0].room && baseMeetings[0].day && baseMeetings[0].slot))) {
       if (strictTimes && session.description.times?.length > 0) {
         // Try to schedule the session during the requested slots
         // and in the right room if the room is imposed
-        meetings = session.description.times.map(time => Object.assign({
+        baseMeetings = session.description.times.map(time => Object.assign({
           room: session.room,
           day: time.day,
           slot: time.slot
@@ -298,9 +298,9 @@ export function suggestSchedule(project, { seed }) {
       }
       else {
         // Prepare a list of meetings that we want to schedule
-        meetings = [];
+        baseMeetings = [];
         for (let i = 0; i < numberOfMeetings; i++) {
-          meetings.push({
+          baseMeetings.push({
             day: session.day,
             room: session.room,
             slot: session.slot
@@ -309,9 +309,9 @@ export function suggestSchedule(project, { seed }) {
       }
     }
 
-    // Now, the goal is to select as many meetings as needed
-    const resourcesToUpdate = [];
-    for (const meeting of meetings) {
+    // Helper function that returns the list of possible rooms
+    // for the given meeting
+    function getPossibleRooms(meeting, previousRoom) {
       // List possible rooms:
       // - If we explicitly set a room already, that's the only possibility.
       // - Otherwise, if the default track room constraint is set, that's
@@ -327,6 +327,10 @@ export function suggestSchedule(project, { seed }) {
         // Need to assign the session to the track room
         possibleRooms.push(trackRoom);
       }
+      else if (previousRoom && sameRoom) {
+        // Need to use the same room for all meetings
+        possibleRooms.push(previousRoom);
+      }
       else {
         // All rooms that have enough capacity are candidate rooms
         possibleRooms.push(...rooms
@@ -340,107 +344,121 @@ export function suggestSchedule(project, { seed }) {
             .sort(byCapacityDesc));
         }
       }
+      return possibleRooms;
+    }
 
-      if (possibleRooms.length === 0) {
-        // Cannot schedule the meeting, stop here
-        break;
-      }
-
-      for (const room of possibleRooms) {
-        // List possible slots in the current room:
-        // - If we explicitly set a slot already, that's the only possibility,
-        // provided the slot is available in that room!
-        // - Otherwise, all the slots that are still available in the room are
-        // possible.
-        // If we're dealing with a real track, we'll consider possible slots in
-        // order. If we're dealing with plenary sessions, we'll fill possible
-        // slots in order before moving to the next one. If we're dealing with a
-        // session that is not in a track, possible slots are ordered so that
-        // less used ones get considered first (to avoid gaps).
-        const possibleDayAndSlots = [];
-        if (meeting.day && meeting.slot) {
-          if (isMeetingAvailableForSession(session, { room: room.name, day: meeting.day, slot: meeting.slot }) &&
-              !meetings.find(m => m !== meeting && m.day === meeting.day && m.slot === meeting.slot)) {
-            const slot = daysAndSlots.find(ds => ds.day.name === meeting.day && ds.slot.name === meeting.slot);
-            possibleDayAndSlots.push(slot);
-          }
-        }
-        else {
-          possibleDayAndSlots.push(...daysAndSlots
-            .filter(ds => !meeting.day || ds.day.name === meeting.day)
-            .filter(ds => !meeting.slot || ds.slot.name === meeting.slot)
-            .filter(ds => isMeetingAvailableForSession(session, { room: room.name, day: ds.day.name, slot: ds.slot.name }) &&
-                          !meetings.find(m => m !== meeting && m.day === ds.day.name && m.slot === ds.slot.name))
-          );
-          if (session.description.type === 'plenary') {
-            // For plenary sessions, fill slot fully before moving to another slot
-            possibleDayAndSlots.sort((s1, s2) => {
-              const s1len = s1.sessions.filter(s => s.room === plenaryRoom).length;
-              const s2len = s2.sessions.filter(s => s.room === plenaryRoom).length;
-              if (s1len === s2len) {
-                return s2.pos - s1.pos;
-              }
-              else {
-                return s2len - s1len;
-              }
-            });
-          }
-          else if (!trackRoom) {
-            // When not considering a specific track, fill slots in turn,
-            // starting with least busy ones
-            possibleDayAndSlots.sort((s1, s2) => {
-              const s1len = s1.sessions.length;
-              const s2len = s2.sessions.length;
-              if (s1len === s2len) {
-                return s1.pos - s2.pos;
-              }
-              else {
-                return s1len - s2len;
-              }
-            });
-          }
-        }
-
-        // Search for a suitable slot for the current room in the list. If one is
-        // found, we're done, otherwise move on to next possible room... or
-        // surrender for this set of constraints.
-        const dayslot = possibleDayAndSlots.find(nonConflictingDayAndSlot);
-        if (dayslot) {
-          if (!meeting.room) {
-            meeting.room = room.name;
-            resourcesToUpdate.push(room);
-          }
-          if (!meeting.day || !meeting.slot) {
-            meeting.day = dayslot.day.name;
-            meeting.slot = dayslot.slot.name;
-            resourcesToUpdate.push(dayslot);
-          }
+    // Now, the goal is to select as many meetings as needed,
+    // if possible in the same room.
+    const resourcesToUpdate = [];
+    for (const firstMeetingRoom of getPossibleRooms(baseMeetings[0])) {
+      // Work on a copy of the base list of meetings
+      const meetings = JSON.parse(JSON.stringify(baseMeetings));
+      for (const meeting of meetings) {
+        // List possible rooms:
+        // - If we explicitly set a room already, that's the only possibility.
+        // - Otherwise, if the default track room constraint is set, that's
+        // the only possible choice.
+        // - Otherwise, all rooms that have enough capacity are possible,
+        // or all rooms if capacity constraint has been relaxed already.
+        const possibleRooms = getPossibleRooms(meeting, firstMeetingRoom);
+        if (possibleRooms.length === 0) {
+          // Cannot schedule the meeting, stop here
           break;
         }
-      }
-    }
+        for (const room of possibleRooms) {
+          // List possible slots in the current room:
+          // - If we explicitly set a slot already, that's the only possibility,
+          // provided the slot is available in that room!
+          // - Otherwise, all the slots that are still available in the room are
+          // possible.
+          // If we're dealing with a real track, we'll consider possible slots in
+          // order. If we're dealing with plenary sessions, we'll fill possible
+          // slots in order before moving to the next one. If we're dealing with a
+          // session that is not in a track, possible slots are ordered so that
+          // less used ones get considered first (to avoid gaps).
+          const possibleDayAndSlots = [];
+          if (meeting.day && meeting.slot) {
+            if (isMeetingAvailableForSession(session, { room: room.name, day: meeting.day, slot: meeting.slot }) &&
+                !meetings.find(m => m !== meeting && m.day === meeting.day && m.slot === meeting.slot)) {
+              const slot = daysAndSlots.find(ds => ds.day.name === meeting.day && ds.slot.name === meeting.slot);
+              possibleDayAndSlots.push(slot);
+            }
+          }
+          else {
+            possibleDayAndSlots.push(...daysAndSlots
+              .filter(ds => !meeting.day || ds.day.name === meeting.day)
+              .filter(ds => !meeting.slot || ds.slot.name === meeting.slot)
+              .filter(ds => isMeetingAvailableForSession(session, { room: room.name, day: ds.day.name, slot: ds.slot.name }) &&
+                            !meetings.find(m => m !== meeting && m.day === ds.day.name && m.slot === ds.slot.name))
+            );
+            if (session.description.type === 'plenary') {
+              // For plenary sessions, fill slot fully before moving to another slot
+              possibleDayAndSlots.sort((s1, s2) => {
+                const s1len = s1.sessions.filter(s => s.room === plenaryRoom).length;
+                const s2len = s2.sessions.filter(s => s.room === plenaryRoom).length;
+                if (s1len === s2len) {
+                  return s2.pos - s1.pos;
+                }
+                else {
+                  return s2len - s1len;
+                }
+              });
+            }
+            else if (!trackRoom) {
+              // When not considering a specific track, fill slots in turn,
+              // starting with least busy ones
+              possibleDayAndSlots.sort((s1, s2) => {
+                const s1len = s1.sessions.length;
+                const s2len = s2.sessions.length;
+                if (s1len === s2len) {
+                  return s1.pos - s2.pos;
+                }
+                else {
+                  return s1len - s2len;
+                }
+              });
+            }
+          }
 
-    if (meetings.every(m => m.room && m.day && m.slot)) {
-      if (resourcesToUpdate.length > 0) {
-        if (project.allowMultipleMeetings) {
-          session.meeting = serializeSessionMeetings(meetings, project);
-        }
-        else {
-          session.room = meetings[0].room;
-          session.day = meetings[0].day;
-          session.slot = meetings[0].slot;
-        }
-        session.meetings = meetings;
-        session.updated = true;
-        for (const resource of resourcesToUpdate) {
-          resource.sessions.push(session);
+          // Search for a suitable slot for the current room in the list. If one is
+          // found, we're done, otherwise move on to next possible room... or
+          // surrender for this set of constraints.
+          const dayslot = possibleDayAndSlots.find(nonConflictingDayAndSlot);
+          if (dayslot) {
+            if (!meeting.room) {
+              meeting.room = room.name;
+              resourcesToUpdate.push(room);
+            }
+            if (!meeting.day || !meeting.slot) {
+              meeting.day = dayslot.day.name;
+              meeting.slot = dayslot.slot.name;
+              resourcesToUpdate.push(dayslot);
+            }
+            break;
+          }
         }
       }
-      return true;
+
+      if (meetings.every(m => m.room && m.day && m.slot)) {
+        if (resourcesToUpdate.length > 0) {
+          if (project.allowMultipleMeetings) {
+            session.meeting = serializeSessionMeetings(meetings, project);
+          }
+          else {
+            session.room = meetings[0].room;
+            session.day = meetings[0].day;
+            session.slot = meetings[0].slot;
+          }
+          session.meetings = meetings;
+          session.updated = true;
+          for (const resource of resourcesToUpdate) {
+            resource.sessions.push(session);
+          }
+        }
+        return true;
+      }
     }
-    else {
-      return false;
-    }
+    return false;
   }
 
   // Proceed on a track-by-track basis
@@ -471,6 +489,7 @@ export function suggestSchedule(project, { seed }) {
       const constraints = {
         trackRoom,
         numberOfMeetings: session.description.times?.length ?? 1,
+        sameRoom: true,
         strictTimes: true,
         strictDuration: true,
         meetDuration: true,
@@ -478,7 +497,11 @@ export function suggestSchedule(project, { seed }) {
         meetConflicts: ['session', 'track']
       };
       while (!chooseSessionMeetings(session, constraints)) {
-        if (constraints.strictDuration && session.description.duration) {
+        if (constraints.sameRoom && constraints.numberOfMeetings > 1) {
+          console.warn(`- relax "same room" constraint for #${session.number}`);
+          constraints.sameRoom = false;
+        }
+        else if (constraints.strictDuration && session.description.duration) {
           console.warn(`- relax duration comparison for #${session.number}`);
           constraints.strictDuration = false;
         }
