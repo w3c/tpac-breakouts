@@ -311,10 +311,7 @@ export async function convertProjectToHTML(project, cliParams) {
             writeLine(8, `<p><a href="${url}">#${session.number}</a>: ${session.title}`);
 
             // Format groups/chairs
-            if (project.metadata.type === 'groups') {
-              writeLine(9, '<br/><i>Group(s): ' + session.groups.map(x => x.name).join(', ') + '</i>');
-            }
-            else {
+            if (project.metadata.type !== 'groups') {
               writeLine(9, '<br/><i>Chair(s): ' + session.chairs.map(x => x.name).join(', ') + '</i>');
             }
 
