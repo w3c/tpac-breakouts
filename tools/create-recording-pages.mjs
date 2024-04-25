@@ -94,7 +94,7 @@ async function createRecordingPage(recording, recordingFolder) {
 
 async function main() {
   // First, retrieve known information about the project
-  const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER');
+  const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER', 'w3c');
   const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
   const CHAIR_W3CID = await getEnvKey('CHAIR_W3CID', {}, true);
   console.log();

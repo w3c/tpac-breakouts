@@ -30,7 +30,7 @@ import { validateSession } from './lib/validate.mjs';
 async function main(sessionNumber, status, options) {
   options = options ?? {};
   console.log(`Retrieve environment variables...`);
-  const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER');
+  const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER', 'w3c');
   console.log(`- PROJECT_OWNER: ${PROJECT_OWNER}`);
   const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
   console.log(`- PROJECT_NUMBER: ${PROJECT_NUMBER}`);

@@ -63,7 +63,7 @@ async function waitForIRCMessage(what) {
  * Main function
  */
 async function main({ number, onlyCommands, dismissBots } = {}) {
-  const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER');
+  const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER', 'w3c');
   const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
   const CHAIR_W3CID = await getEnvKey('CHAIR_W3CID', {}, true);
   console.log();

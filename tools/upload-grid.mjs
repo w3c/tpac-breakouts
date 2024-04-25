@@ -14,7 +14,7 @@ function readconfig(filename) {
 }
 
 async function main({ filename, apply }) {
-  const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER');
+  const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER', 'w3c');
   const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
   console.warn();
   console.warn(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER}...`);

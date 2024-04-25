@@ -17,7 +17,7 @@ import { getEnvKey } from './lib/envkeys.mjs';
 import { fetchProject } from './lib/project.mjs';
 
 async function run() {
-  const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER');
+  const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER', 'w3c');
   const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
   const project = await fetchProject(PROJECT_OWNER, PROJECT_NUMBER);
   if (!project) {
