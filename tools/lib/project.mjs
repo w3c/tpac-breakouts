@@ -1,4 +1,8 @@
 import { sendGraphQLRequest } from './graphql.mjs';
+import { getEnvKey } from './envkeys.mjs';
+import { readFile } from 'node:fs/promises';
+import * as path from 'node:path';
+import * as YAML from 'yaml';
 
 /**
  * List of allowed timezone values.
@@ -694,6 +698,37 @@ export async function fetchProject(login, id) {
     labels = labelsResponse.data.repository.labels.nodes;
   }
 
+  // Time to read the issue template that goes with the project
+  // TODO: the template file should rather be passed as function parameter!
+  const templateDefault = path.join('.github', 'ISSUE_TEMPLATE', 'session.yml');
+  const templateFile = await getEnvKey('ISSUE_TEMPLATE', templateDefault);
+  const templateYaml = await readFile(
+    path.join(process.cwd(), templateFile),
+    'utf8');
+  const template = YAML.parse(templateYaml);
+  const sessionSections = template.body
+    .filter(section => !!section.id);
+
+  // The "calendar" and "materials" sections are not part of the template.
+  // They are added manually or automatically when need arises. For the
+  // purpose of validation and serialization, we need to add them to the list
+  // of sections (as custom "auto hide" sections that only get displayed when
+  // they are not empty).
+  sessionSections.push({
+    id: 'calendar',
+    attributes: {
+      label: 'Links to calendar',
+      autoHide: true
+    }
+  });
+  sessionSections.push({
+    id: 'materials',
+    attributes: {
+      label: 'Meeting materials',
+      autoHide: true
+    }
+  });
+
   // Let's combine and flatten the information a bit
   return {
     // Project's title and URL are more for internal reporting purpose.
@@ -766,6 +801,9 @@ export async function fetchProject(login, id) {
     // (it signals the fact that sessions may be scheduled more than once)
     meetingsFieldId: meeting?.id,
     allowMultipleMeetings: !!meeting?.id,
+
+    // Sections defined in the issue template
+    sessionSections,
 
     // List of open sessions linked to the project (in other words, all of the
     // issues that have been associated with the project). For each session, we

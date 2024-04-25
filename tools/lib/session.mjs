@@ -1,11 +1,5 @@
-import { readFile } from 'node:fs/promises';
-import * as path from 'node:path';
-import * as YAML from 'yaml';
-import { fileURLToPath } from 'url';
 import { sendGraphQLRequest } from './graphql.mjs';
 import { todoStrings } from './todostrings.mjs';
-import { getEnvKey } from './envkeys.mjs';
-const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 
 /**
@@ -78,34 +72,7 @@ export async function initSectionHandlers(project) {
   if (sectionHandlers) {
     return;
   }
-  const templateDefault = path.join('.github', 'ISSUE_TEMPLATE', 'session.yml');
-  const templateFile = await getEnvKey('ISSUE_TEMPLATE', templateDefault);
-  const templateYaml = await readFile(
-    path.join(process.cwd(), templateFile),
-    'utf8');
-  const template = YAML.parse(templateYaml);
-  const sections = template.body
-    .filter(section => !!section.id);
-
-  // The "calendar" and "materials" sections are not part of the template.
-  // They are added manually or automatically when need arises. For the
-  // purpose of validation and serialization, we need to add them to the list
-  // of sections (as custom "auto hide" sections that only get displayed when
-  // they are not empty).
-  sections.push({
-    id: 'calendar',
-    attributes: {
-      label: 'Links to calendar',
-      autoHide: true
-    }
-  });
-  sections.push({
-    id: 'materials',
-    attributes: {
-      label: 'Meeting materials',
-      autoHide: true
-    }
-  });
+  const sections = project.sessionSections;
 
   sectionHandlers = sections
     .map(section => {

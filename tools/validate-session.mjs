@@ -134,6 +134,7 @@ async function main(sessionNumber, changesFile) {
   // No IRC channel provided, one will be created, let's add a
   // "check: irc channel" flag
   if (!report.find(err => err.severity === 'error' && err.type === 'format') &&
+      project.sessionSections.find(section => section.id === 'shortname') &&
       !session.description.shortname &&
       (session.description.type !== 'plenary')) {
     report.push({
@@ -200,6 +201,7 @@ async function main(sessionNumber, changesFile) {
   }
   // Or generate IRC channel if it was not provided
   else if (!report.find(err => err.severity === 'error' && err.type === 'format') &&
+      project.sessionSections.find(section => section.id === 'shortname') &&
       !session.description.shortname) {
     console.log();
     console.log(`Generate IRC channel...`);
