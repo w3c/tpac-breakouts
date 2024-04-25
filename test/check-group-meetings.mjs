@@ -115,16 +115,11 @@ describe('The group meetings module', function () {
     }]);
   });
 
-  it('reports missing minutes when a meeting is past', async function () {
+  it('does not report missing minutes when a meeting is past', async function () {
     const project = await fetchTestProject();
     const sessionNumber = 11;
     const errors = await validateSession(sessionNumber, project);
-    assert.deepStrictEqual(errors, [{
-      session: sessionNumber,
-      severity: 'warning',
-      type: 'minutes',
-      messages: ['Session needs a link to the minutes']
-    }]);
+    assert.deepStrictEqual(errors, []);
   });
 
   it('reports an error when two sessions are scheduled in the same room at the same time', async function () {

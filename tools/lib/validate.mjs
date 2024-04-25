@@ -517,7 +517,9 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
 
   // If breakout session took place more than 2 days ago,
   // time to add a link to the minutes
-  if (hasActualMeeting(meetings) && isMaterialMissing('minutes')) {
+  if (project.metadata.type !== 'groups' &&
+      hasActualMeeting(meetings) &&
+      isMaterialMissing('minutes')) {
     const minutesNeeded = meetings
       .filter(meeting => meeting.room && meeting.day && meeting.slot)
       .find(meeting => {
