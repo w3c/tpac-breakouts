@@ -68,20 +68,20 @@ export async function convertProjectToHTML(project, cliParams) {
     };
     for (const room of table.rooms) {
       room.sessions = table.sessions.filter(session =>
-        session.atomicMeetings.find(m => m.room === room.name));
+        session.atomicMeetings.find(m => m.day === day.name && m.room === room.name));
     }
     for (const slot of table.slots) {
       slot.sessions = table.sessions.filter(session =>
-        session.atomicMeetings.find(m => m.slot === slot.name));
+        session.atomicMeetings.find(m => m.day === day.name && m.slot === slot.name));
       slot.cells = table.rooms.map(room => Object.assign({
         slot, room,
         errors: [],
         atomic: slot.sessions.filter(session =>
           session.atomicMeetings.find(m =>
-            m.room === room.name && m.slot === slot.name)),
+            m.day === day.name && m.room === room.name && m.slot === slot.name)),
         grouped: slot.sessions.filter(session =>
           session.groupedMeetings.find(m =>
-            m.room === room.name && m.start === slot.start))
+            m.day === day.name && m.room === room.name && m.start === slot.start))
       }));
     }
     return table;

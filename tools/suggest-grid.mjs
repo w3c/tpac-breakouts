@@ -93,6 +93,7 @@ import { validateGrid } from './lib/validate.mjs';
 import { convertProjectToHTML } from './lib/project2html.mjs';
 import { parseMeetingsChanges,
          applyMeetingsChanges } from '../tools/lib/meetings.mjs';
+import { suggestSchedule } from './lib/schedule.mjs';
 
 const schedulingErrors = [
   'error: chair conflict',
@@ -214,7 +215,7 @@ async function main({ preserve, except, changesFile, apply, seed }) {
 
   await suggestSchedule(project, { seed });
 
-  for (const session of project.sessions) {
+  for (const session of validSessions) {
     // TODO: make sure that "session.meetings" was set
     if (session.meetings.length === 0 ||
         session.meetings.find(m => !(m.room && m.day && m.slot))) {

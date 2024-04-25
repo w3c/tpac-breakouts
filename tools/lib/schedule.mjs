@@ -430,6 +430,7 @@ export function suggestSchedule(project, { seed }) {
           session.day = meetings[0].day;
           session.slot = meetings[0].slot;
         }
+        session.meetings = meetings;
         session.updated = true;
         for (const resource of resourcesToUpdate) {
           resource.sessions.push(session);
@@ -519,7 +520,7 @@ export function suggestSchedule(project, { seed }) {
         }
       }
       for (const meeting of session.meetings) {
-        console.warn(`- assigned #${session.number} to ${session.day} ${session.slot} in ${session.room}`);
+        console.warn(`- assigned #${session.number} to ${meeting.day} ${meeting.slot} in ${meeting.room}`);
       }
       session = selectNextSession(track);
     }

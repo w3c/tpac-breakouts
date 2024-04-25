@@ -1,9 +1,11 @@
 import * as assert from 'node:assert';
+import { readFile } from 'node:fs/promises';
 import { initTestEnv } from './init-test-env.mjs';
 import { getEnvKey, setEnvKey } from '../tools/lib/envkeys.mjs';
 import { fetchProject, convertProjectToJSON } from '../tools/lib/project.mjs';
 import { validateSession, validateGrid } from '../tools/lib/validate.mjs';
 import { suggestSchedule } from '../tools/lib/schedule.mjs';
+import { convertProjectToHTML } from '../tools/lib/project2html.mjs';
 
 async function fetchTestProject() {
   const project = await fetchProject(
@@ -34,6 +36,14 @@ function checkMeetingsAgainstTimes(project) {
     .flat()
     .map(time => `Session #${time.session.number} not scheduled on ${time.day} at ${time.slot}`);
   assert.deepStrictEqual(unscheduled, []);
+}
+
+async function getRefHtml(name) {
+  if (!name) {
+    name = await getEnvKey('PROJECT_NUMBER');
+  }
+  return (await readFile(`test/data/ref-${name}.html`, 'utf8'))
+    .replace(/\r/g, '');
 }
 
 // Test data contains a few meetings of groups that are not real W3C groups.
@@ -157,5 +167,18 @@ _No response_`;
         'Session not scheduled on Thursday (2023-09-14) at 17:00 - 18:30 as requested'
       ]
     }]);
+  });
+
+  it('creates an appropriate HTML page', async function () {
+    const project = await fetchTestProject();
+    const errors = await validateGrid(project);
+    assert.deepStrictEqual(errors, []);
+
+    suggestSchedule(project, { seed: 'schedule' });
+
+    const ref = await getRefHtml();
+    const html = await convertProjectToHTML(project);
+    assert.strictEqual(html, ref);
+    //console.log(html);
   });
 });
