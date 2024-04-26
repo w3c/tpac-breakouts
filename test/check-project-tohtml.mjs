@@ -2,7 +2,7 @@ import { initTestEnv } from './init-test-env.mjs';
 import { getEnvKey, setEnvKey } from '../tools/lib/envkeys.mjs';
 import { fetchProject } from '../tools/lib/project.mjs';
 import { convertProjectToHTML } from '../tools/lib/project2html.mjs';
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import * as assert from 'node:assert';
 
 async function fetchTestProject() {
@@ -11,12 +11,16 @@ async function fetchTestProject() {
     await getEnvKey('PROJECT_NUMBER'));
 }
 
-async function getRefHtml(name) {
-  if (!name) {
-    name = await getEnvKey('PROJECT_NUMBER');
+async function assertSameAsRef(html) {
+  const refName = await getEnvKey('PROJECT_NUMBER');
+  const refFilename = `test/data/ref-${refName}.html`;
+  const updateRef = await getEnvKey('UPDATE_REFS', false);
+  if (updateRef) {
+    await writeFile(refFilename, html, 'utf8');
   }
-  return (await readFile(`test/data/ref-${name}.html`, 'utf8'))
+  const refHtml = (await readFile(refFilename, 'utf8'))
     .replace(/\r/g, '');
+  assert.strictEqual(html, refHtml);
 }
 
 describe('The module that converts a project to HTML', function () {
@@ -28,29 +32,23 @@ describe('The module that converts a project to HTML', function () {
     setEnvKey('ISSUE_TEMPLATE', 'test/data/session-template-default.yml');
     setEnvKey('PROJECT_NUMBER', 'session-validation');
     const project = await fetchTestProject();
-    const ref = await getRefHtml();
     const html = await convertProjectToHTML(project);
-    assert.strictEqual(html, ref);
-    //console.log(html);
+    await assertSameAsRef(html);
   });
 
   it('creates the expected page for group meetings', async function () {
     setEnvKey('ISSUE_TEMPLATE', 'test/data/group-template.yml');
     setEnvKey('PROJECT_NUMBER', 'group-meetings');
     const project = await fetchTestProject();
-    const ref = await getRefHtml();
     const html = await convertProjectToHTML(project);
-    assert.strictEqual(html, ref);
-    //console.log(html);
+    await assertSameAsRef(html);
   });
 
   it('creates the expected page for breakouts day 2024', async function () {
     setEnvKey('ISSUE_TEMPLATE', 'test/data/session-template-default.yml');
     setEnvKey('PROJECT_NUMBER', 'breakouts-day-2024');
     const project = await fetchTestProject();
-    const ref = await getRefHtml();
     const html = await convertProjectToHTML(project);
-    assert.strictEqual(html, ref);
-    //console.log(html);
+    await assertSameAsRef(html);
   });
 });

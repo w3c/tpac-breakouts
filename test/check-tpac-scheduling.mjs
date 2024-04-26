@@ -1,5 +1,5 @@
 import * as assert from 'node:assert';
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { initTestEnv } from './init-test-env.mjs';
 import { getEnvKey, setEnvKey } from '../tools/lib/envkeys.mjs';
 import { fetchProject, convertProjectToJSON } from '../tools/lib/project.mjs';
@@ -38,12 +38,16 @@ function checkMeetingsAgainstTimes(project) {
   assert.deepStrictEqual(unscheduled, []);
 }
 
-async function getRefHtml(name) {
-  if (!name) {
-    name = await getEnvKey('PROJECT_NUMBER');
+async function assertSameAsRef(html) {
+  const refName = await getEnvKey('PROJECT_NUMBER');
+  const refFilename = `test/data/ref-${refName}.html`;
+  const updateRef = await getEnvKey('UPDATE_REFS', false);
+  if (updateRef) {
+    await writeFile(refFilename, html, 'utf8');
   }
-  return (await readFile(`test/data/ref-${name}.html`, 'utf8'))
+  const refHtml = (await readFile(refFilename, 'utf8'))
     .replace(/\r/g, '');
+  assert.strictEqual(html, refHtml);
 }
 
 // Test data contains a few meetings of groups that are not real W3C groups.
@@ -175,9 +179,7 @@ _No response_`;
 
     suggestSchedule(project, { seed: 'schedule' });
 
-    const ref = await getRefHtml();
     const html = await convertProjectToHTML(project);
-    assert.strictEqual(html, ref);
-    //console.log(html);
+    await assertSameAsRef(html);
   });
 });
