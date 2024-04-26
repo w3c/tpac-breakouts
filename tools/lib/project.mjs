@@ -880,7 +880,7 @@ export async function saveSessionMeetings(session, project) {
     if (prop === 'text') {
       // Text field
       if (session[field]) {
-        value = session[field];
+        value = `"${session[field]}"`;
       }
     }
     else {
