@@ -59,33 +59,46 @@ export function parseSessionMeetings(session, project) {
 
 
 /**
- * Serialize the list of meetings to a `meeting`` field string
+ * Serialize the list of meetings to a `meeting` field string.
  *
  * The function uses labels when possible instead of full names to increase
  * readability of the resulting string.
+ *
+ * The function actually returns an object with `room` and `meeting`
+ * properties. The `room` property is set to the full name of the room if all
+ * meetings take place in the same room. When that happens, the `meeting` value
+ * will not contain any information about the room.
+ *
+ * The `room` property is not set otherwise
  */
 export function serializeSessionMeetings(meetings, project) {
   if (!meetings || meetings.length === 0) {
     return null;
   }
-  return meetings
-    .map(meeting => {
-      const tokens = [];
-      if (meeting.day) {
-        const day = project.days.find(day => day.name === meeting.day);
-        tokens.push(day.label ?? day.name);
-      }
-      if (meeting.slot) {
-        const slot = project.slots.find(slot => slot.name === meeting.slot);
-        tokens.push(slot.start);
-      }
-      if (meeting.room) {
-        const room = project.rooms.find(room => room.name === meeting.room);
-        tokens.push(room.label ?? slot.name);
-      }
-      return tokens.join(', ');
-    })
-    .join('; ');
+  const room = meetings.reduce((room, meeting) => {
+    return (meeting.room && meeting.room === room) ? room : null;
+  }, meetings[0].room);
+  return {
+    room,
+    meeting: meetings
+      .map(meeting => {
+        const tokens = [];
+        if (meeting.day) {
+          const day = project.days.find(day => day.name === meeting.day);
+          tokens.push(day.label ?? day.name);
+        }
+        if (meeting.slot) {
+          const slot = project.slots.find(slot => slot.name === meeting.slot);
+          tokens.push(slot.start);
+        }
+        if (meeting.room && !room) {
+          const roomObj = project.rooms.find(room => room.name === meeting.room);
+          tokens.push(roomObj.label ?? roomObj.name);
+        }
+        return tokens.join(', ');
+      })
+      .join('; ')
+  };
 }
 
 

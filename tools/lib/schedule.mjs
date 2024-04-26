@@ -442,7 +442,11 @@ export function suggestSchedule(project, { seed }) {
       if (meetings.every(m => m.room && m.day && m.slot)) {
         if (resourcesToUpdate.length > 0) {
           if (project.allowMultipleMeetings) {
-            session.meeting = serializeSessionMeetings(meetings, project);
+            const { room, meeting } = serializeSessionMeetings(meetings, project);
+            if (room) {
+              session.room = room;
+            }
+            session.meeting = meeting;
           }
           else {
             session.room = meetings[0].room;

@@ -212,9 +212,11 @@ describe('The group meetings module', function () {
     await validateSession(sessionNumber, project);
     const session = project.sessions.find(s => s.number === sessionNumber);
     const meetings = parseSessionMeetings(session, project);
-    const meetingsStr = serializeSessionMeetings(meetings, project);
-    assert.strictEqual(meetingsStr,
-      'Tuesday, 9:00, Room 1; 2020-02-11, 11:00, Room 1');
+    const meetingsSerialized = serializeSessionMeetings(meetings, project);
+    assert.deepStrictEqual(meetingsSerialized, {
+      room: 'Room 1',
+      meeting: 'Tuesday, 9:00; 2020-02-11, 11:00'
+    });
   });
 
   it('merges contiguous slots for calendaring purpose', async function () {
