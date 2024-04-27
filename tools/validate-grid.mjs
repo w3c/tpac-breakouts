@@ -50,9 +50,7 @@ async function main(validation) {
   console.log(`Validate grid... done`);
 
   // Time to record session validation issues
-  const sessions = [... new Set(errors.map(error => error.session))]
-    .map(number => project.sessions.find(s => s.number === number));
-  for (const session of sessions) {
+  for (const session of project.sessions) {
     console.log();
     console.log(`Save validation results for session ${session.number}...`);
     for (const severity of ['Error', 'Warning', 'Check']) {

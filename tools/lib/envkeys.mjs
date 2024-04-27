@@ -58,7 +58,7 @@ export async function getEnvKey(key, defaultValue, json) {
     }
   }
   if (Object.hasOwn(repoConfig, key)) {
-    return repoConfig[key];
+    return json ? JSON.parse(repoConfig[key]) : repoConfig[key];
   }
 
   if (defaultValue !== undefined) {
