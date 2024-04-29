@@ -8,7 +8,7 @@ describe('The stubbing mechanism', function () {
   it('works as expected', async function () {
     initTestEnv();
     setEnvKey('PROJECT_NUMBER', 'single-breakout-session');
-    setEnvKey('ISSUE_TEMPLATE', 'test/data/session-template-default.yml');
+    setEnvKey('ISSUE_TEMPLATE', 'test/data/template-breakout.yml');
 
     const project = await fetchProject('test', 'single-breakout-session');
     assert.strictEqual(project.sessions.length, 1, 'Test data should contain one session');

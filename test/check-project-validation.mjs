@@ -12,7 +12,7 @@ async function fetchTestProject() {
 describe('Project validation', function () {
   beforeEach(function () {
     initTestEnv();
-    setEnvKey('ISSUE_TEMPLATE', 'test/data/session-template-default.yml');
+    setEnvKey('ISSUE_TEMPLATE', 'test/data/template-breakout.yml');
   });
 
   it('reports about missing meeting and timezone fields', async function () {

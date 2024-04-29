@@ -29,7 +29,7 @@ describe('The module that converts a project to HTML', function () {
   });
 
   it('creates the expected page for breakout sessions', async function () {
-    setEnvKey('ISSUE_TEMPLATE', 'test/data/session-template-default.yml');
+    setEnvKey('ISSUE_TEMPLATE', 'test/data/template-breakout.yml');
     setEnvKey('PROJECT_NUMBER', 'session-validation');
     const project = await fetchTestProject();
     const html = await convertProjectToHTML(project);
@@ -37,7 +37,7 @@ describe('The module that converts a project to HTML', function () {
   });
 
   it('creates the expected page for group meetings', async function () {
-    setEnvKey('ISSUE_TEMPLATE', 'test/data/group-template.yml');
+    setEnvKey('ISSUE_TEMPLATE', 'test/data/template-group.yml');
     setEnvKey('PROJECT_NUMBER', 'group-meetings');
     const project = await fetchTestProject();
     const html = await convertProjectToHTML(project);
@@ -45,7 +45,7 @@ describe('The module that converts a project to HTML', function () {
   });
 
   it('creates the expected page for breakouts day 2024', async function () {
-    setEnvKey('ISSUE_TEMPLATE', 'test/data/session-template-default.yml');
+    setEnvKey('ISSUE_TEMPLATE', 'test/data/template-breakout.yml');
     setEnvKey('PROJECT_NUMBER', 'breakouts-day-2024');
     const project = await fetchTestProject();
     const html = await convertProjectToHTML(project);

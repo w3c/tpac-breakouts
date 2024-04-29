@@ -23,7 +23,7 @@ describe('Session validation', function () {
   before(function () {
     initTestEnv();
     setEnvKey('PROJECT_NUMBER', 'session-validation');
-    setEnvKey('ISSUE_TEMPLATE', 'test/data/session-template-default.yml');
+    setEnvKey('ISSUE_TEMPLATE', 'test/data/template-breakout.yml');
   });
 
   it('validates a valid session', async function () {

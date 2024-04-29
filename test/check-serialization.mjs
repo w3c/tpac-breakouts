@@ -16,7 +16,7 @@ describe('The serialization of session descriptions', function () {
   beforeEach(function () {
     initTestEnv();
     setEnvKey('PROJECT_NUMBER', 'session-validation');
-    setEnvKey('ISSUE_TEMPLATE', 'test/data/session-template-default.yml');
+    setEnvKey('ISSUE_TEMPLATE', 'test/data/template-breakout.yml');
   });
 
   it('does not introduce changes if description is complete', async function () {
@@ -114,7 +114,7 @@ _No response_`;
 
   it('handles times choices correctly', async function () {
     setEnvKey('PROJECT_NUMBER', 'tpac2023');
-    setEnvKey('ISSUE_TEMPLATE', 'test/data/tpac-template.yml');
+    setEnvKey('ISSUE_TEMPLATE', 'test/data/template-tpac2023.yml');
     const project = await fetchTestProject();
     await initSectionHandlers(project);
     const initialBody = `### Estimate of in-person participants
@@ -163,7 +163,7 @@ _No response_`;
 
   it('adds times section if missing', async function () {
     setEnvKey('PROJECT_NUMBER', 'tpac2023');
-    setEnvKey('ISSUE_TEMPLATE', 'test/data/tpac-template.yml');
+    setEnvKey('ISSUE_TEMPLATE', 'test/data/template-tpac2023.yml');
     const project = await fetchTestProject();
     await initSectionHandlers(project);
     const initialBody = `### Estimate of in-person participants
@@ -215,7 +215,7 @@ _No response_`;
 
   it('handles times choices correctly', async function () {
     setEnvKey('PROJECT_NUMBER', 'tpac2023');
-    setEnvKey('ISSUE_TEMPLATE', 'test/data/tpac-template.yml');
+    setEnvKey('ISSUE_TEMPLATE', 'test/data/template-tpac2023.yml');
     const project = await fetchTestProject();
     await initSectionHandlers(project);
     const initialBody = `### Estimate of in-person participants
@@ -264,7 +264,7 @@ _No response_`;
 
   it('parses the discussion URL correctly', async function () {
     setEnvKey('PROJECT_NUMBER', 'tpac2023');
-    setEnvKey('ISSUE_TEMPLATE', 'test/data/tpac-template.yml');
+    setEnvKey('ISSUE_TEMPLATE', 'test/data/template-tpac2023.yml');
     const project = await fetchTestProject();
     await initSectionHandlers(project);
     const initialBody = `### Estimate of in-person participants

@@ -29,7 +29,7 @@ describe('The group meetings module', function () {
   before(function () {
     initTestEnv();
     setEnvKey('PROJECT_NUMBER', 'group-meetings');
-    setEnvKey('ISSUE_TEMPLATE', 'test/data/group-template.yml');
+    setEnvKey('ISSUE_TEMPLATE', 'test/data/template-group.yml');
   });
 
   it('validates a valid group meeting', async function () {

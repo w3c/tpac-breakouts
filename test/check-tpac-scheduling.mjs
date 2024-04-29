@@ -65,7 +65,7 @@ describe('Scheduling of TPAC meetings', function () {
   before(function () {
     initTestEnv();
     setEnvKey('PROJECT_NUMBER', 'tpac2023');
-    setEnvKey('ISSUE_TEMPLATE', 'test/data/tpac-template.yml');
+    setEnvKey('ISSUE_TEMPLATE', 'test/data/template-tpac2023.yml');
   });
 
   it('parses a group issue', async function () {
