@@ -84,26 +84,26 @@ describe('Scheduling of TPAC meetings', function () {
 
   it('validates all TPAC 2023 meetings', async function () {
     const project = await fetchTestProject();
-    const errors = await validateGrid(project);
+    const { errors } = await validateGrid(project);
     assert.deepStrictEqual(errors, []);
   });
 
   it('respects requested times', async function () {
     const project = await fetchTestProject();
-    const errors = await validateGrid(project);
+    const { errors } = await validateGrid(project);
     assert.deepStrictEqual(errors, []);
 
     suggestSchedule(project, { seed: 'schedule' });
     checkMeetingsAgainstTimes(project);
 
-    const scheduleErrors = (await validateGrid(project))
-      .filter(error => error.severity === 'error');
+    let { errors: scheduleErrors } = await validateGrid(project);
+    scheduleErrors = scheduleErrors.filter(error => error.severity === 'error');
     assert.deepStrictEqual(scheduleErrors, []);
   });
 
   it('respects requested times regardless of seed', async function () {
     const project = await fetchTestProject();
-    const errors = await validateGrid(project);
+    const { errors } = await validateGrid(project);
     assert.deepStrictEqual(errors, []);
 
     suggestSchedule(project, { seed: 'another' });
@@ -154,13 +154,13 @@ _No response_
 ### Agenda for the meeting.
 
 _No response_`;
-    const errors = await validateGrid(project);
+    const { errors } = await validateGrid(project);
     assert.deepStrictEqual(stripDetails(errors) , []);
 
     suggestSchedule(project, { seed: 'schedule' });
 
-    const warnings = (await validateGrid(project))
-      .filter(error => error.severity === 'warning' && error.type === 'times');
+    let { errors: warnings } = await validateGrid(project);
+    warnings = warnings.filter(error => error.severity === 'warning' && error.type === 'times');
     assert.deepStrictEqual(stripDetails(warnings), [{
       session: 42,
       severity: 'warning',
@@ -174,7 +174,7 @@ _No response_`;
 
   it('creates an appropriate HTML page', async function () {
     const project = await fetchTestProject();
-    const errors = await validateGrid(project);
+    const { errors } = await validateGrid(project);
     assert.deepStrictEqual(errors, []);
 
     suggestSchedule(project, { seed: 'schedule' });

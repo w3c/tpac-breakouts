@@ -21,7 +21,7 @@ export async function convertProjectToHTML(project, cliParams) {
 
   // Validate project sessions. Note this will also expand the sessions with
   // useful info (chairs, groups, description)
-  const validationIssues = await validateGrid(project);
+  const { errors: validationIssues } = await validateGrid(project);
 
   // We'll report sessions that have formatting issues and exclude them from
   // the schedule tables.

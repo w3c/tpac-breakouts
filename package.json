@@ -24,6 +24,7 @@
     "tools/"
   ],
   "bin": {
+    "tpac-breakouts": "./tools/cli.mjs",
     "add-minutes": "./tools/add-minutes.mjs",
     "create-recording-pages": "./tools/create-recording-pages.mjs",
     "init-repo-labels": "./tools/init-repo-labels.mjs",
@@ -31,21 +32,16 @@
     "list-chairs": "./tools/list-chairs.mjs",
     "minutes-to-w3c": "./tools/minutes-to-w3c.mjs",
     "setup-irc": "./tools/setup-irc.mjs",
-    "suggest-grid": "./tools/suggest-grid.mjs",
-    "update-calendar": "./tools/update-calendar.mjs",
-    "upload-grid": "./tools/upload-grid.mjs",
-    "validate-grid": "./tools/validate-grid.mjs",
-    "validate-session": "./tools/validate-session.mjs",
-    "truncate-recording": "./tools/truncate-recording.mjs",
-    "view-event": "./tools/view-event.mjs"
+    "truncate-recording": "./tools/truncate-recording.mjs"
   },
   "scripts": {
     "test": "mocha"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "dependencies": {
+    "commander": "^12.0.0",
     "irc": "^0.5.2",
     "puppeteer": "^22.6.1",
     "seedrandom": "^3.0.5",
