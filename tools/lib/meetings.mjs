@@ -307,30 +307,31 @@ export function meetsInRoom(session, room, project) {
 export function parseMeetingsChanges(yaml) {
   const resources = ['room', 'day', 'slot', 'meeting'];
   const yamlChanges = YAML.parse(yaml);
-  return Object.entries(yamlChanges).map(([number, yamlChange]) => {
-    if (!number.match(/^\d+$/)) {
-      throw new Error(`Invalid meetings changes: #${number} is not a session number`);
-    }
-    const change = {
-      number: parseInt(number, 10)
-    };
+  return yamlChanges.map(yamlChange => {
+    const change = {};
     for (const [key, value] of Object.entries(yamlChange)) {
-      if (!['reset', 'room', 'day', 'slot', 'meeting'].includes(key)) {
-        throw new Error(`Invalid meetings changes for #${number}: "${key}" is an unexpected key`);
+      if (!['number', 'reset', 'room', 'day', 'slot', 'meeting'].includes(key)) {
+        throw new Error(`Invalid meetings changes for #${yamlChange.number}: "${key}" is an unexpected key`);
       }
       switch (key) {
+      case 'number':
+        if (!Number.isInteger(value)) {
+          throw new Error(`Invalid meetings changes: #${value} is not a session number`);
+        }
+        change[key] = value;
+        break;
       case 'reset':
         if (value === 'all') {
           change[key] = resources.slice();
         }
         else if (Array.isArray(value)) {
           if (value.find(val => !resources.includes(val))) {
-            throw new Error(`Invalid meetings changes for #${number}: "${key}" values "${value.join(', ')}" contains an unexpected field`);
+            throw new Error(`Invalid meetings changes for #${yamlChange.number}: "${key}" values "${value.join(', ')}" contains an unexpected field`);
           }
           change[key] = value;
         }
         else if (!resources.includes(value)) {
-          throw new Error(`Invalid meetings changes for #${number}: "${key}" value "${value}" is unexpected`);
+          throw new Error(`Invalid meetings changes for #${yamlChange.number}: "${key}" value "${value}" is unexpected`);
         }
         else {
           change[key] = [value];
@@ -341,7 +342,7 @@ export function parseMeetingsChanges(yaml) {
       case 'day':
       case 'slot':
         if (typeof value !== 'string') {
-          throw new Error(`Invalid meetings changes for #${number}: "${key}" value is not a string`);
+          throw new Error(`Invalid meetings changes for #${yamlChange.number}: "${key}" value is not a string`);
         }
         change[key] = value;
         break;
@@ -351,16 +352,19 @@ export function parseMeetingsChanges(yaml) {
           if (value.find(val => typeof val !== 'string' ||
                                 val.includes(';') ||
                                 val.includes('|'))) {
-            throw new Error(`Invalid meetings changes for #${number}: "${key}" value is not an array of individual meeting strings`);
+            throw new Error(`Invalid meetings changes for #${yamlChange.number}: "${key}" value is not an array of individual meeting strings`);
           }
           change[key] = value.join('; ');
         }
         else if (typeof value !== 'string') {
-          throw new Error(`Invalid meetings changes for #${number}: "${key}" value is not a string`);
+          throw new Error(`Invalid meetings changes for #${yamlChange.number}: "${key}" value is not a string`);
         }
         else {
           change[key] = value;
         }
+      }
+      if (!change.number) {
+        throw new Error(`Invalid meetings changes: all changes must reference a session number`);
       }
     }
     return change;

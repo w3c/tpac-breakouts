@@ -1,5 +1,6 @@
 import { parseSessionMeetings, groupSessionMeetings } from './meetings.mjs';
 import { validateGrid } from './validate.mjs';
+import * as YAML from 'yaml';
 
 const hasMeeting = s => s.atomicMeetings.find(m => m.room && m.day && m.slot);
 
@@ -414,21 +415,19 @@ export async function convertProjectToHTML(project, cliParams) {
     </section>`);
   }
 
+  const yaml = sessions.map(session => Object.assign({
+    number: session.number,
+    reset: 'all',
+    room: session.room,
+    day: session.day,
+    slot: session.slot,
+    meeting: session.meeting?.split(';').map(m => m.trim())
+  }));
   writeLine(2, `
-    <section id="json">
+    <section id="yaml">
       <h2>Data for Saving/Restoring Schedule</h2>
       <pre id="data">`);
-  writeLine(0, JSON.stringify(
-    sessions.map(session => Object.assign(
-      {
-        number: session.number,
-        room: session.room,
-        day: session.day,
-        slot: session.slot
-      },
-      session.meeting ? { meeting: session.meeting } : {}
-    )),
-    null, 2));
+  writeLine(0, YAML.stringify(yaml));
   writeLine(3, `</pre>
     </section>
   </body>

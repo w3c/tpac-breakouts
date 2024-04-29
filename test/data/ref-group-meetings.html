@@ -527,108 +527,114 @@
         </section>
     </section>
     
-    <section id="json">
+    <section id="yaml">
       <h2>Data for Saving/Restoring Schedule</h2>
       <pre id="data">
-[
-  {
-    "number": 1
-  },
-  {
-    "number": 2
-  },
-  {
-    "number": 3
-  },
-  {
-    "number": 4
-  },
-  {
-    "number": 5
-  },
-  {
-    "number": 6
-  },
-  {
-    "number": 7
-  },
-  {
-    "number": 8
-  },
-  {
-    "number": 9
-  },
-  {
-    "number": 10,
-    "meeting": "Room 1, Monday, 9:00; Invalid room; 2042-02-10; 9:00 - 11:00"
-  },
-  {
-    "number": 11,
-    "meeting": "Room 1, 2042-02-11, 9:00; Room 1, 2020-02-11, 11:00"
-  },
-  {
-    "number": 12,
-    "room": "Room 2",
-    "day": "Monday (2042-02-10)",
-    "meeting": "9:00; 11:00"
-  },
-  {
-    "number": 13,
-    "meeting": "Room 2, Monday, 9:00; Room 3, Monday, 11:00"
-  },
-  {
-    "number": 14,
-    "meeting": "Room 1"
-  },
-  {
-    "number": 15,
-    "room": "Room 3",
-    "day": "Monday (2042-02-10)",
-    "slot": "14:00 - 16:00"
-  },
-  {
-    "number": 16,
-    "meeting": "Room 4, Monday, 11:00; Room 4, Monday, 14:00"
-  },
-  {
-    "number": 17,
-    "meeting": "Room 1, Monday, 16:00"
-  },
-  {
-    "number": 18,
-    "meeting": "Room 2, Monday, 16:00"
-  },
-  {
-    "number": 19,
-    "meeting": "Monday, 9:00; Monday, 11:00; Monday, 9:00 - 11:00"
-  },
-  {
-    "number": 20,
-    "day": "Thursday (2042-02-13)",
-    "slot": "16:00 - 18:00",
-    "meeting": "Room 1"
-  },
-  {
-    "number": 21,
-    "meeting": "Thursday, 16:00"
-  },
-  {
-    "number": 22,
-    "room": "Room 5",
-    "meeting": "Monday, 9:00 | Monday, 11:00 | Monday, 14:00 - 16:00"
-  },
-  {
-    "number": 23,
-    "day": "Monday (2042-02-10)",
-    "slot": "14:00 - 16:00",
-    "meeting": "Room 6"
-  },
-  {
-    "number": 24,
-    "room": "Room 6",
-    "meeting": "Tuesday, 14:00; Tuesday, 11:00; Tuesday, 9:00; Thursday, 9:00; Tuesday, 16:00; Thursday, 16:00; Thursday, 14:00; Friday, 11:00; Friday, 16:00"
-  }
-]
+- number: 1
+  reset: all
+- number: 2
+  reset: all
+- number: 3
+  reset: all
+- number: 4
+  reset: all
+- number: 5
+  reset: all
+- number: 6
+  reset: all
+- number: 7
+  reset: all
+- number: 8
+  reset: all
+- number: 9
+  reset: all
+- number: 10
+  reset: all
+  meeting:
+    - Room 1, Monday, 9:00
+    - Invalid room
+    - 2042-02-10
+    - 9:00 - 11:00
+- number: 11
+  reset: all
+  meeting:
+    - Room 1, 2042-02-11, 9:00
+    - Room 1, 2020-02-11, 11:00
+- number: 12
+  reset: all
+  room: Room 2
+  day: Monday (2042-02-10)
+  meeting:
+    - 9:00
+    - 11:00
+- number: 13
+  reset: all
+  meeting:
+    - Room 2, Monday, 9:00
+    - Room 3, Monday, 11:00
+- number: 14
+  reset: all
+  meeting:
+    - Room 1
+- number: 15
+  reset: all
+  room: Room 3
+  day: Monday (2042-02-10)
+  slot: 14:00 - 16:00
+- number: 16
+  reset: all
+  meeting:
+    - Room 4, Monday, 11:00
+    - Room 4, Monday, 14:00
+- number: 17
+  reset: all
+  meeting:
+    - Room 1, Monday, 16:00
+- number: 18
+  reset: all
+  meeting:
+    - Room 2, Monday, 16:00
+- number: 19
+  reset: all
+  meeting:
+    - Monday, 9:00
+    - Monday, 11:00
+    - Monday, 9:00 - 11:00
+- number: 20
+  reset: all
+  day: Thursday (2042-02-13)
+  slot: 16:00 - 18:00
+  meeting:
+    - Room 1
+- number: 21
+  reset: all
+  meeting:
+    - Thursday, 16:00
+- number: 22
+  reset: all
+  room: Room 5
+  meeting:
+    - Monday, 9:00 | Monday, 11:00 | Monday, 14:00 - 16:00
+- number: 23
+  reset: all
+  day: Monday (2042-02-10)
+  slot: 14:00 - 16:00
+  meeting:
+    - Room 6
+- number: 24
+  reset: all
+  room: Room 6
+  meeting:
+    - Tuesday, 14:00
+    - Tuesday, 11:00
+    - Tuesday, 9:00
+    - Thursday, 9:00
+    - Tuesday, 16:00
+    - Thursday, 16:00
+    - Thursday, 14:00
+    - Friday, 11:00
+    - Friday, 16:00
+
       </pre>
     </section>
   </body>

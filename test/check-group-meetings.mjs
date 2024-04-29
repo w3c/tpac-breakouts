@@ -352,7 +352,7 @@ describe('The group meetings module', function () {
 
   it('parses a YAML file that describes meeting changes', function () {
     const changes = parseMeetingsChanges(`
-      1:
+      - number: 1
         reset:
           - day
           - slot
@@ -361,10 +361,10 @@ describe('The group meetings module', function () {
         meeting:
           - Monday
           - Tuesday
-      2:
+      - number: 2
         reset: all
         room: Room 1
-      3:
+      - number: 3
         reset: day
     `);
     assert.deepStrictEqual(changes, [
