@@ -490,9 +490,13 @@ export function suggestSchedule(project, { seed }) {
       // Scheduling may fail if there's no way to avoid a conflict and if
       // that conflict cannot be relaxed (e.g., same person cannot chair two
       // sessions at the same time).
+      let numberOfMeetings = 1;
+      if (session.description.times?.length) {
+        numberOfMeetings = session.description.times.length;
+      }
       const constraints = {
         trackRoom,
-        numberOfMeetings: session.description.times?.length ?? 1,
+        numberOfMeetings,
         sameRoom: true,
         strictTimes: true,
         strictDuration: true,
