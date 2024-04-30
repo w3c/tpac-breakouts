@@ -1,0 +1,27 @@
+name: Required select fields
+description: Template with required select fields
+labels: ["session"]
+body:
+  - type: dropdown
+    id: type
+    attributes:
+      label: Session type
+      description: |
+        Please choose a type of session. A **breakout session** (smaller set of participants, deep dive on a topic, at most 50 minutes) will be scheduled in parallel with other breakout sessions. A **plenary session** (larger and broader audience, raising awareness, at most 10 minutes) will not be scheduled in parallel with any other sessions.
+      options:
+        - Breakout (Default)
+        - Plenary
+    validations:
+      required: true
+
+  - type: dropdown
+    id: capacity
+    attributes:
+      label: Estimated number of in-person attendees
+      options:
+        - Don't know (Default)
+        - Fewer than 20 people
+        - 20-45 people
+        - More than 45 people
+    validations:
+      required: true

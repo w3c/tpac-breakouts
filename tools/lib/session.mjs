@@ -87,10 +87,17 @@ export async function initSectionHandlers(project) {
         serialize: value => value
       };
       if (section.type === 'dropdown') {
+        // GitHub has this funky feature that "required" is not supported
+        // when the repository is "private", making it add a "None" choice
+        // to dropdowns. We'll add it to the list of options.
         handler.options = section.attributes.options.map(o => Object.assign({
           label: o,
           llabel: o.toLowerCase()
         }));
+        handler.options.push({
+          label: 'None',
+          llabel: 'none'
+        });
         handler.validate = value => !!handler.options.find(o => o.llabel === value.toLowerCase());
       }
       else if (section.type === 'input') {
@@ -200,6 +207,7 @@ export async function initSectionHandlers(project) {
         for (const option of handler.options) {
           option.value = (function (label) {
             switch (label) {
+            case 'none': return 0;
             case 'don\'t know': return 0;
             case 'don\'t know (default)': return 0;
 
@@ -230,7 +238,9 @@ export async function initSectionHandlers(project) {
           return option.value;
         };
         handler.serialize = value => {
-          const option = handler.options.find(o => o.value === value);
+          const option =
+            handler.options.find(o => o.value === value && o.label !== 'none') ??
+            handler.options.find(o => o.value === value);
           if (!option) {
             throw new Error(`Unexpected capacity value "${value}"`);
           }
