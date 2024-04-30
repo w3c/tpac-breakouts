@@ -31,7 +31,7 @@ async function main(format) {
   console.warn(`- found ${project.sessions.length} sessions`);
 
   if (format === 'json') {
-    const data = convertToJSON(project);
+    const data = convertProjectToJSON(project);
     console.log(JSON.stringify(data, null, 2));
   }
   else {
