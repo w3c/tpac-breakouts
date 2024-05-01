@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "irc": "^0.5.2",
-    "puppeteer": "^22.6.1",
+    "puppeteer": "^22.7.1",
     "seedrandom": "^3.0.5",
     "webvtt-parser": "^2.2.0",
     "yaml": "^2.4.1"
