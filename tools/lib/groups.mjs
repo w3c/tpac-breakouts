@@ -16,7 +16,13 @@ import { fetchW3CGroups } from './w3c.mjs';
 export async function fetchSessionGroups(session, groups2W3CID) {
   const lcGroups2W3CID = {};
   for (const name of Object.keys(groups2W3CID ?? {})) {
-    lcGroups2W3CID[name.toLowerCase()] = groups2W3CID[name];
+    const normalized = name.toLowerCase()
+      .replace(/ Business Group$/i, ' bg')
+      .replace(/ Community Group$/i, ' cg')
+      .replace(/ Interest Group$/i, ' ig')
+      .replace(/ Working Group$/i, ' wg')
+      .replace(/ Task Force$/i, ' tf');
+    lcGroups2W3CID[normalized] = groups2W3CID[name];
   }
 
   const w3cGroups = await fetchW3CGroups();
