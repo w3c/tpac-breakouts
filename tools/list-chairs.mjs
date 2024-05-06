@@ -26,7 +26,7 @@ async function main() {
     throw new Error(`Project ${PROJECT_OWNER}/${PROJECT_NUMBER} could not be retrieved`);
   }
   project.chairsToW3CID = CHAIR_W3CID;
-  const errors = await validateGrid(project)
+  const { errors } = await validateGrid(project)
   console.log(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER}... done`);
 
   const sessions = project.sessions.filter(session => session.chairs);

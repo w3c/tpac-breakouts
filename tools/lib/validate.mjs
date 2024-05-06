@@ -1,17 +1,33 @@
-import { fetchProject, validateProject } from './project.mjs';
+import { validateProject } from './project.mjs';
 import { initSectionHandlers, validateSessionBody, parseSessionBody } from './session.mjs';
 import { fetchSessionChairs, validateSessionChairs } from './chairs.mjs';
 import { fetchSessionGroups, validateSessionGroups } from './groups.mjs';
 import { parseSessionMeetings, meetsAt, meetsInParallelWith } from './meetings.mjs';
 import { todoStrings } from './todostrings.mjs';
 
+// List of errors and warnings that are scheduling issues.
+const schedulingErrors = [
+  'error: chair conflict',
+  'error: scheduling',
+  'error: irc',
+  'warning: capacity',
+  'warning: conflict',
+  'warning: duration',
+  'warning: track'
+];
+
 /**
  * Validate the entire grid.
  * 
- * The function returns a list of errors by type. Each error links to the
- * session that may need some care.
+ * The function returns two things:
+ * 1. a list of errors by type. Each error links to the session that may need
+ * some care.
+ * 2. a list of sessions for which validation changes, along with the new
+ * validation results, taking session notes into account (which may remove
+ * warnings). Note the function does not update the session itself
  */
-export async function validateGrid(project) {
+export async function validateGrid(project,
+    { what = 'everything' } = { what: 'everything' }) {
   const projectErrors = validateProject(project);
   if (projectErrors.length > 0) {
     throw new Error(`Project "${project.title}" is invalid:
@@ -23,7 +39,55 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
     const sessionErrors = await validateSession(session.number, project);
     errors = errors.concat(sessionErrors);
   }
-  return errors;
+  errors = errors.filter(error =>
+    what === 'everything' ||
+    schedulingErrors.includes(`${error.severity}: ${error.type}`));
+
+  const changes = project.sessions
+    .map(session => {
+      const changes = {
+        number: session.number,
+        validation: {}
+      };
+      let hasChanged = false;
+      for (const severity of ['error', 'warning', 'check']) {
+        let results = errors
+          .filter(error => error.session === session.number && error.severity === severity)
+          .map(error => error.type);
+        if (severity === 'check' &&
+            session.validation.check?.includes('irc channel') &&
+            !results.includes('irc channel')) {
+          // Need to keep the 'irc channel' value until an admin removes it
+          results.push('irc channel');
+        }
+        else if (severity === 'warning' && session.validation.note) {
+          results = results.filter(warning =>
+            !session.validation.note.includes(`-warning:${warning}`) &&
+            !session.validation.note.includes(`-warn:${warning}`) &&
+            !session.validation.note.includes(`-w:${warning}`));
+        }
+        if (what !== 'everything' && session.validation[severity]) {
+          // Need to preserve previous results that touched on other aspects
+          const previousResults = session.validation[severity]
+            .split(',')
+            .map(value => value.trim());
+          for (const result of previousResults) {
+            if (!schedulingErrors.includes(`${severity}: ${result}`)) {
+              results.push(result);
+            }
+          }
+        }
+        results = results.sort();
+        changes.validation[severity] = results.join(', ');
+        if ((session.validation[severity] ?? '') !== changes.validation[severity]) {
+          hasChanged = true;
+        }
+      }
+      return hasChanged ? changes : null;
+    })
+    .filter(session => !!session);
+
+  return { errors, changes };
 }
 
 
@@ -33,7 +97,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
  * The function returns a list of errors by type (i.e., by GitHub "label").
  * Errors in the list may be real errors or warnings.
  */
-export async function validateSession(sessionNumber, project) {
+export async function validateSession(sessionNumber, project, changes) {
   function hasActualMeeting(meetings) {
     return meetings.length > 0 &&
       meetings[0].room &&
@@ -550,6 +614,31 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         type: 'minutes origin',
         messages: ['Minutes not stored on w3.org']
       });
+    }
+  }
+
+  // Check the need to keep the "check: instructions" flag.
+  // An admin may already have validated the instructions for meeting planners
+  // (and removed the flag). We should only keep the flag if the instructions
+  // section changed.
+  const checkComments = errors.find(error =>
+    error.severity === 'check' && error.type === 'instructions');
+  if (checkComments &&
+      !session.validation.check?.includes('instructions') &&
+      changes?.body?.from) {
+    try {
+      const previousDescription = parseSessionBody(changes.body.from);
+      const newDescription = parseSessionBody(session.body);
+      if (newDescription.comments === previousDescription.comments) {
+        errors = errors.filter(error =>
+          !(error.severity === 'check' && error.type === 'instructions'));
+      }
+    }
+    catch {
+      // Previous version could not be parsed. Well, too bad, let's keep
+      // the "check: comments" flag then.
+      // TODO: consider doing something smarter as broken format errors
+      // will typically arise when author adds links to agenda/minutes.
     }
   }
 
