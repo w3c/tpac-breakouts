@@ -19,7 +19,7 @@ describe('Validation of unknown groups', function () {
 
   it('takes mapping into account regardless of type abbreviation (BG -> Business Group)', async function () {
     const project = await fetchTestProject();
-    project.chairsToW3CID = { 'The Super Business Group': -1 };
+    project.w3cIds = { 'The Super Business Group': -1 };
     const sessionNumber = 1;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
@@ -27,7 +27,7 @@ describe('Validation of unknown groups', function () {
 
   it('takes mapping into account regardless of type abbreviation (BG -> BG)', async function () {
     const project = await fetchTestProject();
-    project.chairsToW3CID = { 'The Super BG': 'ok' };
+    project.w3cIds = { 'The Super BG': 'ok' };
     const sessionNumber = 1;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
@@ -35,7 +35,7 @@ describe('Validation of unknown groups', function () {
 
   it('takes mapping into account regardless of type abbreviation (Working Group -> Working Group)', async function () {
     const project = await fetchTestProject();
-    project.chairsToW3CID = { 'the not heavily working group': 'lazy' };
+    project.w3cIds = { 'the not heavily working group': 'lazy' };
     const sessionNumber = 2;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
@@ -43,7 +43,7 @@ describe('Validation of unknown groups', function () {
 
   it('takes mapping into account regardless of type abbreviation (Working Group -> WG)', async function () {
     const project = await fetchTestProject();
-    project.chairsToW3CID = { 'the not heavily WG': -1 };
+    project.w3cIds = { 'the not heavily WG': -1 };
     const sessionNumber = 2;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);

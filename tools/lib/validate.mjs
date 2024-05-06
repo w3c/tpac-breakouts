@@ -150,7 +150,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   if (project.metadata.type === 'groups') {
     // Retrieve information about groups for all sessions
     for (const s of project.sessions) {
-      s.groups = await fetchSessionGroups(s, project.chairsToW3CID);
+      s.groups = await fetchSessionGroups(s, project.w3cIds);
     }
     const groupsErrors = validateSessionGroups(session.groups);
     if (groupsErrors.length > 0) {
@@ -191,7 +191,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   else {
     // Retrieve information about chairs, unless that was already done
     if (!session.chairs) {
-      session.chairs = await fetchSessionChairs(session, project.chairsToW3CID);
+      session.chairs = await fetchSessionChairs(session, project.w3cIds);
     }
     const chairsErrors = validateSessionChairs(session.chairs);
     if (chairsErrors.length > 0) {

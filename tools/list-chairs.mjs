@@ -16,7 +16,7 @@ import puppeteer from 'puppeteer';
 async function main() {
   const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER', 'w3c');
   const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
-  const CHAIR_W3CID = await getEnvKey('CHAIR_W3CID', {}, true);
+  const W3CID_MAP = await getEnvKey('W3CID_MAP', {}, true);
   const W3C_LOGIN = await getEnvKey('W3C_LOGIN');
   const W3C_PASSWORD = await getEnvKey('W3C_PASSWORD');
   console.log();
@@ -25,7 +25,7 @@ async function main() {
   if (!project) {
     throw new Error(`Project ${PROJECT_OWNER}/${PROJECT_NUMBER} could not be retrieved`);
   }
-  project.chairsToW3CID = CHAIR_W3CID;
+  project.w3cIds = W3CID_MAP;
   const { errors } = await validateGrid(project)
   console.log(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER}... done`);
 

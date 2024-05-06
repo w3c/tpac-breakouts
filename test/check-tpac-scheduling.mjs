@@ -11,7 +11,7 @@ async function fetchTestProject() {
   const project = await fetchProject(
     await getEnvKey('PROJECT_OWNER'),
     await getEnvKey('PROJECT_NUMBER'));
-  project.chairsToW3CID = nonW3CGroupMeetings;
+  project.w3cIds = nonW3CGroupMeetings;
   return project;
 }
 
