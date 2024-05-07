@@ -80,6 +80,12 @@ async function getTestData(testDataId) {
         field: { name: 'Meeting' }
       });
     }
+    if (session.trymeout) {
+      fields.push({
+        text: session.trymeout,
+        field: { name: 'Try me out' }
+      });
+    }
 
     return {
       id: `id_${uid++}`,
@@ -125,6 +131,9 @@ async function getTestData(testDataId) {
   if (custom.allowMultipleMeetings) {
     testData.allowMultipleMeetings = custom.allowMultipleMeetings;
   }
+  if (custom.allowTryMeOut) {
+    testData.allowTryMeOut = custom.allowTryMeOut;
+  }
 
   testDataCache[testDataId] = testData;
   return JSON.parse(JSON.stringify(testData));
@@ -154,6 +163,9 @@ export async function sendGraphQLRequest(query, acceptHeader = '') {
         const name = match[1];
         let field;
         if ((name === 'Meeting') && !testData.allowMultipleMeetings) {
+          field = null;
+        }
+        else if ((name === 'Try me out') && !testData.allowTryMeOut) {
           field = null;
         }
         else {

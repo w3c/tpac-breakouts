@@ -13,7 +13,8 @@ const schedulingErrors = [
   'warning: capacity',
   'warning: conflict',
   'warning: duration',
-  'warning: track'
+  'warning: track',
+  'warning: times'
 ];
 
 /**

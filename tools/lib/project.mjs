@@ -621,6 +621,21 @@ export async function fetchProject(login, id) {
   }`);
   const meeting = meetingResponse.data[type].projectV2.field;
 
+  // Project may also have a "Try me out" custom field to adjust the schedule
+  const tryMeetingResponse = await sendGraphQLRequest(`query {
+    ${type}(login: "${login}"){
+      projectV2(number: ${id}) {
+        field(name: "Try me out") {
+          ... on ProjectV2FieldCommon {
+            id
+            name
+          }
+        }
+      }
+    }
+  }`);
+  const tryMeeting = tryMeetingResponse.data[type].projectV2.field;
+
   // Another request to retrieve the list of sessions associated with the project.
   const sessionsResponse = await sendGraphQLRequest(`query {
     ${type}(login: "${login}") {
@@ -802,6 +817,11 @@ export async function fetchProject(login, id) {
     meetingsFieldId: meeting?.id,
     allowMultipleMeetings: !!meeting?.id,
 
+    // ID of the "Try me out" custom field, if it exists
+    // (it signals the ability to try schedule adjustments from GitHub)
+    trymeoutsFieldId: tryMeeting?.id,
+    allowTryMeOut: !!tryMeeting?.id,
+
     // Sections defined in the issue template
     sessionSections,
 
@@ -832,6 +852,8 @@ export async function fetchProject(login, id) {
             .find(value => value.field?.name === 'Slot')?.name,
           meeting: session.fieldValues.nodes
             .find(value => value.field?.name === 'Meeting')?.text,
+          trymeout: session.fieldValues.nodes
+            .find(value => value.field?.name === 'Try me out')?.text,
           validation: {
             check: session.fieldValues.nodes.find(value => value.field?.name === 'Check')?.text,
             warning: session.fieldValues.nodes.find(value => value.field?.name === 'Warning')?.text,
@@ -870,12 +892,12 @@ function parseProjectDescription(desc) {
  * Record the meetings assignments for the provided session
  */
 export async function saveSessionMeetings(session, project) {
-  for (const field of ['room', 'day', 'slot', 'meeting']) {
+  for (const field of ['room', 'day', 'slot', 'meeting', 'trymeout']) {
     // Project may not allow multiple meetings
     if (!project[field + 'sFieldId']) {
       continue;
     }
-    const prop = (field === 'meeting') ? 'text': 'singleSelectOptionId';
+    const prop = (field === 'meeting' || field === 'trymeout') ? 'text': 'singleSelectOptionId';
     let value = null;
     if (prop === 'text') {
       // Text field
@@ -997,6 +1019,9 @@ export function convertProjectToJSON(project) {
   };
   if (project.allowMultipleMeetings) {
     data.allowMultipleMeetings = true;
+  }
+  if (project.allowTryMeOut) {
+    data.allowTryMeOut = true;
   }
   for (const list of ['days', 'rooms', 'slots', 'labels']) {
     data[list] = toNameList(project[list]);
