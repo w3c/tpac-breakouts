@@ -66,7 +66,7 @@ export default async function (project, options) {
   }
   cli.seed = options.seed;
   cli.apply = options.apply;
-  cli.cmd = `npx suggest-grid --preserve ${cli.preserve} --except ${cli.except} --seed ${cli.seed}${cli.apply ? ' --apply' : ''}`;
+  cli.cmd = `npx tpac-breakouts schedule --preserve ${cli.preserve} --except ${cli.except} --seed ${cli.seed}${cli.apply ? ' --apply' : ''}`;
 
   // Apply preserve/except parameters
   if (options.preserve === 'all') {
