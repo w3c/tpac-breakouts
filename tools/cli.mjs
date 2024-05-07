@@ -198,7 +198,7 @@ program
   .argument('<number>', 'session to synchronize. Either a session number or "all" to synchronize all sessions.')
   .option('-s, --status <status>', 'status of the calendar entries: "draft", "tentative" or "confirmed".')
   .option('-q, --quiet', 'make the command fail silently without error when the session is invalid. Useful for jobs.')
-  .action(getCommandRunner('synchronizeCalendar'))
+  .action(getCommandRunner(synchronizeCalendar))
   .addHelpText('after', `
 Notes:
   - The command follows the project's "calendar" setting by default. If that setting is absent or set to "no" and the \`status\` option is not set either, the command will not do anything.
