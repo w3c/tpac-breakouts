@@ -42,7 +42,6 @@ export default async function (project, number, options) {
         console.warn();
         console.warn(`Convert session ${session.number} to calendar entries...`);
         const room = project.rooms.find(r => r.name === session.room);
-        const zoom = ROOM_ZOOM[room?.label] ? ROOM_ZOOM[room.label] : undefined;
         await synchronizeSessionWithCalendar({
           browser, session, project,
           calendarServer: CALENDAR_SERVER,
@@ -90,7 +89,6 @@ export default async function (project, number, options) {
       console.warn();
       console.warn(`Convert session ${session.number} to calendar entries...`);
       const room = project.rooms.find(r => r.name === session.room);
-      const zoom = ROOM_ZOOM[room?.label] ? ROOM_ZOOM[room.label] : undefined;
       await synchronizeSessionWithCalendar({
         browser, session, project,
         calendarServer: CALENDAR_SERVER,
