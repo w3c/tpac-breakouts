@@ -15,6 +15,9 @@ export default async function (project, options) {
   console.warn(`Adjust schedule with "Try me out" field...`);
   for (const session of project.sessions) {
     if (session.trymeout) {
+      // TODO: also support "try me out" for breakout sessions,
+      // updating the room, day and slot fields instead of meeting which
+      // does not exist for breakout sessions.
       session.meeting = session.trymeout;
       session.trymeout = null;
       session.updated = true;
