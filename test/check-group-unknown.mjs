@@ -48,4 +48,41 @@ describe('Validation of unknown groups', function () {
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
   });
+
+  it('is fine with joint meetings that involves an unknown group explicitly approved (using ",")', async function () {
+    const project = await fetchTestProject();
+    project.w3cIds = { 'WHATWG': 'ok' };
+    const sessionNumber = 3;
+    const errors = await validateSession(sessionNumber, project);
+    assert.deepStrictEqual(errors, []);
+  });
+
+  it('is fine with joint meetings that involves an unknown group explicitly approved (using "&")', async function () {
+    const project = await fetchTestProject();
+    project.w3cIds = { 'WHATWG': 'ok' };
+    const sessionNumber = 4;
+    const errors = await validateSession(sessionNumber, project);
+    assert.deepStrictEqual(errors, []);
+  });
+
+  it('is fine with joint meetings that involves an unknown group explicitly approved (using "and")', async function () {
+    const project = await fetchTestProject();
+    project.w3cIds = { 'WHATWG': 'ok' };
+    const sessionNumber = 5;
+    const errors = await validateSession(sessionNumber, project);
+    assert.deepStrictEqual(errors, []);
+  });
+
+  it('reports an error when title of a joint meeting does not end with "Joint meeting"', async function () {
+    const project = await fetchTestProject();
+    project.w3cIds = { 'WHATWG': 'ok' };
+    const sessionNumber = 6;
+    const errors = await validateSession(sessionNumber, project);
+    assert.deepStrictEqual(errors, [{
+      session: sessionNumber,
+      severity: 'error',
+      type: 'groups',
+      messages: ['Joint meeting found but the title does not end with "Joint Meeting"']
+    }]);
+  });
 });

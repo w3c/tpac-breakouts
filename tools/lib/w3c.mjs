@@ -88,23 +88,23 @@ function normalizeGroup(group) {
 
   // Hardcode a few exceptions
   if (group.abbrName === 'technical architecture group') {
-    group.alias = 'TAG';
+    group.alias = ['TAG'];
     group.label += ' (TAG)';
   }
   else if (group.abbrName === 'web platform incubator') {
-    group.alias = 'WICG';
+    group.alias = ['WICG'];
     group.label += ' (WICG)';
   }
   else if (group.abbrName === 'cascading style sheets (css)') {
     group.abbrName = 'cascading style sheets';
-    group.alias = 'css';
+    group.alias = ['CSS WG', 'Cascading Style Sheets WG'];
   }
   else if (group.abbrName === 'privacy') {
-    group.alias = 'ping';
+    group.alias = ['ping'];
     group.label += ' (PING)';
   }
   else if (group.abbrName === 'web real-time communications') {
-    group.alias = 'webrtc';
+    group.alias = ['WebRTC WG'];
   }
 
   return group;
