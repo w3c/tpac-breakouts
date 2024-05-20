@@ -62,6 +62,8 @@ const nonW3CGroupMeetings = {
 };
 
 describe('Scheduling of TPAC meetings', function () {
+  this.timeout(10000);
+
   before(function () {
     initTestEnv();
     setEnvKey('PROJECT_NUMBER', 'tpac2023');

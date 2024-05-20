@@ -14,54 +14,97 @@ import { fetchW3CGroups } from './w3c.mjs';
  * The object may only contain the GitHub login or the W3C account name.
  */
 export async function fetchSessionGroups(session, groups2W3CID) {
-  const lcGroups2W3CID = {};
-  for (const name of Object.keys(groups2W3CID ?? {})) {
-    const normalized = name.toLowerCase()
-      .replace(/ Business Group$/i, ' bg')
-      .replace(/ Community Group$/i, ' cg')
-      .replace(/ Interest Group$/i, ' ig')
-      .replace(/ Working Group$/i, ' wg')
-      .replace(/ Task Force$/i, ' tf');
-    lcGroups2W3CID[normalized] = groups2W3CID[name];
+  function normalizeTitle(title) {
+    return title
+      .replace(/ (BG|Business Group)($|,| and| &)/gi, ' BG$2')
+      .replace(/ (CG|Community Group)($|,| and| &)/gi, ' CG$2')
+      .replace(/ (IG|Interest Group)($|,| and| &)/gi, ' IG$2')
+      .replace(/ (WG|Working Group)($|,| and| &)/gi, ' WG$2')
+      .replace(/ (TF|Task Force)($|,| and| &)/gi, ' TF$2')
+      .trim();
   }
 
   const w3cGroups = await fetchW3CGroups();
+  const additionalGroups = Object.entries(groups2W3CID ?? {})
+    .map(([name, w3cId]) => {
+      return {
+        name: normalizeTitle(name),
+        label: name,
+        abbrName: normalizeTitle(name).toLowerCase(),
+        w3cId
+      };
+    });
+  const allGroups = additionalGroups.concat(w3cGroups);
 
+  // Issue title may be for a joint meeting, in which case it contains a list
+  // of groups separated by "&", "," or " and ". As individual group names may
+  // also contain these tokens, we cannot just split the title on them to get
+  // to the list of groups. Instead, the function consumes the title in chunks.
   function title2Groups(title) {
-    const jointMatch = title.match(/^(.*)\s+Joint Meeting$/i);
+    const groups = [];
+    const jointMatch = title.trim().match(/^(.*)\s+Joint Meeting$/i);
     if (jointMatch) {
       title = jointMatch[1];
     }
-    const normalized = title
-      .replace(/ (BG|Business Group)($|,| and| &)(?:(?:,| and| &)\s*(.*))?/gi, ' BG|')
-      .replace(/ (CG|Community Group)($|,| and| &)/gi, ' CG|')
-      .replace(/ (IG|Interest Group)($|,| and| &)/gi, ' IG|')
-      .replace(/ (WG|Working Group)($|,| and| &)/gi, ' WG|')
-      .replace(/ (TF|Task Force)($|,| and| &)/gi, ' TF|');
-    return normalized.split('|')
-      .map(name => name.trim())
-      .filter(name => !!name)
-      .map(name => {
-        const match =
-          name.match(/^(.*?)\s+(BG|CG|IG|WG|TF)$/i) ??
-          [name, name, 'other', null];
-        const type = match[2].toLowerCase();
-        const lcAbbrName = match[1].toLowerCase();
-        let group = w3cGroups.find(group =>
-          group.type === type &&
-          (group.abbrName === lcAbbrName || group.alias === lcAbbrName));
-        if (!group) {
-          group = {
-            name, type,
-            label: name,
-            abbrName: lcAbbrName
-          };
-          if (lcGroups2W3CID[name.toLowerCase()]) {
-            group.w3cId = lcGroups2W3CID[name.toLowerCase()];
-          }
+    let remaining = normalizeTitle(title);
+    while (remaining) {
+      const lcRemaining = remaining.toLowerCase();
+      let matchLength = 0;
+      let group = allGroups.reduce((candidate, group) => {
+        let candidateName = null;
+        if (lcRemaining.startsWith(group.name.toLowerCase())) {
+          candidateName = group.name;
         }
-        return Object.assign({}, group);
-      });
+        else {
+          candidateName = group.alias?.find(alias =>
+            lcRemaining.startsWith(alias.toLowerCase()));
+        }
+        if (!candidateName) {
+          // Current group is not a better match than the candidate group that
+          // we may have found already.
+          return candidate;
+        }
+
+        if (candidate && candidateName.length < matchLength) {
+          // Previously found candidate group was better, stick with it.
+          return candidate;
+        }
+
+        // Make sure that the name is followed by a separating token
+        const match = remaining.substring(candidateName.length)
+          .match(/^($|,| and| &)/i);
+        if (!match) {
+          return candidate;
+        }
+
+        // Still there? That means we found a (better) group candidate!
+        matchLength = candidateName.length + match[1].length;
+        return group;
+      }, null);
+
+      if (group) {
+        // We managed to map the beginning of the title to a group,
+        // let's proceed with the rest of the title.
+        remaining = remaining.substring(matchLength).trim();
+      }
+      else {
+        // String does not match any known group, consider that the whole
+        // title is the name of the group (validation will report the error)
+        const match =
+          remaining.match(/^(.*?)\s+(BG|CG|IG|WG|TF)$/i) ??
+          [remaining, remaining, 'other', null];
+        group = {
+          name: remaining,
+          type: match[2].toLowerCase(),
+          label: remaining,
+          abbrName: match[1].toLowerCase()
+        };
+        remaining = '';
+      }
+      groups.push(Object.assign({}, group));
+    }
+
+    return groups;
   }
 
   // Gather group name(s) from title

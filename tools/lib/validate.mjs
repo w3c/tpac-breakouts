@@ -162,7 +162,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         messages: groupsErrors
       });
     }
-    else if (session.title.match(/ Joint Meeting$/i)) {
+    else if (session.title.trim().match(/ Joint Meeting$/i)) {
       // TODO: validate that groups appear no more than once in the list
       if (session.groups.length === 1) {
         errors.push({
@@ -172,6 +172,14 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
           messages: ['Group cannot have a joint meeting with itself']
         });
       }
+    }
+    else if (session.groups.length > 1) {
+      errors.push({
+        session: sessionNumber,
+        severity: 'error',
+        type: 'groups',
+        messages: ['Joint meeting found but the title does not end with "Joint Meeting"']
+      });
     }
     else if (session.groups.length === 1) {
       const duplSessions = project.sessions.filter(s =>
