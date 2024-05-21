@@ -131,20 +131,15 @@ export function suggestSchedule(project, { seed }) {
     }));
 
   // Return next session to process (and flag it as processed)
-  // Note we schedule sessions that require a bigger room first.
-  // When requested capacity is the same, we schedule sessions that
-  // need a bigger number of slots first.
+  // Note we schedule sessions that require a bigger number of slots first.
   function selectNextSession(track) {
     let nbTimes = 0;
-    let capacity = 0;
     const session = sessions.reduce((candidate, s) => {
       if (!s.processed &&
           ((track === '_plenary' && s.description.type === 'plenary') ||
           track === '' ||
           s.tracks.includes(track))) {
-        if (!candidate || capacity < s.description.capacity ||
-            (capacity === s.description.capacity && nbTimes < s.description.times?.length)) {
-          capacity = s.description.capacity;
+        if (!candidate || nbTimes < s.description.times?.length) {
           nbTimes = s.description.times?.length ?? 0;
           return s;
         }

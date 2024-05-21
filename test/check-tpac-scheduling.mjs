@@ -164,12 +164,10 @@ _No response_`;
     let { errors: warnings } = await validateGrid(project);
     warnings = warnings.filter(error => error.severity === 'warning' && error.type === 'times');
     assert.deepStrictEqual(stripDetails(warnings), [{
-      session: 42,
+      session: 58,
       severity: 'warning',
       type: 'times',
       messages: [
-        'Session not scheduled on Tuesday (2023-09-12) at 11:30 - 13:00 as requested',
-        'Session not scheduled on Tuesday (2023-09-12) at 14:30 - 16:30 as requested',
         'Session not scheduled on Thursday (2023-09-14) at 17:00 - 18:30 as requested'
       ]
     }]);
