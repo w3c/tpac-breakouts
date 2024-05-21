@@ -40,6 +40,7 @@
       .capacity-error { background-color: #fcebbd; color: #af9540; }
       .track-error { background-color: #e1f2fa; color: #5992aa; }
       .scheduling-error { background-color: #f5ab9e; color: #8c3a2b; }
+      .scheduling-warning { background-color: #fcebbd; color: #8c3a2b; }
       .track {
         display: inline-block;
         background-color: #0E8A16;
@@ -498,6 +499,168 @@
             </tr>
           </tbody>
         </table>
+      </section>
+    </section>
+    <section id="groups">
+      <h2>Groups view</h2>
+      <section id="g134685">
+        <h3>Anti-Fraud CG</h3>
+        <p>No meeting scheduled</p>
+      </section>
+      <section id="g110716">
+        <h3>Audio CG</h3>
+        <ul>
+          <li>Monday, 11:00 - 16:00 (Room 4), joint meeting with Audio Description CG</li>
+          <li>Monday, 14:00 - 16:00 (Room 3)</li>
+        </ul>
+        <ul class="scheduling-error">
+          <li>Session scheduled at the same time as "Audio CG & Audio Description CG joint meeting" (#16), which shares group Audio CG</li>
+          <li>Session scheduled at the same time as "Audio Community Group" (#15), which shares group Audio CG</li>
+        </ul>
+      </section>
+      <section id="g106721">
+        <h3>Audio Description CG</h3>
+        <ul>
+          <li>Monday, 11:00 - 16:00 (Room 4), joint meeting with Audio CG</li>
+        </ul>
+        <ul class="scheduling-error">
+          <li>Session scheduled at the same time as "Audio Community Group" (#15), which shares group Audio CG</li>
+        </ul>
+      </section>
+      <section id="g119681">
+        <h3>Cognitive AI CG</h3>
+        <ul>
+          <li>Monday, 16:00 - 18:00 (Room 1)</li>
+        </ul>
+        <ul class="scheduling-warning">
+          <li>Same day/slot "Monday (2042-02-10) 16:00 - 18:00" as conflicting session "Color on the Web Community Group" (#18)</li>
+        </ul>
+      </section>
+      <section id="g96574">
+        <h3>Color on the Web CG</h3>
+        <ul>
+          <li>Monday, 16:00 - 18:00 (Room 2)</li>
+        </ul>
+      </section>
+      <section id="g127555">
+        <h3>Consent CG</h3>
+        <p>No meeting scheduled</p>
+      </section>
+      <section id="g72898">
+        <h3>Credentials CG</h3>
+        <ul>
+          <li>Thursday, 16:00 - 18:00 (Room 1)</li>
+        </ul>
+        <ul class="scheduling-error">
+          <li>Same IRC channel "#debug" as session #21 "Credible Web Community Group"</li>
+        </ul>
+      </section>
+      <section id="g103073">
+        <h3>Credible Web CG</h3>
+        <p>No meeting scheduled</p>
+      </section>
+      <section id="gundefined">
+        <h3>Fantasy WG</h3>
+        <p>No meeting scheduled</p>
+      </section>
+      <section id="g96877">
+        <h3>GPU for the Web CG</h3>
+        <ul>
+          <li>Tuesday, 9:00 - 18:00 (Room 6)</li>
+          <li>Thursday, 14:00 - 18:00 (Room 6)</li>
+          <li>Thursday, 9:00 - 11:00 (Room 6)</li>
+          <li>Friday, 11:00 - 13:00 (Room 6)</li>
+          <li>Friday, 16:00 - 18:00 (Room 6)</li>
+        </ul>
+      </section>
+      <section id="g49726">
+        <h3>Games CG</h3>
+        <ul>
+          <li>Monday, 9:00 - 16:00 (Room 5)</li>
+        </ul>
+        <ul class="scheduling-warning">
+          <li>Same day/slot "Monday (2042-02-10) 14:00 - 16:00" as session in same track "track: debug": "Generative AI CG" (#23)</li>
+        </ul>
+      </section>
+      <section id="g148246">
+        <h3>Generative AI CG</h3>
+        <ul>
+          <li>Monday, 14:00 - 16:00 (Room 6)</li>
+        </ul>
+        <ul class="scheduling-warning">
+          <li>Same day/slot "Monday (2042-02-10) 14:00 - 16:00" as session in same track "track: debug": "Games CG" (#22)</li>
+        </ul>
+      </section>
+      <section id="g109735">
+        <h3>Immersive Web WG</h3>
+        <p>No meeting scheduled</p>
+      </section>
+      <section id="g103226">
+        <h3>Improving Web Advertising BG</h3>
+        <ul>
+          <li>Monday, 11:00 - 13:00 (Room 3)</li>
+          <li>Monday, 9:00 - 11:00 (Room 2)</li>
+        </ul>
+        <ul class="scheduling-error">
+          <li>Session scheduled in same room (Room 2) and same day/slot (Monday (2042-02-10) 9:00 - 11:00) as session "Publishing BG" (12)</li>
+        </ul>
+      </section>
+      <section id="g49174">
+        <h3>JSON for Linking Data CG</h3>
+        <p>No meeting scheduled</p>
+      </section>
+      <section id="g115198">
+        <h3>Media WG</h3>
+        <p>No meeting scheduled</p>
+      </section>
+      <section id="g97159">
+        <h3>Publishing BG</h3>
+        <ul>
+          <li>Monday, 9:00 - 13:00 (Room 2)</li>
+        </ul>
+        <ul class="scheduling-error">
+          <li>Session scheduled in same room (Room 2) and same day/slot (Monday (2042-02-10) 9:00 - 11:00) as session "Improving Web Advertising Business Group" (13)</li>
+        </ul>
+      </section>
+      <section id="g138751">
+        <h3>RDF Dataset Canonicalization and Hash WG</h3>
+        <p>No meeting scheduled</p>
+      </section>
+      <section id="g67710">
+        <h3>Second Screen CG</h3>
+        <p>No meeting scheduled</p>
+      </section>
+      <section id="g74168">
+        <h3>Second Screen WG</h3>
+        <p>No meeting scheduled</p>
+      </section>
+      <section id="g45211">
+        <h3>Web Performance WG</h3>
+        <p>No meeting scheduled</p>
+      </section>
+      <section id="g47318">
+        <h3>Web Real-Time Communications WG</h3>
+        <p>No meeting scheduled</p>
+      </section>
+      <section id="g95969">
+        <h3>Web of Things WG</h3>
+        <p>No meeting scheduled</p>
+      </section>
+      <section id="g101196">
+        <h3>WebAssembly WG</h3>
+        <ul>
+          <li>2020-02-11, 11:00 - 13:00 (Room 1)</li>
+          <li>Tuesday, 9:00 - 11:00 (Room 1)</li>
+        </ul>
+      </section>
+      <section id="g125908">
+        <h3>WebTransport WG</h3>
+        <ul>
+          <li>Monday, 9:00 - 11:00 (Room 1)</li>
+        </ul>
+        <ul class="scheduling-error">
+          <li>Invalid room, day or slot in "Invalid room"</li>
+        </ul>
       </section>
     </section>
     <section id="todo">
