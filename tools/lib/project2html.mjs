@@ -159,6 +159,7 @@ export async function convertProjectToHTML(project, cliParams) {
       .capacity-error { background-color: #fcebbd; color: #af9540; }
       .track-error { background-color: #e1f2fa; color: #5992aa; }
       .scheduling-error { background-color: #f5ab9e; color: #8c3a2b; }
+      .scheduling-warning { background-color: #fcebbd; color: #8c3a2b; }
       .track {
         display: inline-block;
         background-color: #0E8A16;
@@ -355,6 +356,92 @@ export async function convertProjectToHTML(project, cliParams) {
       </section>`);
   }
   writeLine(2, '</section>');
+
+  if (project.metadata.type === 'groups') {
+    writeLine(2, `<section id="groups">
+      <h2>Groups view</h2>`);
+    const groupsView = {};
+    for (const session of sessions) {
+      for (const group of session.groups) {
+        if (!groupsView[group.name]) {
+          groupsView[group.name] = { group, meetings: [] };
+        }
+        if (session.groupedMeetings) {
+          const meetings = groupsView[group.name].meetings;
+          groupsView[group.name].meetings = meetings.concat(
+            session.groupedMeetings.map(meeting => Object.assign({ session, meeting }))
+          );
+        }
+      }
+    }
+    const groupNames = Object.keys(groupsView);
+    groupNames.sort();
+    for (const name of groupNames) {
+      const { group, meetings } = groupsView[name];
+      const groupSessions = meetings
+        .map(m => m.session)
+        .filter((session, pos, arr) => arr.findIndex(s => s.number === session.number) === pos);
+      writeLine(3, `<section id="g${group.w3cId}">
+        <h3>${group.name}</h3>`);
+      if (meetings.length > 0) {
+        meetings.sort((m1, m2) => {
+          const day1 = project.days.find(day => day.name === m1.meeting.day);
+          const day2 = project.days.find(day => day.name === m2.meeting.day);
+          if (day1.date < day2.date) {
+            return -1;
+          }
+          else if (day1.date > day2.date) {
+            return 1;
+          }
+          else if (m1.meeting.start < m2.meeting.start) {
+            return -1;
+          }
+          else if (m1.meeting.start > m2.meeting.start) {
+            return 1;
+          }
+          else {
+            return 0;
+          }
+        });
+        writeLine(4, `<ul>`);
+        for (const groupMeeting of meetings) {
+          const meeting = groupMeeting.meeting;
+          const day = project.days.find(day => day.name === meeting.day);
+          const room = project.rooms.find(room => room.name === meeting.room);
+          const session = groupMeeting.session;
+          let jointStr = '';
+          if (session.groups.length > 1) {
+            const groups = session.groups.filter(g => g.name !== name);
+            jointStr = `, joint meeting with ` + groups.map(g => g.name).join(', ');
+          }
+          writeLine(5, `<li>${day.label}, ${meeting.start} - ${meeting.end} (${room.label})${jointStr}</li>`);
+        }
+        writeLine(4, `</ul>`);
+      }
+      else {
+        writeLine(4, `<p>No meeting scheduled</p>`);
+      }
+      for (const type of ['warning', 'error']) {
+        const errors = validationIssues
+          .filter(err =>
+            groupSessions.find(s => s.number === err.session) &&
+            err.severity === type)
+          .map(err => err.messages)
+          .flat();
+        if (errors.length > 0) {
+          writeLine(4, `<ul class="scheduling-${type}">`);
+          for (const error of errors) {
+            writeLine(5, `<li>${error}</li>`);
+          }
+          writeLine(4, `</ul>`);
+        }
+      }
+      writeLine(3, `</section>`);
+    }
+    writeLine(2, '</section>');
+  }
+
+
 
   const unscheduled = sessions.filter(session => !hasMeeting(session));
   const incomplete = sessions
