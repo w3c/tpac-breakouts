@@ -364,8 +364,13 @@ export async function convertProjectToHTML(project, cliParams) {
     for (const session of sessions) {
       for (const group of session.groups) {
         if (!groupsView[group.name]) {
-          groupsView[group.name] = { group, meetings: [] };
+          groupsView[group.name] = {
+            group,
+            meetings: [],
+            sessions: []
+          };
         }
+        groupsView[group.name].sessions.push(session);
         if (session.groupedMeetings) {
           const meetings = groupsView[group.name].meetings;
           groupsView[group.name].meetings = meetings.concat(
@@ -377,10 +382,7 @@ export async function convertProjectToHTML(project, cliParams) {
     const groupNames = Object.keys(groupsView);
     groupNames.sort();
     for (const name of groupNames) {
-      const { group, meetings } = groupsView[name];
-      const groupSessions = meetings
-        .map(m => m.session)
-        .filter((session, pos, arr) => arr.findIndex(s => s.number === session.number) === pos);
+      const { group, meetings, sessions } = groupsView[name];
       writeLine(3, `<section id="g${group.w3cId}">
         <h3>${group.name}</h3>`);
       if (meetings.length > 0) {
@@ -418,22 +420,26 @@ export async function convertProjectToHTML(project, cliParams) {
         }
         writeLine(4, `</ul>`);
       }
-      else {
-        writeLine(4, `<p>No meeting scheduled</p>`);
-      }
-      for (const type of ['warning', 'error']) {
-        const errors = validationIssues
-          .filter(err =>
-            groupSessions.find(s => s.number === err.session) &&
-            err.severity === type)
-          .map(err => err.messages)
-          .flat();
-        if (errors.length > 0) {
-          writeLine(4, `<ul class="scheduling-${type}">`);
-          for (const error of errors) {
-            writeLine(5, `<li>${error}</li>`);
+      for (const session of sessions) {
+        if (!hasMeeting(session)) {
+          writeLine(4, `<ul class="scheduling-error">
+            <li><a href="https://github.com/${session.repository}/issues/${session.number}">#${session.number}</a>: No meeting scheduled</li>
+          </ul>`);
+        }
+        for (const type of ['warning', 'error']) {
+          const errors = validationIssues
+            .filter(err =>
+              err.session === session.number &&
+              err.severity === type)
+            .map(err => err.messages)
+            .flat();
+          if (errors.length > 0) {
+            writeLine(4, `<ul class="scheduling-${type}">`);
+            for (const error of errors) {
+              writeLine(5, `<li><a href="https://github.com/${session.repository}/issues/${session.number}">#${session.number}</a>: ${error}</li>`);
+            }
+            writeLine(4, `</ul>`);
           }
-          writeLine(4, `</ul>`);
         }
       }
       writeLine(3, `</section>`);
