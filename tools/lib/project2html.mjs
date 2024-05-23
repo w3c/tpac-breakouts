@@ -416,7 +416,7 @@ export async function convertProjectToHTML(project, cliParams) {
             const groups = session.groups.filter(g => g.name !== name);
             jointStr = `, joint meeting with ` + groups.map(g => g.name).join(', ');
           }
-          writeLine(5, `<li>${day.label}, ${meeting.start} - ${meeting.end} (${room.label})${jointStr}</li>`);
+          writeLine(5, `<li>${day.label}, ${meeting.start} - ${meeting.end} (${room.label})${jointStr} (#${session.number})</li>`);
         }
         writeLine(4, `</ul>`);
       }
