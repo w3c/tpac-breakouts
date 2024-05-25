@@ -121,7 +121,7 @@ program
   .option('-a, --apply', 'apply the created schedule, updating events information on GitHub')
   .option('-c, --changes <file>', 'YAML file with a list of changes to apply to the generated schedule')
   .option('-e, --except <numbers...>', 'numbers of sessions for which scheduling information should be discarded')
-  .option('-p, --preserve <numbers...>', 'numbers of sessions for which scheduling information should be preserved', 'all')
+  .option('-p, --preserve <numbers...>', 'numbers of sessions for which scheduling information should be preserved', ['all'])
   .option('-s, --seed <seed>', 'seed string to use to shuffle sessions')
   .action(getCommandRunner(schedule))
   .addHelpText('after', `

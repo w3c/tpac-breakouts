@@ -46,10 +46,10 @@ export default async function (project, options) {
 
   // Save initial grid algorithm settings as CLI params
   const cli = {};
-  if (options.preserve === 'all') {
+  if (options.preserve?.includes('all')) {
     cli.preserve = 'all';
   }
-  else if (options.preserve === 'none') {
+  else if (options.preserve?.includes('none')) {
     cli.preserve = 'none';
   }
   else {
@@ -69,7 +69,8 @@ export default async function (project, options) {
   cli.cmd = `npx tpac-breakouts schedule --preserve ${cli.preserve} --except ${cli.except} --seed ${cli.seed}${cli.apply ? ' --apply' : ''}`;
 
   // Apply preserve/except parameters
-  if (options.preserve === 'all') {
+  const preserveAll = options.preserve?.includes('all');
+  if (preserveAll) {
     options.preserve = project.sessions
       .filter(s => s.meeting || s.day || s.slot || s.room)
       .map(s => s.number);
@@ -82,7 +83,7 @@ export default async function (project, options) {
     options.preserve = [];
   }
   cli.preserveInPractice =
-    ((options.preserve === 'all' || options.except) && options.preserve.length > 0) ?
+    ((preserveAll || options.except) && options.preserve.length > 0) ?
       ' (in practice: ' + options.preserve.sort((n1, n2) => n1 - n2).join(',') + ')' :
       '';
   for (const session of validSessions) {
