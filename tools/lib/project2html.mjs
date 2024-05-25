@@ -18,6 +18,8 @@ export async function convertProjectToHTML(project, cliParams) {
     }
     html += spaces + str + '\n';
   }
+  // If --reduce show less info
+  const reduce = ((typeof cliParams !== 'undefined') && cliParams.reduce)? true : false;
 
   // Validate project sessions. Note this will also expand the sessions with
   // useful info (chairs, groups, description)
@@ -156,7 +158,7 @@ export async function convertProjectToHTML(project, cliParams) {
         vertical-align: bottom;
       }
       .conflict-error { background-color: #ddaeff; color: #8156a7; }
-      .capacity-error { background-color: #fcebbd; color: #af9540; }
+      ${reduce? '' : '.capacity-error { background-color: #fcebbd; color: #af9540; }' }
       .track-error { background-color: #e1f2fa; color: #5992aa; }
       .scheduling-error { background-color: #f5ab9e; color: #8c3a2b; }
       .scheduling-warning { background-color: #fcebbd; color: #8c3a2b; }
@@ -172,13 +174,17 @@ export async function convertProjectToHTML(project, cliParams) {
         font-size: smaller;
         white-space: nowrap;
       }
-    </style>
-  </head>
-  <body>
+    </style>`);
+    if (reduce) {
+      writeLine(2, `<link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/base.css" type="text/css"/>`);
+    }
+    writeLine(1, `</head>`);
+    writeLine(1, `<body>
     <h1>${project.metadata.meeting}</h1>`);
 
   // Start with global stats
-  writeLine(2, `<section id="overview">
+  if (!reduce) {
+     writeLine(2, `<section id="overview">
       <h2>Sessions overview</h2>
       <table>
         <thead>
@@ -225,24 +231,27 @@ export async function convertProjectToHTML(project, cliParams) {
         </tfoot>
       </table>
     </section>`);
+  }
 
   // Create one schedule table per day
   writeLine(2, `<section id="schedule">
       <h2>Schedule</h2>`);
   for (const table of tables) {
     // Columns represent the rooms
-    writeLine(3, `<section id="d${table.day.date}">
-        <h3>${table.day.name}</h3>
-        <table>
-          <thead>
-            <tr>
-              <th></th>`);
-    for (const room of table.rooms) {
-      writeLine(7, '<th>' + room.name + '</th>');
+    writeLine(3, `<section id="d${table.day.date}">`);
+    writeLine(4, `<h3>${table.day.name}</h3>`);    
+    writeLine(4, `<table>`);
+    if (!reduce) {
+       writeLine(5, `<thead>`);
+       writeLine(6, `<tr>`);
+       writeLine(7, `<th></th>`);
+       for (const room of table.rooms) {
+         writeLine(7, '<th>' + room.name + '</th>');
+       }
+       writeLine(6, `</tr>`);
+       writeLine(5, `</thead>`);
     }
-    writeLine(6, `</tr>
-          </thead>
-          <tbody>`);
+    writeLine(5, `<tbody>`);
 
     for (const slot of table.slots) {
       // Format the row header (the time slot)
@@ -310,7 +319,11 @@ export async function convertProjectToHTML(project, cliParams) {
           for (const session of cell.atomic) {
             const url = 'https://github.com/' + session.repository + '/issues/' + session.number;
             // Format session number (with link to GitHub) and name
-            writeLine(8, `<p><a href="${url}">#${session.number}</a>: ${session.title}`);
+	    if (reduce) {
+               writeLine(8, `<p><b>#${session.number}</b>: ${session.title}`);
+	    } else {
+               writeLine(8, `<p><a href="${url}">#${session.number}</a>: ${session.title}`);
+	    }
 
             // Format groups/chairs
             if (project.metadata.type !== 'groups') {
@@ -416,16 +429,24 @@ export async function convertProjectToHTML(project, cliParams) {
             const groups = session.groups.filter(g => g.name !== name);
             jointStr = `, joint meeting with ` + groups.map(g => g.name).join(', ');
           }
-          writeLine(5, `<li>${day.label}, ${meeting.start} - ${meeting.end} (${room.label})${jointStr} (#${session.number})</li>`);
+	  if (reduce) {
+            writeLine(5, `<li>${day.label}, ${meeting.start} - ${meeting.end}${jointStr} (#${session.number})</li>`);
+	  } else {
+            writeLine(5, `<li>${day.label}, ${meeting.start} - ${meeting.end} (${room.label})${jointStr} (#${session.number})</li>`);
+	  }
         }
         writeLine(4, `</ul>`);
       }
       for (const session of sessions) {
         if (!hasMeeting(session)) {
-          writeLine(4, `<ul class="scheduling-error">
-            <li><a href="https://github.com/${session.repository}/issues/${session.number}">#${session.number}</a>: No meeting scheduled</li>
-          </ul>`);
-        }
+           writeLine(4, `<ul class="scheduling-error">`);
+	   if (reduce) {
+              writeLine(5, `<li>#${session.number}: No meeting scheduled</li>`);
+	   } else {
+	      writeLine(5, `<li><a href="https://github.com/${session.repository}/issues/${session.number}">#${session.number}</a>: No meeting scheduled</li>`);
+	   }
+           writeLine(4, `</ul>`);	   
+	}
         for (const type of ['warning', 'error']) {
           const errors = validationIssues
             .filter(err =>
@@ -436,7 +457,11 @@ export async function convertProjectToHTML(project, cliParams) {
           if (errors.length > 0) {
             writeLine(4, `<ul class="scheduling-${type}">`);
             for (const error of errors) {
-              writeLine(5, `<li><a href="https://github.com/${session.repository}/issues/${session.number}">#${session.number}</a>: ${error}</li>`);
+	      if (reduce) {
+                writeLine(5, `<li>#${session.number}: ${error}</li>`);
+	      } else {
+                writeLine(5, `<li><a href="https://github.com/${session.repository}/issues/${session.number}">#${session.number}</a>: ${error}</li>`);
+	      }
             }
             writeLine(4, `</ul>`);
           }
@@ -462,7 +487,11 @@ export async function convertProjectToHTML(project, cliParams) {
         <ul>`);
       for (const session of invalidSessions) {
         const url = 'https://github.com/' + session.repository + '/issues/' + session.number;
-        writeLine(5, `<li><a href="${url}">#${session.number}</a>: ${session.title}</li>`);
+	if (reduce) {
+          writeLine(5, `<li>#${session.number}: ${session.title}</li>`);
+	} else {
+          writeLine(5, `<li><a href="${url}">#${session.number}</a>: ${session.title}</li>`);
+	}
       }
       writeLine(4, `</ul>
         </section>`);
@@ -474,7 +503,11 @@ export async function convertProjectToHTML(project, cliParams) {
         <ul>`);
       for (const session of unscheduled) {
         const url = 'https://github.com/' + session.repository + '/issues/' + session.number;
-        writeLine(5, `<li><a href="${url}">#${session.number}</a>: ${session.title}</li>`);
+	if (reduce) {
+          writeLine(5, `<li>#${session.number}: ${session.title}</li>`);
+	} else {
+          writeLine(5, `<li><a href="${url}">#${session.number}</a>: ${session.title}</li>`);
+	}
       }
       writeLine(4, `</ul>
         </section>`);
@@ -486,7 +519,11 @@ export async function convertProjectToHTML(project, cliParams) {
         <ul>`);
       for (const session of incomplete) {
         const url = 'https://github.com/' + session.repository + '/issues/' + session.number;
-        writeLine(5, `<li><a href="${url}">#${session.number}</a>: ${session.title}</li>`);
+	if (reduce) {
+          writeLine(5, `<li>#${session.number}: ${session.title}</li>`);
+	} else {
+          writeLine(5, `<li><a href="${url}">#${session.number}</a>: ${session.title}</li>`);
+	}
       }
       writeLine(4, `</ul>
         </section>`);
@@ -494,7 +531,7 @@ export async function convertProjectToHTML(project, cliParams) {
     writeLine(2, '</section>');
   }
 
-  if (cliParams) {
+  if (cliParams && !reduce) {
     writeLine(2, `<section id="cli">
       <h2>Generation parameters</h2>
       <ul>
@@ -502,6 +539,7 @@ export async function convertProjectToHTML(project, cliParams) {
         <li>except: ${cliParams.except}</li>
         <li>seed: ${cliParams.seed}</li>
         <li>apply: ${cliParams.apply}</li>
+        <li>reduce: ${cliParams.reduce}</li>
       </ul>
       <p>Command-line command:</p>
       <pre><code>${cliParams.cmd}</code></pre>
@@ -516,15 +554,19 @@ export async function convertProjectToHTML(project, cliParams) {
     slot: session.slot,
     meeting: session.meeting?.split(';').map(m => m.trim())
   }));
-  writeLine(2, `
-    <section id="yaml">
-      <h2>Data for Saving/Restoring Schedule</h2>
-      <pre id="data">`);
-  writeLine(0, YAML.stringify(yaml));
-  writeLine(3, `</pre>
-    </section>
-  </body>
-</html>`);
-
+  if (!reduce) {
+    writeLine(2, `
+      <section id="yaml">
+        <h2>Data for Saving/Restoring Schedule</h2>
+        <pre id="data">`);
+    writeLine(0, YAML.stringify(yaml));
+    writeLine(3, `</pre>
+      </section>`);
+  }
+  if (reduce) {
+     writeLine(2, `<!-- Seed: ${cliParams.seed} -->`);
+  }
+  writeLine(1, `</body>`);
+  writeLine(0, `</html>`);
   return html;
 }
