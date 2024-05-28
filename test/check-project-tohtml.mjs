@@ -51,4 +51,15 @@ describe('The module that converts a project to HTML', function () {
     const html = await convertProjectToHTML(project);
     await assertSameAsRef(html);
   });
+
+  it('creates the expected page when the reduce option is set', async function () {
+    setEnvKey('ISSUE_TEMPLATE', 'test/data/template-breakout.yml');
+    setEnvKey('PROJECT_NUMBER', 'breakouts-day-2024-reduce');
+    const project = await fetchTestProject();
+    const html = await convertProjectToHTML(project, {
+      seed: 'hophophop',
+      reduce: true
+    });
+    await assertSameAsRef(html);
+  });
 });

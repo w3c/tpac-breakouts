@@ -66,7 +66,8 @@ export default async function (project, options) {
   }
   cli.seed = options.seed;
   cli.apply = options.apply;
-  cli.cmd = `npx tpac-breakouts schedule --preserve ${cli.preserve} --except ${cli.except} --seed ${cli.seed}${cli.apply ? ' --apply' : ''}`;
+  cli.reduce = options.reduce;  
+  cli.cmd = `npx tpac-breakouts schedule --preserve ${cli.preserve} --except ${cli.except} --seed ${cli.seed}${cli.apply ? ' --apply' : ''}${cli.reduce ? ' --reduce' : ''}`;
 
   // Apply preserve/except parameters
   const preserveAll = options.preserve?.includes('all');

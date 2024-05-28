@@ -123,6 +123,7 @@ program
   .option('-e, --except <numbers...>', 'numbers of sessions for which scheduling information should be discarded')
   .option('-p, --preserve <numbers...>', 'numbers of sessions for which scheduling information should be preserved', ['all'])
   .option('-s, --seed <seed>', 'seed string to use to shuffle sessions')
+  .option('-r, --reduce', 'reduce output: schedule only, without github links or room info')
   .action(getCommandRunner(schedule))
   .addHelpText('after', `
 Output:
