@@ -347,11 +347,13 @@ export function suggestSchedule(project, { seed }) {
       else {
         // All rooms that have enough capacity are candidate rooms
         possibleRooms.push(...rooms
+          .filter(room => !room.vip)
           .filter(room => room.name !== plenaryRoom || session.description.type === 'plenary')
           .filter(room => room.capacity >= (session.description.capacity ?? 0))
           .sort(byCapacity));
         if (!meetCapacity) {
           possibleRooms.push(...rooms
+            .filter(room => !room.vip)
             .filter(room => room.name !== plenaryRoom || session.description.type === 'plenary')
             .filter(room => room.capacity < (session.description.capacity ?? +Infinity))
             .sort(byCapacityDesc));
