@@ -759,20 +759,28 @@ export async function fetchProject(login, id) {
     metadata: parseProjectDescription(project.shortDescription),
 
     // List of rooms. For each of them, we return the exact name of the option
-    // for the "Room" custom field in the project (which should include the
-    // room's capacity), the actual name of the room without the capacity, and
-    // the room's capacity in number of seats.
+    // for the "Room" custom field in the project (which includes all info),
+    // the actual room label, the room's capacity in number of seats, the
+    // location of the room, and the possible "vip" flag.
+    // The room's full name should follow the pattern:
+    //   "label (xx - location) (vip)"
+    // Examples:
+    //  Catalina (25)
+    //  Utrecht (40 - 2nd floor)
+    //  Main (120) (vip)
+    //  Business (vip)
+    //  Small (15)
+    //  Plenary (150 - 18th floor) (vip)
     roomsFieldId: rooms.id,
     rooms: rooms.options.map(room => {
-      const match =
-        room.name.match(/(.*) \((\d+)\s*(?:\-\s*([^\)]+))?\)$/) ??
-        [room.name, room.name, '30', undefined];
+      const match = room.name.match(/^(.*?)(?:\s*\((\d+)\s*(?:\-\s*([^\)]+))?\))?(?:\s*\((vip)\))?$/i);
       return {
         id: room.id,
         name: match[0],
         label: match[1],
         location: match[3] ?? '',
-        capacity: parseInt(match[2], 10)
+        capacity: parseInt(match[2] ?? '30', 10),
+        vip: !!match[4]
       };
     }),
 
