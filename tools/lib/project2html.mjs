@@ -309,7 +309,7 @@ export async function convertProjectToHTML(project, cliParams) {
           }
           const capacityIssues = cell.errors.filter(error =>
             error.issue.severity === 'warning' && error.issue.type === 'capacity');
-          if (capacityIssues.length > 0) {
+          if (capacityIssues.length > 0 && !reduce) {
             classAttr.push('capacity-error');
           }
           const trackIssues = cell.errors.filter(error =>
