@@ -991,6 +991,10 @@ export function validateProject(project) {
     if (!['groups', 'breakouts', undefined].includes(project.metadata?.type)) {
       errors.push('The "type" info must be one of "groups" or "breakouts"');
     }
+    if (project.metadata.calendar &&
+        !['no', 'draft', 'tentative', 'confirmed'].includes(project.metadata.calendar)) {
+      errors.push('The "calendar" info must be one of "no", "draft", "tentative" or "confirmed"');
+    }
   }
 
   for (const slot of project.slots) {
