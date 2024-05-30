@@ -346,7 +346,7 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
 
   const room = (project.metadata.rooms === 'hide') ?
     null :
-    project.rooms.find(room => room.name === entry.room);
+    project.rooms.find(room => room.name === entry.meeting.room);
   const roomLocation = (room?.label ?? '') + (room?.location ? ' - ' + room.location : '');
   await fillTextInput('input#event_location', roomLocation ?? '');
 
@@ -600,9 +600,9 @@ export async function synchronizeSessionWithCalendar(
   // sessions in the same plenary. To avoid creating a mess in the calendar,
   // we'll throw if one of these sessions has an error that needs fixing.
   if (session.description.type === 'plenary') {
-    const meeting = actions.update[0] ?? actions.create[0];
+    const meetingEntry = actions.update[0] ?? actions.create[0];
     const sessions = project.sessions
-      .filter(s => s !== session && meetsAt(s, meeting, project));
+      .filter(s => s !== session && meetsAt(s, meetingEntry.meeting, project));
     for (const s of sessions) {
       const errors = (await validateSession(s, project))
         .filter(error => error.severity === 'error');
@@ -647,8 +647,8 @@ export async function synchronizeSessionWithCalendar(
   }
 
   for (const entry of actions.update) {
-    console.log(`- refresh calendar entry ${entry.url}, meeting in ${entry.room} on ${entry.day} ${entry.start} - ${entry.end}`);
-    const room = project.rooms.find(room => room.name === entry.room);
+    console.log(`- refresh calendar entry ${entry.url}, meeting in ${entry.meeting.room} on ${entry.day} ${entry.start} - ${entry.end}`);
+    const room = project.rooms.find(room => room.name === entry.meeting.room);
     const zoom = project.metadata.rooms === 'hide' ? null : roomZoom[room.label];
     entry.url = await updateCalendarEntry({
       calendarUrl: entry.url,
@@ -658,8 +658,8 @@ export async function synchronizeSessionWithCalendar(
   }
 
   for (const entry of actions.create) {
-    console.log(`- create new calendar entry, meeting in ${entry.room} on ${entry.day} ${entry.start} - ${entry.end}`);
-    const room = project.rooms.find(room => room.name === entry.room);
+    console.log(`- create new calendar entry, meeting in ${entry.meeting.room} on ${entry.day} ${entry.start} - ${entry.end}`);
+    const room = project.rooms.find(room => room.name === entry.meeting.room);
     const zoom = project.metadata.rooms === 'hide' ? null : roomZoom[room.label];
     entry.url = await updateCalendarEntry({
       calendarUrl: null,
