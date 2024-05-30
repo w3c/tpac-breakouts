@@ -12,6 +12,13 @@ export default async function (project, number, options) {
     throw new Error(`Invalid argument passed as parameter. Expected "all" or a session number and got "${number}"`);
   }
 
+  if (options.status?.toLowerCase() === 'no' ||
+      !project.metadata.calendar ||
+      project.metadata.calendar.toLowerCase() === 'no') {
+    console.warn('Nothing to do, synchronization with W3C calendar is disabled. To enable synchronization, set the `--status` command-line option or the "calendar" setting in the project\'s description.');
+    return;
+  }
+
   console.warn(`Retrieve environment variables...`);
   const CALENDAR_SERVER = await getEnvKey('CALENDAR_SERVER', 'www.w3.org');
   console.warn(`- CALENDAR_SERVER: ${CALENDAR_SERVER}`);
@@ -47,7 +54,7 @@ export default async function (project, number, options) {
           calendarServer: CALENDAR_SERVER,
           login: W3C_LOGIN,
           password: W3C_PASSWORD,
-          status: options.status,
+          status: options.status ?? project.metadata.calendar,
           roomZoom: project.roomZoom
         });
         console.warn(`Convert session ${session.number} to calendar entries... done`);
@@ -94,7 +101,7 @@ export default async function (project, number, options) {
         calendarServer: CALENDAR_SERVER,
         login: W3C_LOGIN,
         password: W3C_PASSWORD,
-        status: options.status,
+        status: options.status ?? project.metadata.calendar,
         roomZoom: project.roomZoom
       });
       console.warn(`Convert session ${session.number} to calendar entries... done`);
