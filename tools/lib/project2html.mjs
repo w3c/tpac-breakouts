@@ -181,6 +181,7 @@ export async function convertProjectToHTML(project, cliParams) {
         font-size: smaller;
         white-space: nowrap;
       }
+      .nbrooms { font-weight: normal; }
     </style>
     <link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/base.css" type="text/css"/>
   </head>
@@ -261,6 +262,7 @@ export async function convertProjectToHTML(project, cliParams) {
       writeLine(6, `<tr>
               <th>
                 ${slot.name}`);
+      writeLine(8, `<p class="nbrooms">${slot.sessions.length} meetings</p>`);
 
       const groupConflicts = [... new Set(slot.errors
         .filter(error => error.issue.type === 'group conflict')
