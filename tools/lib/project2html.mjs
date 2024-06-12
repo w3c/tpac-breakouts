@@ -354,7 +354,7 @@ export async function convertProjectToHTML(project, cliParams) {
 
             const capacityIssue = capacityIssues
               .find(error => error.issue.session === session.number);
-            if (capacityIssue) {
+            if (capacityIssue && !reduce) {
               writeLine(8, '<br/><b>Capacity: ' + session.description.capacity + '</b>');
             }
             writeLine(8, '</p>');
