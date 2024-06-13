@@ -534,6 +534,7 @@ export async function fetchProject(login, id) {
               ... on ProjectV2SingleSelectFieldOption {
                 id
                 name
+                description
               }
             }
           }
@@ -556,6 +557,7 @@ export async function fetchProject(login, id) {
               ... on ProjectV2SingleSelectFieldOption {
                 id
                 name
+                description
               }
             }
           }
@@ -577,6 +579,7 @@ export async function fetchProject(login, id) {
               ... on ProjectV2SingleSelectFieldOption {
                 id
                 name
+                description
               }
             }
           }
@@ -780,7 +783,8 @@ export async function fetchProject(login, id) {
         label: match[1],
         location: match[3] ?? '',
         capacity: parseInt(match[2] ?? '30', 10),
-        vip: !!match[4]
+        vip: !!match[4],
+        description: room.description
       };
     }),
 
