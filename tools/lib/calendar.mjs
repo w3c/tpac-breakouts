@@ -652,6 +652,7 @@ export async function synchronizeSessionWithCalendar(
     const zoom = project.metadata.rooms === 'hide' ? null : roomZoom[room.label];
     entry.url = await updateCalendarEntry({
       calendarUrl: entry.url,
+      calendarServer,
       entry, session, project,
       browser, login, password, status, zoom
     });
@@ -663,6 +664,7 @@ export async function synchronizeSessionWithCalendar(
     const zoom = project.metadata.rooms === 'hide' ? null : roomZoom[room.label];
     entry.url = await updateCalendarEntry({
       calendarUrl: null,
+      calendarServer,
       entry, session, project,
       browser, login, password, status, zoom
     });
@@ -705,7 +707,7 @@ export async function synchronizeSessionWithCalendar(
  * Create/Update calendar entry for the given meeting
  */
 async function updateCalendarEntry(
-    { calendarUrl, entry, session, project,
+    { calendarUrl, calendarServer, entry, session, project,
       browser, login, password, status, zoom }) {
   const calendarEditUrl = calendarUrl ?
     `${calendarUrl.replace(/www\.w3\.org/, calendarServer)}edit/` :
