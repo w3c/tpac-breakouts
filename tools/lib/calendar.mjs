@@ -722,8 +722,13 @@ async function updateCalendarEntry(
     await authenticate(page, login, password, calendarEditUrl);
 
     if (calendarUrl) {
-      console.log('- make sure calendar entry is linked to the session');
-      await assessCalendarEntry(page, session);
+      // TODO: this disables the security check, which sort of works
+      // for group meetings provided that the repository remains private.
+      // That's not fantastic though, find a better way!
+      if (project.metadata.type !== 'groups') {
+        console.log('- make sure calendar entry is linked to the session');
+        await assessCalendarEntry(page, session);
+      }
 
       console.log('- assess the type of the calendar entry');
       const sharedCalendarEntry = await isSharedCalendarEntry(page, session);
