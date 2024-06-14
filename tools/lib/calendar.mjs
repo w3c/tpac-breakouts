@@ -437,12 +437,14 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
     if (session.description.discussion) {
       await fillTextInput('input#event_chat', session.description.discussion);
     }
-    else {
+    else if (session.description.shortname) {
       await fillTextInput('input#event_chat',
         `https://irc.w3.org/?channels=${encodeURIComponent(session.description.shortname)}`);
     }
     await fillTextInput('input#event_agendaUrl', getAgendaUrl(session));
-    await fillTextInput('textarea#event_agenda', formatAgenda(session));
+    if (project.metadata.type !== 'groups') {
+      await fillTextInput('textarea#event_agenda', formatAgenda(session));
+    }
   }
 
   const minutesMaterial = session.description.materials?.minutes ?? '@@';
