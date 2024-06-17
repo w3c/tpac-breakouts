@@ -377,7 +377,7 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
       typeof group.w3cId === 'number');
     if (groups.length > 0) {
       await page.evaluate(`window.tpac_groups = ${JSON.stringify(groups, null, 2)};`);
-      await page.$eval('select#event_groups', el => el.innerHTML =
+      await page.$eval('select#event_groups', el => el.innerHTML +=
         window.tpac_groups
           .filter(group => !el.querySelector(`option[selected][value="${group.w3cId}"]`))
           .map(group => `<option value="${group.w3cId}" selected="selected">${group.name}</option>`)
