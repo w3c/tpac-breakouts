@@ -73,7 +73,7 @@ describe('Validation of unknown groups', function () {
     assert.deepStrictEqual(errors, []);
   });
 
-  it('reports an error when title of a joint meeting does not end with "Joint meeting"', async function () {
+  it('reports an error when title of a joint meeting does not have "Joint meeting"', async function () {
     const project = await fetchTestProject();
     project.w3cIds = { 'WHATWG': 'ok' };
     const sessionNumber = 6;
@@ -82,7 +82,7 @@ describe('Validation of unknown groups', function () {
       session: sessionNumber,
       severity: 'error',
       type: 'groups',
-      messages: ['Joint meeting found but the title does not end with "Joint Meeting"']
+      messages: ['Joint meeting found but the title does not have "Joint Meeting"']
     }]);
   });
 });

@@ -4,6 +4,8 @@ import { getEnvKey, setEnvKey } from '../tools/lib/envkeys.mjs';
 import { fetchProject, validateProject } from '../tools/lib/project.mjs';
 import { validateSession } from '../tools/lib/validate.mjs';
 import { groupSessionMeetings } from '../tools/lib/meetings.mjs';
+import { convertProjectToHTML } from '../tools/lib/project2html.mjs';
+import { readFile, writeFile } from 'node:fs/promises';
 
 async function fetchTestProject() {
   return fetchProject(
@@ -13,6 +15,18 @@ async function fetchTestProject() {
 
 function toGroupNames(groups) {
   return groups ? groups.map(group => group.name) : [];
+}
+
+async function assertSameAsRef(html) {
+  const refName = await getEnvKey('PROJECT_NUMBER');
+  const refFilename = `test/data/ref-${refName}.html`;
+  const updateRef = await getEnvKey('UPDATE_REFS', false);
+  if (updateRef) {
+    await writeFile(refFilename, html, 'utf8');
+  }
+  const refHtml = (await readFile(refFilename, 'utf8'))
+    .replace(/\r/g, '');
+  assert.strictEqual(html, refHtml);
 }
 
 describe('The group meetings highlight code', function () {
@@ -70,6 +84,20 @@ describe('The group meetings highlight code', function () {
       ['Second Screen WG', 'Media WG']);
   });
 
+  it('reports an error when meeting is only an highlight', async function () {
+    const project = await fetchTestProject();
+    const sessionNumber = 6;
+    const errors = await validateSession(sessionNumber, project);
+    assert.deepStrictEqual(errors, [{
+      session: 6,
+      severity: 'error',
+      type: 'groups',
+      messages: [
+        'No group associated with the issue'
+      ]
+    }]);
+  });
+
   it('does not merge meetings when an highlight is used in one of them', async function () {
     const project = await fetchTestProject();
     const errors = await validateProject(project);
@@ -91,5 +119,11 @@ describe('The group meetings highlight code', function () {
         day: 'Monday (2042-02-10)'
       }
     ]);
+  });
+
+  it('reports highlights in the group view in the generated HTML page', async function () {
+    const project = await fetchTestProject();
+    const html = await convertProjectToHTML(project);
+    await assertSameAsRef(html);
   });
 });

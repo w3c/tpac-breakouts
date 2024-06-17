@@ -14,7 +14,8 @@ export default {
 
   rooms: [
     'Room 1',
-    'Room 2'
+    'Room 2',
+    'Room 3'
   ],
 
   sessions: [
@@ -51,6 +52,13 @@ export default {
       title: 'Second Screen WG & Media WG Joint Meeting: Media streaming',
       room: 'Room 2',
       meeting: 'Monday, 14:00'
+    },
+
+    {
+      number: 6,
+      title: '> Just an highlight',
+      room: 'Room 3',
+      meeting: 'Monday, 9:00'
     }
   ]
 }
