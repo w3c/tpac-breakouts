@@ -42,9 +42,10 @@ export async function fetchSessionGroups(session, groups2W3CID) {
   // to the list of groups. Instead, the function consumes the title in chunks.
   function title2Groups(title) {
     const groups = [];
-    const jointMatch = title.trim().match(/^(.*)\s+Joint Meeting$/i);
+    let highlight = null;
+    const jointMatch = title.trim().match(/^(.*)\s+Joint Meeting(?=$|\s*([:>].*))/i);
     if (jointMatch) {
-      title = jointMatch[1];
+      title = jointMatch[1] + (jointMatch[2] ?? '');
     }
     let remaining = normalizeTitle(title);
     while (remaining) {
@@ -72,7 +73,7 @@ export async function fetchSessionGroups(session, groups2W3CID) {
 
         // Make sure that the name is followed by a separating token
         const match = remaining.substring(candidateName.length)
-          .match(/^($|,| and| &)/i);
+          .match(/^($|,| and| &|\s*(?=[:>]))/i);
         if (!match) {
           return candidate;
         }
@@ -88,23 +89,32 @@ export async function fetchSessionGroups(session, groups2W3CID) {
         remaining = remaining.substring(matchLength).trim();
       }
       else {
-        // String does not match any known group, consider that the whole
-        // title is the name of the group (validation will report the error)
-        const match =
-          remaining.match(/^(.*?)\s+(BG|CG|IG|WG|TF)$/i) ??
-          [remaining, remaining, 'other', null];
-        group = {
-          name: remaining,
-          type: match[2].toLowerCase(),
-          label: remaining,
-          abbrName: match[1].toLowerCase()
-        };
+        // String does not match any known group. This can be an highlight
+        // (something like ": Foo" or "> Foo"). Otherwise, we'll consider
+        // that the whole string is the name of a group. Validation will
+        // report an error afterwards.
+        if (remaining.match(/^[:>]/)) {
+          highlight = remaining.substring(1).trim();
+        }
+        else {
+          const match =
+            remaining.match(/^(.*?)\s+(BG|CG|IG|WG|TF)$/i) ??
+            [remaining, remaining, 'other', null];
+          group = {
+            name: remaining,
+            type: match[2].toLowerCase(),
+            label: remaining,
+            abbrName: match[1].toLowerCase()
+          };
+        }
         remaining = '';
       }
-      groups.push(Object.assign({}, group));
+      if (group) {
+        groups.push(Object.assign({}, group));
+      }
     }
 
-    return groups;
+    return { groups, highlight };
   }
 
   // Gather group name(s) from title

@@ -425,11 +425,15 @@ export async function convertProjectToHTML(project, cliParams) {
           const room = project.rooms.find(room => room.name === meeting.room);
           const session = groupMeeting.session;
           let jointStr = '';
+          let highlightStr = '';
           if (session.groups.length > 1) {
             const groups = session.groups.filter(g => g.name !== name);
             jointStr = `, joint meeting with ` + groups.map(g => g.name).join(', ');
           }
-          writeLine(5, `<li>${day.label}, ${meeting.start} - ${meeting.end}${reduce ? '' : ' (' + room.label + ')'}${jointStr} (#${session.number})</li>`);
+          if (session.highlight) {
+            highlightStr = `, topic: ${session.highlight}`;
+          }
+          writeLine(5, `<li>${day.label}, ${meeting.start} - ${meeting.end}${reduce ? '' : ' (' + room.label + ')'}${jointStr}${highlightStr} (#${session.number})</li>`);
         }
         writeLine(4, `</ul>`);
       }

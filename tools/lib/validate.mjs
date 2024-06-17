@@ -151,7 +151,9 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   if (project.metadata.type === 'groups') {
     // Retrieve information about groups for all sessions
     for (const s of project.sessions) {
-      s.groups = await fetchSessionGroups(s, project.w3cIds);
+      const { groups, highlight } = await fetchSessionGroups(s, project.w3cIds);
+      s.groups = groups;
+      s.highlight = highlight;
     }
     const groupsErrors = validateSessionGroups(session.groups);
     if (groupsErrors.length > 0) {
@@ -162,8 +164,9 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         messages: groupsErrors
       });
     }
-    else if (session.title.trim().match(/ Joint Meeting$/i)) {
+    else if (session.title.trim().match(/^(.*)\s+Joint Meeting(?=$|\s*([:>].*))/i)) {
       // TODO: validate that groups appear no more than once in the list
+      // TODO: validate that the joint meeting is not a duplicate of another one
       if (session.groups.length === 1) {
         errors.push({
           session: sessionNumber,
@@ -178,7 +181,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         session: sessionNumber,
         severity: 'error',
         type: 'groups',
-        messages: ['Joint meeting found but the title does not end with "Joint Meeting"']
+        messages: ['Joint meeting found but the title does not have "Joint Meeting"']
       });
     }
     else if (session.groups.length === 1) {
@@ -186,7 +189,8 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         s !== session &&
         s.groups.length === 1 &&
         s.groups[0].type === session.groups[0].type &&
-        s.groups[0].abbrName === session.groups[0].abbrName);
+        s.groups[0].abbrName === session.groups[0].abbrName &&
+        s.highlight === session.highlight);
       if (duplSessions.length > 0) {
         errors.push({
           session: sessionNumber,
