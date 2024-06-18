@@ -3,6 +3,10 @@ import { getEnvKey } from '../lib/envkeys.mjs';
 import { synchronizeSessionWithCalendar } from '../lib/calendar.mjs';
 import { validateSession, validateGrid } from '../lib/validate.mjs';
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms, 'slept'));
+}
+
 export default async function (project, number, options) {
   const sessionToSynchronize =
     (number.trim().toLowerCase() === 'all') ?
@@ -58,6 +62,9 @@ export default async function (project, number, options) {
           roomZoom: project.roomZoom
         });
         console.warn(`Convert session ${session.number} to calendar entries... done`);
+        console.warn('Wait 2s to ease load on calendar server...');
+        await sleep(2000);
+        console.warn('Wait 2s to ease load on calendar server... done');
       }
     }
     finally {
