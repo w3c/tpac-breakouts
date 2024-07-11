@@ -433,7 +433,6 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
   }
   else {
     await fillTextInput('input#event_title', session.title);
-    await fillTextInput('textarea#event_description', convertToCalendarMarkdown(session.description.description));
     if (session.description.discussion) {
       await fillTextInput('input#event_chat', session.description.discussion);
     }
@@ -441,15 +440,28 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
       await fillTextInput('input#event_chat',
         `https://irc.w3.org/?channels=${encodeURIComponent(session.description.shortname)}`);
     }
-    await fillTextInput('input#event_agendaUrl', getAgendaUrl(session));
-    if (project.metadata.type !== 'groups') {
+
+    // Always update the next few fields for breakout sessions,
+    // only if there is some actual info to set for group meetings
+    // (group meetings issues typically do not contain anything about agendas
+    // or descriptions, and group chairs may adjust the calendar entries
+    // themselves, so let's preserve the info by default)
+    if (project.metadata.type !== 'groups' || getAgendaUrl(session)) {
+      await fillTextInput('input#event_agendaUrl', getAgendaUrl(session));
+    }
+    if (project.metadata.type !== 'groups' || formatAgenda(session)) {
       await fillTextInput('textarea#event_agenda', formatAgenda(session));
+    }
+    if (project.metadata.type !== 'groups' || convertToCalendarMarkdown(session.description.description)) {
+      await fillTextInput('textarea#event_description', convertToCalendarMarkdown(session.description.description));
     }
   }
 
   const minutesMaterial = session.description.materials?.minutes ?? '@@';
   const minutesUrl = todoStrings.includes(minutesMaterial) ? undefined : minutesMaterial;
-  await fillTextInput('input#event_minutesUrl', minutesUrl);
+  if (project.metadata.type !== 'groups' || minutesUrl) {
+    await fillTextInput('input#event_minutesUrl', minutesUrl);
+  }
 
   // Big meeting is something like "TPAC 2023", not the actual option value
   await page.evaluate(`window.tpac_breakouts_meeting = "${project.metadata.meeting}";`);
