@@ -452,7 +452,7 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
     if (project.metadata.type !== 'groups' || getAgendaUrl(session)) {
       await fillTextInput('input#event_agendaUrl', getAgendaUrl(session));
     }
-    if (project.metadata.type !== 'groups' || formatAgenda(session)) {
+    if (project.metadata.type !== 'groups') {
       await fillTextInput('textarea#event_agenda', formatAgenda(session));
     }
     if (project.metadata.type !== 'groups' || convertToCalendarMarkdown(session.description.description)) {
