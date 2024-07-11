@@ -338,6 +338,13 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
     const el = await selectEl(selector);
     await el.select(value);
   }
+  async function toggleBox(selector, status) {
+    const checked = await page.$eval(selector, el => el.checked ? 'checked' : 'unchecked');
+    if (checked !== status) {
+      const el = await selectEl(selector);
+      await el.click();
+    }
+  }
 
   // Note statuses are different when calendar entry has already been flagged as
   // "tentative" or "confirmed" ("draft" no longer exists in particular).
@@ -399,10 +406,6 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
       );
     }
   }
-
-  // Show joining information to "Holders of a W3C account", unless session is restricted
-  // to TPAC registrants
-  await clickOnElement('input#event_joinVisibility_' + (session.description.attendance === 'restricted' ? '2' : '1'));
 
   if (getZoomLink(zoom)) {
     await fillTextInput('input#event_joinLink', getZoomLink(zoom));
@@ -469,6 +472,20 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
     el.selected = el.innerText.startsWith(window.tpac_breakouts_meeting)));
   await chooseOption('select#event_category',
     project.metadata.type === 'groups' ? 'group-meetings' : 'breakout-sessions');
+
+  // For group meetings and restricted breakout sessions, tick the restrict
+  // attendance box and show joining information to people invited to the event
+  // and holders of a W3C account with Member access.
+  // Show information to everyone with a W3C account otherwise.
+  if ((project.metadata.type === 'groups') ||
+      (session.description.attendance === 'restricted')) {
+    await toggleBox('input#event_bigMeetingRestricted', 'checked');
+    await clickOnElement('input#event_joinVisibility_2');
+  }
+  else {
+    await toggleBox('input#event_bigMeetingRestricted', 'unchecked');
+    await clickOnElement('input#event_joinVisibility_1');
+  }
 
   // Click on "Create/Update but don't send notifications" button
   // and return URL of the calendar entry
