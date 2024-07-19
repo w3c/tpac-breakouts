@@ -467,9 +467,16 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
   }
 
   // Big meeting is something like "TPAC 2023", not the actual option value
-  await page.evaluate(`window.tpac_breakouts_meeting = "${project.metadata.meeting}";`);
-  await page.$$eval('select#event_big_meeting option', options => options.forEach(el =>
-    el.selected = el.innerText.startsWith(window.tpac_breakouts_meeting)));
+  // Note the need to use the "select" method on the select element so as to
+  // trigger a "change" event that the page hooks into to display the other
+  // fields we need (event_category, and the event_bigMeetingRestricted).
+  const bigMeetingValue = await page.evaluate(
+    meeting => [...document.querySelectorAll('select#event_big_meeting option')]
+      .find(op => op.innerText.startsWith(meeting))
+      .value,
+    project.metadata.meeting);
+  const bigMeetingSelect = await selectEl('select#event_big_meeting');
+  await bigMeetingSelect.select(bigMeetingValue);
   await chooseOption('select#event_category',
     project.metadata.type === 'groups' ? 'group-meetings' : 'breakout-sessions');
 
