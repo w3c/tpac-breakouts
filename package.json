@@ -49,6 +49,6 @@
     "yaml": "^2.4.5"
   },
   "devDependencies": {
-    "mocha": "^10.6.0"
+    "mocha": "^10.7.3"
   }
 }
