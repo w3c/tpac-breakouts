@@ -18,6 +18,7 @@ import synchronizeCalendar from './commands/sync-calendar.mjs';
 import validate from './commands/validate.mjs';
 import viewEvent from './commands/view-event.mjs';
 import tryChanges from './commands/try-changes.mjs';
+import assessRoomsCapacity from './commands/assess-rooms-capacity.mjs';
 
 
 /**
@@ -233,6 +234,23 @@ Notes:
 Examples:
   $ npx tpac-breakouts sync-calendar all --status tentative
   $ npx tpac-breakouts sync-calendar 42 --status confirmed
+`);
+
+
+/******************************************************************************
+ * The "assess-rooms" command
+ *****************************************************************************/
+program
+  .command('assess-rooms')
+  .summary('Assess assigned rooms capacity against the actual number of registrants for a TPAC event.')
+  .description('Assess assigned rooms capacity against the actual number of registrants for each meeting for a TPAC event.')
+  .argument('<number>', 'meeting rooms to assess. Either a group session number or "all" to assess all meeting rooms.')
+  .option('-u, --url <url>', 'URL of the page that lists the registrants per meeting. The code uses `https://www.w3.org/register/[meeting name]/registrants` when not given')
+  .action(getCommandRunner(assessRoomsCapacity))
+  .addHelpText('after', `
+Examples:
+  $ npx tpac-breakouts assess-rooms all
+  $ npx tpac-breakouts assess-rooms 42
 `);
 
 
