@@ -25,7 +25,9 @@ export default {
     'Room 3',
     'Room 4',
     'Room 5',
-    'Room 6'
+    'Room 6',
+    'Room 7',
+    'Room 8'
   ],
 
   w3cAccounts: {
@@ -238,6 +240,15 @@ Check contiguous slots merge and links to calendar
 - [Monday, 9:00 - 18:00](https://example.com/calendar/6)`,
       room: 'Room 6',
       meeting: 'Tuesday, 14:00; Tuesday, 11:00; Tuesday, 9:00; Thursday, 9:00; Tuesday, 16:00; Thursday, 16:00; Thursday, 14:00; Friday, 11:00; Friday, 16:00'
+    },
+
+    {
+      number: 25,
+      title: 'RDF-star Working Group',
+      body: `
+### Session description
+Check warning on different rooms with contiguous slots`,
+      meeting: 'Tuesday, 9:00, Room 7; Tuesday, 11:00, Room 8; Tuesday, 14:00, Room 7; Thursday, 9:00, Room 8'
     }
   ]
 }

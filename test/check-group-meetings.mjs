@@ -146,6 +146,21 @@ describe('The group meetings module', function () {
     }]);
   });
 
+  it('warns about room switches', async function () {
+    const project = await fetchTestProject();
+    const sessionNumber = 25;
+    const errors = await validateSession(sessionNumber, project);
+    assert.deepStrictEqual(stripDetails(errors), [{
+      session: sessionNumber,
+      severity: 'warning',
+      type: 'switch',
+      messages: [
+        'Room switch between "Room 7" and "Room 8" on Tuesday at 11:00',
+        'Room switch between "Room 8" and "Room 7" on Tuesday at 14:00'
+      ]
+    }]);
+  });
+
   it('reports an error when a group needs to be at two places at once', async function () {
     const project = await fetchTestProject();
     const sessionNumber = 15;
