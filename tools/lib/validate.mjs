@@ -13,6 +13,7 @@ const schedulingErrors = [
   'warning: capacity',
   'warning: conflict',
   'warning: duration',
+  'warning: switch',
   'warning: track',
   'warning: times'
 ];
@@ -407,6 +408,36 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         details: capacityWarnings
       });
     }
+  }
+
+  // Check whether the session needs to switch rooms from one slot to the next
+  const scheduledMeetings = meetings.filter(m => m.room && m.day && m.slot);
+  const switchWarnings = scheduledMeetings
+    .map(meeting => {
+      const slotIndex = project.slots.findIndex(s => s.name === meeting.slot);
+      const nextMeetingInDifferentRoom = scheduledMeetings.find(m =>
+        m.day === meeting.day &&
+        m.room !== meeting.room &&
+        project.slots.findIndex(s => s.name === m.slot) === slotIndex + 1);
+      return nextMeetingInDifferentRoom ?
+        { meeting: nextMeetingInDifferentRoom, previous: meeting } :
+        null;
+    })
+    .filter(warning => !!warning);
+  if (switchWarnings.length > 0) {
+    errors.push({
+      session: sessionNumber,
+      severity: 'warning',
+      type: 'switch',
+      messages: switchWarnings.map(warn => {
+        const prevRoom = project.rooms.find(s => s.name === warn.previous.room);
+        const nextRoom = project.rooms.find(s => s.name === warn.meeting.room);
+        const day = project.days.find(d => d.name === warn.meeting.day);
+        const slot = project.slots.find(s => s.name === warn.meeting.slot);
+        return `Room switch between "${prevRoom.label}" and "${nextRoom.label}" on ${day.label} at ${slot.start}`;
+      }),
+      details: switchWarnings
+    })
   }
 
   // Check absence of conflict with sessions with same group(s) or chair(s)

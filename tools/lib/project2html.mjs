@@ -340,6 +340,14 @@ export async function convertProjectToHTML(project, cliParams) {
 
             const sessionIssues = cell.errors.filter(error =>
               error.issue.session === session.number);
+            const roomSwitchIssue = sessionIssues.find(error =>
+              error.issue.severity === 'warning' && error.issue.type === 'switch');
+            if (roomSwitchIssue) {
+              const room = project.rooms.find(room => room.name === roomSwitchIssue.detail.previous.room);
+              writeLine(8, '<br/><b>Previous slot in</b>: ' +
+                '<span class="scheduling-warning">' + room.label + '</span>');
+            }
+
             const conflictIssues = sessionIssues
               .filter(error =>
                 error.issue.severity === 'warning' &&
