@@ -161,28 +161,27 @@ export default async function (project, number, options) {
 
   console.warn();
   console.warn('Assess meeting rooms capacity...');
+  const sessionUrl = `https://github.com/${session.repository}/issues/${session.number}`;
   console.log('## Too many Participants');    
   for (const session of mapped) {
     const tooSmall = session.rooms.filter(room => room.capacity < session.nbParticipants);
     if (tooSmall.length > 0) {
-      const sessionUrl = `https://github.com/${session.repository}/issues/${session.number}`;
       console.log(`- [${session.title}](${sessionUrl})`);
       for (const room of tooSmall) {
-          console.log(`  - in ${room.label}: capacity is ${room.capacity}, [${session.nbParticipants} group participants](${registrantsUrl}#${session.id}) (plus ${session.nbObservers} observers, total: ${session.nbParticipants + session.nbObservers}).`);
-        }
+        console.log(`  - in ${room.label}: capacity is ${room.capacity}, [${session.nbParticipants} group participants](${registrantsUrl}#${session.id}) (plus ${session.nbObservers} observers, total: ${session.nbParticipants + session.nbObservers}).`);
       }
+    }
   }
   console.log('\n## Too many Observers');    
   for (const session of mapped) {
     const tooSmall = session.rooms.filter(room =>
       room.capacity > session.nbParticipants && room.capacity < session.nbParticipants + session.nbObservers);
     if (tooSmall.length > 0) {
-      const sessionUrl = `https://github.com/${session.repository}/issues/${session.number}`;
       console.log(`- [${session.title}](${sessionUrl})`);
       for (const room of tooSmall) {
-          console.log(`  - in ${room.label}: capacity is ${room.capacity}, [${session.nbParticipants} group participants](${registrantsUrl}#${session.id}) but also ${session.nbObservers} observers, total: ${session.nbParticipants + session.nbObservers}.`)
+        console.log(`  - in ${room.label}: capacity is ${room.capacity}, [${session.nbParticipants} group participants](${registrantsUrl}#${session.id}) but also ${session.nbObservers} observers, total: ${session.nbParticipants + session.nbObservers}.`)
       }
     }
   }
-console.warn('Assess meeting rooms capacity... done');
+  console.warn('Assess meeting rooms capacity... done');
 }
