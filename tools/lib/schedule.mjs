@@ -74,8 +74,8 @@ export function suggestSchedule(project, { seed }) {
 
   // Filter out invalid sessions
   sessions = sessions.filter(session =>
-    !session.blockingErrors ||
-    (session.blockingErrors.length === 0));
+    session.description &&
+    !session.blockingError);
 
   // Initialize the list of tracks
   // Note: for the purpose of scheduling, a "_plenary" track gets artificially

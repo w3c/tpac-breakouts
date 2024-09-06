@@ -2,7 +2,7 @@ import * as assert from 'node:assert';
 import { readFile, writeFile } from 'node:fs/promises';
 import { initTestEnv } from './init-test-env.mjs';
 import { getEnvKey, setEnvKey } from '../tools/lib/envkeys.mjs';
-import { fetchProject, convertProjectToJSON } from '../tools/lib/project.mjs';
+import { fetchProject } from '../tools/lib/project.mjs';
 import { validateSession, validateGrid } from '../tools/lib/validate.mjs';
 import { suggestSchedule } from '../tools/lib/schedule.mjs';
 import { convertProjectToHTML } from '../tools/lib/project2html.mjs';

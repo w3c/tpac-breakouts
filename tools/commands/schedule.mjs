@@ -28,6 +28,9 @@ export default async function (project, options) {
     error.type !== 'irc');
   const validSessions = project.sessions.filter(s =>
     !errors.find(error => error.number === s.number));
+  project.sessions
+    .filter(s => errors.find(error => error.number === s.number))
+    .forEach(s => s.blockingError = true);
   console.warn(`- found ${validSessions.length} valid sessions among them: ${validSessions.map(s => s.number).join(', ')}`);
   console.warn(`Validate sessions... done`);
 
