@@ -98,6 +98,18 @@ describe('The group meetings highlight code', function () {
     }]);
   });
 
+  it('finds group names even when no acronym is used', async function () {
+    const project = await fetchTestProject();
+    const sessionNumber = 7;
+    const errors = await validateSession(sessionNumber, project);
+    assert.deepStrictEqual(errors, []);
+
+    const session = project.sessions.find(s => s.number === sessionNumber);
+    assert.deepStrictEqual(
+      toGroupNames(session.groups),
+      ['Web Payments WG']);
+  });
+
   it('does not merge meetings when an highlight is used in one of them', async function () {
     const project = await fetchTestProject();
     const errors = await validateProject(project);

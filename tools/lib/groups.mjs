@@ -16,11 +16,11 @@ import { fetchW3CGroups } from './w3c.mjs';
 export async function fetchSessionGroups(session, groups2W3CID) {
   function normalizeTitle(title) {
     return title
-      .replace(/ (BG|Business Group)($|,| and| &)/gi, ' BG$2')
-      .replace(/ (CG|Community Group)($|,| and| &)/gi, ' CG$2')
-      .replace(/ (IG|Interest Group)($|,| and| &)/gi, ' IG$2')
-      .replace(/ (WG|Working Group)($|,| and| &)/gi, ' WG$2')
-      .replace(/ (TF|Task Force)($|,| and| &)/gi, ' TF$2')
+      .replace(/ (BG|Business Group)($|,| and| &|:|>)/gi, ' BG$2')
+      .replace(/ (CG|Community Group)($|,| and| &|:|>)/gi, ' CG$2')
+      .replace(/ (IG|Interest Group)($|,| and| &|:|>)/gi, ' IG$2')
+      .replace(/ (WG|Working Group)($|,| and| &|:|>)/gi, ' WG$2')
+      .replace(/ (TF|Task Force)($|,| and| &|:|>)/gi, ' TF$2')
       .trim();
   }
 
