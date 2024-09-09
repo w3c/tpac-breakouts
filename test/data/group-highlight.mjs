@@ -59,6 +59,13 @@ export default {
       title: '> Just an highlight',
       room: 'Room 3',
       meeting: 'Monday, 9:00'
+    },
+
+    {
+      number: 7,
+      title: 'Web Payments Working Group: money money money',
+      room: 'Room 3',
+      meeting: 'Monday, 11:00'
     }
   ]
 }
