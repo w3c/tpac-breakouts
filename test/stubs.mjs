@@ -39,7 +39,21 @@ async function getTestData(testDataId) {
   }
 
   function toGraphQLNameList(arr) {
-    return arr.map(name => Object.assign({ id: `id_${uid++}`, name }));
+    return arr.map(item => {
+      if (typeof item === 'string') {
+        return {
+          id: `id_${uid++}`,
+          name: item
+        };
+      }
+      else {
+        return {
+          id: `id_${uid++}`,
+          name: item.name,
+          description: item.description
+        };
+      }
+    });
   }
 
   function toGraphQLAuthor(login) {
