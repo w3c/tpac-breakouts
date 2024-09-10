@@ -534,6 +534,7 @@ export async function fetchProject(login, id) {
               ... on ProjectV2SingleSelectFieldOption {
                 id
                 name
+                description
               }
             }
           }
@@ -759,10 +760,10 @@ export async function fetchProject(login, id) {
     metadata: parseProjectDescription(project.shortDescription),
 
     // List of rooms. For each of them, we return the exact name of the option
-    // for the "Room" custom field in the project (which includes all info),
-    // the actual room label, the room's capacity in number of seats, the
-    // location of the room, and the possible "vip" flag.
-    // The room's full name should follow the pattern:
+    // for the "Room" custom field in the project. If the exact name can be
+    // split into a room label, capacity in number of seats, location, and the
+    // possible "vip" flag, then that information is used to initialize the
+    // room's metadata. The room's full name should follow the pattern:
     //   "label (xx - location) (vip)"
     // Examples:
     //  Catalina (25)
@@ -771,17 +772,31 @@ export async function fetchProject(login, id) {
     //  Business (vip)
     //  Small (15)
     //  Plenary (150 - 18th floor) (vip)
+    // The exact same information can be provided using actual metadata in the
+    // description of the room, given as a list of key/value pairs such as:
+    // - capacity: 40
+    // - location: 2nd floor
+    // Possible metadata keys are expected to evolve over time. If the
+    // information is duplicated in the room name and in metadata, the
+    // information in the room name will be used
     roomsFieldId: rooms.id,
     rooms: rooms.options.map(room => {
+      const metadata = {};
+      (room.description ?? '')
+        .split(/\n/)
+        .map(line => line.trim().replace(/^[*\-] /, '').split(/:\s*/))
+        .filter(data => data[0] && data[1])
+        .filter(data => data[0].toLowerCase() !== 'capacity' || data[1]?.match(/^\d+$/))
+        .forEach(data => metadata[data[0].toLowerCase()] = data[1]);
       const match = room.name.match(/^(.*?)(?:\s*\((\d+)\s*(?:\-\s*([^\)]+))?\))?(?:\s*\((vip)\))?$/i);
-      return {
+      return Object.assign(metadata, {
         id: room.id,
         name: match[0],
         label: match[1],
-        location: match[3] ?? '',
-        capacity: parseInt(match[2] ?? '30', 10),
-        vip: !!match[4]
-      };
+        location: match[3] ?? metadata.location ?? '',
+        capacity: parseInt(match[2] ?? metadata.capacity ?? '30', 10),
+        vip: !!match[4] || (metadata.vip === 'true')
+      });
     }),
 
     // IDs of custom fields used to store validation problems
