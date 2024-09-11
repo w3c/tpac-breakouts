@@ -133,22 +133,44 @@ export function suggestSchedule(project, { seed }) {
   // Return next session to process (and flag it as processed)
   // Note we schedule sessions that require a bigger number of slots first.
   function selectNextSession(track) {
-    let nbTimes = 0;
-    const session = sessions.reduce((candidate, s) => {
+    const { session } = sessions.reduce((candidate, s) => {
+      if (candidate.meetingTimeImposed) {
+        return candidate;
+      }
+      // A good candidate is a session that has not been processed already,
+      // and that either belongs to the track we're interested in (noting that
+      // "plenary" is handled as a kind of track). When we're not interested in
+      // a specific track, all non processed sessions are good candidates.
       if (!s.processed &&
           ((track === '_plenary' && s.description.type === 'plenary') ||
-          track === '' ||
-          s.tracks.includes(track))) {
-        if (!candidate || nbTimes < s.description.times?.length) {
-          nbTimes = s.description.times?.length ?? 0;
-          return s;
+          s.tracks.includes(track) ||
+          track === '')) {
+        // Keep the new candidate if:
+        // 1. we don't yet have a candidate session
+        // 2. the session has been assigned a given time (we want to process it
+        // earlier to avoid introducing conflicts afterwards)
+        // TODO: we may want to include day in the future for group meetings
+        // 3. the session requires more slots (we want to process it earlier to
+        // avoid assigning the session to different rooms)
+        if (!candidate.session ||
+            s.meetings?.find(m => m.slot) ||
+            candidate.nbTimes < s.description.times?.length) {
+          return {
+            session: s,
+            nbTimes: s.description.times?.length ?? 0,
+            meetingTimeImposed: s.meetings?.find(m => m.slot)
+          };
         }
         else {
           return candidate;
         }
       }
       return candidate;
-    }, null);
+    }, {
+      session: null,
+      nbTimes: 0,
+      meetingTimeImposed: false
+    });
     if (session) {
       session.processed = true;
     }
