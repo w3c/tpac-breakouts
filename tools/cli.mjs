@@ -17,8 +17,8 @@ import schedule from './commands/schedule.mjs';
 import synchronizeCalendar from './commands/sync-calendar.mjs';
 import validate from './commands/validate.mjs';
 import viewEvent from './commands/view-event.mjs';
+import viewRegisrants from './commands/view-registrants.mjs';
 import tryChanges from './commands/try-changes.mjs';
-import assessRoomsCapacity from './commands/assess-rooms-capacity.mjs';
 
 
 /**
@@ -238,19 +238,24 @@ Examples:
 
 
 /******************************************************************************
- * The "assess-rooms" command
+ * The "view-registrants" command
  *****************************************************************************/
 program
-  .command('assess-rooms')
-  .summary('Assess assigned rooms capacity against the actual number of registrants for a TPAC event.')
-  .description('Assess assigned rooms capacity against the actual number of registrants for each meeting for a TPAC event.')
-  .argument('<number>', 'meeting rooms to assess. Either a group session number or "all" to assess all meeting rooms.')
-  .option('-u, --url <url>', 'URL of the page that lists the registrants per meeting. The code uses `https://www.w3.org/register/[meeting name]/registrants` when not given')
-  .action(getCommandRunner(assessRoomsCapacity))
+  .command('view-registrants')
+  .summary('View the number of participants and observers for each session.')
+  .description('View the number of participants and observers for each session, possibly fetching the information from a registrants page (for TPAC events).')
+  .argument('<number>', 'session to view. Either a session number or "all" to view information for all sessions.')
+  .option('-f, --fetch', 'fetch the registrants information from the registrants page.')
+  .option('-s, --save', 'save registrants information to the project. The --fetch option must be set.')
+  .option('-u, --url <url>', 'URL of the page that lists the registrants per session. The code uses `https://www.w3.org/register/[meeting name]/registrants` when not given. The --fetch option must be set.')
+  .option('-w, --warnings-only', 'Only return information about sessions that meet in rooms that are too small.')
+  .action(getCommandRunner(viewRegisrants))
   .addHelpText('after', `
 Examples:
-  $ npx tpac-breakouts assess-rooms all
-  $ npx tpac-breakouts assess-rooms 42
+  $ npx tpac-breakouts view-registrants all
+  $ npx tpac-breakouts view-registrants all -w
+  $ npx tpac-breakouts view-registrants all --fetch --save
+  $ npx tpac-breakouts view-registrants all --fetch --url https://example.org/registrants
 `);
 
 

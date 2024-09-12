@@ -637,6 +637,21 @@ export async function fetchProject(login, id) {
   }`);
   const tryMeeting = tryMeetingResponse.data[type].projectV2.field;
 
+  // And a "Registrants" custom field to record registrants to the session
+  const registrantsResponse = await sendGraphQLRequest(`query {
+    ${type}(login: "${login}"){
+      projectV2(number: ${id}) {
+        field(name: "Registrants") {
+          ... on ProjectV2FieldCommon {
+            id
+            name
+          }
+        }
+      }
+    }
+  }`);
+  const registrants = registrantsResponse.data[type].projectV2.field;
+
   // Another request to retrieve the list of sessions associated with the project.
   const sessionsResponse = await sendGraphQLRequest(`query {
     ${type}(login: "${login}") {
@@ -845,6 +860,13 @@ export async function fetchProject(login, id) {
     trymeoutsFieldId: tryMeeting?.id,
     allowTryMeOut: !!tryMeeting?.id,
 
+    // ID of the "Registrants" custom field, if it exists
+    // (it signals the ability to look at registrants to select rooms)
+    // (note: the double "s" is needed because our convention was to make that
+    // a plural of the custom field name, which happens to be a plural already)
+    registrantssFieldId: registrants?.id,
+    allowRegistrants: !!registrants?.id,
+
     // Sections defined in the issue template
     sessionSections,
 
@@ -877,6 +899,8 @@ export async function fetchProject(login, id) {
             .find(value => value.field?.name === 'Meeting')?.text,
           trymeout: session.fieldValues.nodes
             .find(value => value.field?.name === 'Try me out')?.text,
+          registrants: session.fieldValues.nodes
+            .find(value => value.field?.name === 'Registrants')?.text,
           validation: {
             check: session.fieldValues.nodes.find(value => value.field?.name === 'Check')?.text,
             warning: session.fieldValues.nodes.find(value => value.field?.name === 'Warning')?.text,
@@ -914,13 +938,15 @@ function parseProjectDescription(desc) {
 /**
  * Record the meetings assignments for the provided session
  */
-export async function saveSessionMeetings(session, project) {
-  for (const field of ['room', 'day', 'slot', 'meeting', 'trymeout']) {
-    // Project may not allow multiple meetings
-    if (!project[field + 'sFieldId']) {
-      continue;
-    }
-    const prop = (field === 'meeting' || field === 'trymeout') ? 'text': 'singleSelectOptionId';
+export async function saveSessionMeetings(session, project, options) {
+  // Project may not have some of the custom fields, and we may only
+  // be interested in a restricted set of them
+  const fields = ['room', 'day', 'slot', 'meeting', 'trymeout', 'registrants']
+    .filter(field => project[field + 'sFieldId'])
+    .filter(field => !options || !options.fields || options.fields.includes(field));
+  for (const field of fields) {
+    const prop = ['meeting', 'trymeout', 'registrants'].includes(field) ?
+      'text': 'singleSelectOptionId';
     let value = null;
     if (prop === 'text') {
       // Text field
@@ -1050,6 +1076,9 @@ export function convertProjectToJSON(project) {
   if (project.allowTryMeOut) {
     data.allowTryMeOut = true;
   }
+  if (project.allowRegistrants) {
+    data.allowRegistrants = true;
+  }
   for (const list of ['days', 'rooms', 'slots', 'labels']) {
     data[list] = toNameList(project[list]);
   }
@@ -1064,7 +1093,7 @@ export function convertProjectToJSON(project) {
     if (session.labels.length !== 1 || session.labels[0] !== 'session') {
       simplified.labels = session.labels;
     }
-    for (const field of ['day', 'room', 'slot', 'meeting']) {
+    for (const field of ['day', 'room', 'slot', 'meeting', 'registrants']) {
       if (session[field]) {
         simplified[field] = session[field];
       }
