@@ -100,6 +100,12 @@ async function getTestData(testDataId) {
         field: { name: 'Try me out' }
       });
     }
+    if (session.registrants) {
+      fields.push({
+        text: session.registrants,
+        field: { name: 'Registrants' }
+      });
+    }
 
     return {
       id: `id_${uid++}`,
@@ -148,6 +154,9 @@ async function getTestData(testDataId) {
   if (custom.allowTryMeOut) {
     testData.allowTryMeOut = custom.allowTryMeOut;
   }
+  if (custom.allowRegistrants) {
+    testData.allowRegistrants = custom.allowRegistrants;
+  }
 
   testDataCache[testDataId] = testData;
   return JSON.parse(JSON.stringify(testData));
@@ -180,6 +189,9 @@ export async function sendGraphQLRequest(query, acceptHeader = '') {
           field = null;
         }
         else if ((name === 'Try me out') && !testData.allowTryMeOut) {
+          field = null;
+        }
+        else if ((name === 'Registrants') && !testData.allowRegistrants) {
           field = null;
         }
         else {
