@@ -13,6 +13,10 @@ import { validateGrid } from './lib/validate.mjs';
 import { authenticate } from './lib/calendar.mjs';
 import puppeteer from 'puppeteer';
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms, 'slept'));
+}
+
 async function main() {
   const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER', 'w3c');
   const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
@@ -77,6 +81,9 @@ async function main() {
         finally {
           page.close();
         }
+        console.warn('Wait 2s to ease load on server...');
+        await sleep(2000);
+        console.warn('Wait 2s to ease load on server... done');
       }
     }
     finally {
