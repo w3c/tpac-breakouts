@@ -78,15 +78,20 @@ async function main(format) {
           await authenticate(page, W3C_LOGIN, W3C_PASSWORD, url);
           chair.email = await page.evaluate(() => {
             const el = document.querySelector('.card--user a[href^=mailto]');
-            return el.textContent.trim();
+            if (el) {
+              return el.textContent.trim();
+            }
+            else {
+              return 'no email address found in user page';
+            }
           });
+          console.warn('Wait 4s to ease load on server...');
+          await sleep(4000);
+          console.warn('Wait 4s to ease load on server... done');
         }
         finally {
           page.close();
         }
-        console.warn('Wait 1s to ease load on server...');
-        await sleep(1000);
-        console.warn('Wait 1s to ease load on server... done');
       }
     }
     finally {
