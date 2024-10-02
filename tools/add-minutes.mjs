@@ -81,8 +81,8 @@ async function main(number) {
     const day = project.days.find(day => day.name === session.day);
     const year = day.date.substring(0, 4);
     const month = day.date.substring(5, 7);
-    const day = day.date.substring(8, 10);
-    const url = `https://www.w3.org/${year}/${month}/${day}-${session.description.shortname.substring(1)}-minutes.html`;
+    const mday = day.date.substring(8, 10);
+    const url = `https://www.w3.org/${year}/${month}/${mday}-${session.description.shortname.substring(1)}-minutes.html`;
     const response = await fetch(url);
     if ((response.status !== 200) && (response.status !== 401)) {
       console.log(`- no minutes found for session ${session.number}: ${url} yields a ${response.status}`);
