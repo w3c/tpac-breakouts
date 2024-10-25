@@ -15,6 +15,7 @@ import { getEnvKey } from './lib/envkeys.mjs';
 import { fetchProject } from './lib/project.mjs';
 import schedule from './commands/schedule.mjs';
 import synchronizeCalendar from './commands/sync-calendar.mjs';
+import synchronizeSheet from './commands/sync-sheet.mjs';
 import validate from './commands/validate.mjs';
 import viewEvent from './commands/view-event.mjs';
 import viewRegisrants from './commands/view-registrants.mjs';
@@ -234,6 +235,33 @@ Notes:
 Examples:
   $ npx tpac-breakouts sync-calendar all --status tentative
   $ npx tpac-breakouts sync-calendar 42 --status confirmed
+`);
+
+
+/******************************************************************************
+ * The "sync-sheet" command
+ *****************************************************************************/
+program
+  .command('sync-sheet')
+  .summary('Synchronize the project with a Google sheet.')
+  .description('Create/Update a Google sheet that contains all project\'s data, including the schedule.')
+  .option('-s, --sheet <id>', 'ID of the Google Sheet to update, "new" to create a new one. Default: value of the GOOGLE_SHEET_ID environment variable.')
+  .option('-d, --drive <id>', 'ID of the Google shared drive in which to create the new sheet')
+  .action(getCommandRunner(synchronizeSheet))
+  .addHelpText('after', `
+Notes:
+  - Local environment must define a \`GOOGLE_KEY_JSON\` variable.
+  The variable must complete the path to a JSON file that contains the
+  private key of a service account with the appropriate rights, created
+  in Google Cloud: https://console.cloud.google.com/.
+
+  - If the --drive option is set while the sheet already exists, the code
+  will try to move the sheet to the provided shared drive. That may not
+  succeed depending on the permissions associated with the key.
+
+Examples:
+  $ npx tpac-breakouts sync-sheet
+  $ npx tpac-breakouts sync-sheet --sheet new
 `);
 
 
