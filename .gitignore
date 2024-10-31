@@ -1,2 +1,4 @@
 config.json
 node_modules
+tools/appscript/bundle.js
+.clasp.json
