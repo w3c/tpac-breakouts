@@ -35,7 +35,11 @@
     "truncate-recording": "./tools/truncate-recording.mjs"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "appscript-pull": "clasp pull",
+    "appscript-push": "clasp push",
+    "appscript-bundle": "rollup tools/appscript/main.mjs --file tools/appscript/bundle.js --no-treeshake",
+    "appscript": "npm run appscript-pull && npm run appscript-bundle && npm run appscript-push"
   },
   "engines": {
     "node": ">=20"
@@ -50,6 +54,8 @@
     "yaml": "^2.5.0"
   },
   "devDependencies": {
-    "mocha": "^10.7.3"
+    "mocha": "^10.7.3",
+    "@google/clasp": "^2.4.2",
+    "rollup": "^4.24.3"
   }
 }
