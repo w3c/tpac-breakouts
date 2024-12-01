@@ -51,7 +51,7 @@
     "puppeteer": "^23.6.1",
     "seedrandom": "^3.0.5",
     "webvtt-parser": "^2.2.0",
-    "yaml": "^2.5.0"
+    "yaml": "^2.6.1"
   },
   "devDependencies": {
     "mocha": "^10.7.3",
