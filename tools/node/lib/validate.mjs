@@ -3,7 +3,7 @@ import { fetchSessionGroups, validateSessionGroups } from './groups.mjs';
 import { validateProject } from '../../common/project.mjs';
 import { initSectionHandlers, validateSessionBody, parseSessionBody } from '../../common/session.mjs';
 import { parseSessionMeetings, meetsAt, meetsInParallelWith } from '../../common/meetings.mjs';
-import { todoStrings } from '../../common/todostrings.mjs';
+import todoStrings from '../../common/todostrings.mjs';
 
 // List of errors and warnings that are scheduling issues.
 const schedulingErrors = [

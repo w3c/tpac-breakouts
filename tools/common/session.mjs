@@ -1,4 +1,4 @@
-import { todoStrings } from './todostrings.mjs';
+import todoStrings from './todostrings.mjs';
 
 
 /**
