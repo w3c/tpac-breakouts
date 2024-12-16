@@ -10,11 +10,11 @@
  * Leave empty to add minute links to all sessions.
  */
 
-import { getEnvKey } from './lib/envkeys.mjs';
-import { fetchProject } from './lib/project.mjs'
-import { validateSession } from './lib/validate.mjs';
-import { updateSessionDescription } from './lib/session.mjs';
-import { todoStrings } from './lib/todostrings.mjs';
+import { getEnvKey } from './node/lib/envkeys.mjs';
+import { fetchProject } from './node/lib/project.mjs'
+import { validateSession } from './node/lib/validate.mjs';
+import { updateSessionDescription } from './node/lib/session.mjs';
+import { todoStrings } from './common/todostrings.mjs';
 
 
 async function main(number) {

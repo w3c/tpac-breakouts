@@ -1,9 +1,9 @@
 import { readFile } from 'fs/promises';
-import { convertProjectToHTML } from '../lib/project2html.mjs';
-import { suggestSchedule } from '../lib/schedule.mjs';
-import { saveSessionMeetings } from '../lib/project.mjs';
-import { parseMeetingsChanges, applyMeetingsChanges } from '../lib/meetings.mjs';
-import { validateGrid } from '../lib/validate.mjs';
+import { convertProjectToHTML } from './lib/project2html.mjs';
+import { suggestSchedule } from './lib/schedule.mjs';
+import { saveSessionMeetings } from './lib/project.mjs';
+import { parseMeetingsChanges, applyMeetingsChanges } from './lib/meetings.mjs';
+import { validateGrid } from './lib/validate.mjs';
 
 /**
  * Helper function to generate a random seed

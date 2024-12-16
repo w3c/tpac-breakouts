@@ -1,9 +1,9 @@
-import { validateProject } from './project.mjs';
-import { initSectionHandlers, validateSessionBody, parseSessionBody } from './session.mjs';
 import { fetchSessionChairs, validateSessionChairs } from './chairs.mjs';
 import { fetchSessionGroups, validateSessionGroups } from './groups.mjs';
-import { parseSessionMeetings, meetsAt, meetsInParallelWith } from './meetings.mjs';
-import { todoStrings } from './todostrings.mjs';
+import { validateProject } from '../../common/project.mjs';
+import { initSectionHandlers, validateSessionBody, parseSessionBody } from '../../common/session.mjs';
+import { parseSessionMeetings, meetsAt, meetsInParallelWith } from '../../common/meetings.mjs';
+import { todoStrings } from '../../common/todostrings.mjs';
 
 // List of errors and warnings that are scheduling issues.
 const schedulingErrors = [

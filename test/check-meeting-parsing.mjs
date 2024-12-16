@@ -1,12 +1,11 @@
 import * as assert from 'node:assert';
 import { initTestEnv } from './init-test-env.mjs';
-import { getEnvKey, setEnvKey } from '../tools/lib/envkeys.mjs';
-import { fetchProject } from '../tools/lib/project.mjs';
+import { getEnvKey, setEnvKey } from '../tools/node/lib/envkeys.mjs';
+import { fetchProject } from '../tools/node/lib/project.mjs';
 import { groupSessionMeetings,
          computeSessionCalendarUpdates,
          parseSessionMeetings,
-         serializeSessionMeetings,
-         applyMeetingsChanges } from '../tools/lib/meetings.mjs';
+         serializeSessionMeetings } from '../tools/common/meetings.mjs';
 
 async function fetchTestProject() {
   return fetchProject(

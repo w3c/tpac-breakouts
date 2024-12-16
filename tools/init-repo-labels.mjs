@@ -15,7 +15,7 @@
  * created, and each time changes are made to the list of labels below.
  */
 
-import { sendGraphQLRequest } from './lib/graphql.mjs';
+import { sendGraphQLRequest } from './node/lib/graphql.mjs';
 
 const labels = [
   {

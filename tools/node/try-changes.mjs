@@ -1,6 +1,6 @@
-import { validateGrid } from '../lib/validate.mjs';
-import { saveSessionMeetings } from '../lib/project.mjs';
-import { convertProjectToHTML } from '../lib/project2html.mjs';
+import { validateGrid } from './lib/validate.mjs';
+import { saveSessionMeetings } from './lib/project.mjs';
+import { convertProjectToHTML } from './lib/project2html.mjs';
 
 export default async function (project, options) {
   if (!project.allowTryMeOut) {

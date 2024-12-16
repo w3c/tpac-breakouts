@@ -1,9 +1,9 @@
 import { initTestEnv } from './init-test-env.mjs';
-import { getEnvKey, setEnvKey } from '../tools/lib/envkeys.mjs';
-import { fetchProject } from '../tools/lib/project.mjs';
+import { getEnvKey, setEnvKey } from '../tools/node/lib/envkeys.mjs';
+import { fetchProject } from '../tools/node/lib/project.mjs';
 import { initSectionHandlers,
          parseSessionBody,
-         serializeSessionDescription } from '../tools/lib/session.mjs';
+         serializeSessionDescription } from '../tools/common/session.mjs';
 import * as assert from 'node:assert';
 
 async function fetchTestProject() {
