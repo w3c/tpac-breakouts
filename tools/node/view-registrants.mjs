@@ -1,9 +1,9 @@
 import puppeteer from 'puppeteer';
-import { validateSession } from '../lib/validate.mjs';
-import { authenticate } from '../lib/calendar.mjs';
-import { getEnvKey } from '../lib/envkeys.mjs';
-import { parseSessionMeetings } from '../lib/meetings.mjs';
-import { saveSessionMeetings } from '../lib/project.mjs';
+import { validateSession } from './lib/validate.mjs';
+import { authenticate } from './lib/calendar.mjs';
+import { getEnvKey } from './lib/envkeys.mjs';
+import { saveSessionMeetings } from './lib/project.mjs';
+import { parseSessionMeetings } from '../common/meetings.mjs';
 
 export default async function (project, number, options) {
   const meeting = project.metadata.meeting.toLowerCase().replace(/\s+/g, '');

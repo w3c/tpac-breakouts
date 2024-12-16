@@ -1,7 +1,7 @@
 import { initTestEnv } from './init-test-env.mjs';
-import { getEnvKey, setEnvKey } from '../tools/lib/envkeys.mjs';
-import { fetchProject } from '../tools/lib/project.mjs';
-import { convertProjectToHTML } from '../tools/lib/project2html.mjs';
+import { getEnvKey, setEnvKey } from '../tools/node/lib/envkeys.mjs';
+import { fetchProject } from '../tools/node/lib/project.mjs';
+import { convertProjectToHTML } from '../tools/node/lib/project2html.mjs';
 import { readFile, writeFile } from 'node:fs/promises';
 import * as assert from 'node:assert';
 

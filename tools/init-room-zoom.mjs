@@ -13,8 +13,8 @@
  * created and the list of rooms known.
  */
 
-import { getEnvKey } from './lib/envkeys.mjs';
-import { fetchProject } from './lib/project.mjs';
+import { getEnvKey } from './node/lib/envkeys.mjs';
+import { fetchProject } from './node/lib/project.mjs';
 
 async function run() {
   const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER', 'w3c');

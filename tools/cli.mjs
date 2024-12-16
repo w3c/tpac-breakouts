@@ -11,15 +11,15 @@
  */
 import packageConfig from '../package.json' with { type: 'json' };
 import { Command } from 'commander';
-import { getEnvKey } from './lib/envkeys.mjs';
-import { fetchProject } from './lib/project.mjs';
-import schedule from './commands/schedule.mjs';
-import synchronizeCalendar from './commands/sync-calendar.mjs';
-import synchronizeSheet from './commands/sync-sheet.mjs';
-import validate from './commands/validate.mjs';
-import viewEvent from './commands/view-event.mjs';
-import viewRegisrants from './commands/view-registrants.mjs';
-import tryChanges from './commands/try-changes.mjs';
+import { getEnvKey } from './node/lib/envkeys.mjs';
+import { fetchProject } from './node/lib/project.mjs';
+import schedule from './node/schedule.mjs';
+import synchronizeCalendar from './node/sync-calendar.mjs';
+import synchronizeSheet from './node/sync-sheet.mjs';
+import validate from './node/validate.mjs';
+import viewEvent from './node/view-event.mjs';
+import viewRegisrants from './node/view-registrants.mjs';
+import tryChanges from './node/try-changes.mjs';
 
 
 /**

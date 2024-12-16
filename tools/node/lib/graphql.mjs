@@ -25,7 +25,7 @@ export async function resetGraphQLCache() {
   const STUB_REQUESTS = await getEnvKey('STUB_REQUESTS', '');
   if (STUB_REQUESTS) {
     if (!stubs) {
-      stubs = await import(`../../test/stubs.mjs`);
+      stubs = await import(`../../../test/stubs.mjs`);
     }
     stubs.resetCaches();
   }
@@ -51,7 +51,7 @@ export async function sendGraphQLRequest(query, acceptHeader = '') {
   const STUB_REQUESTS = await getEnvKey('STUB_REQUESTS', '');
   if (STUB_REQUESTS) {
     if (!stubs) {
-      stubs = await import(`../../test/stubs.mjs`);
+      stubs = await import(`../../../test/stubs.mjs`);
     }
     cache[query] = await stubs.sendGraphQLRequest(query);
     return JSON.parse(JSON.stringify(cache[query]));

@@ -30,7 +30,7 @@ import { parseSessionMeetings,
          serializeSessionMeetings,
          meetsInParallelWith,
          meetsInRoom,
-         meetsAt } from './meetings.mjs';
+         meetsAt } from '../../common/meetings.mjs';
 
 /**
  * Helper function to shuffle an array

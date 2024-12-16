@@ -1,7 +1,7 @@
 import { validateSession } from './validate.mjs';
 import { updateSessionDescription } from './session.mjs';
-import { todoStrings } from './todostrings.mjs';
-import { computeSessionCalendarUpdates, meetsAt } from './meetings.mjs';
+import { todoStrings } from '../../common/todostrings.mjs';
+import { computeSessionCalendarUpdates, meetsAt } from '../../common/meetings.mjs';
 
 
 /**

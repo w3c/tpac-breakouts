@@ -1,4 +1,4 @@
-import { parseSessionMeetings, groupSessionMeetings } from './meetings.mjs';
+import { parseSessionMeetings, groupSessionMeetings } from '../../common/meetings.mjs';
 import { validateGrid } from './validate.mjs';
 import * as YAML from 'yaml';
 

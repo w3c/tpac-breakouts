@@ -1,7 +1,7 @@
 import path from 'path';
-import { updateSessionDescription } from '../lib/session.mjs';
-import { saveSessionValidationResult } from '../lib/project.mjs';
-import { validateSession, validateGrid } from '../lib/validate.mjs';
+import { updateSessionDescription } from './lib/session.mjs';
+import { saveSessionValidationResult } from './lib/project.mjs';
+import { validateSession, validateGrid } from './lib/validate.mjs';
 
 /**
  * Helper function to generate a shortname from the session's title

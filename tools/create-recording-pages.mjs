@@ -28,11 +28,11 @@
 
 import path from 'path';
 import fs from 'fs/promises';
-import { convert } from './lib/webvtt2html.mjs';
-import { getEnvKey } from './lib/envkeys.mjs';
-import { fetchProject } from './lib/project.mjs';
-import { validateSession } from './lib/validate.mjs';
-import { todoStrings } from './lib/todostrings.mjs';
+import { convert } from './node/lib/webvtt2html.mjs';
+import { getEnvKey } from './node/lib/envkeys.mjs';
+import { fetchProject } from './node/lib/project.mjs';
+import { validateSession } from './node/lib/validate.mjs';
+import { todoStrings } from './common/todostrings.mjs';
 
 async function listRecordings(accountId, authToken, recordingPrefix) {
   const response = await fetch(

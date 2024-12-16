@@ -1,7 +1,7 @@
-import { getEnvKey, setEnvKey, resetEnvKeys } from '../tools/lib/envkeys.mjs';
-import { resetGraphQLCache } from '../tools/lib/graphql.mjs';
-import { resetSectionHandlers } from '../tools/lib/session.mjs';
-import { resetW3CCache } from '../tools/lib/w3c.mjs';
+import { getEnvKey, setEnvKey, resetEnvKeys } from '../tools/node/lib/envkeys.mjs';
+import { resetGraphQLCache } from '../tools/node/lib/graphql.mjs';
+import { resetSectionHandlers } from '../tools/common/session.mjs';
+import { resetW3CCache } from '../tools/node/lib/w3c.mjs';
 
 export function initTestEnv() {
   resetEnvKeys();

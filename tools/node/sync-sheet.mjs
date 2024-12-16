@@ -1,5 +1,5 @@
-import { getEnvKey } from '../lib/envkeys.mjs';
-import { convertProjectToSheet } from '../lib/project2sheet.mjs';
+import { getEnvKey } from './lib/envkeys.mjs';
+import { convertProjectToSheet } from './lib/project2sheet.mjs';
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms, 'slept'));
