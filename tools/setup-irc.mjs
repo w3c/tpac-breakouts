@@ -22,7 +22,7 @@
 import { getEnvKey } from './node/lib/envkeys.mjs';
 import { fetchProject } from './node/lib/project.mjs'
 import { validateSession } from './node/lib/validate.mjs';
-import { todoStrings } from './common/todostrings.mjs';
+import todoStrings from './common/todostrings.mjs';
 import irc from 'irc';
 
 const botName = 'tpac-breakout-bot';

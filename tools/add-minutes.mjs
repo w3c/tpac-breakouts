@@ -14,7 +14,7 @@ import { getEnvKey } from './node/lib/envkeys.mjs';
 import { fetchProject } from './node/lib/project.mjs'
 import { validateSession } from './node/lib/validate.mjs';
 import { updateSessionDescription } from './node/lib/session.mjs';
-import { todoStrings } from './common/todostrings.mjs';
+import todoStrings from './common/todostrings.mjs';
 
 
 async function main(number) {
