@@ -25,12 +25,12 @@
  * it cannot schedule due to a confict that it cannot resolve.
  */
 
-import seedrandom from 'seedrandom';
+import seedrandom from './seedrandom.mjs';
 import { parseSessionMeetings,
          serializeSessionMeetings,
          meetsInParallelWith,
          meetsInRoom,
-         meetsAt } from '../../common/meetings.mjs';
+         meetsAt } from './meetings.mjs';
 
 /**
  * Helper function to shuffle an array

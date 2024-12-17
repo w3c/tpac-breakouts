@@ -3,8 +3,8 @@ import { initTestEnv } from './init-test-env.mjs';
 import { getEnvKey, setEnvKey } from '../tools/node/lib/envkeys.mjs';
 import { fetchProject } from '../tools/node/lib/project.mjs';
 import { validateGrid } from '../tools/node/lib/validate.mjs';
-import { suggestSchedule } from '../tools/node/lib/schedule.mjs';
 import { convertProjectToHTML } from '../tools/node/lib/project2html.mjs';
+import { suggestSchedule } from '../tools/common/schedule.mjs';
 
 async function fetchTestProject() {
   const project = await fetchProject(
