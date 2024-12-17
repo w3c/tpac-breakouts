@@ -49,13 +49,12 @@
     "googleapis": "^144.0.0",
     "irc": "^0.5.2",
     "puppeteer": "^23.6.1",
-    "seedrandom": "^3.0.5",
     "webvtt-parser": "^2.2.0",
     "yaml": "^2.5.0"
   },
   "devDependencies": {
-    "mocha": "^10.7.3",
     "@google/clasp": "^2.4.2",
+    "mocha": "^10.7.3",
     "rollup": "^4.24.3"
   }
 }
