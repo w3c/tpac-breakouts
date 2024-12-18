@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer';
-import { getEnvKey } from './lib/envkeys.mjs';
+import { getEnvKey } from '../common/envkeys.mjs';
 import { synchronizeSessionWithCalendar } from './lib/calendar.mjs';
-import { validateSession, validateGrid } from './lib/validate.mjs';
+import { validateSession, validateGrid } from '../common/validate.mjs';
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms, 'slept'));

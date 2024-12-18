@@ -10,7 +10,7 @@
  * Leave empty to add minute links to all sessions.
  */
 
-import { getEnvKey } from './node/lib/envkeys.mjs';
+import { getEnvKey } from './common/envkeys.mjs';
 import { fetchProject } from './node/lib/project.mjs'
 import { validateSession } from './node/lib/validate.mjs';
 import fs from 'node:fs/promises';

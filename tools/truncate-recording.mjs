@@ -19,7 +19,7 @@ import path from 'path';
 import fs from 'fs/promises';
 import util from 'node:util';
 import webvtt from 'webvtt-parser';
-import { getEnvKey } from './node/lib/envkeys.mjs';
+import { getEnvKey } from './common/envkeys.mjs';
 import { execFile } from 'node:child_process';
 import { fileURLToPath } from 'url';
 const __dirname = fileURLToPath(new URL('.', import.meta.url));

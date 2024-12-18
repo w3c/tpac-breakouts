@@ -1,5 +1,5 @@
 import { convertProjectToJSON } from '../../common/project.mjs';
-import { parseSessionMeetings } from '../../meetings.mjs';
+import { parseSessionMeetings } from '../../common/meetings.mjs';
 import { google } from 'googleapis';
 
 /**

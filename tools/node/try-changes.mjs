@@ -1,4 +1,4 @@
-import { validateGrid } from './lib/validate.mjs';
+import { validateGrid } from '../common/validate.mjs';
 import { saveSessionMeetings } from './lib/project.mjs';
 import { convertProjectToHTML } from './lib/project2html.mjs';
 

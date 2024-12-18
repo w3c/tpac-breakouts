@@ -1,5 +1,5 @@
 import { parseSessionMeetings, groupSessionMeetings } from '../../common/meetings.mjs';
-import { validateGrid } from './validate.mjs';
+import { validateGrid } from '../../common/validate.mjs';
 import * as YAML from 'yaml';
 
 const hasMeeting = s => s.atomicMeetings.find(m => m.room && m.day && m.slot);

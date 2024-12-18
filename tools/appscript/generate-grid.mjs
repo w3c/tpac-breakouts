@@ -1,3 +1,4 @@
+import { getProjectSheets } from './project.mjs';
 import reportError from './report-error.mjs';
 
 /**
@@ -13,60 +14,10 @@ export default function () {
  */
 function generateGrid(spreadsheet) {
   // These are the sheets we expect to find
-  const sheets = {
-    grid: {},
-    sessions: { titleMatch: /list/i },
-    meetings: { titleMatch: /meetings/i },
-    rooms: { titleMatch: /rooms/i },
-    days: { titleMatch: /days/i },
-    slots: { titleMatch: /slots/i }
-  };
-
-  // Retrieve the sheets from the spreadsheet
-  // (we'll consider that the grid view is the first sheet we find that isn't one of the
-  // other well-known sheets. That gives some leeway as to how the sheet gets named.)
-  for (const sheet of spreadsheet.getSheets()) {
-    const name = sheet.getName().toLowerCase();
-    const desc = Object.values(sheets).find(s => s.titleMatch?.test(name));
-    if (desc) {
-      desc.sheet = sheet;
-      desc.values = getValues(sheet);
-    }
-    else if (!sheets.grid.sheet) {
-      sheets.grid.sheet = sheet;
-      sheets.grid.values = getValues(sheet);
-    }
-  }
-
-  // Do we have all we need?
-  const ui = SpreadsheetApp.getActiveSpreadsheet() ? SpreadsheetApp.getUi() : null;
-  if (!sheets.grid.sheet) {
-    reportError('No "Grid view" sheet found, please add one and start again.');
-    return;
-  }
+  const sheets = getProjectSheets(spreadsheet);
   if (!sheets.sessions.sheet) {
     reportError('No "List view" sheet found, please import data from GitHub first.');
     return;
-  }
-  if (!sheets.rooms.sheet) {
-    reportError('No "Rooms" sheet found, please import data from GitHub first.');
-    return;
-  }
-  if (!sheets.days.sheet) {
-    reportError('No "Days" sheet found, please import data from GitHub first.');
-    return;
-  }
-  if (!sheets.slots.sheet) {
-    reportError('No "Slots" sheet found, please import data from GitHub first.');
-    return;
-  }
-
-  if (!sheets.meetings.sheet) {
-    // No "Meetings" sheet for breakouts sessions, that's normal, there's a 1:1
-    // relationship between breakout sessions and meetings, the sessions sheet
-    // already contains the expanded view.
-    sheets.meetings.sheet = sheets.sessions.sheet;
-    sheets.meetings.values = sheets.sessions.values;
   }
 
   // Re-generate the grid view
@@ -87,24 +38,6 @@ function generateGrid(spreadsheet) {
     sheets.days.values,
     sheets.slots.values
   );
-}
-
-
-/**
- * Return the values in a sheet as a list of objects whose property names are
- * derived from the header row.
- */
-function getValues(sheet) {
-  const rows = sheet.getDataRange().getValues();
-  const headers = rows[0];
-  const values = rows.slice(1).map(row => {
-    const value = {};
-    for (let i = 0; i < headers.length; i++) {
-      value[headers[i].toLowerCase()] = row[i];
-    }
-    return value;
-  });
-  return values;
 }
 
 

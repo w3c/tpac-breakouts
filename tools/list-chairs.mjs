@@ -7,9 +7,9 @@
  *  node tools/list-chairs.mjs
  */
 
-import { getEnvKey } from './node/lib/envkeys.mjs';
+import { getEnvKey } from './common/envkeys.mjs';
 import { fetchProject } from './node/lib/project.mjs'
-import { validateGrid } from './node/lib/validate.mjs';
+import { validateGrid } from './common/validate.mjs';
 import { authenticate } from './node/lib/calendar.mjs';
 import checkRegistrants from './node/lib/check-registrants.mjs';
 import puppeteer from 'puppeteer';

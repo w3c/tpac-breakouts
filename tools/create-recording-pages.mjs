@@ -29,9 +29,9 @@
 import path from 'path';
 import fs from 'fs/promises';
 import { convert } from './node/lib/webvtt2html.mjs';
-import { getEnvKey } from './node/lib/envkeys.mjs';
+import { getEnvKey } from './common/envkeys.mjs';
 import { fetchProject } from './node/lib/project.mjs';
-import { validateSession } from './node/lib/validate.mjs';
+import { validateSession } from './common/validate.mjs';
 import todoStrings from './common/todostrings.mjs';
 
 async function listRecordings(accountId, authToken, recordingPrefix) {

@@ -1,5 +1,13 @@
-import { validateSession } from './validate.mjs';
-import { updateSessionDescription } from './session.mjs';
+/**
+ * Handles synchronization with the W3C calendar.
+ *
+ * Since there is no proper API endpoint to interact with the W3C calendar, the
+ * code drives a Puppeteer instance behind the scenes to access and manage
+ * calendar entries. As such, the code can only run in a Node.js environment.
+ */
+
+import { validateSession } from '../../common/validate.mjs';
+import { updateSessionDescription } from '../../common/session.mjs';
 import todoStrings from '../../common/todostrings.mjs';
 import { computeSessionCalendarUpdates, meetsAt } from '../../common/meetings.mjs';
 

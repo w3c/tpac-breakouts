@@ -34,7 +34,7 @@ export async function fetchW3CAccount(databaseId) {
   const STUB_REQUESTS = await getEnvKey('STUB_REQUESTS', '');
   if (STUB_REQUESTS) {
     if (!stubs) {
-      stubs = await import(`../../../test/stubs.mjs`);
+      stubs = await import(`../../test/stubs.mjs`);
     }
     cache[databaseId] = await stubs.fetchW3CAccount(databaseId);
     return cache[databaseId];
@@ -126,7 +126,7 @@ export async function fetchW3CGroups() {
   const STUB_REQUESTS = await getEnvKey('STUB_REQUESTS', '');
   if (STUB_REQUESTS) {
     if (!stubs) {
-      stubs = await import(`../../../test/stubs.mjs`);
+      stubs = await import(`../../test/stubs.mjs`);
     }
     const groups = await stubs.fetchW3CGroups();
     cache.w3cGroups = groups.map(normalizeGroup);
@@ -170,7 +170,7 @@ export async function resetW3CCache() {
   const STUB_REQUESTS = await getEnvKey('STUB_REQUESTS', '');
   if (STUB_REQUESTS) {
     if (!stubs) {
-      stubs = await import(`../../../test/stubs.mjs`);
+      stubs = await import(`../../test/stubs.mjs`);
     }
     stubs.resetCaches();
   }

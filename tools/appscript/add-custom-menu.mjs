@@ -5,6 +5,7 @@
  */
 export default function () {
   SpreadsheetApp.getUi().createMenu('TPAC')
+    .addItem('Export event data as JSON', 'exportEventData')
     .addItem('Associate with GitHub repository', 'associateWithGitHubRepository')
     .addItem('Import data from GitHub', 'importFromGithub')
     .addItem('Generate grid', 'generateGrid')

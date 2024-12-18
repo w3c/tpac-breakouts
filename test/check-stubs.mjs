@@ -1,8 +1,8 @@
 import { initTestEnv } from './init-test-env.mjs';
-import { setEnvKey } from '../tools/node/lib/envkeys.mjs';
+import { setEnvKey } from '../tools/common/envkeys.mjs';
 import { fetchProject } from '../tools/node/lib/project.mjs';
 import { validateProject } from '../tools/common/project.mjs';
-import { validateSession } from '../tools/node/lib/validate.mjs';
+import { validateSession } from '../tools/common/validate.mjs';
 import * as assert from 'node:assert';
 
 describe('The stubbing mechanism', function () {

@@ -1,5 +1,5 @@
 import { convertProjectToHTML } from './lib/project2html.mjs';
-import { convertProjectToJSON } from './lib/project.mjs';
+import { convertProjectToJSON } from '../common/project.mjs';
 
 export default async function (project, options) {
   if (options.format?.toLowerCase() === 'json') {
