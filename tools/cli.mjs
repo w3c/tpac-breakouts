@@ -11,7 +11,7 @@
  */
 import packageConfig from '../package.json' with { type: 'json' };
 import { Command } from 'commander';
-import { getEnvKey } from './node/lib/envkeys.mjs';
+import { getEnvKey } from './common/envkeys.mjs';
 import { fetchProject } from './node/lib/project.mjs';
 import schedule from './node/schedule.mjs';
 import synchronizeCalendar from './node/sync-calendar.mjs';

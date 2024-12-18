@@ -1,9 +1,9 @@
 import * as assert from 'node:assert';
 import { initTestEnv } from './init-test-env.mjs';
-import { getEnvKey, setEnvKey } from '../tools/node/lib/envkeys.mjs';
+import { getEnvKey, setEnvKey } from '../tools/common/envkeys.mjs';
 import { fetchProject } from '../tools/node/lib/project.mjs';
 import { validateProject } from '../tools/common/project.mjs';
-import { validateSession } from '../tools/node/lib/validate.mjs';
+import { validateSession } from '../tools/common/validate.mjs';
 import { groupSessionMeetings } from '../tools/common/meetings.mjs';
 import { convertProjectToHTML } from '../tools/node/lib/project2html.mjs';
 import { readFile, writeFile } from 'node:fs/promises';

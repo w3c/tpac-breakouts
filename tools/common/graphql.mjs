@@ -1,4 +1,5 @@
 import { getEnvKey } from './envkeys.mjs';
+import wrappedFetch from './wrappedfetch.mjs';
 
 /**
  * Internal memory cache to avoid sending the same request more than once
@@ -25,7 +26,7 @@ export async function resetGraphQLCache() {
   const STUB_REQUESTS = await getEnvKey('STUB_REQUESTS', '');
   if (STUB_REQUESTS) {
     if (!stubs) {
-      stubs = await import(`../../../test/stubs.mjs`);
+      stubs = await import(`../../test/stubs.mjs`);
     }
     stubs.resetCaches();
   }
@@ -51,14 +52,14 @@ export async function sendGraphQLRequest(query, acceptHeader = '') {
   const STUB_REQUESTS = await getEnvKey('STUB_REQUESTS', '');
   if (STUB_REQUESTS) {
     if (!stubs) {
-      stubs = await import(`../../../test/stubs.mjs`);
+      stubs = await import(`../../test/stubs.mjs`);
     }
     cache[query] = await stubs.sendGraphQLRequest(query);
     return JSON.parse(JSON.stringify(cache[query]));
   }
 
   const GRAPHQL_TOKEN = await getEnvKey('GRAPHQL_TOKEN');
-  const res = await fetch('https://api.github.com/graphql', {
+  const res = await wrappedFetch('https://api.github.com/graphql', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

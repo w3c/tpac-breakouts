@@ -1,4 +1,4 @@
-import { getEnvKey } from './lib/envkeys.mjs';
+import { getEnvKey } from '../common/envkeys.mjs';
 import { convertProjectToSheet } from './lib/project2sheet.mjs';
 
 function sleep(ms) {

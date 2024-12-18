@@ -4,7 +4,7 @@
  * are only meant for testing purpose!
  */
 
-import { getEnvKey } from '../tools/node/lib/envkeys.mjs';
+import { getEnvKey } from '../tools/common/envkeys.mjs';
 import defaultGroups from './data/w3cgroups.json' with { type: 'json' };
 
 /**

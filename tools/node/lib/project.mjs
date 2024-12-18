@@ -1,5 +1,5 @@
-import { sendGraphQLRequest } from './graphql.mjs';
-import { getEnvKey } from './envkeys.mjs';
+import { sendGraphQLRequest } from '../../common/graphql.mjs';
+import { getEnvKey } from '../../common/envkeys.mjs';
 import { readFile } from 'node:fs/promises';
 import * as path from 'node:path';
 import * as YAML from 'yaml';

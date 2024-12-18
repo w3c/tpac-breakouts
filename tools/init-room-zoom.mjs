@@ -13,7 +13,7 @@
  * created and the list of rooms known.
  */
 
-import { getEnvKey } from './node/lib/envkeys.mjs';
+import { getEnvKey } from './common/envkeys.mjs';
 import { fetchProject } from './node/lib/project.mjs';
 
 async function run() {

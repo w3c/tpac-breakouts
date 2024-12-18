@@ -1,6 +1,3 @@
-import path from 'path';
-import { execSync } from 'child_process';
-
 let localConfig = {};
 let fileConfig = null;
 let repoConfig = null;
@@ -20,7 +17,7 @@ export async function getEnvKey(key, defaultValue, json) {
   }
 
   // If the environment explicitly defines the key, that's good, let's use it!
-  if (Object.hasOwn(process.env, key)) {
+  if (typeof process !== 'undefined' && Object.hasOwn(process.env, key)) {
     return json ? JSON.parse(process.env[key]) : process.env[key];
   }
 
@@ -28,16 +25,19 @@ export async function getEnvKey(key, defaultValue, json) {
   // (note that is done only once)
   if (!fileConfig) {
     fileConfig = {};
-    try {
-      const configFileUrl = 'file:///' +
-        path.join(process.cwd(), 'config.json').replace(/\\/g, '/');
-      const { default: env } = await import(
-        configFileUrl,
-        { assert: { type: 'json' } }
-      );
-      fileConfig = env;
-    }
-    catch {
+    if (typeof process !== 'undefined') {
+      const path = await import('node:path');
+      try {
+        const configFileUrl = 'file:///' +
+          path.join(process.cwd(), 'config.json').replace(/\\/g, '/');
+        const { default: env } = await import(
+          configFileUrl,
+          { with: { type: 'json' } }
+        );
+        fileConfig = env;
+      }
+      catch {
+      }
     }
   }
   if (Object.hasOwn(fileConfig, key)) {
@@ -47,18 +47,30 @@ export async function getEnvKey(key, defaultValue, json) {
   // Retrieve variables from the GitHub repo directly through the "gh" CLI.
   if (!repoConfig) {
     repoConfig = {};
-    try {
-      const repoVariablesStr = execSync(`gh variable list --json name,value`);
-      const repoVariables = JSON.parse(repoVariablesStr);
-      for (const variable of repoVariables) {
-        repoConfig[variable.name] = variable.value;
+    if (typeof process !== 'undefined') {
+      const childProcess = await import('node:child_process');
+      const execSync = childProcess.execSync;
+      try {
+        const repoVariablesStr = execSync(`gh variable list --json name,value`);
+        const repoVariables = JSON.parse(repoVariablesStr);
+        for (const variable of repoVariables) {
+          repoConfig[variable.name] = variable.value;
+        }
       }
-    }
-    catch {
+      catch {
+      }
     }
   }
   if (Object.hasOwn(repoConfig, key)) {
     return json ? JSON.parse(repoConfig[key]) : repoConfig[key];
+  }
+
+  if (typeof PropertiesService !== 'undefined') {
+    const scriptProperties = PropertiesService.getScriptProperties();
+    const value = scriptProperties.getProperty(key);
+    if (value) {
+      return value;
+    }
   }
 
   if (defaultValue !== undefined) {
