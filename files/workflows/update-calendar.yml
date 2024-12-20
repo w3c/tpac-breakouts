@@ -1,0 +1,69 @@
+name: "[M] Update W3C calendar"
+
+on:
+  workflow_dispatch:
+    inputs:
+      sessionNumber:
+        description: 'Session issue number or "all" to convert all valid sessions'
+        required: true
+        default: 'all'
+        type: string
+      calendarstatus:
+        description: 'Calendar entry status to use'
+        required: true
+        default: 'draft'
+        type: choice
+        options:
+          - draft
+          - tentative
+          - confirmed
+
+jobs:
+  update-calendar:
+    name: Update W3C calendar
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Checkout latest version of release script
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Convert session issues to calendar entries.
+        run: npx tpac-breakouts sync-calendar ${{ inputs.sessionNumber }} --status ${{ inputs.calendarstatus }}
+        env:
+          # URL of the annual TPAC XXXX breakout project.
+          # The PROJECT_OWNER and PROJECT_NUMBER variables must be defined on
+          # the repository. PROJECT_OWNER_TYPE needs to be set to "user" if
+          # project belongs to a user. It may be omitted otherwise (or set to
+          # 'org"').
+          PROJECT_OWNER: ${{ vars.PROJECT_OWNER_TYPE || 'organization' }}/${{ vars.PROJECT_OWNER || 'w3c' }}
+          PROJECT_NUMBER: ${{ vars.PROJECT_NUMBER }}
+
+          # A valid Personal Access Token (classic version) with project
+          # and public_repo scope.
+          GRAPHQL_TOKEN: ${{ secrets.GRAPHQL_TOKEN }}
+          GH_TOKEN: ${{ secrets.GRAPHQL_TOKEN }}
+
+          # Information about the team user on behalf of which the updates to
+          # the calendar will be made. The password must obviously be stored
+          # as a secret!
+          W3C_LOGIN: ${{ vars.W3C_LOGIN }}
+          W3C_PASSWORD: ${{ secrets.W3C_PASSWORD }}
+
+          # Mapping between rooms and Zoom meetings must be stored in a variable
+          # (so that it does not get published). Structure is a JSON object
+          # with room names as keys.
+          ROOM_ZOOM: ${{ vars.ROOM_ZOOM }}
+
+          # Mapping between chair GitHub identities and W3C IDs must be stored
+          # in a variable. Structure is a JSON object with identities as keys.
+          W3CID_MAP: ${{ vars.W3CID_MAP }}
+

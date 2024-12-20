@@ -1,0 +1,110 @@
+name: Group session
+description: Propose a TPAC group session.
+labels: ["session"]
+body:
+# This repo includes code that validates instances of the data below. 
+# The validation code parses this file and uses "id" for some aspects of validation. 
+# One implication is that labels below can be changed without disrupting some of the validation code.
+# However, the validation code in some cases also matches on values of "options" below, so if those change,
+# you will need to change the validation code as well.
+
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for proposing a TPAC session. The title should be the name of the group or groups who will be meeting. The name must be the official [group name in the W3C system](https://www.w3.org/groups/), with some abbreviations supported (e.g., WG for Working Group).
+
+  - type: dropdown
+    id: capacity
+    attributes:
+      label: Estimate of in-person participants
+      options:
+        - More than 40
+        - 30 to 39
+        - 20 to 29
+        - Less than 20
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Scheduling preferences
+
+  - type: checkboxes
+    id: times
+    attributes:
+      label: Select preferred dates and times (23-27 September)
+      description: You may select more than one
+      options:
+        - label: Monday, 09:00 - 10:30
+        - label: Monday, 11:00 - 12:30
+        - label: Monday, 14:00 - 16:00
+        - label: Monday, 16:30 - 18:00
+        - label: Tuesday, 09:00 - 10:30
+        - label: Tuesday, 11:00 - 12:30
+        - label: Tuesday, 14:00 - 16:00
+        - label: Tuesday, 16:30 - 18:00
+        - label: Thursday, 09:00 - 10:30
+        - label: Thursday, 11:00 - 12:30
+        - label: Thursday, 14:00 - 16:00
+        - label: Thursday, 16:30 - 18:00
+        - label: Friday, 09:00 - 10:30
+        - label: Friday, 11:00 - 12:30
+        - label: Friday, 14:00 - 16:00
+        - label: Friday, 16:30 - 18:00
+
+  - type: textarea
+    id: conflicts
+    attributes:
+      label: Other sessions where we should avoid scheduling conflicts (Optional)
+      description: |
+        Identify sessions by their issue number in this GitHub repo (e.g., `#32, #18`). Space- or comma-separated list.
+    validations:
+      required: false
+
+  - type: textarea
+    id: comments
+    attributes:
+      label: Other instructions for meeting planners (Optional)
+      description: |
+        Any information for the meeting planners, including timing constraints or groups not yet registered where overlap should be avoided. This information will not be exported to the TPAC site or calendar.
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Logistics
+
+  - type: markdown
+    attributes:
+      value: |
+        > [!Note]
+        The meeting planners will provide additional logistics information automatically, including calendar information.
+
+  - type: input
+    id: discussion
+    attributes:
+      label: Discussion channel (Optional)
+      description: |
+        A URL for a meeting discussion channel (e.g., IRC, Slack). If provided, this will be added to the calendar invitation.
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Agenda
+
+  - type: textarea
+    id: agenda
+    attributes:
+      label: Agenda for the meeting.
+      description: |
+        This part may be completed closer to the meeting. As the agenda becomes available, you will be able to update your session description in markdown to **detail the agenda or link to an external agenda**. Agenda information will be pushed to the calendar.
+
+  - type: markdown
+    attributes:
+      value: |
+        > [!Note]
+        After the meeting, the meeting planners will add a section to the session description for meeting materials such as links to minutes, presentations, and any recordings.
