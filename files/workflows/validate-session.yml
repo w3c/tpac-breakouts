@@ -1,0 +1,112 @@
+name: "[A] Validate session and update W3C calendar"
+
+on:
+  issues:
+    # Details for types below can be found at:
+    # https://docs.github.com/en/webhooks-and-events/webhooks/webhook-events-and-payloads?actionType=edited#issues
+    types:
+      # Job triggered when an issue is created or re-opened
+      - opened
+      - reopened
+
+      # or gets "edited" (title or body updated)
+      - edited
+
+jobs:
+  validate-session:
+    name: Validate session and update W3C calendar
+    runs-on: ubuntu-latest
+    # We're only interested in "session" issues
+    # and don't want to react to edits made by the bot as a consequence of
+    # a previous run of this job
+    if: ${{ !endsWith(github.actor, '-bot') && contains(github.event.issue.labels.*.name, 'session') }}
+    steps:
+      - name: Setup node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Checkout latest version of release script
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Add issue to TPAC breakout session project
+        if: ${{ github.event.action == 'opened' || github.event.action == 'reopened' }}
+        uses: actions/add-to-project@v0.5.0
+        with:
+          # Note: This isn't really necessary since we already made sure that
+          # issue is a "session" issue
+          labeled: session
+
+          # URL of the annual TPAC XXXX breakout project.
+          # The PROJECT_OWNER and PROJECT_NUMBER variables must be defined on
+          # the repository. PROJECT_OWNER_TYPE needs to be set to "user" if
+          # project belongs to a user. It may be omitted otherwise (or set to
+          # 'org"').
+          project-url: https://github.com/${{vars.PROJECT_OWNER_TYPE || 'org'}}s/${{vars.PROJECT_OWNER || 'w3c'}}/projects/${{vars.PROJECT_NUMBER}}
+
+          # A valid Personal Access Token (classic version) with project scope
+          # (and public_repo scope so that labels may be updated) needs to be
+          # added as secret to the repo, because the action uses the GraphQL
+          # API under the hoods.
+          github-token: ${{ secrets.GRAPHQL_TOKEN }}
+
+      - name: Add thank you comment with links to documentation
+        if: ${{ github.event.action == 'opened' }}
+        run: gh issue comment "$NUMBER" --body-file "$BODY_FILE"
+        env:
+          GH_TOKEN: ${{ secrets.GRAPHQL_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.issue.number }}
+          BODY_FILE: .github/session-created.md
+
+      - name: Dump changes to local file
+        run: echo '${{ toJSON(github.event.issue.changes || '{}') }}' > changes.json
+        shell: bash
+
+      - name: Validate session and update issue labels accordingly
+        run: npx tpac-breakouts validate ${{ github.event.issue.number }} --changes changes.json --what everything
+        env:
+          # See above for PROJECT_XX variables
+          PROJECT_OWNER: ${{ vars.PROJECT_OWNER_TYPE || 'organization' }}/${{ vars.PROJECT_OWNER || 'w3c' }}
+          PROJECT_NUMBER: ${{ vars.PROJECT_NUMBER }}
+
+          # Same valid Personal Access Token (classic version) as above, with
+          # project and public_repo scope.
+          GRAPHQL_TOKEN: ${{ secrets.GRAPHQL_TOKEN }}
+          GH_TOKEN: ${{ secrets.GRAPHQL_TOKEN }}
+
+          # Mapping between chair GitHub identities and W3C IDs must be stored
+          # in a variable. Structure is a JSON object with identities as keys.
+          W3CID_MAP: ${{ vars.W3CID_MAP }}
+
+      - name: Create/Update calendar entry
+        run: npx tpac-breakouts sync-calendar ${{ github.event.issue.number }} --quiet
+        env:
+          # See above for PROJECT_XX variables
+          PROJECT_OWNER: ${{ vars.PROJECT_OWNER_TYPE || 'organization' }}/${{ vars.PROJECT_OWNER || 'w3c' }}
+          PROJECT_NUMBER: ${{ vars.PROJECT_NUMBER }}
+
+          # Same valid Personal Access Token (classic version) as above, with
+          # project and public_repo scope.
+          GRAPHQL_TOKEN: ${{ secrets.GRAPHQL_TOKEN }}
+          GH_TOKEN: ${{ secrets.GRAPHQL_TOKEN }}
+
+          # Information about the team user on behalf of which the updates to
+          # the calendar will be made. The password must obviously be stored
+          # as a secret!
+          W3C_LOGIN: ${{ vars.W3C_LOGIN }}
+          W3C_PASSWORD: ${{ secrets.W3C_PASSWORD }}
+
+          # Mapping between rooms and Zoom meetings must be stored in a variable
+          # (so that it does not get published). Structure is a JSON object
+          # with room names as keys.
+          ROOM_ZOOM: ${{ vars.ROOM_ZOOM }}
+
+          # Mapping between chair GitHub identities and W3C IDs must be stored
+          # in a variable. Structure is a JSON object with identities as keys.
+          W3CID_MAP: ${{ vars.W3CID_MAP }}

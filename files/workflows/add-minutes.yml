@@ -1,0 +1,55 @@
+name: "[M] Link to session minutes"
+
+on:
+  workflow_dispatch:
+    inputs:
+      sessionNumber:
+        description: 'Session issue number or "all" to link all possible minutes'
+        required: true
+        default: 'all'
+        type: string
+
+jobs:
+  add-minutes:
+    name: Link to session minutes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Checkout latest version of release script
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      # Note: no "package-lock.json" and no "npm ci" on purpose to retrieve
+      # latest version of w3c/tpac-breakouts tools (which are unversioned)
+      - name: Install dependencies
+        run: npm install
+
+      - name: Link to session minutes
+        run: npx add-minutes ${{ inputs.sessionNumber }}
+        env:
+          # URL of the annual TPAC XXXX breakout project.
+          # The PROJECT_OWNER and PROJECT_NUMBER variables must be defined on
+          # the repository. PROJECT_OWNER_TYPE needs to be set to "user" if
+          # project belongs to a user. It may be omitted otherwise (or set to
+          # 'org"').
+          PROJECT_OWNER: ${{ vars.PROJECT_OWNER_TYPE || 'organization' }}/${{ vars.PROJECT_OWNER || 'w3c' }}
+          PROJECT_NUMBER: ${{ vars.PROJECT_NUMBER }}
+
+          # A valid Personal Access Token (classic version) with project
+          # and public_repo scope.
+          GRAPHQL_TOKEN: ${{ secrets.GRAPHQL_TOKEN }}
+
+          # Information about the team user on behalf of which the updates to
+          # the calendar will be made. The password must obviously be stored
+          # as a secret!
+          W3C_LOGIN: ${{ vars.W3C_LOGIN }}
+          W3C_PASSWORD: ${{ secrets.W3C_PASSWORD }}
+
+          # Mapping between chair GitHub identities and W3C IDs must be stored
+          # in a variable. Structure is a JSON object with identities as keys.
+          CHAIR_W3CID: ${{ vars.CHAIR_W3CID }}

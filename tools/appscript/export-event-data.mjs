@@ -6,10 +6,11 @@ import { getProject } from './project.mjs';
 export default function () {
   const project = getProject(SpreadsheetApp.getActiveSpreadsheet());
 
-  const ui = SpreadsheetApp.getUi();
-    ui.alert(
-      'Event data',
-      JSON.stringify(project, null, 2),
-      ui.ButtonSet.OK
-    );
+  const htmlOutput = HtmlService
+    .createHtmlOutput(
+      '<pre>' + JSON.stringify(project, null, 2) + '</pre>'
+    )
+    .setWidth(300)
+    .setHeight(400);
+  SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Event data');
 }

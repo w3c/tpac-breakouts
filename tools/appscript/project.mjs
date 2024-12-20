@@ -160,11 +160,12 @@ export function getProject(spreadsheet) {
     title: spreadsheet.getName(),
     url: getSetting('GitHub project URL', ''),
     metadata: {
-      meeting: getSetting('Meeting name', ''),
       type: getSetting('Type', 'breakouts'),
       timezone: getSetting('Timezone', 'Etc/UTC'),
       calendar: getSetting('Sync with W3C calendar', 'no'),
-      rooms: getSetting('Show rooms in calendar') === 'no' ? 'hide' : 'show'
+      rooms: getSetting('Show rooms in calendar') === 'no' ? 'hide' : 'show',
+      meeting: getSetting('Meeting name in calendar', ''),
+      reponame: getSetting('GitHub repository name')
     },
 
     rooms: sheets.rooms.values.filter(v => !!v.name),
