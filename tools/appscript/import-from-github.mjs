@@ -1,22 +1,26 @@
-import associateWithGitHubRepository from './link-to-repository.mjs';
+import { getProject } from './project.mjs';
 import reportError from './report-error.mjs';
 
 /**
  * Trigger a GitHub workflow that refreshes the data from GitHub
  */
 export default function () {
-  const scriptProperties = PropertiesService.getScriptProperties();
-  const GITHUB_TOKEN = scriptProperties.getProperty('GITHUB_TOKEN');
-  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  let repository = spreadsheet.getDeveloperMetadata().find(data => data.getKey() === 'repository');
-  if (!repository) {
-    associateWithGitHubRepository();
-    repository = spreadsheet.getDeveloperMetadata().find(data => data.getKey() === 'repository');
-    if (!repository) {
-      return;
-    }
+  const project = getProject(SpreadsheetApp.getActiveSpreadsheet());
+
+  if (!project.metadata.reponame) {
+    reportError(`No GitHub repository associated with the current document.
+
+Make sure that the "GitHub repository name" parameter is set in the "Event" sheet.
+
+Also make sure the targeted repository and project have been properly initialized.
+If not, ask François or Ian to run the required initialization steps.`);
   }
-  const repo = repository.getValue();
+
+  const repoparts = project.metadata.reponame.split('/');
+  const repo = {
+    owner: repoparts.length > 1 ? repoparts[0] : 'w3c',
+    name: repoparts.length > 1 ? repoparts[1] : repoparts[0]
+  };
 
   const options = {
     method : 'post',
@@ -34,7 +38,7 @@ export default function () {
   };
 
   const response = UrlFetchApp.fetch(
-    `https://api.github.com/repos/${repo}/actions/workflows/sync-spreadsheet.yml/dispatches`,
+    `https://api.github.com/repos/${repo.owner}/${repo.name}/actions/workflows/sync-spreadsheet.yml/dispatches`,
     options);
   const status = response.getResponseCode();
   if (status === 200 || status === 204) {
