@@ -18,7 +18,7 @@ import { parseProjectDescription } from '../../common/project.mjs';
  * Returned object should look like:
  * {
  *   "title": "TPAC xxxx breakout sessions",
- *   "url": "https://github.com/organization/w3c/projects/xx",
+ *   "url": "https://github.com/orgs/w3c/projects/xx",
  *   "id": "xxxxxxx",
  *   "roomsFieldId": "xxxxxxx",
  *   "rooms": [
