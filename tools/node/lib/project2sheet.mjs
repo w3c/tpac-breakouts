@@ -156,6 +156,13 @@ export async function convertProjectToSheet(project,
         desc.sheetId = sheet.properties.sheetId;
         desc.title = sheet.properties.title;
       }
+      if (name === 'sessions') {
+        const devMetadata = res.data.developerMetadata?.find(d =>
+          d.metadataKey === 'session-template');
+        if (devMetadata) {
+          desc.sessionTemplate = devMetadata.metadataValue;
+        }
+      }
     }
   }
 
@@ -737,6 +744,51 @@ export async function convertProjectToSheet(project,
     });
   }
 
+  /**
+   * The YAML session template is stored as developer metadata in the
+   * spreadsheet.
+   *
+   * Note: the function assumes that no one else will mess up with developer
+   * metadata (and, e.g., create another "session-template" key with a
+   * different location)
+   */
+  async function updateSessionTemplate() {
+    let request;
+    if (sheetsInfo.sessions.sessionTemplate) {
+      request = {
+        updateDeveloperMetadata: {
+          dataFilters: [
+            {
+              developerMetadataLookup: {
+                metadataKey: 'session-template'
+              }
+            }
+          ],
+          developerMetadata: {
+            metadataValue: project.sessionTemplate
+          },
+          fields: 'metadataValue'
+        }
+      };
+    }
+    else {
+      request = {
+        createDeveloperMetadata: {
+          developerMetadata: {
+            metadataKey: 'session-template',
+            metadataValue: project.sessionTemplate,
+            location: { spreadsheet: true },
+            visibility: 'DOCUMENT'
+          }
+        }
+      };
+    }
+    await sheets.spreadsheets.batchUpdate({
+        spreadsheetId,
+        resource: { requests: [request] }
+    });
+  }
+
   // Create the spreadsheet if needed
   if (!spreadsheetId) {
     spreadsheetId = await createSpreadsheet();
@@ -749,8 +801,9 @@ export async function convertProjectToSheet(project,
   await updateSlots();
   await updateSessions();
   await updateMeetings();
+  await updateSessionTemplate();
 
-  /*res = await sheets.spreadsheets.get({
+  /*const res = await sheets.spreadsheets.get({
     spreadsheetId,
     includeGridData: true
   });

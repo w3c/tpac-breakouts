@@ -251,8 +251,8 @@ program
   .action(getProjectCommandRunner(synchronizeSheet))
   .addHelpText('after', `
 Notes:
-  - Local environment must define a \`GOOGLE_KEY_JSON\` variable.
-  The variable must complete the path to a JSON file that contains the
+  - Local environment must define a \`GOOGLE_KEY_FILE\` variable.
+  The variable must be the path to a JSON file that contains the
   private key of a service account with the appropriate rights, created
   in Google Cloud: https://console.cloud.google.com/.
 

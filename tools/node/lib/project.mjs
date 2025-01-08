@@ -420,6 +420,7 @@ export async function fetchProject(login, id) {
     allowRegistrants: !!registrants?.id,
 
     // Sections defined in the issue template
+    sessionTemplate: templateYaml,
     sessionSections,
 
     // List of open sessions linked to the project (in other words, all of the
