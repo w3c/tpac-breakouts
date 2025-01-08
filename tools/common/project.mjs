@@ -20,6 +20,20 @@ export function parseProjectDescription(desc) {
 
 
 /**
+ * Helper function to serialize project metadata into a description
+ *
+ * Metadata needs to have been parsed with parseProjectDescription
+ */
+export function serializeProjectMetadata(metadata) {
+  const description = [];
+  for (const [param, value] of Object.entries(metadata)) {
+    description.push(`${param}: ${value}`);
+  }
+  return description.join(', ');
+}
+
+
+/**
  * Validate that we have the information we need about the project.
  */
 export function validateProject(project) {

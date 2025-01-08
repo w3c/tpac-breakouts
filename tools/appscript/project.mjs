@@ -168,7 +168,15 @@ export function getProject(spreadsheet) {
       reponame: getSetting('GitHub repository name')
     },
 
-    rooms: sheets.rooms.values.filter(v => !!v.name),
+    rooms: sheets.rooms.values
+      .filter(v => !!v.name)
+      .map(v => {
+        if (v['vip room']) {
+          v.vip = v['vip room'] === 'yes' ? true : false;
+          delete v['vip room'];
+        }
+        return v;
+      }),
 
     days: sheets.days.values
       .filter(v => !!v.date)

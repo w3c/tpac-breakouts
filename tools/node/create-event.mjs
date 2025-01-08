@@ -3,40 +3,22 @@ import fs from 'fs/promises';
 import { exec } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import util from 'node:util';
+import { serializeProjectMetadata } from '../common/project.mjs';
 
 /**
- * The template project on GitHub for group meetings and breakouts
+ * The project templates on GitHub for group meetings and breakouts
  */
-const templateProjects = {
-  group: 81,      // TODO: create a real project template
-  breakouts: 57   // TODO: create a real project template
+const projectTemplates = {
+  group: 156,      // https://github.com/orgs/w3c/projects/156/views/1
+  breakouts: 157   // https://github.com/orgs/w3c/projects/157/views/1
 }
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
-async function run(cmd, options) {
-  try {
-    const { stdout, stderr } = await util.promisify(exec)(cmd, options);
-    if (stderr && !options?.ignoreErrors) {
-      console.error(`Could not run command: ${cmd}`);
-      console.error(stderr);
-      process.exit(1);
-    }
-    return { stdout, stderr };
-  }
-  catch (err) {
-    if (options.ignoreErrors) {
-      return { stdout: '', stderr: err.toString() };
-    }
-    else {
-      console.error(`Could not run command: ${cmd}`);
-      console.error(stderr);
-      process.exit(1);
-    }
-  }
-}
 
 export default async function (jsonfile, options) {
+  console.log(`----- MAGIC BEGINS -----`);
+  console.log(`- Read event data from JSON file`);
   const data = await fs.readFile(jsonfile, 'utf8');
   const project = JSON.parse(data);
   
@@ -55,6 +37,19 @@ export default async function (jsonfile, options) {
   }
   if (!project.metadata.reponame) {
     console.warn('The "metadata.reponame" property must be set to the name of the repository to create.');
+    process.exit(1);
+  }
+  if (project.rooms.length === 0) {
+    console.warn('At least one room must be defined. Room name may remain a placeholder (like "Room 1")');
+    process.exit(1);
+  }
+  if (project.days.length === 0) {
+    console.warn('At least one day must be defined.');
+    process.exit(1);
+  }
+  if (project.slots.length === 0) {
+    console.warn('At least one slot must be defined.');
+    process.exit(1);
   }
 
   const repoparts = project.metadata.reponame.split('/');
@@ -184,7 +179,7 @@ export default async function (jsonfile, options) {
   // Step: Add w3c/tpac-breakouts dependency
   {
     console.log(`- Install w3c/tpac-breakouts in "${repo.name}" folder`);
-    await run('npm install w3c/tpac-breakouts', { cwd: repo.name });
+    //await run('npm install w3c/tpac-breakouts', { cwd: repo.name });
   }
 
   // Step: Commit git changes in local folder
@@ -200,7 +195,12 @@ export default async function (jsonfile, options) {
       }
     }
 
-    await run('git commit -m "Synchronize content with w3c/tpac-breakouts" || true', { cwd: repo.name });
+    {
+      const { stdout } = await run('git status', { cwd: repo.name });
+      if (!stdout.match(/nothing to commit/)) {
+        await run('git commit -m "Synchronize content with w3c/tpac-breakouts" --quiet', { cwd: repo.name });
+      }
+    }
   }
 
   // Step: Push git changes to GitHub
@@ -221,34 +221,185 @@ export default async function (jsonfile, options) {
   // Step: Create session label on GitHub
   {
     console.log(`- Create session label in "${repo.owner}/${repo.name}"`);
-    console.log('TODO');
+    const desc = (project.metadata.type === 'groups') ?
+      'Group meeting' : 'Breakout session proposal'
+    const { stdout } = await run(`gh label create session --color C2E0C6 --description "${desc}" --force`, { cwd: repo.name });
   }
 
   // Step: Create GitHub project if needed
+  const gProject = {};
   {
     console.log(`- Retrieve/Create associated GitHub project`);
     const { stdout } = await run('gh repo view --json projectsV2', { cwd: repo.name });
     const projectsV2 = JSON.parse(stdout);
-    const gProject = {};
-    if (projectsV2?.Nodes?.length === 0) {
-      const { stdout } = await run(`gh project copy ${templateProjects[project.metadata.type]} --source-owner w3c --target-owner ${repo.owner} --title "${project.title}"`);
+    if (projectsV2?.projectsV2?.Nodes?.length === 0) {
+      const { stdout } = await run(`gh project copy ${projectTemplates[project.metadata.type]} --source-owner w3c --target-owner ${repo.owner} --title "${project.title}"`);
       // stdout should contain a URL like:
       //  https://github.com/users/tidoust/projects/xx
       // or
       //  https://github.com/orgs/w3c/projects/xx
-      gProject.url = stdout.trim();
+      gProject.url = stdout;
       gProject.number = parseInt(gProject.match(/\/projects\/(\d+)$/)[1], 10);
-      await run(`gh project link ${gProject.number} --owner w3c`)
+      await run(`gh project link ${gProject.number} --owner ${repo.owner}`)
     }
     else {
-      gProject.number: projectsV2.Nodes[0].number,
-      gProject.url = projectsV2.Nodes[0].url;
+      gProject.number = projectsV2.projectsV2.Nodes[0].number,
+      gProject.url = projectsV2.projectsV2.Nodes[0].url;
     }
   }
 
-  // Step: Fill out project settings as needed
+  // Step: Refresh project settings as needed
   {
-    console.log(`- Refresh project settings as needed`);
-    console.log('TODO!');
+    console.log(`- Refresh project title and description`);
+    const settings = {
+      meeting: project.metadata.meeting || '@@',
+      type: project.metadata.type || 'breakouts',
+      timezone: project.metadata.timezone || 'Etc/UTC',
+      calendar: project.metadata.calendar || 'no',
+      rooms: project.metadata.rooms || 'show'
+    };
+    await run(`gh project edit ${gProject.number} --owner ${repo.owner} --title "${project.title}" --description "${serializeProjectMetadata(settings)}"`)
+  }
+
+  // Step: Retrieve the IDs of the custom fields in the GitHub project
+  {
+    console.log(`- Retrieve custom fields' IDs`);
+    const { stdout } = await run(`gh project field-list ${gProject.number} --owner ${repo.owner} --format json`);
+    const desc = JSON.parse(stdout);
+
+    const room = desc.fields.find(field => field.name === "Room");
+    gProject.roomsFieldId = room.id;
+    gProject.rooms = room.options;
+
+    const day = desc.fields.find(field => field.name === 'Day');
+    gProject.daysFieldId = day.id;
+    gProject.days = day.options;
+
+    const slot = desc.fields.find(field => field.name === 'Slot');
+    gProject.slotsFieldId = slot.id;
+    gProject.slots = slot.options;
+  }
+
+  // Step: Refresh the list of options for each custom field
+  for (const field of ['rooms', 'days', 'slots']) {
+    console.log(`- Refresh list of ${field}`);
+    const singleSelectOptions = project[field].map(item => {
+      let desc = [];
+      if (field === 'rooms') {
+        for (const [key, value] of Object.entries(item)) {
+          if (key !== 'id' && key !== 'name' &&
+              value !== false && value !== null) {
+            desc.push(`- ${key}: ${value}`);
+          }
+        }
+      }
+      return `{ name: "${item.name}", description: "${desc.join('\\n')}", color: GRAY }`;
+    });
+    const query = `
+mutation($fieldId: ID!) {
+  updateProjectV2Field(input: {
+    clientMutationId: "mutatis mutandis",
+    fieldId: $fieldId,
+    singleSelectOptions: [${singleSelectOptions.join(',\n')}]
+  }) {
+    clientMutationId
+  }
+}
+    `;
+    const queryFile = path.join(repo.name, 'query.graphql');
+    await fs.writeFile(queryFile, query, 'utf8');
+    const fieldId = gProject[field + 'FieldId'];
+    const { stdout } = await run(
+      `gh api graphql -F fieldId=${fieldId} -F query=@query.graphql`,
+      { cwd: repo.name }
+    );
+    const res = JSON.parse(stdout);
+    if (res?.data?.updateProjectV2Field?.clientMutationId !== 'mutatis mutandis') {
+      console.error(`Could not refresh the list of ${field} in project ${gProject.number}`);
+      console.error(stdout);
+      process.exit(1);
+    }
+    await fs.unlink(queryFile);
+  }
+
+  // Step: Setup repository variables
+  {
+    console.log(`- Setup repository variables`);
+    if (repo.owner !== 'w3c') {
+      await run(`gh variable set PROJECT_OWNER --body "${repo.owner}"`, { cwd: repo.name });
+    }
+    await run(`gh variable set PROJECT_NUMBER --body "${gProject.number}"`, { cwd: repo.name });
+
+    const { stdout } = await run(`gh variable list --json name`, { cwd: repo.name });
+    const variables = JSON.parse(stdout);
+    if (!variables.find(v => v.name === 'W3CID_MAP')) {
+      await run(`gh variable set W3CID_MAP --body "{}"`, { cwd: repo.name });
+    }
+    if (!variables.find(v => v.name === 'ROOM_ZOOM')) {
+      await run(`gh variable set ROOM_ZOOM --body "{}"`, { cwd: repo.name });
+    }
+    if (!variables.find(v => v.name === 'W3C_LOGIN')) {
+      await run(`gh variable set W3C_LOGIN --body "fd"`, { cwd: repo.name });
+    }
+  }
+
+  console.log(
+`----- MAGIC ENDS -----
+
+----- MANUAL STEPS -----
+The following should now exist:
+- Repository: https://github.com/${repo.owner}/${repo.name}
+- Repository clone: in "${repo.name}" subfolder
+- Project: ${gProject.url}
+
+But you still have work to do!
+
+Run the following actions (in any order):
+- Give @tpac-breakout-bot write permissions onto the project at:
+   ${gProject.url}/settings/access
+- Give @tpac-breakout-bot write access to the repository at:
+   https://github.com/${repo.owner}/${repo.name}/settings/access
+- Set "watch" to "All Activity" for the repository to receive comments left on issues:
+   https://github.com/${repo.owner}/${repo.name}
+   (look for the dropdown menu named "Watch" or "Unwatch")
+- Ask François (fd@w3.org) to set the "GRAPHQL_TOKEN" and "W3C_PASSWORD" repository secret. Sorry, not something you can do on your own for now!`);
+
+  if (project.metadata.type !== 'groups') {
+    console.log(`
+Consider adding documentation to the repository:
+- Enable Wiki pages on the repository:
+   https://github.com/${repo.owner}/${repo.name}/settings
+- Add Wiki pages to the repository:
+   https://github.com/${repo.owner}/${repo.name}/wiki
+   see https://github.com/w3c/tpac2024-breakouts/wiki for inspiration
+- Adjust the README as needed:
+   https://github.com/${repo.owner}/${repo.name}/blob/main/README.md
+   see https://github.com/w3c/tpac2024-breakouts/blob/main/README.md for inspiration`);
+  }
+}
+
+
+/**
+ * Helper function to run a bash command within the script and report result
+ */
+async function run(cmd, options) {
+  try {
+    const { stdout, stderr } = await util.promisify(exec)(cmd, options);
+    if (stderr && !options?.ignoreErrors) {
+      console.error(`Could not run command: ${cmd}`);
+      console.error(stderr);
+      process.exit(1);
+    }
+    return { stdout: stdout.trim(), stderr: stderr.trim() };
+  }
+  catch (err) {
+    if (options?.ignoreErrors) {
+      return { stdout: '', stderr: err.toString().trim() };
+    }
+    else {
+      console.error(`Could not run command: ${cmd}`);
+      console.error(err.toString());
+      process.exit(1);
+    }
   }
 }
