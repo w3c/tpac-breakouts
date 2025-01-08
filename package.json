@@ -55,6 +55,6 @@
   "devDependencies": {
     "@google/clasp": "^2.4.2",
     "mocha": "^10.7.3",
-    "rollup": "^4.24.3"
+    "rollup": "^4.30.1"
   }
 }
