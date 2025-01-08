@@ -158,7 +158,6 @@ export function getProject(spreadsheet) {
 
   const project = {
     title: spreadsheet.getName(),
-    url: getSetting('GitHub project URL', ''),
     metadata: {
       type: getSetting('Type', 'breakouts'),
       timezone: getSetting('Timezone', 'Etc/UTC'),
