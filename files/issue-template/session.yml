@@ -1,5 +1,5 @@
 name: Session proposal
-description: Propose to chair a breakout session at TPAC
+description: Propose to chair a breakout session
 labels: ["session"]
 body:
 # This repo includes code that validates instances of the data below. 
@@ -11,7 +11,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for proposing to chair a TPAC breakout session. Please ensure that the session is [in scope for a TPAC breakout](https://github.com/w3c/tpac-breakouts/wiki/Policies#session-scope) and review the [good practices for session chairs](https://github.com/w3c/tpac-breakouts/wiki/Good-Practices-for-Session-Chairs), which includes information about [how you can later update your session](https://github.com/w3c/tpac-breakouts/wiki/Good-Practices-for-Session-Chairs#how-to-update-a-session).
+        Thank you for proposing to chair a breakout session. Please ensure that the session is [in scope for a breakout](https://github.com/w3c/tpac-breakouts/wiki/Policies#session-scope) and review the [good practices for session chairs](https://github.com/w3c/tpac-breakouts/wiki/Good-Practices-for-Session-Chairs), which includes information about [how you can later update your session](https://github.com/w3c/tpac-breakouts/wiki/Good-Practices-for-Session-Chairs#how-to-update-a-session).
 
   - type: textarea
     id: description
@@ -89,7 +89,7 @@ body:
     attributes:
       label: Instructions for meeting planners (Optional)
       description: |
-        Any information for the meeting planners, including [timing constraints](https://github.com/w3c/tpac2024-breakouts/wiki/Breakout%E2%80%90time%E2%80%90slots) or groups not yet registered where overlap should be avoided. This information will not be exported to the TPAC site or calendar.
+        Any information for the meeting planners, including [timing constraints](https://github.com/w3c/tpac2024-breakouts/wiki/Breakout%E2%80%90time%E2%80%90slots) or groups not yet registered where overlap should be avoided. This information will not be exported to the event site or calendar.
     validations:
       required: false
 
