@@ -212,6 +212,7 @@ export default async function (jsonfile, options) {
           !stderr.match(/Everything up-to-date/) &&
           !stderr.match(/To github.com:/)) {
         console.error(`Could not run "git push origin main" in folder "${repo.name}"`);
+        console.error(stdout);
         console.error(stderr);
         process.exit(1);
       }
@@ -233,14 +234,11 @@ export default async function (jsonfile, options) {
     const { stdout } = await run('gh repo view --json projectsV2', { cwd: repo.name });
     const projectsV2 = JSON.parse(stdout);
     if (projectsV2?.projectsV2?.Nodes?.length === 0) {
-      const { stdout } = await run(`gh project copy ${projectTemplates[project.metadata.type]} --source-owner w3c --target-owner ${repo.owner} --title "${project.title}"`);
-      // stdout should contain a URL like:
-      //  https://github.com/users/tidoust/projects/xx
-      // or
-      //  https://github.com/orgs/w3c/projects/xx
-      gProject.url = stdout;
-      gProject.number = parseInt(gProject.match(/\/projects\/(\d+)$/)[1], 10);
-      await run(`gh project link ${gProject.number} --owner ${repo.owner}`)
+      const { stdout } = await run(`gh project copy ${projectTemplates[project.metadata.type]} --source-owner w3c --target-owner ${repo.owner} --title "${project.title}" --format json`);
+      const desc = JSON.parse(stdout);
+      gProject.url = desc.url;
+      gProject.number = desc.number;
+      await run(`gh project link ${gProject.number} --owner ${repo.owner}`, { cwd: repo.name });
     }
     else {
       gProject.number = projectsV2.projectsV2.Nodes[0].number,
@@ -258,7 +256,7 @@ export default async function (jsonfile, options) {
       calendar: project.metadata.calendar || 'no',
       rooms: project.metadata.rooms || 'show'
     };
-    await run(`gh project edit ${gProject.number} --owner ${repo.owner} --title "${project.title}" --description "${serializeProjectMetadata(settings)}"`)
+    await run(`gh project edit ${gProject.number} --owner ${repo.owner} --title "${project.title}" --description "${serializeProjectMetadata(settings)}"`);
   }
 
   // Step: Retrieve the IDs of the custom fields in the GitHub project
@@ -367,8 +365,6 @@ Run the following actions (in any order):
   if (project.metadata.type !== 'groups') {
     console.log(`
 Consider adding documentation to the repository:
-- Enable Wiki pages on the repository:
-   https://github.com/${repo.owner}/${repo.name}/settings
 - Add Wiki pages to the repository:
    https://github.com/${repo.owner}/${repo.name}/wiki
    see https://github.com/w3c/tpac2024-breakouts/wiki for inspiration
