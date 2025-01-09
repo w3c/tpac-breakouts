@@ -38,18 +38,6 @@ body:
     validations:
       required: false
 
-  - type: dropdown
-    id: attendance
-    attributes:
-      label: Who can attend
-      description: |
-        TPAC breakouts sessions are usually open to the public (including remote attendees). Please only select “Restricted” if there is a compelling reason why the session should only be open to TPAC registrants.
-      options:
-        - Anyone may attend (Default)
-        - Restricted to TPAC registrants
-    validations:
-      required: true
-
   - type: markdown
     attributes:
       value: |
@@ -89,7 +77,7 @@ body:
     attributes:
       label: Instructions for meeting planners (Optional)
       description: |
-        Any information for the meeting planners, including [timing constraints](https://github.com/w3c/tpac2024-breakouts/wiki/Breakout%E2%80%90time%E2%80%90slots) or groups not yet registered where overlap should be avoided. This information will not be exported to the event site or calendar.
+        Any information for the meeting planners, including timing constraints or groups not yet registered where overlap should be avoided. This information will not be exported to the event site or calendar.
     validations:
       required: false
 

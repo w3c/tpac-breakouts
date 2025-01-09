@@ -156,10 +156,21 @@ export function getProject(spreadsheet) {
     });
   }
 
+  const eventType = getSetting('Type', 'TPAC breakouts');
+  let projectType;
+  if (eventType === 'TPAC group meetings') {
+    projectType = 'groups';
+  }
+  else if (eventType === 'TPAC breakouts') {
+    projectType = 'tpac-breakouts';
+  }
+  else {
+    projectType = 'breakouts-day';
+  }
   const project = {
     title: spreadsheet.getName(),
     metadata: {
-      type: getSetting('Type', 'breakouts'),
+      type: projectType,
       timezone: getSetting('Timezone', 'Etc/UTC'),
       calendar: getSetting('Sync with W3C calendar', 'no'),
       rooms: getSetting('Show rooms in calendar') === 'no' ? 'hide' : 'show',

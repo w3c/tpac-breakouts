@@ -1,0 +1,112 @@
+name: Session proposal
+description: Propose to chair a breakout session
+labels: ["session"]
+body:
+# This repo includes code that validates instances of the data below. 
+# The validation code parses this file and uses "id" for some aspects of validation. 
+# One implication is that labels below can be changed without disrupting some of the validation code.
+# However, the validation code in some cases also matches on values of "options" below, so if those change,
+# you will need to change the validation code as well.
+
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for proposing to chair a TPAC breakout session. Please ensure that the session is [in scope for a breakout](https://github.com/w3c/tpac-breakouts/wiki/Policies#session-scope) and review the [good practices for session chairs](https://github.com/w3c/tpac-breakouts/wiki/Good-Practices-for-Session-Chairs), which includes information about [how you can later update your session](https://github.com/w3c/tpac-breakouts/wiki/Good-Practices-for-Session-Chairs#how-to-update-a-session).
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Session description
+      description: |
+        Simple markdown only please (inline formatting, links, lists).
+    validations:
+      required: true
+
+  - type: input
+    id: goal
+    attributes:
+      label: Session goal
+    validations:
+      required: true
+
+  - type: textarea
+    id: chairs
+    attributes:
+      label: Additional session chairs (Optional)
+      description: |
+        GitHub identities of additional session chairs other than you (e.g., `@tidoust, @ianbjacobs`). Space- or comma-separated list.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: attendance
+    attributes:
+      label: Who can attend
+      description: |
+        TPAC breakouts sessions are usually open to the public (including remote attendees). Please only select “Restricted” if there is a compelling reason why the session should only be open to TPAC registrants.
+      options:
+        - Anyone may attend (Default)
+        - Restricted to TPAC registrants
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Logistics
+
+  - type: markdown
+    attributes:
+      value: |
+        > [!Note]
+        The meeting planners will provide additional logistics information automatically, including calendar information.
+
+  - type: input
+    id: shortname
+    attributes:
+      label: IRC channel (Optional)
+      description: |
+        Shortname for the irc.w3.org channel (e.g., `#my-fav-session`). If not provided, shortname will be generated from title.
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Preferences
+
+  - type: textarea
+    id: conflicts
+    attributes:
+      label: Other sessions where we should avoid scheduling conflicts (Optional)
+      description: |
+        Identify sessions by their issue number in this GitHub repo (e.g., `#32, #18`). Please do not use links, just '#' followed by an issue number. Space- or comma-separated list. Note: When someone chairs 2 or more sessions, we automatically do not schedule those sessions in the same slots, so there is no need to note those conflicts there.
+    validations:
+      required: false
+
+  - type: textarea
+    id: comments
+    attributes:
+      label: Instructions for meeting planners (Optional)
+      description: |
+        Any information for the meeting planners, including timing constraints or groups not yet registered where overlap should be avoided. This information will not be exported to the event site or calendar.
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Agenda
+
+  - type: textarea
+    id: agenda
+    attributes:
+      label: Agenda for the meeting.
+      description: |
+        This part may be completed closer to the meeting. As the agenda becomes available, you will be able to update your session description in markdown to **detail the agenda or link to an external agenda**. Agenda information will be pushed to the calendar.
+
+  - type: markdown
+    attributes:
+      value: |
+        > [!Note]
+        After the meeting, the meeting planners will add a section to the session description for meeting materials such as links to minutes, presentations, and any recordings.
