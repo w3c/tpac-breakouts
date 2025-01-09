@@ -210,9 +210,8 @@ export default async function (jsonfile, options) {
       const { stdout, stderr } = await run('git push origin main', { cwd: repo.name, ignoreErrors: true });
       if (stderr &&
           !stderr.match(/Everything up-to-date/) &&
-          !stderr.match(/To github.com:/)) {
+          !stderr.match(/To (.*)github\.com/)) {
         console.error(`Could not run "git push origin main" in folder "${repo.name}"`);
-        console.error(stdout);
         console.error(stderr);
         process.exit(1);
       }
