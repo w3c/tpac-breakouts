@@ -124,8 +124,7 @@ export default async function (jsonfile, options) {
     const templateDest = path.join(repo.name, '.github', 'ISSUE_TEMPLATE');
     await fs.mkdir(templateDest, { recursive: true });
     await fs.copyFile(
-      path.join(templateSource,
-        project.metadata.type === 'group' ? 'meeting.yml' : 'session.yml'),
+      path.join(templateSource, project.metadata.type + '.yml'),
       path.join(templateDest, 'session.yml')
     );
 
