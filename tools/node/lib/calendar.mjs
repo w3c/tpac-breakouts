@@ -480,7 +480,7 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
   // fields we need (event_category, and the event_bigMeetingRestricted).
   const bigMeetingValue = await page.evaluate(
     meeting => [...document.querySelectorAll('select#event_big_meeting option')]
-      .find(op => op.innerText.startsWith(meeting))
+      .find(op => op.innerText.includes(meeting))
       .value,
     project.metadata.meeting);
   const bigMeetingSelect = await selectEl('select#event_big_meeting');
