@@ -178,7 +178,7 @@ export default async function (jsonfile, options) {
   // Step: Add w3c/tpac-breakouts dependency
   {
     console.log(`- Install w3c/tpac-breakouts in "${repo.name}" folder`);
-    //await run('npm install w3c/tpac-breakouts', { cwd: repo.name });
+    await run('npm install w3c/tpac-breakouts', { cwd: repo.name });
   }
 
   // Step: Commit git changes in local folder
