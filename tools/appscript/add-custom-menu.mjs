@@ -5,9 +5,16 @@
  */
 export default function () {
   SpreadsheetApp.getUi().createMenu('TPAC')
-    .addItem('Export event data as JSON', 'exportEventData')
-    .addItem('Import data from GitHub', 'importFromGithub')
-    .addItem('Generate grid', 'generateGrid')
+    .addItem('Refresh grid', 'generateGrid')
+    .addItem('Validate grid', 'validateGrid')
+    .addSeparator()
+    .addSubMenu(
+      SpreadsheetApp.getUi()
+        .createMenu('Sync with GitHub')
+        .addItem('Import data from GitHub', 'importFromGitHub')
+        .addItem('Export data to GitHub', 'exportToGitHub')
+        .addItem('Export event data as JSON', 'exportEventData')
+    )
     .addToUi();
 }
 
