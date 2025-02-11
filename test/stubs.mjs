@@ -268,6 +268,21 @@ export async function sendGraphQLRequest(query, acceptHeader = '') {
         }
       };
     }
+    else if (query.includes('projectsV2(')) {
+      const type = query.includes('organization(') ? 'organization' : 'user'
+      const id = query.match(/repository\(name: "([^"]+)"\)/)[1];
+      const result = { data: {} };
+      result.data[type] = {
+        repository: {
+          projectsV2: {
+            nodes: [{
+              number: id
+            }]
+          }
+        }
+      };
+      return result;
+    }
     else {
       throw new Error('Unexpected GraphQL query request, cannot fake it!', { cause: query });
     }
