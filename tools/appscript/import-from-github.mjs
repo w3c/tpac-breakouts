@@ -1,10 +1,13 @@
 import { getProject } from './project.mjs';
 import reportError from './report-error.mjs';
+import { fetchProjectFromGitHub } from '../common/project.mjs';
+import { refreshProject } from './project.mjs';
+import * as YAML from '../../node_modules/yaml/browser/index.js';
 
 /**
  * Trigger a GitHub workflow that refreshes the data from GitHub
  */
-export default function () {
+export default async function () {
   const project = getProject(SpreadsheetApp.getActiveSpreadsheet());
 
   if (!project.metadata.reponame) {
@@ -14,6 +17,7 @@ Make sure that the "GitHub repository name" parameter is set in the "Event" shee
 
 Also make sure the targeted repository and project have been properly initialized.
 If not, ask François or Ian to run the required initialization steps.`);
+    return;
   }
 
   const repoparts = project.metadata.reponame.split('/');
@@ -22,38 +26,40 @@ If not, ask François or Ian to run the required initialization steps.`);
     name: repoparts.length > 1 ? repoparts[1] : repoparts[0]
   };
 
-  const options = {
-    method : 'post',
-    contentType: 'application/json',
-    payload : JSON.stringify({
-      ref: 'main',
-      inputs: {
-        sheet: spreadsheet.getId()
-      }
-    }),
-    headers: {
-      'Authorization': `Bearer ${GITHUB_TOKEN}`
-    },
-    muteHttpExceptions: true
-  };
+  let githubProject;
+  try {
+    const yamlTemplateResponse = UrlFetchApp.fetch(
+      `https://raw.githubusercontent.com/${repo.owner}/${repo.name}/refs/heads/main/.github/ISSUE_TEMPLATE/session.yml`
+    );
+    const yamlTemplate = yamlTemplateResponse.getContentText();
+    const template = YAML.parse(yamlTemplate);
 
-  const response = UrlFetchApp.fetch(
-    `https://api.github.com/repos/${repo.owner}/${repo.name}/actions/workflows/sync-spreadsheet.yml/dispatches`,
-    options);
-  const status = response.getResponseCode();
-  if (status === 200 || status === 204) {
-    const ui = SpreadsheetApp.getUi();
-    ui.alert(
-      'Patience...',
-      `A job was scheduled to refresh the data in the spreadsheet. This may take a while...
-
-The job will clear the grid in the process. Please run "Generate grid" again once the grid is empty.`,
-      ui.ButtonSet.OK
+    githubProject = await fetchProjectFromGitHub(
+      repo.owner === 'w3c' ? repo.owner : `user/${repo.owner}`,
+      repo.name,
+      template
     );
   }
-  else {
-    reportError(`Unexpected HTTP status ${status} received from GitHub.
-
-Data could not be imported from ${repo}.`);
+  catch (err) {
+    reportError(err.toString());
+    return;
   }
+
+  try {
+    refreshProject(SpreadsheetApp.getActiveSpreadsheet(), githubProject, {
+      what: 'all'
+    });
+  }
+  catch(err) {
+    reportError(err.toString());
+    return;
+  }
+
+  const htmlOutput = HtmlService
+    .createHtmlOutput(
+      '<pre>' + JSON.stringify(githubProject, null, 2) + '</pre>'
+    )
+    .setWidth(300)
+    .setHeight(400);
+  SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'GitHub project');
 }

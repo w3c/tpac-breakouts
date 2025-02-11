@@ -7,13 +7,13 @@ export default async function (url, options) {
       params.method = options.method;
     }
     if (options.headers) {
-      params.header = options.headers;
+      params.headers = options.headers;
     }
     if (options.body) {
       params.payload = options.body;
     }
 
-    const response = UrlFetchApp.fetch(url)
+    const response = UrlFetchApp.fetch(url, params);
     return {
       status: response.getResponseCode(),
       json: async function () {
