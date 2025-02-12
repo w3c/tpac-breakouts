@@ -2,7 +2,7 @@ import puppeteer from 'puppeteer';
 import { validateSession } from '../common/validate.mjs';
 import { authenticate } from './lib/calendar.mjs';
 import { getEnvKey } from '../common/envkeys.mjs';
-import { saveSessionMeetings } from './lib/project.mjs';
+import { saveSessionMeetings } from '../common/project.mjs';
 import { parseSessionMeetings } from '../common/meetings.mjs';
 
 export default async function (project, number, options) {
