@@ -624,3 +624,28 @@ export async function saveSessionMeetings(session, project, options) {
     }
   }
 }
+
+
+/**
+ * Record session note
+ */
+export async function saveSessionNote(session, note, project) {
+  const fieldId = project.severityFieldIds.Note;
+  const response = await sendGraphQLRequest(`mutation {
+    updateProjectV2ItemFieldValue(input: {
+      clientMutationId: "mutatis mutandis",
+      fieldId: "${fieldId}",
+      itemId: "${session.projectItemId}",
+      projectId: "${project.id}",
+      value: {
+        text: "${note ?? ''}"
+      }
+    }) {
+      clientMutationId
+    }
+  }`);
+  if (!response?.data?.updateProjectV2ItemFieldValue?.clientMutationId) {
+    console.log(JSON.stringify(response, null, 2));
+    throw new Error(`GraphQL error, could not record "Note" for session #${session.number}`);
+  }
+}
