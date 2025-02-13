@@ -8,7 +8,9 @@ import { fetchProjectFromGitHub, saveSessionMeetings } from '../common/project.m
  */
 export default async function () {
   // TODO: consider reading only the list of sessions
+  console.log('Read data from spreadsheet...');
   const project = getProject(SpreadsheetApp.getActiveSpreadsheet());
+  console.log('Read data from spreadsheet... done');
 
   if (!project.metadata.reponame) {
     reportError(`No GitHub repository associated with the current document.
@@ -25,22 +27,17 @@ If not, ask François or Ian to run the required initialization steps.`);
     name: repoparts.length > 1 ? repoparts[1] : repoparts[0]
   };
 
-  let githubProject;
   try {
-    githubProject = await fetchProjectFromGitHub(
+    console.log('Fetch data from GitHub...');
+    const githubProject = await fetchProjectFromGitHub(
       repo.owner === 'w3c' ? repo.owner : `user/${repo.owner}`,
       repo.name,
       null
     );
-  }
-  catch (err) {
-    reportError(err.toString());
-    return;
-  }
+    console.log('Fetch data from GitHub... done');
 
-  const updated = [];
-  try {
-    // Check sessions that need an update
+    console.log('Export updates when needed...');
+    const updated = [];
     for (const session of githubProject.sessions) {
       const ssSession = project.sessions.find(s =>
         s.number === session.number);
@@ -79,34 +76,37 @@ If not, ask François or Ian to run the required initialization steps.`);
         console.warn(`- updating #${session.number}... done`);
       }
     }
+    console.log('Export updates when needed... done');
+
+    // Report the list of sessions that were updated
+    console.log('Report result...');
+    if (updated.length > 0) {
+      const list = updated.map(s =>
+        `${s.title} (<a href="https://github.com/${s.repository}/issues/${s.number}">#${s.number}</a>)`);
+      const htmlOutput = HtmlService
+        .createHtmlOutput(`
+          <p>The following session${list.length > 1 ? 's were' : ' was'} updated:</p>
+          <ul>
+            <li>${list.join('</li><li>')}</li>
+          </ul>
+        `)
+        .setWidth(400)
+        .setHeight(400);
+      SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Updated');
+    }
+    else {
+      const htmlOutput = HtmlService
+        .createHtmlOutput(`
+          <p>Data seems up-to-date already, nothing to export!</p>`
+        )
+        .setWidth(400)
+        .setHeight(400);
+      SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Nothing to update');
+    }
+    console.log('Report result... done');
   }
   catch(err) {
     reportError(err.toString());
     return;
-  }
-  
-  // Report the list of sessions that were updated
-  if (updated.length > 0) {
-    const list = updated.map(s =>
-      `${s.title} (<a href="https://github.com/${s.repository}/issues/${s.number}">#${s.number}</a>)`);
-    const htmlOutput = HtmlService
-      .createHtmlOutput(`
-        <p>The following session${list.length > 1 ? 's were' : ' was'} updated:</p>
-        <ul>
-          <li>${list.join('</li><li>')}</li>
-        </ul>`
-      )
-      .setWidth(400)
-      .setHeight(400);
-    SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Updated');
-  }
-  else {
-    const htmlOutput = HtmlService
-      .createHtmlOutput(`
-        <p>Data seems up-to-date already, nothing to export!</p>`
-      )
-      .setWidth(400)
-      .setHeight(400);
-    SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Nothing to update');
   }
 }

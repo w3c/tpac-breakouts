@@ -260,7 +260,6 @@ function getValues(sheet) {
 function setValues(sheet, values) {
   const nbRows = sheet.getLastRow() - 1;
   const nbColumns = sheet.getLastColumn();
-  console.log('rows cols', nbRows, nbColumns);
 
   const headers = sheet
     .getRange(1, 1, 1, nbColumns)
@@ -279,12 +278,12 @@ function setValues(sheet, values) {
       }
       return value;
     });
-  console.log('headers', headers);
+  console.log('  - sheet headers', headers);
 
   // Values is an array of indexed objects, while we need a two-dimensional
   // array of raw values. Let's convert the values.
   const rawValues = values.map((obj, vidx) => headers.map(header => {
-    if (!obj.hasOwnProperty(header)) {
+    if (!Object.hasOwn(obj, header)) {
       return '';
     }
     if (obj[header] === true) {
@@ -293,36 +292,45 @@ function setValues(sheet, values) {
     if (obj[header] === false) {
       return 'no';
     }
-    if (obj[header] === null) {
+    if (obj[header] === null || obj[header] === undefined) {
       return '';
+    }
+    if (header === 'labels' && obj[header]) {
+      return obj[header].join(', ');
     }
     if (header === 'author' && obj[header].login) {
       return obj[header].login;
     }
     return obj[header];
   }));
-  console.log('raw values', rawValues);
+  console.log('  - raw values to set', rawValues);
 
   // Note: we may have more or less rows than in the current sheet
   if (nbRows > 0) {
     const updateNb = Math.min(nbRows, rawValues.length);
+    console.log(`  - updating ${updateNb}/${rawValues.length} rows...`);
     const updateRange = sheet.getRange(
       2, 1, updateNb, nbColumns
     );
     updateRange.setValues(rawValues.slice(0, updateNb));
+    console.log(`  - updating ${updateNb}/${rawValues.length} rows... done`);
     if (nbRows > rawValues.length) {
+      console.log(`  - clearing ${nbRows - rawValues.length} rows...`);
       const clearRange = sheet.getRange(
         rawValues.length + 2, 1,
         nbRows - rawValues.length, nbColumns
       );
       clearRange.clear();
+      console.log(`  - clearing ${nbRows - rawValues.length} rows... done`);
     }
   }
   if (nbRows < rawValues.length) {
+    console.log(`  - adding ${rawValues.length - nbRows} rows...`);
     const appendRange = sheet.getRange(
       nbRows + 2, 1,
       rawValues.length - nbRows, nbColumns);
     appendRange.setValues(rawValues.slice(nbRows));
+    console.log(`  - adding ${rawValues.length - nbRows} rows... done`);
   }
 }
 
@@ -365,10 +373,13 @@ export function refreshProject(spreadsheet, project, { what }) {
     else if (type === 'sessions') {
       idKey = 'number';
     }
-    console.log(type, idKey);
     const values = sheets[type].values ?? [];
     const seen = [];
-    for (const obj of project[type]) {
+    for (let obj of project[type]) {
+      // Validation notes are nested under a "validation" key in the
+      // internal representation of a project, but are at the root level
+      // in the spreadsheet. Let's copy them to the root level as well.
+      obj = Object.assign({}, obj, obj.validation);
       const value = values.find(val => val[idKey] === obj[idKey]);
       if (value) {
         // Existing item, refresh the data
@@ -379,33 +390,40 @@ export function refreshProject(spreadsheet, project, { what }) {
       }
       else {
         // New item, add to the end of the list
+        // (copy validation notes along the way)
         values.push(obj);
         seen.push(obj);
       }
     }
     const toset = values.filter(value => seen.includes(value));
-    console.log(type, toset.length);
+    console.log(`- import ${toset.length} ${type}...`);
     setValues(sheets[type].sheet, toset);
+    console.log(`- import ${toset.length} ${type}... done`);
 
     // Set formula to auto-fill the weekday in the days sheet
     // and the slot name in the slots sheet
     // TODO: this assumes a position for the columns
     if (type === 'days') {
+      console.log(`- add formula for weekday column again...`);
       const range = sheets[type].sheet.getRange('B2:B');
       range.setFormulaR1C1(
         '=IF(INDIRECT("R[0]C[-1]", false) <> "", CHOOSE(WEEKDAY(INDIRECT("R[0]C[-1]", false)), "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ), "")'
       );
+      console.log(`- add formula for weekday column again... done`);
     }
     if (type === 'slots') {
+      console.log(`- add formula for slot name column again...`);
       const range = sheets[type].sheet.getRange('C2:C');
       range.setFormulaR1C1(
         '=IF(INDIRECT("R[0]C[-2]", false) <> "", CONCAT(CONCAT(INDIRECT("R[0]C[-2]", false), "-"), INDIRECT("R[0]C[-1]", false)), "")'
       );
+      console.log(`- add formula for slot name column again... done`);
     }
 
     // To make team's life easier, we'll convert session numbers in the first
     // column to a link to the session on GitHub
     if (type === 'sessions' && toset.length > 0) {
+      console.log(`- convert session numbers to links...`);
       const richValues = toset
         .map(session => SpreadsheetApp
           .newRichTextValue()
@@ -416,6 +434,7 @@ export function refreshProject(spreadsheet, project, { what }) {
         .map(richValue => [richValue]);
       const range = sheets[type].sheet.getRange(2, 1, toset.length, 1);
       range.setRichTextValues(richValues);
+      console.log(`- convert session numbers to links... done`);
     }
 
     SpreadsheetApp.flush();
