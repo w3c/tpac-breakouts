@@ -577,3 +577,50 @@ export function convertProjectToJSON(project) {
   });
   return data;
 }
+
+
+/**
+ * Record the meetings assignments for the provided session
+ */
+export async function saveSessionMeetings(session, project, options) {
+  // Project may not have some of the custom fields, and we may only
+  // be interested in a restricted set of them
+  const fields = ['room', 'day', 'slot', 'meeting', 'trymeout', 'registrants']
+    .filter(field => project[field + 'sFieldId'])
+    .filter(field => !options || !options.fields || options.fields.includes(field));
+  for (const field of fields) {
+    const prop = ['meeting', 'trymeout', 'registrants'].includes(field) ?
+      'text': 'singleSelectOptionId';
+    let value = null;
+    if (prop === 'text') {
+      // Text field
+      if (session[field]) {
+        value = `"${session[field]}"`;
+      }
+    }
+    else {
+      // Option in a selection field
+      const obj = project[field + 's'].find(o => o.name === session[field]);
+      if (obj) {
+        value = `"${obj.id}"`;
+      }
+    }
+    const resField = await sendGraphQLRequest(`mutation {
+      updateProjectV2ItemFieldValue(input: {
+        clientMutationId: "mutatis mutandis",
+        fieldId: "${project[field + 'sFieldId']}",
+        itemId: "${session.projectItemId}",
+        projectId: "${project.id}",
+        value: {
+          ${prop}: ${value}
+        }
+      }) {
+        clientMutationId
+      }
+    }`);
+    if (!resField?.data?.updateProjectV2ItemFieldValue?.clientMutationId) {
+      console.log(JSON.stringify(resField, null, 2));
+      throw new Error(`GraphQL error, could not assign session #${session.number} to ${field} value "${session[field]}"`);
+    }
+  }
+}

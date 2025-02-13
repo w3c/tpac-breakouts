@@ -1,10 +1,13 @@
 import { getProject } from './project.mjs';
 import reportError from './report-error.mjs';
+import { fetchProjectFromGitHub, saveSessionMeetings } from '../common/project.mjs';
+
 
 /**
  * Trigger a GitHub workflow that refreshes the data from GitHub
  */
-export default function () {
+export default async function () {
+  // TODO: consider reading only the list of sessions
   const project = getProject(SpreadsheetApp.getActiveSpreadsheet());
 
   if (!project.metadata.reponame) {
@@ -21,5 +24,89 @@ If not, ask François or Ian to run the required initialization steps.`);
     owner: repoparts.length > 1 ? repoparts[0] : 'w3c',
     name: repoparts.length > 1 ? repoparts[1] : repoparts[0]
   };
+
+  let githubProject;
+  try {
+    githubProject = await fetchProjectFromGitHub(
+      repo.owner === 'w3c' ? repo.owner : `user/${repo.owner}`,
+      repo.name,
+      null
+    );
+  }
+  catch (err) {
+    reportError(err.toString());
+    return;
+  }
+
+  const updated = [];
+  try {
+    // Check sessions that need an update
+    for (const session of githubProject.sessions) {
+      const ssSession = project.sessions.find(s =>
+        s.number === session.number);
+      if (!ssSession) {
+        const htmlOutput = HtmlService
+          .createHtmlOutput(`
+            <p>Sorry, I did not export anything because I detected a new
+            session in the GitHub repository that is not in the spreadsheet yet:
+            </p>
+            <blockquote>
+              <p>${session.title}
+              (<a href="https://github.com/${session.repository}/issues/${session.number}">#${session.number}</a>)
+              </p>
+            </blockquote>
+            <p>Please run <b>TPAC > Sync with GitHub > Import data from GitHub</b>
+            first to retrieve it.
+            You may also want to re-validate the grid afterwards!</p>`
+          )
+          .setWidth(400)
+          .setHeight(400);
+        SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Not up-to-date!');
+        return;
+      }
+
+      // TODO: handle meeting column for TPAC group meetings
+
+      if ((session.room !== ssSession.room) ||
+          (session.day !== ssSession.day) ||
+          (session.slot !== ssSession.slot)) {
+        console.warn(`- updating #${session.number}...`);
+        session.room = ssSession.room;
+        session.day = ssSession.day;
+        session.slot = ssSession.slot;
+        await saveSessionMeetings(session, githubProject);
+        updated.push(session);
+        console.warn(`- updating #${session.number}... done`);
+      }
+    }
+  }
+  catch(err) {
+    reportError(err.toString());
+    return;
+  }
   
+  // Report the list of sessions that were updated
+  if (updated.length > 0) {
+    const list = updated.map(s =>
+      `${s.title} (<a href="https://github.com/${s.repository}/issues/${s.number}">#${s.number}</a>)`);
+    const htmlOutput = HtmlService
+      .createHtmlOutput(`
+        <p>The following session${list.length > 1 ? 's were' : ' was'} updated:</p>
+        <ul>
+          <li>${list.join('</li><li>')}</li>
+        </ul>`
+      )
+      .setWidth(400)
+      .setHeight(400);
+    SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Updated');
+  }
+  else {
+    const htmlOutput = HtmlService
+      .createHtmlOutput(`
+        <p>Data seems up-to-date already, nothing to export!</p>`
+      )
+      .setWidth(400)
+      .setHeight(400);
+    SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Nothing to update');
+  }
 }

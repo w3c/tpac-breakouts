@@ -212,9 +212,8 @@ export function getProject(spreadsheet) {
     // TODO: how to retrieve the labels?
     labels: [],
 
-    // TODO: initialize from sessions sheet if it exists
     // TODO: complete with meetings sheet if it exists
-    sessions: []
+    sessions: sheets.sessions.values
   };
 
   return project;
