@@ -382,15 +382,20 @@ export function refreshProject(spreadsheet, project, { what }) {
       obj = Object.assign({}, obj, obj.validation);
       const value = values.find(val => val[idKey] === obj[idKey]);
       if (value) {
-        // Existing item, refresh the data
+        // Existing item, refresh the data, except if the user is only
+        // willing to refresh the list of sessions itself.
         for (const [key, val] of Object.entries(obj)) {
-          value[key] = val;
+          if (what !== 'sessions' ||
+              !['room', 'day', 'slot', 'meeting'].includes(key)) {
+            value[key] = val;
+          }
         }
         seen.push(value);
       }
       else {
         // New item, add to the end of the list
-        // (copy validation notes along the way)
+        // Note: for new sessions, we do copy the meeting info no matter what
+        // as "new" info that should inform the local grid
         values.push(obj);
         seen.push(obj);
       }
@@ -441,7 +446,7 @@ export function refreshProject(spreadsheet, project, { what }) {
   }
 
   // Refresh metadata settings
-  if (what === 'all' || what === 'metadata') {
+  if (['all', 'metadata'].includes(what)) {
     // Refresh the session template
     const sessionTemplate = spreadsheet.getDeveloperMetadata()
       .find(data => data.getKey() === 'session-template');
@@ -484,7 +489,7 @@ export function refreshProject(spreadsheet, project, { what }) {
   }
 
   // Refresh sessions
-  if (what === 'all' || what === 'sessions') {
+  if (['all', 'sessions', 'grid'].includes(what)) {
     if (!sheets.sessions.sheet) {
       sheets.sessions.sheet = createSessionsSheet(spreadsheet, sheets, project);
     }
