@@ -39,7 +39,7 @@
     "appscript-pull": "clasp pull",
     "appscript-push": "clasp push",
     "appscript-bundle": "rollup tools/appscript/main.mjs --file tools/appscript/bundle.js --no-treeshake --external ../../test/stubs.mjs",
-    "appscript": "npm run appscript-pull && npm run appscript-bundle && npm run appscript-push"
+    "appscript": "npm run appscript-bundle && npm run appscript-push"
   },
   "engines": {
     "node": ">=20"
