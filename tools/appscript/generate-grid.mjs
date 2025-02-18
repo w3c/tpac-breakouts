@@ -13,31 +13,44 @@ export default function () {
  * Generate the grid in the provided spreadsheet
  */
 function generateGrid(spreadsheet) {
-  // These are the sheets we expect to find
-  const project = getProject(spreadsheet);
-  if (!project.sheets.sessions.sheet) {
-    reportError('No sheet found that contains the list of sessions, please import data from GitHub first.');
+  try {
+    console.log('Read data from spreadsheet...');
+    const project = getProject(spreadsheet);
+    if (!project.sheets.sessions.sheet) {
+      reportError('No sheet found that contains the list of sessions, please import data from GitHub first.');
+      return;
+    }
+    console.log('Read data from spreadsheet... done');
+
+    console.log('Generate grid sheet...');
+    const sheet = project.sheets.grid.sheet;
+    sheet.clear();
+    console.log('- sheet cleared');
+    createHeaderRow(sheet, project.rooms);
+    console.log('- header row created');
+    createDaySlotColumns(sheet, project.days, project.slots);
+    console.log('- days/slots headers created');
+    addSessions(sheet,
+      project.sessions,
+      project.sessions,  // TODO: real meetings for TPAC group meetings!
+      project.rooms,
+      project.days,
+      project.slots,
+      spreadsheet.getUrl() + '#gid=' + project.sheets.meetings.sheet.getSheetId()
+    );
+    console.log('- sessions added to the grid');
+    addBorders(sheet,
+      project.rooms,
+      project.days,
+      project.slots
+    );
+    console.log('- borders added');
+    console.log('Generate grid sheet... done');
+  }
+  catch(err) {
+    reportError(err.toString());
     return;
   }
-
-  // Re-generate the grid view
-  const sheet = project.sheets.grid.sheet;
-  sheet.clear();
-  createHeaderRow(sheet, project.rooms);
-  createDaySlotColumns(sheet, project.days, project.slots);
-  addSessions(sheet,
-    project.sessions,
-    project.sessions,  // TODO: real meetings for TPAC group meetings!
-    project.rooms,
-    project.days,
-    project.slots,
-    spreadsheet.getUrl() + '#gid=' + project.sheets.meetings.sheet.getSheetId()
-  );
-  addBorders(sheet,
-    project.rooms,
-    project.days,
-    project.slots
-  );
 }
 
 

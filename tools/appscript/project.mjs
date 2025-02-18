@@ -213,7 +213,21 @@ export function getProject(spreadsheet) {
     labels: [],
 
     // TODO: complete with meetings sheet if it exists
-    sessions: sheets.sessions.values,
+    sessions: (sheets.sessions?.values ?? []).map(session =>
+      Object.assign(session, {
+        author: {
+          databaseId: session['author id'],
+          login: session.author
+        },
+        labels: (session.labels ?? '').split(', '),
+        validation: {
+          check: session.check,
+          warning: session.warning,
+          error: session.error,
+          note: session.note
+        }
+      })
+    ),
 
     sheets: sheets
   };
@@ -278,6 +292,9 @@ function setValues(sheet, values) {
       if (value === 'vip room') {
         return 'vip';
       }
+      if (value === 'author id') {
+        return 'authorid';
+      }
       return value;
     });
   console.log('  - sheet headers', headers);
@@ -285,6 +302,12 @@ function setValues(sheet, values) {
   // Values is an array of indexed objects, while we need a two-dimensional
   // array of raw values. Let's convert the values.
   const rawValues = values.map((obj, vidx) => headers.map(header => {
+    if (header === 'author' && obj.author?.login) {
+      return obj.author.login;
+    }
+    if (header === 'authorid' && obj.author?.databaseId) {
+      return obj.author.databaseId;
+    }
     if (!Object.hasOwn(obj, header)) {
       return '';
     }
@@ -299,9 +322,6 @@ function setValues(sheet, values) {
     }
     if (header === 'labels' && obj[header]) {
       return obj[header].join(', ');
-    }
-    if (header === 'author' && obj[header].login) {
-      return obj[header].login;
     }
     return obj[header];
   }));
@@ -508,7 +528,7 @@ function createSessionsSheet(spreadsheet, sheets, project) {
 
   // Set the headers row
   const headers = [
-    'Number', 'Title', 'Author', 'Body', 'Labels',
+    'Number', 'Title', 'Author', 'Author ID', 'Body', 'Labels',
     'Room', 'Day', 'Slot', 'Meeting',
     'Error', 'Warning', 'Check', 'Note',
     'Registrants'

@@ -631,7 +631,8 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
     const minutesNeeded = meetings
       .filter(meeting => meeting.room && meeting.day && meeting.slot)
       .find(meeting => {
-        const day = project.days.find(d => d.name === meeting.day);
+        const day = project.days.find(d =>
+          d.name === meeting.day || d.date === meeting.day);
         const twoDaysInMs = 48 * 60 * 60 * 1000;
         return (
           (new Date()).getTime() -

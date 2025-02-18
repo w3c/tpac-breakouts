@@ -79,9 +79,9 @@ export default async function () {
         console.warn(`- updating meeting info for #${ghSession.number}... done`);
       }
 
-      if ((ghSession.validation.note ?? '') !== (ssSession.note ?? '')) {
+      if ((ghSession.validation.note ?? '') !== (ssSession.validation.note ?? '')) {
         console.warn(`- updating note for #${ghSession.number}...`);
-        await saveSessionNote(ghSession, ssSession.note, githubProject);
+        await saveSessionNote(ghSession, ssSession.validation.note, githubProject);
         console.warn(`- updating note for #${ghSession.number}... done`);
       }
     }

@@ -2,7 +2,9 @@ export default async function (url, options) {
   options = options ?? {};
   if (typeof UrlFetchApp !== 'undefined') {
     // AppScript runtime, cannot use fetch directly
-    const params = {};
+    const params = {
+      muteHttpExceptions: true
+    };
     if (options.method) {
       params.method = options.method;
     }

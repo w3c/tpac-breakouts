@@ -7,20 +7,24 @@ export function getSessionSections(template) {
   // purpose of validation and serialization, we need to add them to the list
   // of sections (as custom "auto hide" sections that only get displayed when
   // they are not empty).
-  sessionSections.push({
-    id: 'calendar',
-    attributes: {
-      label: 'Links to calendar',
-      autoHide: true
-    }
-  });
-  sessionSections.push({
-    id: 'materials',
-    attributes: {
-      label: 'Meeting materials',
-      autoHide: true
-    }
-  });
+  if (!sessionSections.find(section => section.id === 'calendar')) {
+    sessionSections.push({
+      id: 'calendar',
+      attributes: {
+        label: 'Links to calendar',
+        autoHide: true
+      }
+    });
+  }
+  if (!sessionSections.find(section => section.id === 'materials')) {
+    sessionSections.push({
+      id: 'materials',
+      attributes: {
+        label: 'Meeting materials',
+        autoHide: true
+      }
+    });
+  }
 
   return sessionSections;
 }

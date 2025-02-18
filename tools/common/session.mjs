@@ -1,6 +1,29 @@
 import { sendGraphQLRequest } from './graphql.mjs';
 import todoStrings from './todostrings.mjs';
 
+/**
+ * Returns true if the given URL is valid, false otherwise.
+ *
+ * Unfortunately, the Appscript runtime does not support the URL object,
+ * so we'll fallback to a simple regular expression in that case. It is
+ * possible that the validation on GitHub rejects a URL that validation in the
+ * spreadsheet accepts, but so be it.
+ */
+function isUrlValid(url) {
+  if (typeof URL === 'undefined') {
+    return /^https?:\/\/[^ "]+$/.test(url);
+  }
+  else {
+    try {
+      new URL(url);
+      return true;
+    }
+    catch (err) {
+      return false;
+    }
+  }
+}
+
 
 /**
  * The list of sections that may be found in a session body and, for each of
@@ -160,18 +183,7 @@ export async function initSectionHandlers(project) {
         };
         handler.validate = value => {
           const match = value.match(/^\[(.+)\]\((.*)\)$/i);
-          try {
-            if (match) {
-              new URL(match[2]);
-            }
-            else {
-              new URL(value);
-            }
-            return true;
-          }
-          catch (err) {
-            return false;
-          }
+          return isUrlValid(match ? match[2] : value);
         };
         break;
 
@@ -325,14 +337,10 @@ export async function initSectionHandlers(project) {
             if (!match) {
               return false;
             }
-            try {
-              new URL(match[2]);
-              return !!match[1].match(reCalendarInfo);
-            }
-            catch {
+            if (!isUrlValid(match[2])) {
               return false;
             }
-
+            return !!match[1].match(reCalendarInfo);
           });
         };
         handler.serialize = value => value
@@ -361,13 +369,7 @@ export async function initSectionHandlers(project) {
               return false;
             }
             if (!todoStrings.includes(match[2].toUpperCase())) {
-              try {
-                new URL(match[2]);
-                return true;
-              }
-              catch (err) {
-                return false;
-              }
+              return isUrlValid(match[2]);
             }
             return true;
           });
@@ -425,6 +427,8 @@ export function validateSessionBody(body) {
         return `Unexpected empty section "${section.title}"`;
       }
       if (section.value && !sectionHandler.validate(section.value)) {
+        console.warn(`Invalid content in section "${section.title}":
+          ${section.value}`);
         return `Invalid content in section "${section.title}"`;
       }
       return null;

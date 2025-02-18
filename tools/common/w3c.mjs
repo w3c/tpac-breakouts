@@ -1,4 +1,5 @@
 import { getEnvKey } from './envkeys.mjs';
+import wrappedFetch from './wrappedfetch.mjs';
 
 /**
  * Internal memory cache to avoid sending the same request more than once
@@ -40,7 +41,7 @@ export async function fetchW3CAccount(databaseId) {
     return cache[databaseId];
   }
 
-  const res = await fetch(
+  const res = await wrappedFetch(
     `https://api.w3.org/users/connected/github/${databaseId}`
   );
 
@@ -135,7 +136,7 @@ export async function fetchW3CGroups() {
 
   const groups = [];
   for (const groupType of ['bg', 'cg', 'ig', 'wg', 'other', 'tf']) {
-    const res = await fetch(`https://api.w3.org/groups/${groupType}?embed=1&items=200`);
+    const res = await wrappedFetch(`https://api.w3.org/groups/${groupType}?embed=1&items=200`);
     if (res.status !== 200) {
       throw new Error(`W3C API server returned an unexpected HTTP status ${res.status}`);
     }
