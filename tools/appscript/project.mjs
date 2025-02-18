@@ -187,7 +187,7 @@ export function getProject(spreadsheet) {
     slots: sheets.slots.values
       .filter(v => !!v['start time'] && !!v['end time'])
       .map(v => {
-        const name = v['start time'] + ' - ' + v['end time'];
+        const name = v['start time'] + '-' + v['end time'];
         const times =
           name.match(/^(\d+):(\d+)\s*-\s*(\d+):(\d+)$/) ??
           [null, '00', '00', '01', '00'];
@@ -213,7 +213,9 @@ export function getProject(spreadsheet) {
     labels: [],
 
     // TODO: complete with meetings sheet if it exists
-    sessions: sheets.sessions.values
+    sessions: sheets.sessions.values,
+
+    sheets: sheets
   };
 
   return project;

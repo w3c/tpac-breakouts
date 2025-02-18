@@ -1,4 +1,4 @@
-import { getProjectSheets } from './project.mjs';
+import { getProject } from './project.mjs';
 import reportError from './report-error.mjs';
 
 /**
@@ -14,29 +14,29 @@ export default function () {
  */
 function generateGrid(spreadsheet) {
   // These are the sheets we expect to find
-  const sheets = getProjectSheets(spreadsheet);
-  if (!sheets.sessions.sheet) {
-    reportError('No "List view" sheet found, please import data from GitHub first.');
+  const project = getProject(spreadsheet);
+  if (!project.sheets.sessions.sheet) {
+    reportError('No sheet found that contains the list of sessions, please import data from GitHub first.');
     return;
   }
 
   // Re-generate the grid view
-  const sheet = sheets.grid.sheet;
+  const sheet = project.sheets.grid.sheet;
   sheet.clear();
-  createHeaderRow(sheet, sheets.rooms.values);
-  createDaySlotColumns(sheet, sheets.days.values, sheets.slots.values);
+  createHeaderRow(sheet, project.rooms);
+  createDaySlotColumns(sheet, project.days, project.slots);
   addSessions(sheet,
-    sheets.sessions.values,
-    sheets.meetings.values,
-    sheets.rooms.values,
-    sheets.days.values,
-    sheets.slots.values,
-    spreadsheet.getUrl() + '#gid=' + sheets.meetings.sheet.getSheetId()
+    project.sessions,
+    project.sessions,  // TODO: real meetings for TPAC group meetings!
+    project.rooms,
+    project.days,
+    project.slots,
+    spreadsheet.getUrl() + '#gid=' + project.sheets.meetings.sheet.getSheetId()
   );
   addBorders(sheet,
-    sheets.rooms.values,
-    sheets.days.values,
-    sheets.slots.values
+    project.rooms,
+    project.days,
+    project.slots
   );
 }
 
@@ -47,7 +47,7 @@ function generateGrid(spreadsheet) {
  * TODO: auto resize does not work that well, need more margin around the labels!
  */
 function createHeaderRow(sheet, rooms) {
-  const labels = rooms.map(room => `${room.label}\n${room.location}`);
+  const labels = rooms.map(room => `${room.name}\n${room.location}`);
   const values = [['Days', 'Slots'].concat(labels)];
   sheet.getRange(1, 1, values.length, values[0].length)
     .setFontWeight('bold')
@@ -112,8 +112,9 @@ function addSessions(sheet, sessions, meetings, rooms, days, slots, meetingsShee
 
   // TODO: consider re-computing meetings data from sessions
 
-  // Sort meetings (in place) since the editor may have changed the order from the canonical one.
-  meetings.sort((m1, m2) => {
+  // Sort meetings since the editor may have changed the order from the canonical one.
+  const sortedMeetings = Array.from(meetings);
+  sortedMeetings.sort((m1, m2) => {
     const slot1 = slots.findIndex(s => s.name === m1.slot);
     const slot2 = slots.findIndex(s => s.name === m2.slot);
     const key1 = `${m1.number}-${m1.room}-${m1.day}-${slot1}`;
@@ -131,7 +132,7 @@ function addSessions(sheet, sessions, meetings, rooms, days, slots, meetingsShee
 
   // Convert the expanded list of meetings into a list of ranges that represent
   // the (possibly merged) cells of the grid.
-  const ranges = meetings
+  const ranges = sortedMeetings
     .reduce((ranges, meeting, idx) => {
       const last = ranges.length > 0 ? ranges[ranges.length - 1] : null;
       if (last &&
@@ -143,9 +144,9 @@ function addSessions(sheet, sessions, meetings, rooms, days, slots, meetingsShee
         last.slot = meeting.slot;
       }
       else {
-        const dayIndex = days.findIndex(v => v.label === meeting.day);
+        const dayIndex = days.findIndex(v => v.date === meeting.day);
         const slotIndex = slots.findIndex(v => v.name === meeting.slot);
-        const roomIndex = rooms.findIndex(v => v.label === meeting.room);
+        const roomIndex = rooms.findIndex(v => v.name === meeting.room);
         const range = {
           row: startRow + (slots.length * dayIndex) + slotIndex,
           column: startCol + roomIndex,
@@ -168,9 +169,11 @@ function addSessions(sheet, sessions, meetings, rooms, days, slots, meetingsShee
 
   for (const range of ranges) {
     const session = sessions.find(session => session.number === range.number);
+    const firstMeeting = sortedMeetings[range.firstIndex];
+    const firstIndex = meetings.findIndex(m => m === firstMeeting);
     const meetingRange = breakouts ?
-      `A${range.firstIndex + 2}` :
-      `A${range.firstIndex + 2}:D${range.firstIndex + 1 + range.numRows}`;
+      `A${firstIndex + 2}` :
+      `A${firstIndex + 2}:D${firstIndex + 1 + range.numRows}`;
     const richValue = SpreadsheetApp.newRichTextValue()
         .setText(`${session.title} (${session.number})`)
         .setLinkUrl(`${meetingsSheetUrl}&range=${meetingRange}`)
