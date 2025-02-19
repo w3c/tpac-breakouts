@@ -34,10 +34,6 @@ export function getProjectSheets(spreadsheet) {
   }
 
   // Do we have all we need?
-  if (!sheets.grid.sheet) {
-    reportError('No "Grid view" sheet found, please add one and start again.');
-    return;
-  }
   if (!sheets.event.sheet) {
     reportError('No "Event" sheet found, please add one and start again.');
     return;
@@ -524,7 +520,10 @@ export function refreshProject(spreadsheet, project, { what }) {
 function createSessionsSheet(spreadsheet, sheets, project) {
   // Create the new sheet
   const title = project.metadata.type === 'groups' ? 'List' : 'Breakouts';
-  const sheet = spreadsheet.insertSheet(title, spreadsheet.getSheets().length - 2);
+  const position = project.sheets.grid.sheet ?
+    spreadsheet.getSheets().length - 2 :
+    spreadsheet.getSheets().length - 1;
+  const sheet = spreadsheet.insertSheet(title, position);
 
   // Set the headers row
   const headers = [
@@ -594,4 +593,22 @@ function createSessionsSheet(spreadsheet, sheets, project) {
     .setWarningOnly(true);
 
   return sheet;
+}
+
+
+/**
+ * Save the session validation result in the sheet
+ */
+export async function saveSessionValidationInSheet(session, project) {
+  const sessionIndex = project.sessions.findIndex(s => s === session);
+  const rowIndex = sessionIndex + 2;
+  const value = project.sheets.sessions.values[sessionIndex];
+  const colIndex = Object.keys(value).findIndex(h => h === 'error') + 1;
+  const sheet = project.sheets.sessions.sheet;
+  const range = sheet.getRange(rowIndex, colIndex, 1, 3);
+  range.setValues([[
+    session.validation.error,
+    session.validation.warning,
+    session.validation.check
+  ]]);
 }
