@@ -1,24 +1,95 @@
 /**
  * Fill the grid in the provided spreadsheet
  */
-export function fillGridSheet(spreadsheet, project) {
+export function fillGridSheet(spreadsheet, project, validationErrors) {
   let sheet = project.sheets.grid.sheet;
   if (!sheet) {
     sheet = spreadsheet.insertSheet('Grid', spreadsheet.getSheets().length - 1);
     project.sheets.grid.sheet = sheet;
   }
+  console.log('- clear sheet');
   sheet.clear();
-  console.log('- sheet cleared');
+  console.log('- create headers row');
   createHeaderRow(sheet, project.rooms);
-  console.log('- header row created');
+  console.log('- create days/slots headers');
   createDaySlotColumns(sheet, project.days, project.slots);
-  console.log('- days/slots headers created');
-  addSessions(sheet, project,
+  console.log('- add sessions to the grid');
+  addSessions(sheet, project, validationErrors,
     spreadsheet.getUrl() + '#gid=' + project.sheets.meetings.sheet.getSheetId());
-  console.log('- sessions added to the grid');
+  console.log('- add borders');
   addBorders(sheet, project);
-  console.log('- borders added');
-  console.log('Generate grid sheet... done');
+  fillGridValidationSheet(spreadsheet, project, validationErrors);
+}
+
+/**
+ * Fill the grid validation sheet
+ */
+function fillGridValidationSheet(spreadsheet, project, validationErrors) {
+  let sheet = project.sheets.gridValidation.sheet;
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet('Grid validation',
+      spreadsheet.getSheets().length - 1);
+    project.sheets.gridValidation.sheet = sheet;
+  }
+  console.log('- clear grid validation sheet');
+  sheet.clear();
+
+  const headers = ['Number', 'Title', 'Meetings', 'Errors', 'Warnings'];
+  sheet.getRange(1, 1, 1, headers.length)
+    .setFontWeight('bold')
+    .setVerticalAlignment('middle')
+    .setValues([headers])
+  sheet
+    .autoResizeColumns(2, headers.length)
+    .setFrozenRows(1);
+  console.log('- create headers in grid validation sheet');
+
+  // TODO: consider reporting "check" messages as well
+  validationErrors = validationErrors.filter(err => err.severity !== 'check');
+
+  const values = [];
+  const sessions = project.sessions.filter(s =>
+    validationErrors.find(err => err.session === s.number));
+  for (const session of sessions) {
+    console.log(`- report grid validation errors for session ${session.number}`);
+    const errors = validationErrors.filter(err =>
+      err.session === session.number &&
+      err.severity === 'error');
+    const warnings = validationErrors.filter(err =>
+      err.session === session.number &&
+      err.severity === 'warning');
+    values.push([
+      session.number,
+      session.title,
+      getMeetingsDescription(session),
+      getDescription(errors),
+      getDescription(warnings)
+    ]);
+  }
+
+  const range = sheet.getRange(2, 1, values.length, headers.length);
+  range.setValues(values);
+}
+
+
+/**
+ * Get a description of the given list of errors or warnings suitable for
+ * display.
+ */
+function getDescription(errors) {
+  return errors
+    .map(error => error.messages.map(msg => `[${error.type}] ${msg}`))
+    .flat()
+    .map(desc => `- ${desc}`)
+    .join('\n');
+}
+
+
+/**
+ * Return a description of the session meeting(s)
+ */
+function getMeetingsDescription(session) {
+  return '';
 }
 
 
@@ -87,7 +158,7 @@ function isRightAfter(slotAfter, slotBefore, slots) {
 /**
  * Add the list of meetings
  */
-function addSessions(sheet, project, meetingsSheetUrl) {
+function addSessions(sheet, project, validationErrors, meetingsSheetUrl) {
   const startRow = 2;
   const startCol = 3;
 

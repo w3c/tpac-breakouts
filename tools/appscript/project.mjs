@@ -9,6 +9,7 @@ export function getProjectSheets(spreadsheet) {
   // These are the sheets we expect to find in the spreadsheet
   const sheets = {
     grid: {},
+    gridValidation: { titleMatch: /validation/i },
     event: { titleMatch: /event/i },
     sessions: { titleMatch: /(list|breakouts)/i },
     meetings: { titleMatch: /meetings/i },

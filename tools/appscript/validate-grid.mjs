@@ -35,7 +35,7 @@ export default async function () {
     console.warn(`Save validation results... done`);
 
     console.log('Refresh grid view with validation results...');
-    fillGridSheet(spreadsheet, project);
+    fillGridSheet(spreadsheet, project, res.errors);
     console.log('- TODO: report validation results');
     console.log('Refresh grid view with validation results... done');
 
