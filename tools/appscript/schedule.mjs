@@ -1,3 +1,5 @@
+import { groupSessionMeetings } from '../common/meetings.mjs';
+
 /**
  * Fill the grid in the provided spreadsheet
  */
@@ -14,8 +16,7 @@ export function fillGridSheet(spreadsheet, project, validationErrors) {
   console.log('- create days/slots headers');
   createDaySlotColumns(sheet, project.days, project.slots);
   console.log('- add sessions to the grid');
-  addSessions(sheet, project, validationErrors,
-    spreadsheet.getUrl() + '#gid=' + project.sheets.meetings.sheet.getSheetId());
+  addSessions(sheet, project, validationErrors);
   console.log('- add borders');
   addBorders(sheet, project);
   fillGridValidationSheet(spreadsheet, project, validationErrors);
@@ -61,14 +62,32 @@ function fillGridValidationSheet(spreadsheet, project, validationErrors) {
     values.push([
       session.number,
       session.title,
-      getMeetingsDescription(session),
+      getMeetingsDescription(session, project),
       getDescription(errors),
       getDescription(warnings)
     ]);
   }
 
   const range = sheet.getRange(2, 1, values.length, headers.length);
-  range.setValues(values);
+  range
+    .setValues(values)
+    .setVerticalAlignment('top');
+
+  const sessionsSheetUrl = '#gid=' + project.sheets.sessions.sheet.getSheetId();
+  const richValues = values
+    .map(value => SpreadsheetApp
+      .newRichTextValue()
+      .setText(value[0])
+      .setLinkUrl(`${sessionsSheetUrl}&range=A${project.sessions.findIndex(s => s.number === value[0]) + 2}`)
+      .build())
+    .map(richValue => [richValue]);
+  const firstCol = sheet.getRange(2, 1, values.length, 1);
+  firstCol.setRichTextValues(richValues);
+
+  SpreadsheetApp.flush();
+  sheet.setColumnWidth(1, 60);
+  sheet.setColumnWidth(2, 300);
+  sheet.autoResizeColumns(3, 3);
 }
 
 
@@ -80,7 +99,6 @@ function getDescription(errors) {
   return errors
     .map(error => error.messages.map(msg => `[${error.type}] ${msg}`))
     .flat()
-    .map(desc => `- ${desc}`)
     .join('\n');
 }
 
@@ -88,8 +106,34 @@ function getDescription(errors) {
 /**
  * Return a description of the session meeting(s)
  */
-function getMeetingsDescription(session) {
-  return '';
+function getMeetingsDescription(session, project) {
+  return groupSessionMeetings(session, project)
+    .sort((m1, m2) => {
+      const day1 = project.days.find(day => day.name === m1.meeting.day || day.date === m1.meeting.day);
+      const day2 = project.days.find(day => day.name === m2.meeting.day || day.date === m2.meeting.day);
+      if (day1.date < day2.date) {
+        return -1;
+      }
+      else if (day1.date > day2.date) {
+        return 1;
+      }
+      else if (m1.meeting.start < m2.meeting.start) {
+        return -1;
+      }
+      else if (m1.meeting.start > m2.meeting.start) {
+        return 1;
+      }
+      else {
+        return 0;
+      }
+    })
+    .map(meeting => {
+      const day = project.days.find(day => day.name === meeting.day || day.date === meeting.day);
+      const room = project.rooms.find(room => room.name === meeting.room);
+      return `${day.label}, ${meeting.start} - ${meeting.end}` +
+        (room ? ` in ${room.name}` : '');
+    })
+    .join('\n');
 }
 
 
@@ -158,7 +202,7 @@ function isRightAfter(slotAfter, slotBefore, slots) {
 /**
  * Add the list of meetings
  */
-function addSessions(sheet, project, validationErrors, meetingsSheetUrl) {
+function addSessions(sheet, project, validationErrors) {
   const startRow = 2;
   const startCol = 3;
 
@@ -219,6 +263,7 @@ function addSessions(sheet, project, validationErrors, meetingsSheetUrl) {
   
   const hasBreakouts = !!project.metadata.type.includes('breakouts');
 
+  const meetingsSheetUrl = '#gid=' + project.sheets.meetings.sheet.getSheetId();
   for (const range of ranges) {
     const session = project.sessions.find(session => session.number === range.number);
     const firstMeeting = sortedMeetings[range.firstIndex];
