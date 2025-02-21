@@ -208,7 +208,8 @@ function addSessions(sheet, project, validationErrors) {
 
   // TODO: consider re-computing meetings data from sessions
   // TODO: expand view for TPAC group meetings (or use "meetings" sheet)
-  const meetings = project.sessions;
+  const meetings = project.sessions
+    .filter(meeting => meeting.day && meeting.slot && meeting.room);
 
   // Sort meetings since the editor may have changed the order from the canonical one.
   const sortedMeetings = Array.from(meetings);
@@ -242,9 +243,21 @@ function addSessions(sheet, project, validationErrors) {
         last.slot = meeting.slot;
       }
       else {
-        const dayIndex = project.days.findIndex(v => v.date === meeting.day);
+        const dayIndex = project.days.findIndex(v => v.date === meeting.day || v.name === meeting.day);
         const slotIndex = project.slots.findIndex(v => v.name === meeting.slot);
         const roomIndex = project.rooms.findIndex(v => v.name === meeting.room);
+        if (dayIndex === -1) {
+          console.error(`- could not find day "${meeting.day}" for ${meeting.title} (#${meeting.number})`);
+          return ranges;
+        }
+        if (slotIndex === -1) {
+          console.error(`- could not find slot "${meeting.slot}" for ${meeting.title} (#${meeting.number})`);
+          return ranges;
+        }
+        if (roomIndex === -1) {
+          console.error(`- could not find room "${meeting.room}" for ${meeting.title} (#${meeting.number})`);
+          return ranges;
+        }
         const range = {
           row: startRow + (project.slots.length * dayIndex) + slotIndex,
           column: startCol + roomIndex,

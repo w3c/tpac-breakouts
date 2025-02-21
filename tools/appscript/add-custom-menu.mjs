@@ -11,6 +11,8 @@ export default function () {
         .addItem('Refresh the grid view', 'generateGrid')
         .addItem('Validate the grid', 'validateGrid')
         .addSeparator()
+        .addItem('Propose a new grid', 'proposeGrid')
+        .addSeparator()
         .addItem('Publish the grid', 'exportGrid')
         .addSeparator()
         .addItem('Fetch published grid from GitHub', 'importGrid')

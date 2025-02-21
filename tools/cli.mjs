@@ -10,7 +10,7 @@
  * npx tpac-breakouts --help
  */
 import packageConfig from '../package.json' with { type: 'json' };
-import { Command } from 'commander';
+import { Command, InvalidArgumentError } from 'commander';
 import { getEnvKey } from './common/envkeys.mjs';
 import { fetchProject } from './node/lib/project.mjs';
 import schedule from './node/schedule.mjs';
@@ -21,6 +21,15 @@ import viewEvent from './node/view-event.mjs';
 import viewRegisrants from './node/view-registrants.mjs';
 import tryChanges from './node/try-changes.mjs';
 import createEvent from './node/create-event.mjs';
+
+function myParseInt(value) {
+  // parseInt takes a string and a radix
+  const parsedValue = parseInt(value, 10);
+  if (isNaN(parsedValue)) {
+    throw new InvalidArgumentError(`Expected a number as parameter, got "${value}"`);
+  }
+  return parsedValue;
+}
 
 
 /**
@@ -125,7 +134,7 @@ program
   .option('-c, --changes <file>', 'YAML file with a list of changes to apply to the generated schedule')
   .option('-e, --except <numbers...>', 'numbers of sessions for which scheduling information should be discarded')
   .option('-p, --preserve <numbers...>', 'numbers of sessions for which scheduling information should be preserved', ['all'])
-  .option('-s, --seed <seed>', 'seed string to use to shuffle sessions')
+  .option('-s, --seed <number>', 'seed string to use to shuffle sessions', myParseInt)
   .option('-r, --reduce', 'reduce output: schedule only, without github links or room info')
   .action(getProjectCommandRunner(schedule))
   .addHelpText('after', `
@@ -182,14 +191,14 @@ Usage notes for the options:
   To tell the command to discard any scheduling information, set the option to "none":
     $ npx tpac-breakouts --preserve none
 
--s, --seed <seed>
-  The command shuffles the list of sessions before it tries to schedule anything and reports an identifier of the shuffled list as a seed string in the generated HTML. This seed string can be provided to make the command re-generate the same shuffling order and thus the same schedule (unless data changed in the meantime).
+-s, --seed <number>
+  The command shuffles the list of sessions before it tries to schedule anything and reports an identifier of the shuffled list as a seed number in the generated HTML. This seed number can be provided to make the command re-generate the same shuffling order and thus the same schedule (unless data changed in the meantime).
 
   This mechanism is useful to review a generated schedule before applying it with the \`apply\` option. It also allows to adjust and test a previously generated schedule.
 
   For example:
-    $ npx tpac-breakouts --seed mvaksu --changes changes.yml
-    $ npx tpac-breakouts --seed tmlnes --apply
+    $ npx tpac-breakouts --seed 12345 --changes changes.yml
+    $ npx tpac-breakouts --seed 54321 --apply
 `);
 
 

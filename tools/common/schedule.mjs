@@ -25,24 +25,12 @@
  * it cannot schedule due to a confict that it cannot resolve.
  */
 
-import seedrandom from './seedrandom.mjs';
+import { Srand } from './jsrand.mjs';
 import { parseSessionMeetings,
          serializeSessionMeetings,
          meetsInParallelWith,
          meetsInRoom,
          meetsAt } from './meetings.mjs';
-
-/**
- * Helper function to shuffle an array
- */
-function shuffle(array, seed) {
-  const randomGenerator = seedrandom(seed);
-  for (let i = array.length - 1; i > 0; i--) {
-    let j = Math.floor(randomGenerator.quick() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-}
-
 
 /**
  * Suggest a schedule, updated sessions meetings as needed.
@@ -67,10 +55,10 @@ export function suggestSchedule(project, { seed }) {
   }
 
   // Shuffle sessions
-  seed = seed ?? makeseed();
   let sessions = project.sessions.slice();
-  shuffle(sessions, seed);
-  console.warn(`- shuffled sessions with seed "${seed}" to: ${sessions.map(s => s.number).join(', ')}`);
+  const rnd = new Srand(seed);
+  rnd.shuffle(sessions);
+  console.warn(`- shuffled sessions with seed "${rnd.seed()}" to: ${sessions.map(s => s.number).join(', ')}`);
 
   // Filter out invalid sessions
   sessions = sessions.filter(session =>
