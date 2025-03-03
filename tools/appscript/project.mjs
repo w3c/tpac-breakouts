@@ -407,6 +407,9 @@ export function refreshProject(spreadsheet, project, { what }) {
           if (what !== 'sessions' ||
               !['room', 'day', 'slot', 'meeting'].includes(key)) {
             value[key] = val;
+            if (key === 'day' && val && val.match(/ \((.+)\)$/)) {
+              value[key] = val.match(/ \((.*)\)$/)[1];
+            }
           }
         }
         seen.push(value);

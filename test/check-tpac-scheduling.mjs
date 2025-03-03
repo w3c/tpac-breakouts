@@ -95,7 +95,7 @@ describe('Scheduling of TPAC meetings', function () {
     const { errors } = await validateGrid(project);
     assert.deepStrictEqual(errors, []);
 
-    suggestSchedule(project, { seed: 'schedule' });
+    suggestSchedule(project, { seed: 12345 });
     checkMeetingsAgainstTimes(project);
 
     let { errors: scheduleErrors } = await validateGrid(project);
@@ -108,7 +108,7 @@ describe('Scheduling of TPAC meetings', function () {
     const { errors } = await validateGrid(project);
     assert.deepStrictEqual(errors, []);
 
-    suggestSchedule(project, { seed: 'another' });
+    suggestSchedule(project, { seed: 54321 });
     checkMeetingsAgainstTimes(project);
   });
 
@@ -159,7 +159,7 @@ _No response_`;
     const { errors } = await validateGrid(project);
     assert.deepStrictEqual(stripDetails(errors) , []);
 
-    suggestSchedule(project, { seed: 'schedule' });
+    suggestSchedule(project, { seed: 12345 });
 
     let { errors: warnings } = await validateGrid(project);
     warnings = warnings.filter(error => error.severity === 'warning' && error.type === 'times');
@@ -178,7 +178,7 @@ _No response_`;
     const { errors } = await validateGrid(project);
     assert.deepStrictEqual(errors, []);
 
-    suggestSchedule(project, { seed: 'schedule' });
+    suggestSchedule(project, { seed: 12345 });
 
     const html = await convertProjectToHTML(project);
     await assertSameAsRef(html);

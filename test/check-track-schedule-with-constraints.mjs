@@ -24,9 +24,9 @@ describe('When given track sessions with constraints, the scheduler', function (
     const { errors } = await validateGrid(project);
     assert.deepStrictEqual(errors, []);
     const sessionWithoutConflicts = project.sessions.find(s => s.number === 2);
-    // Who would have thought? The "good" seed actually shuffles the two
-    // sessions in the order we need: 1 first, then 2.
-    suggestSchedule(project, { seed: 'good' });
+    // The seed actually shuffles the two sessions in the order we need:
+    // 1 first, then 2.
+    suggestSchedule(project, { seed: 12345 });
     assert.deepStrictEqual(sessionWithoutConflicts.slot, '10:00 - 11:00');
   });
 
@@ -35,9 +35,9 @@ describe('When given track sessions with constraints, the scheduler', function (
     const { errors } = await validateGrid(project);
     assert.deepStrictEqual(errors, []);
     const sessionWithoutConflicts = project.sessions.find(s => s.number === 2);
-    // Who would have thought? The "bad" seed actually shuffles the two
-    // sessions in the order we need: 2 first, then 1.
-    suggestSchedule(project, { seed: 'bad' });
+    // The seed actually shuffles the two sessions in the order we need:
+    // 2 first, then 1.
+    suggestSchedule(project, { seed: 1234 });
     assert.deepStrictEqual(sessionWithoutConflicts.slot, '10:00 - 11:00');
   });
 });

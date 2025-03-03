@@ -57,7 +57,7 @@ describe('The module that converts a project to HTML', function () {
     setEnvKey('PROJECT_NUMBER', 'breakouts-day-2024-reduce');
     const project = await fetchTestProject();
     const html = await convertProjectToHTML(project, {
-      seed: 'hophophop',
+      seed: 12345,
       reduce: true
     });
     await assertSameAsRef(html);

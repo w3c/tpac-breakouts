@@ -600,7 +600,8 @@ export async function saveSessionMeetings(session, project, options) {
     }
     else {
       // Option in a selection field
-      const obj = project[field + 's'].find(o => o.name === session[field]);
+      const obj = project[field + 's'].find(o =>
+        o.name === session[field] || o.date === session[field]);
       if (obj) {
         value = `"${obj.id}"`;
       }

@@ -4,16 +4,7 @@ import { saveSessionMeetings } from '../common/project.mjs';
 import { parseMeetingsChanges, applyMeetingsChanges } from './lib/meetings.mjs';
 import { validateGrid } from '../common/validate.mjs';
 import { suggestSchedule } from '../common/schedule.mjs';
-
-/**
- * Helper function to generate a random seed
- */
-function makeseed() {
-  const chars = 'abcdefghijklmnopqrstuvwxyz';
-  return [1, 2, 3, 4, 5]
-    .map(_ => chars.charAt(Math.floor(Math.random() * chars.length)))
-    .join('');
-}
+import { Srand } from '../common/jsrand.mjs';
 
 export default async function (project, options) {
   console.warn();
@@ -35,7 +26,7 @@ export default async function (project, options) {
   console.warn(`Validate sessions... done`);
 
   // Prepare shuffle seed if needed
-  options.seed = options.seed ?? makeseed();
+  options.seed = options.seed ?? (new Srand()).seed();
 
   // Load changes to apply locally if so requested
   let changes = [];
@@ -112,11 +103,13 @@ export default async function (project, options) {
   await suggestSchedule(project, { seed: options.seed });
 
   for (const session of validSessions) {
-    // TODO: make sure that "session.meetings" was set
     if (session.meetings.length === 0 ||
         session.meetings.find(m => !(m.room && m.day && m.slot))) {
-      const tracks = session.tracks.length ? ' - ' + session.tracks.join(', ') : '';
-      console.warn(`- [WARNING] #${session.number} could not be fully scheduled${tracks}`);
+      const tracks = session.labels
+        .filter(label => label.startsWith('track: '))
+        .map(label => label.substring('track: '.length));
+      const tracksStr = tracks.length ? ' - ' + tracks.join(', ') : '';
+      console.warn(`- [WARNING] #${session.number} could not be fully scheduled${tracksStr}`);
     }
   }
 

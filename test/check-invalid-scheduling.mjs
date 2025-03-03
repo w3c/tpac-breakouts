@@ -38,7 +38,7 @@ describe('When given invalid sessions, the scheduler', function () {
     const session2 = project.sessions.find(s => s.number === 2);
     const session3 = project.sessions.find(s => s.number === 3);
     session2.blockingError = true;
-    suggestSchedule(project, { seed: 'schedule' });
+    suggestSchedule(project, { seed: 12345 });
 
     assert.deepStrictEqual(session1.meetings, undefined);
     assert.deepStrictEqual(session2.meetings, undefined);
