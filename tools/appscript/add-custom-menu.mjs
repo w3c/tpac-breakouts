@@ -1,38 +1,27 @@
 /**
- * Add a custom "TPAC" menu.
+ * Add a custom "Event" menu.
  *
  * The function is triggered when a user opens a spreadsheet.
  */
 export default function () {
-  SpreadsheetApp.getUi().createMenu('TPAC')
+  SpreadsheetApp.getUi()
+    .createMenu('Event')
+    .addItem('Refresh sessions/groups (from GitHub)', 'importSessions')
     .addSubMenu(
       SpreadsheetApp.getUi()
-        .createMenu('Event schedule grid')
+        .createMenu('Manage the grid')
+        .addItem('Propose a new grid', 'proposeGrid')
         .addItem('Refresh the grid view', 'generateGrid')
         .addItem('Validate the grid', 'validateGrid')
-        .addSeparator()
-        .addItem('Propose a new grid', 'proposeGrid')
-        .addSeparator()
-        .addItem('Publish the grid', 'exportGrid')
-        .addSeparator()
-        .addItem('Fetch published grid from GitHub', 'importGrid')
     )
-    .addSubMenu(
-      SpreadsheetApp.getUi()
-        .createMenu('Event sessions')
-        .addItem('Fetch the list of sessions from GitHub', 'importSessions')
-    )
-    .addSubMenu(
-      SpreadsheetApp.getUi()
-        .createMenu('Event info, rooms, days, slots')
-        .addItem('Fetch event info, rooms, days, slots from GitHub', 'importMetadata')
-        /*.addSeparator()
-        .addItem('Export event info, rooms, days, slots to GitHub', 'exportMetadata')*/
-    )
+    .addItem('Publish the grid and calendar', 'exportGrid')
     .addSeparator()
     .addSubMenu(
       SpreadsheetApp.getUi()
         .createMenu('Advanced')
+        .addItem('Retrieve latest published grid (from GitHub)', 'importGrid')
+        .addItem('Fetch event info, rooms, days, slots (from GitHub)', 'importMetadata')
+        /*.addItem('Export event info, rooms, days, slots to GitHub', 'exportMetadata')*/
         .addItem('Dump event data as JSON', 'exportEventData')
     )
     .addToUi();
