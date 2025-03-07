@@ -1,4 +1,4 @@
-import { getProject, refreshProject } from './project.mjs';
+import { getProject, refreshProject, saveSessionValidationInSheet } from './project.mjs';
 import { fillGridSheet } from './schedule.mjs';
 import { suggestSchedule } from '../common/schedule.mjs';
 import reportError from './report-error.mjs';
@@ -32,7 +32,7 @@ async function proposeGrid(spreadsheet) {
     console.log('Prompt user... done');
 
     console.log(`Validate sessions...`);
-    let { errors } = await validateGrid(project);
+    let { errors, changes } = await validateGrid(project);
     errors = errors.filter(error =>
       error.severity === 'error' &&
       error.type !== 'chair conflict' &&
@@ -46,6 +46,14 @@ async function proposeGrid(spreadsheet) {
       .filter(s => errors.find(error => error.number === s.number))
       .forEach(s => s.blockingError = true);
     console.log(`- found ${validSessions.length} valid sessions among them: ${validSessions.map(s => s.number).join(', ')}`);
+    for (const change of changes) {
+      console.warn(`- save validation problems for session ${change.number}`);
+      const session = project.sessions.find(s => s.number === change.number);
+      session.validation.error = change.validation.error;
+      session.validation.warning = change.validation.warning;
+      session.validation.check = change.validation.check;
+      await saveSessionValidationInSheet(session, project);
+    }
     console.log(`Validate sessions... done`);
 
     console.log(`Prepare parameters...`);
@@ -105,7 +113,7 @@ async function proposeGrid(spreadsheet) {
     console.log(`Compute new grid... done`);
 
     console.log(`Validate new grid...`);
-    const { errors: newErrors } = await validateGrid(project, { what: 'scheduling' })
+    const { errors: newErrors, changes: newChanges } = await validateGrid(project, { what: 'scheduling' })
     if (newErrors.length) {
       for (const error of newErrors) {
         console.warn(`- [${error.severity}: ${error.type}] #${error.session}: ${error.messages.join(', ')}`);
@@ -113,6 +121,14 @@ async function proposeGrid(spreadsheet) {
     }
     else {
       console.log(`- looks good!`);
+    }
+    for (const change of newChanges) {
+      console.warn(`- save validation problems for session ${change.number}`);
+      const session = project.sessions.find(s => s.number === change.number);
+      session.validation.error = change.validation.error;
+      session.validation.warning = change.validation.warning;
+      session.validation.check = change.validation.check;
+      await saveSessionValidationInSheet(session, project);
     }
     console.warn(`Validate new grid... done`);
 

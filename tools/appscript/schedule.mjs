@@ -14,7 +14,7 @@ export function fillGridSheet(spreadsheet, project, validationErrors) {
   console.log('- create headers row');
   createHeaderRow(sheet, project.rooms);
   console.log('- create days/slots headers');
-  createDaySlotColumns(sheet, project.days, project.slots);
+  createDaySlotColumns(sheet, project.days, project.slots, validationErrors);
   console.log('- add sessions to the grid');
   addSessions(sheet, project, validationErrors);
   console.log('- add borders');
@@ -141,8 +141,6 @@ function getMeetingsDescription(session, project) {
 
 /**
  * Create the header row of the grid view with the list of rooms.
- *
- * TODO: auto resize does not work that well, need more margin around the labels!
  */
 function createHeaderRow(sheet, rooms) {
   const labels = rooms.map(room =>
@@ -156,7 +154,7 @@ function createHeaderRow(sheet, rooms) {
     .setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP)
     .setValues(values)
   sheet
-    .autoResizeColumns(2, rooms.length)
+    .setColumnWidths(3, rooms.length, 150)
     .setFrozenRows(1);
 }
 
@@ -164,7 +162,7 @@ function createHeaderRow(sheet, rooms) {
 /**
  * Create the day/slot columns of the grid view
  */
-function createDaySlotColumns(sheet, days, slots) {
+function createDaySlotColumns(sheet, days, slots, validationErrors) {
   const startRow = 2; // Start after the header row
   const startCol = 1; // Start in first column
 
@@ -236,6 +234,22 @@ function addSessions(sheet, project, validationErrors) {
   // the (possibly merged) cells of the grid.
   const ranges = sortedMeetings
     .reduce((ranges, meeting, idx) => {
+      let errors = [];
+      for (const issue of validationErrors) {
+        if (!issue.details) {
+          continue;
+        }
+        for (const detail of issue.details) {
+          const issueMeeting = detail.meeting ?? detail;
+          if (issueMeeting.day !== meeting.day ||
+              issueMeeting.slot !== meeting.slot ||
+              issueMeeting.room !== meeting.room) {
+            continue;
+          }
+          errors.push({ issue, detail });
+        }
+      }
+
       const last = ranges.length > 0 ? ranges[ranges.length - 1] : null;
       if (last &&
           meeting.number === last.number &&
@@ -244,6 +258,9 @@ function addSessions(sheet, project, validationErrors) {
           isRightAfter(meeting.slot, last.slot, project.slots)) {
         last.numRows += 1;
         last.slot = meeting.slot;
+        if (errors.length > 0) {
+          last.errors.concat(errors);
+        }
       }
       else {
         const dayIndex = project.days.findIndex(v => v.date === meeting.day || v.name === meeting.day);
@@ -270,7 +287,8 @@ function addSessions(sheet, project, validationErrors) {
           day: meeting.day,
           slot: meeting.slot,
           room: meeting.room,
-          firstIndex: idx
+          firstIndex: idx,
+          errors: errors
         };
         ranges.push(range);
       }
@@ -287,8 +305,76 @@ function addSessions(sheet, project, validationErrors) {
     const meetingRange = hasBreakouts ?
       `A${firstIndex + 2}` :
       `A${firstIndex + 2}:D${firstIndex + 1 + range.numRows}`;
+
+    let backgroundColor = null;
+    const capacityIssues = range.errors.filter(error =>
+      error.issue.severity === 'warning' && error.issue.type === 'capacity');
+    if (capacityIssues.length > 0) {
+      backgroundColor = '#fcebbdc';
+    }
+    const trackIssues = range.errors.filter(error =>
+      error.issue.severity === 'warning' && error.issue.type === 'track');
+    if (trackIssues.length > 0) {
+      backgroundColor = '#e1f2fa';
+    }
+    const peopleIssues = range.errors.filter(error =>
+      error.issue.type === 'group conflict' ||
+      error.issue.type === 'chair conflict');
+    if (peopleIssues.length > 0) {
+      backgroundColor = '#ddaeff';
+    }
+    const schedulingIssues = range.errors.filter(error =>
+      error.issue.severity === 'error' && error.issue.type === 'scheduling');
+    if (schedulingIssues.length > 0) {
+      backgroundColor = '#f5ab9e';
+    }
+    if (!backgroundColor && range.errors.find(error =>
+        error.issue.severity === 'warning')) {
+      backgroundColor = '#fcebbd';
+    }
+
+    let label = `${session.title} (${session.number})`;
+    if (project.metadata.type !== 'groups' && session.chairs) {
+      label += '\n\nChair(s): ' + session.chairs.map(x => x.name).join(', ');
+    }
+
+    // Add tracks if needed
+    const tracks = session.labels.filter(label => label.startsWith('track: '));
+    if (tracks.length > 0) {
+      for (const track of tracks) {
+        label += `\n${track}`;
+      }
+    }
+
+    const sessionIssues = range.errors.filter(error =>
+      error.issue.session === session.number);
+    const roomSwitchIssue = sessionIssues.find(error =>
+      error.issue.severity === 'warning' && error.issue.type === 'switch');
+    if (roomSwitchIssue) {
+      const room = project.rooms.find(room => room.name === roomSwitchIssue.detail.previous.room);
+      label += `\nPrevious slot in: ${room.label}`;
+    }
+
+    const conflictIssues = sessionIssues
+      .filter(error =>
+        error.issue.severity === 'warning' &&
+        error.issue.type === 'conflict')
+      .map(error => error);
+    if (conflictIssues.length > 0) {
+      label += '\nConflicts with: ' +
+        conflictIssues
+          .map(error => '#' + error.detail.conflictsWith.number)
+          .join(', ');
+    }
+
+    const capacityIssue = capacityIssues
+      .find(error => error.issue.session === session.number);
+    if (capacityIssue && !reduce) {
+      label += '\nCapacity: ' + session.description.capacity;
+    }
+
     const richValue = SpreadsheetApp.newRichTextValue()
-        .setText(`${session.title} (${session.number})`)
+        .setText(label)
         .setLinkUrl(
           session.title.length + 2,
           session.title.length + 2 + `${session.number}`.length,
@@ -298,9 +384,9 @@ function addSessions(sheet, project, validationErrors) {
       .mergeVertically()
       .setVerticalAlignment('middle')
       .setHorizontalAlignment('center')
-      .setBackground('#b7e1cd')
       .setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP)
-      .setRichTextValue(richValue);
+      .setRichTextValue(richValue)
+      .setBackground(backgroundColor);
   }
 }
 

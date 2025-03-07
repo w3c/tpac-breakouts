@@ -24,6 +24,7 @@ export function getProjectSheets(spreadsheet) {
     const desc = Object.values(sheets).find(s => s.titleMatch?.test(name));
     if (desc) {
       desc.sheet = sheet;
+      desc.headers = getHeaders(sheet);
       desc.values = getValues(sheet);
     }
   }
@@ -54,6 +55,7 @@ export function getProjectSheets(spreadsheet) {
   // already contains the expanded view. 
   if (sheets.sessions.sheet && !sheets.meetings.sheet) {
     sheets.meetings.sheet = sheets.sessions.sheet;
+    sheets.meetings.headers = sheets.sessions.headers;
     sheets.meetings.values = sheets.sessions.values;
   }
 
@@ -144,6 +146,14 @@ export function getProject(spreadsheet) {
     projectType = 'breakouts';
     fullType = 'breakouts-day';
   }
+
+  const reponame = getSetting('GitHub repository name');
+  const repoparts = reponame.split('/');
+  const repo = {
+    owner: repoparts.length > 1 ? repoparts[0] : 'w3c',
+    name: repoparts.length > 1 ? repoparts[1] : repoparts[0]
+  };
+
   const project = {
     title: spreadsheet.getName(),
     metadata: {
@@ -221,7 +231,8 @@ export function getProject(spreadsheet) {
           warning: session.warning,
           error: session.error,
           note: session.note
-        }
+        },
+        repository: repo.owner + '/' + repo.name
       })
     ),
 
@@ -231,6 +242,31 @@ export function getProject(spreadsheet) {
   return project;
 }
 
+
+function getHeaders(sheet) {
+  const nbColumns = sheet.getLastColumn();
+  const headers = sheet
+    .getRange(1, 1, 1, nbColumns)
+    .getValues()[0]
+    .map(value => value.toLowerCase())
+    .map(value => {
+      // Some headers get mapped to a shorter name
+      if (value === 'start time') {
+        return 'start';
+      }
+      if (value === 'end time') {
+        return 'end';
+      }
+      if (value === 'vip room') {
+        return 'vip';
+      }
+      if (value === 'author id') {
+        return 'authorid';
+      }
+      return value;
+    });
+  return headers;
+}
 
 /**
  * Return the values in a sheet as a list of objects whose property names are
@@ -273,27 +309,7 @@ function setValues(sheet, values) {
   const nbRows = sheet.getLastRow() - 1;
   const nbColumns = sheet.getLastColumn();
 
-  const headers = sheet
-    .getRange(1, 1, 1, nbColumns)
-    .getValues()[0]
-    .map(value => value.toLowerCase())
-    .map(value => {
-      // Some headers get mapped to a shorter name
-      if (value === 'start time') {
-        return 'start';
-      }
-      if (value === 'end time') {
-        return 'end';
-      }
-      if (value === 'vip room') {
-        return 'vip';
-      }
-      if (value === 'author id') {
-        return 'authorid';
-      }
-      return value;
-    });
-  console.log('  - sheet headers', headers);
+  const headers = getHeaders(sheet);
 
   // Values is an array of indexed objects, while we need a two-dimensional
   // array of raw values. Let's convert the values.
@@ -513,6 +529,7 @@ export function refreshProject(spreadsheet, project, { what }) {
   if (['all', 'sessions', 'grid'].includes(what)) {
     if (!sheets.sessions.sheet) {
       sheets.sessions.sheet = createSessionsSheet(spreadsheet, sheets, project);
+      sheets.sessions.headers = getHeaders(sheet);
     }
     refreshData('sessions');
   }
@@ -605,8 +622,7 @@ function createSessionsSheet(spreadsheet, sheets, project) {
 export async function saveSessionValidationInSheet(session, project) {
   const sessionIndex = project.sessions.findIndex(s => s === session);
   const rowIndex = sessionIndex + 2;
-  const value = project.sheets.sessions.values[sessionIndex];
-  const colIndex = Object.keys(value).findIndex(h => h === 'error') + 1;
+  const colIndex = project.sheets.sessions.headers.findIndex(h => h === 'error') + 1;
   const sheet = project.sheets.sessions.sheet;
   const range = sheet.getRange(rowIndex, colIndex, 1, 3);
   range.setValues([[
