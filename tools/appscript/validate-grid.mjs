@@ -11,11 +11,6 @@ export default async function () {
     console.log('Read data from spreadsheet...');
     const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
     const project = getProject(spreadsheet);
-    if ((project.metadata.type === 'tpac-breakouts') ||
-        (project.metadata.type === 'breakouts-day')) {
-      // Only two types of events from an internal perspective
-      project.metadata.type = 'breakouts';
-    }
     console.log('Read data from spreadsheet... done');
 
     console.log('Validate the grid...');

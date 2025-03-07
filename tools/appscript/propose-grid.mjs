@@ -20,11 +20,6 @@ async function proposeGrid(spreadsheet) {
   try {
     console.log('Read data from spreadsheet...');
     const project = getProject(spreadsheet);
-    if ((project.metadata.type === 'tpac-breakouts') ||
-        (project.metadata.type === 'breakouts-day')) {
-      // Only two types of events from an internal perspective
-      project.metadata.type = 'breakouts';
-    }
     if (!project.sheets.sessions.sheet) {
       reportError('No sheet found that contains the list of sessions, please import data from GitHub first.');
       return;
@@ -130,7 +125,6 @@ async function proposeGrid(spreadsheet) {
     console.log('Report new grid in grid sheet... done');
 
     console.log('Report results to user...');
-    console.log('- TODO: report something meaningful');
     let msg = `<p>Spreadsheet updated with a new schedule proposal.</p>`;
     const invalidSessions = project.sessions.filter(s =>
       errors.find(error => error.number === s.number));

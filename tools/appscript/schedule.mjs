@@ -35,6 +35,7 @@ function fillGridValidationSheet(spreadsheet, project, validationErrors) {
   console.log('- clear grid validation sheet');
   sheet.clear();
 
+  console.log('- create headers in grid validation sheet');
   const headers = ['Number', 'Title', 'Meetings', 'Errors', 'Warnings'];
   sheet.getRange(1, 1, 1, headers.length)
     .setFontWeight('bold')
@@ -43,7 +44,6 @@ function fillGridValidationSheet(spreadsheet, project, validationErrors) {
   sheet
     .autoResizeColumns(2, headers.length)
     .setFrozenRows(1);
-  console.log('- create headers in grid validation sheet');
 
   // TODO: consider reporting "check" messages as well
   validationErrors = validationErrors.filter(err => err.severity !== 'check');
@@ -68,21 +68,23 @@ function fillGridValidationSheet(spreadsheet, project, validationErrors) {
     ]);
   }
 
-  const range = sheet.getRange(2, 1, values.length, headers.length);
-  range
-    .setValues(values)
-    .setVerticalAlignment('top');
+  if (values.length > 0) {
+    const range = sheet.getRange(2, 1, values.length, headers.length);
+    range
+      .setValues(values)
+      .setVerticalAlignment('top');
 
-  const sessionsSheetUrl = '#gid=' + project.sheets.sessions.sheet.getSheetId();
-  const richValues = values
-    .map(value => SpreadsheetApp
-      .newRichTextValue()
-      .setText(value[0])
-      .setLinkUrl(`${sessionsSheetUrl}&range=A${project.sessions.findIndex(s => s.number === value[0]) + 2}`)
-      .build())
-    .map(richValue => [richValue]);
-  const firstCol = sheet.getRange(2, 1, values.length, 1);
-  firstCol.setRichTextValues(richValues);
+    const sessionsSheetUrl = '#gid=' + project.sheets.sessions.sheet.getSheetId();
+    const richValues = values
+      .map(value => SpreadsheetApp
+        .newRichTextValue()
+        .setText(value[0])
+        .setLinkUrl(`${sessionsSheetUrl}&range=A${project.sessions.findIndex(s => s.number === value[0]) + 2}`)
+        .build())
+      .map(richValue => [richValue]);
+    const firstCol = sheet.getRange(2, 1, values.length, 1);
+    firstCol.setRichTextValues(richValues);
+  }
 
   SpreadsheetApp.flush();
   sheet.setColumnWidth(1, 60);
@@ -143,7 +145,8 @@ function getMeetingsDescription(session, project) {
  * TODO: auto resize does not work that well, need more margin around the labels!
  */
 function createHeaderRow(sheet, rooms) {
-  const labels = rooms.map(room => `${room.name}\n${room.location}`);
+  const labels = rooms.map(room =>
+    `${room.name}${room.location ? '\n' + room.location : ''}`);
   const values = [['Days', 'Slots'].concat(labels)];
   sheet.getRange(1, 1, values.length, values[0].length)
     .setFontWeight('bold')

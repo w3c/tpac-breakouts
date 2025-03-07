@@ -8,7 +8,7 @@ import { getSessionSections } from '../common/session-sections.mjs';
 export function getProjectSheets(spreadsheet) {
   // These are the sheets we expect to find in the spreadsheet
   const sheets = {
-    grid: {},
+    grid: { titleMatch: /grid$/i },
     gridValidation: { titleMatch: /validation/i },
     event: { titleMatch: /event/i },
     sessions: { titleMatch: /(list|breakouts)/i },
@@ -19,18 +19,12 @@ export function getProjectSheets(spreadsheet) {
   };
 
   // Retrieve the sheets from the spreadsheet
-  // (we'll consider that the grid view is the first sheet we find that isn't one of the
-  // other well-known sheets. That gives some leeway as to how the sheet gets named.)
   for (const sheet of spreadsheet.getSheets()) {
     const name = sheet.getName().toLowerCase();
     const desc = Object.values(sheets).find(s => s.titleMatch?.test(name));
     if (desc) {
       desc.sheet = sheet;
       desc.values = getValues(sheet);
-    }
-    else if (!sheets.grid.sheet) {
-      sheets.grid.sheet = sheet;
-      sheets.grid.values = getValues(sheet);
     }
   }
 
@@ -137,19 +131,24 @@ export function getProject(spreadsheet) {
 
   const eventType = getSetting('Type', 'TPAC breakouts');
   let projectType;
+  let fullType;
   if (eventType === 'TPAC group meetings') {
     projectType = 'groups';
+    fullType = 'groups';
   }
   else if (eventType === 'TPAC breakouts') {
-    projectType = 'tpac-breakouts';
+    projectType = 'breakouts';
+    fullType = 'tpac-breakouts';
   }
   else {
-    projectType = 'breakouts-day';
+    projectType = 'breakouts';
+    fullType = 'breakouts-day';
   }
   const project = {
     title: spreadsheet.getName(),
     metadata: {
       type: projectType,
+      fullType: fullType,
       timezone: getSetting('Timezone', 'Etc/UTC'),
       calendar: getSetting('Sync with W3C calendar', 'no'),
       rooms: getSetting('Show rooms in calendar') === 'no' ? 'hide' : 'show',
