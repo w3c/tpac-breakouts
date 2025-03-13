@@ -15,6 +15,12 @@ export default async function () {
           <b>${githubProject.sessions.length}</b>
           sessions retrieved from GitHub.
         </p>
+        <p><strong>Note:</strong> The import did not
+	  affect existing schedule information (day, slot room)
+	  in the spreadsheet. In general, you should not have
+	  to import schedule information from GitHub, but if you do,
+	  that option is available in the "Advanced" menu.
+        </p>
       `)
       .setWidth(300)
       .setHeight(400);
