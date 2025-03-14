@@ -1,6 +1,5 @@
 import { parseSessionMeetings, groupSessionMeetings } from './meetings.mjs';
 import { validateGrid } from './validate.mjs';
-import * as YAML from '../../node_modules/yaml/browser/index.js';
 
 const hasMeeting = s => s.atomicMeetings.find(m => m.room && m.day && m.slot);
 
@@ -531,22 +530,6 @@ export async function convertProjectToHTML(project, cliParams) {
     </section>`);
   }
 
-  const yaml = sessions.map(session => Object.assign({
-    number: session.number,
-    reset: 'all',
-    room: session.room,
-    day: session.day,
-    slot: session.slot,
-    meeting: session.meeting?.split(';').map(m => m.trim())
-  }));
-  if (!reduce) {
-    writeLine(2, `<section id="yaml">
-      <h2>Data for Saving/Restoring Schedule</h2>
-      <pre id="data">`);
-    writeLine(0, YAML.stringify(yaml));
-    writeLine(3, `</pre>
-    </section>`);
-  }
   writeLine(1, `</body>`);
   writeLine(0, `</html>`);
   return html;
