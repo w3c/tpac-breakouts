@@ -26,6 +26,7 @@ import _importMetadata from './import-metadata.mjs';
 import _exportMetadata from './export-metadata.mjs';
 import _exportEventToFiles from './export-event-to-files.mjs';
 import _exportW3CMap from './export-w3cid-map.mjs';
+import _applySchedule from './apply-schedule.mjs';
 
 function main() { _createOnOpenTrigger(); }
 function addTPACMenu() { _addTPACMenu(); }
@@ -39,3 +40,4 @@ function importMetadata() { _importMetadata(); }
 function exportMetadata() { _exportMetadata(); }
 function exportEventToFiles() { _exportEventToFiles(); }
 function exportW3CMap() { _exportW3CMap(); }
+function applySchedule() { _applySchedule(); }

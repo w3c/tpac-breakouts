@@ -12,6 +12,7 @@ export default function () {
         .createMenu('Manage the schedule')
         .addItem('Validate metadata and existing schedule', 'validateGrid')
         .addItem('Validate metadata and propose a new schedule', 'proposeGrid')
+        .addItem('Apply current schedule sheet', 'applySchedule')
         .addItem('Refresh table view of schedule', 'generateGrid')
     )
     .addItem('Publish the schedule and calendar', 'exportGrid')
