@@ -7,8 +7,6 @@ import { getSessionSections } from '../../common/session-sections.mjs';
 export function getProjectSheets(spreadsheet) {
   // These are the sheets we expect to find in the spreadsheet
   const sheets = {
-    grid: { titleMatch: /grid$/i },
-    gridValidation: { titleMatch: /validation/i },
     event: { titleMatch: /event/i },
     sessions: { titleMatch: /(list|breakouts)/i },
     meetings: { titleMatch: /meetings/i },
@@ -536,8 +534,7 @@ export function refreshProject(spreadsheet, project, { what }) {
 function createSessionsSheet(spreadsheet, sheets, project) {
   // Create the new sheet
   const title = project.metadata.type === 'groups' ? 'List' : 'Breakouts';
-  const position = spreadsheet.getSheets().findIndex(s => s === sheets.grid.sheet) + 1;
-  const sheet = spreadsheet.insertSheet(title, position);
+  const sheet = spreadsheet.insertSheet(title);
 
   // Set the headers row
   const headers = [

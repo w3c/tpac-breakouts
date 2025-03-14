@@ -4,9 +4,7 @@ import { groupSessionMeetings } from '../../common/meetings.mjs';
  * Fill the grid in the provided spreadsheet
  */
 export function fillGridSheet(spreadsheet, project, validationErrors) {
-  let sheet = project.sheets.grid.sheet;
-  if (!sheet) {
-    sheet = spreadsheet.insertSheet('Grid', spreadsheet.getSheets().length - 1);
+  const sheet = spreadsheet.insertSheet('Grid', spreadsheet.getSheets().length - 1);
     project.sheets.grid.sheet = sheet;
   }
   console.log('- clear sheet');
