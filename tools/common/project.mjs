@@ -374,9 +374,15 @@ export async function fetchProjectFromGitHub(login, id, sessionTemplate) {
     // all sessions will be associated with it.
     daysFieldId: days.id,
     days: days.options.map(day => {
+      const metadata = {};
+      (day.description ?? '')
+        .split(/\n/)
+        .map(line => line.trim().replace(/^[*\-] /, '').split(/:\s*/))
+        .filter(data => data[0] && data[1])
+        .forEach(data => metadata[data[0].toLowerCase()] = data[1]);
       const match =
         day.name.match(/(.*) \((\d{4}\-\d{2}\-\d{2})\)$/) ??
-        [day.name, day.name, day.name];
+        [day.name, metadata.weekday ?? day.name, day.name];
       return {
         id: day.id,
         name: match[0],

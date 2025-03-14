@@ -1,4 +1,4 @@
-import { convertProjectToHTML } from './lib/project2html.mjs';
+import { convertProjectToHTML } from '../common/project2html.mjs';
 import { convertProjectToJSON } from '../common/project.mjs';
 
 export default async function (project, options) {

@@ -22,7 +22,7 @@ export default function () {
         .addItem('Retrieve latest published schedule (from GitHub)', 'importGrid')
         .addItem('Fetch event info, rooms, days, slots (from GitHub)', 'importMetadata')
         /*.addItem('Export event info, rooms, days, slots to GitHub', 'exportMetadata')*/
-        .addItem('Dump event data as JSON', 'exportEventData')
+        .addItem('Export event to files (HTML, JSON)', 'exportEventToFiles')
     )
     .addToUi();
 }

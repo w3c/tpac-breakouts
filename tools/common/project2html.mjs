@@ -1,6 +1,6 @@
-import { parseSessionMeetings, groupSessionMeetings } from '../../common/meetings.mjs';
-import { validateGrid } from '../../common/validate.mjs';
-import * as YAML from 'yaml';
+import { parseSessionMeetings, groupSessionMeetings } from './meetings.mjs';
+import { validateGrid } from './validate.mjs';
+import * as YAML from '../../node_modules/yaml/browser/index.js';
 
 const hasMeeting = s => s.atomicMeetings.find(m => m.room && m.day && m.slot);
 
@@ -245,7 +245,7 @@ export async function convertProjectToHTML(project, cliParams) {
   for (const table of tables) {
     // Columns represent the rooms
     writeLine(3, `<section id="d${table.day.date}">
-        <h3>${table.day.name}</h3>
+        <h3>${table.day.label ? table.day.label + ' (' + table.day.date + ')' : table.day.name}</h3>
         <table>
           <thead>
             <tr>
@@ -516,7 +516,7 @@ export async function convertProjectToHTML(project, cliParams) {
     writeLine(2, '</section>');
   }
 
-  if (cliParams && !reduce) {
+  if (cliParams?.cmd && !reduce) {
     writeLine(2, `<section id="cli">
       <h2>Generation parameters</h2>
       <ul>

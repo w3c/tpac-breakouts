@@ -1,5 +1,5 @@
 import { readFile } from 'fs/promises';
-import { convertProjectToHTML } from './lib/project2html.mjs';
+import { convertProjectToHTML } from '../common/project2html.mjs';
 import { saveSessionMeetings } from '../common/project.mjs';
 import { parseMeetingsChanges, applyMeetingsChanges } from './lib/meetings.mjs';
 import { validateGrid } from '../common/validate.mjs';

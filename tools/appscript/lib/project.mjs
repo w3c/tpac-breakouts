@@ -178,9 +178,7 @@ export function getProject(spreadsheet) {
     days: sheets.days.values
       .filter(v => !!v.date)
       .map(v => {
-        const name = v.weekday ?
-          v.weekday + ' (' + v.date + ')' :
-          v.date;
+        const name = v.date;
         return {
           id: v.id,
           name,

@@ -1,6 +1,6 @@
 import { validateGrid } from '../common/validate.mjs';
 import { saveSessionMeetings } from '../common/project.mjs';
-import { convertProjectToHTML } from './lib/project2html.mjs';
+import { convertProjectToHTML } from '../common/project2html.mjs';
 
 export default async function (project, options) {
   if (!project.allowTryMeOut) {
