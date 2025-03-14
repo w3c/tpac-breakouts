@@ -1,4 +1,3 @@
-import { getEnvKey } from '../common/envkeys.mjs';
 import { getSessionSections } from '../common/session-sections.mjs';
 
 /**
@@ -529,7 +528,7 @@ export function refreshProject(spreadsheet, project, { what }) {
   if (['all', 'sessions', 'grid'].includes(what)) {
     if (!sheets.sessions.sheet) {
       sheets.sessions.sheet = createSessionsSheet(spreadsheet, sheets, project);
-      sheets.sessions.headers = getHeaders(sheet);
+      sheets.sessions.headers = getHeaders(sheets.sessions.sheet);
     }
     refreshData('sessions');
   }
@@ -540,9 +539,7 @@ export function refreshProject(spreadsheet, project, { what }) {
 function createSessionsSheet(spreadsheet, sheets, project) {
   // Create the new sheet
   const title = project.metadata.type === 'groups' ? 'List' : 'Breakouts';
-  const position = project.sheets.grid.sheet ?
-    spreadsheet.getSheets().length - 2 :
-    spreadsheet.getSheets().length - 1;
+  const position = spreadsheet.getSheets().findIndex(s => s === sheets.grid.sheet) + 1;
   const sheet = spreadsheet.insertSheet(title, position);
 
   // Set the headers row
