@@ -11,6 +11,16 @@ export function fillGridSheet(spreadsheet, project, validationErrors) {
   }
   console.log('- clear sheet');
   sheet.clear();
+  console.log('- attach result as metadata');
+  const metadata = project.sessions.map(session => [
+    session.number,
+    session.room,
+    session.day,
+    session.slot,
+    session.meeting,
+    session.labels
+  ]);
+  sheet.addDeveloperMetadata('SCHEDULE', JSON.stringify(metadata));
   console.log('- create headers row');
   createHeaderRow(sheet, project.rooms);
   console.log('- create days/slots headers');
