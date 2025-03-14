@@ -1,4 +1,4 @@
-import reportError from './report-error.mjs';
+import reportError from './lib/report-error.mjs';
 
 /**
  * Trigger a GitHub workflow that refreshes the data from GitHub

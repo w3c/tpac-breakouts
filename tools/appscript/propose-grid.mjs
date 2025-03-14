@@ -1,10 +1,12 @@
-import { getProject, refreshProject, saveSessionValidationInSheet } from './project.mjs';
-import { fillGridSheet } from './schedule.mjs';
+import {
+  getProject, refreshProject, saveSessionValidationInSheet
+} from './lib/project.mjs';
+import reportError from './lib/report-error.mjs';
+import { fillGridSheet } from './lib/schedule.mjs';
+import { fetchMapping } from './lib/w3cid-map.mjs';
 import { suggestSchedule } from '../common/schedule.mjs';
-import reportError from './report-error.mjs';
 import { validateGrid } from '../common/validate.mjs';
 import { Srand } from '../common/jsrand.mjs';
-import { fetchMapping } from './w3cid-map.mjs';
 
 /**
  * Generate the grid for the current spreadsheet

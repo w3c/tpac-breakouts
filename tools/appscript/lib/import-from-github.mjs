@@ -1,8 +1,8 @@
 import { getProject } from './project.mjs';
 import reportError from './report-error.mjs';
-import { fetchProjectFromGitHub } from '../common/project.mjs';
+import { fetchProjectFromGitHub } from '../../common/project.mjs';
 import { refreshProject } from './project.mjs';
-import * as YAML from '../../node_modules/yaml/browser/index.js';
+import * as YAML from '../../../node_modules/yaml/browser/index.js';
 
 /**
  * Trigger a GitHub workflow that refreshes the data from GitHub

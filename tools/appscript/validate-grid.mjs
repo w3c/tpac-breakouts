@@ -1,8 +1,8 @@
-import reportError from './report-error.mjs';
-import { getProject, saveSessionValidationInSheet } from './project.mjs';
-import { fillGridSheet } from './schedule.mjs';
+import reportError from './lib/report-error.mjs';
+import { getProject, saveSessionValidationInSheet } from './lib/project.mjs';
+import { fillGridSheet } from './lib/schedule.mjs';
+import { fetchMapping } from './lib/w3cid-map.mjs';
 import { validateGrid } from '../common/validate.mjs';
-import { fetchMapping } from './w3cid-map.mjs';
 
 /**
  * Export the event data as JSON

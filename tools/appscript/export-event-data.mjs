@@ -1,4 +1,4 @@
-import { getProject } from './project.mjs';
+import { getProject } from './lib/project.mjs';
 
 /**
  * Export the event data as JSON

@@ -1,4 +1,4 @@
-import { getEnvKey } from '../common/envkeys.mjs';
+import { getEnvKey } from '../../common/envkeys.mjs';
 
 /**
  * Fetch private mapping information from the Google sheet

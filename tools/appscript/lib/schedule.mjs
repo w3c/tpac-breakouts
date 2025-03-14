@@ -1,4 +1,4 @@
-import { groupSessionMeetings } from '../common/meetings.mjs';
+import { groupSessionMeetings } from '../../common/meetings.mjs';
 
 /**
  * Fill the grid in the provided spreadsheet

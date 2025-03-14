@@ -1,4 +1,4 @@
-import { getSessionSections } from '../common/session-sections.mjs';
+import { getSessionSections } from '../../common/session-sections.mjs';
 
 /**
  * Retrieve an indexed object that contains the list of sheets associated with

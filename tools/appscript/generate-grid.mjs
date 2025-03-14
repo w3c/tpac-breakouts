@@ -1,6 +1,6 @@
-import { getProject } from './project.mjs';
-import { fillGridSheet } from './schedule.mjs';
-import reportError from './report-error.mjs';
+import { getProject } from './lib/project.mjs';
+import { fillGridSheet } from './lib/schedule.mjs';
+import reportError from './lib/report-error.mjs';
 import { validateGrid } from '../common/validate.mjs';
 
 /**

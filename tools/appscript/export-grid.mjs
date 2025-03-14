@@ -1,5 +1,5 @@
-import { getProject } from './project.mjs';
-import reportError from './report-error.mjs';
+import { getProject } from './lib/project.mjs';
+import reportError from './lib/report-error.mjs';
 import {
   fetchProjectFromGitHub,
   saveSessionMeetings,
