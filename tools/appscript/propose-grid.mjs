@@ -4,6 +4,7 @@ import { suggestSchedule } from '../common/schedule.mjs';
 import reportError from './report-error.mjs';
 import { validateGrid } from '../common/validate.mjs';
 import { Srand } from '../common/jsrand.mjs';
+import { fetchMapping } from './w3cid-map.mjs';
 
 /**
  * Generate the grid for the current spreadsheet
@@ -20,6 +21,7 @@ async function proposeGrid(spreadsheet) {
   try {
     console.log('Read data from spreadsheet...');
     const project = getProject(spreadsheet);
+    project.w3cIds = await fetchMapping();
     if (!project.sheets.sessions.sheet) {
       reportError('No sheet found that contains the list of sessions, please import data from GitHub first.');
       return;
@@ -28,7 +30,9 @@ async function proposeGrid(spreadsheet) {
 
     console.log('Prompt user...');
     console.log('- TODO: prompt user for confirmation and parameters');
-    const options = {};
+    const options = {
+      preserve: ['all']
+    };
     console.log('Prompt user... done');
 
     console.log(`Validate sessions...`);

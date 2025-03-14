@@ -2,6 +2,7 @@ import reportError from './report-error.mjs';
 import { getProject, saveSessionValidationInSheet } from './project.mjs';
 import { fillGridSheet } from './schedule.mjs';
 import { validateGrid } from '../common/validate.mjs';
+import { fetchMapping } from './w3cid-map.mjs';
 
 /**
  * Export the event data as JSON
@@ -11,6 +12,7 @@ export default async function () {
     console.log('Read data from spreadsheet...');
     const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
     const project = getProject(spreadsheet);
+    project.w3cIds = await fetchMapping();
     console.log('Read data from spreadsheet... done');
 
     console.log('Validate the grid...');
