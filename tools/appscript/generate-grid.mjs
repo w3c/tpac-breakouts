@@ -1,6 +1,7 @@
 import { getProject } from './lib/project.mjs';
 import { fillGridSheet } from './lib/schedule.mjs';
 import reportError from './lib/report-error.mjs';
+import { fetchMapping } from './lib/w3cid-map.mjs';
 import { validateGrid } from '../common/validate.mjs';
 
 /**
@@ -18,6 +19,7 @@ async function generateGrid(spreadsheet) {
   try {
     console.log('Read data from spreadsheet...');
     const project = getProject(spreadsheet);
+    project.w3cIds = await fetchMapping();
     if (!project.sheets.sessions.sheet) {
       reportError('No sheet found that contains the list of sessions, please import data from GitHub first.');
       return;
