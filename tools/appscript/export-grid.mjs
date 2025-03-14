@@ -5,12 +5,8 @@ import {
   saveSessionMeetings,
   saveSessionNote } from '../common/project.mjs';
 
-/**
- * Trigger a GitHub workflow that refreshes the data from GitHub
- */
 export default async function () {
   try {
-    // TODO: consider reading only the list of sessions
     console.log('Read data from spreadsheet...');
     const project = getProject(SpreadsheetApp.getActiveSpreadsheet());
     console.log('Read data from spreadsheet... done');

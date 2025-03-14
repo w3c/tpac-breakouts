@@ -1,8 +1,6 @@
 import reportError from './lib/report-error.mjs';
 
-/**
- * Trigger a GitHub workflow that refreshes the data from GitHub
- */
+
 export default async function () {
   try {
     console.log('Export metadata to GitHub...');

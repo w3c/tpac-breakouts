@@ -4,17 +4,11 @@ import { fetchMapping } from './lib/w3cid-map.mjs';
 import { convertProjectToHTML } from '../common/project2html.mjs';
 
 
-/**
- * Generate the grid for the current spreadsheet
- */
 export default function () {
   return exportEventToFiles(SpreadsheetApp.getActiveSpreadsheet());
 }
 
 
-/**
- * Generate the grid in the provided spreadsheet
- */
 async function exportEventToFiles(spreadsheet) {
   try {
     console.log('Read data from spreadsheet...');

@@ -4,9 +4,7 @@ import { fillGridSheet } from './lib/schedule.mjs';
 import { fetchMapping } from './lib/w3cid-map.mjs';
 import { validateGrid } from '../common/validate.mjs';
 
-/**
- * Export the event data as JSON
- */
+
 export default async function () {
   try {
     console.log('Read data from spreadsheet...');

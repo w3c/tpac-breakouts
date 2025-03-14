@@ -8,17 +8,12 @@ import { suggestSchedule } from '../common/schedule.mjs';
 import { validateGrid } from '../common/validate.mjs';
 import { Srand } from '../common/jsrand.mjs';
 
-/**
- * Generate the grid for the current spreadsheet
- */
+
 export default function () {
   return proposeGrid(SpreadsheetApp.getActiveSpreadsheet());
 }
 
 
-/**
- * Generate the grid in the provided spreadsheet
- */
 async function proposeGrid(spreadsheet) {
   try {
     console.log('Read data from spreadsheet...');
