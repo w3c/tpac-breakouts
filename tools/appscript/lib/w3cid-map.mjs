@@ -4,7 +4,7 @@ import { getEnvKey } from '../../common/envkeys.mjs';
  * Fetch private mapping information from the Google sheet
  */
 export async function fetchMapping() {
-  const W3CID_SPREADSHEET = await getEnvKey('W3CID_SPREADSHEET'); 
+  const W3CID_SPREADSHEET = await getEnvKey('W3CID_SPREADSHEET');
   const spreadsheet = SpreadsheetApp.openById(W3CID_SPREADSHEET);
 
   const mapping = {};
