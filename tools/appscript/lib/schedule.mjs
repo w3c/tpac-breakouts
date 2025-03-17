@@ -1,12 +1,26 @@
 import { groupSessionMeetings } from '../../common/meetings.mjs';
+import { Srand } from '../../common/jsrand.mjs';
 
 /**
  * Fill the grid in the provided spreadsheet
  */
 export function fillGridSheet(spreadsheet, project, validationErrors) {
-  const sheet = spreadsheet.insertSheet('Grid', spreadsheet.getSheets().length - 1);
-    project.sheets.grid.sheet = sheet;
+  let gridVersion = Math.max(
+    ...spreadsheet.getSheets()
+      .map(sheet => sheet.getName())
+      .filter(name => name.match(/^Schedule v(\d+)$/))
+      .map(name => name.match(/^Schedule v(\d+)$/)[1])
+      .map(nb => parseInt(nb))
+  );
+  if (gridVersion === -Infinity) {
+    gridVersion = 0;
   }
+  gridVersion += 1;
+
+  const sheet = spreadsheet.insertSheet(
+    'Schedule v' + gridVersion,
+    spreadsheet.getSheets().length
+  );
   console.log('- clear sheet');
   sheet.clear();
   console.log('- attach result as metadata');
@@ -27,19 +41,17 @@ export function fillGridSheet(spreadsheet, project, validationErrors) {
   addSessions(sheet, project, validationErrors);
   console.log('- add borders');
   addBorders(sheet, project);
-  fillGridValidationSheet(spreadsheet, project, validationErrors);
+  fillGridValidationSheet(spreadsheet, project, gridVersion, validationErrors);
 }
 
 /**
  * Fill the grid validation sheet
  */
-function fillGridValidationSheet(spreadsheet, project, validationErrors) {
-  let sheet = project.sheets.gridValidation.sheet;
-  if (!sheet) {
-    sheet = spreadsheet.insertSheet('Grid validation',
-      spreadsheet.getSheets().length - 1);
-    project.sheets.gridValidation.sheet = sheet;
-  }
+function fillGridValidationSheet(spreadsheet, project, gridVersion, validationErrors) {
+  const sheet = spreadsheet.insertSheet(
+    `Schedule v${gridVersion} issues`,
+    spreadsheet.getSheets().length
+  );
   console.log('- clear grid validation sheet');
   sheet.clear();
 

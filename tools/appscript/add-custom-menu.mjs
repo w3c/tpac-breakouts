@@ -10,16 +10,15 @@ export default function () {
     .addSubMenu(
       SpreadsheetApp.getUi()
         .createMenu('Manage the schedule')
-        .addItem('Validate metadata and existing schedule', 'validateGrid')
-        .addItem('Validate metadata and propose a new schedule', 'proposeGrid')
+        .addItem('Propose a new schedule', 'proposeGrid')
         .addItem('Apply current schedule sheet', 'applySchedule')
-        .addItem('Refresh table view of schedule', 'generateGrid')
     )
     .addItem('Publish the schedule and calendar', 'exportGrid')
     .addSeparator()
     .addSubMenu(
       SpreadsheetApp.getUi()
         .createMenu('Advanced')
+        .addItem('Validate metadata and existing schedule', 'validateGrid')
         .addItem('Retrieve latest published schedule (from GitHub)', 'importGrid')
         .addItem('Fetch event info, rooms, days, slots (from GitHub)', 'importMetadata')
         .addItem('Export event to files (HTML, JSON)', 'exportEventToFiles')
