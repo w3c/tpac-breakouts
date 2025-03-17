@@ -5,7 +5,7 @@ import { fetchProject } from '../tools/node/lib/project.mjs';
 import { validateProject } from '../tools/common/project.mjs';
 import { validateSession } from '../tools/common/validate.mjs';
 import { groupSessionMeetings } from '../tools/common/meetings.mjs';
-import { convertProjectToHTML } from '../tools/node/lib/project2html.mjs';
+import { convertProjectToHTML } from '../tools/common/project2html.mjs';
 import { readFile, writeFile } from 'node:fs/promises';
 
 async function fetchTestProject() {
