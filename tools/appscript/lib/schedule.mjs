@@ -198,13 +198,82 @@ function createDaySlotColumns(sheet, days, slots, validationErrors) {
   }
 
   // Slots are repeated for all days
-  const repeatedSlots = days.map(day => slots).flat();
+  console.log(JSON.stringify(validationErrors, null, 2));
+  const repeatedSlots = days
+    .map(day => slots.map(slot => {
+      slot = Object.assign({ errors: [] }, slot);
+      for (const issue of validationErrors) {
+        if (!issue.details) {
+          continue;
+        }
+        if (issue.type !== 'chair conflict' &&
+            issue.type !== 'group conflict' &&
+            issue.type !== 'track') {
+          continue;
+        }
+        for (const detail of issue.details) {
+          const meeting = detail.meeting ?? detail;
+          if (day.name !== meeting.day) {
+            continue;
+          }
+          if (slot.name !== meeting.slot) {
+            continue;
+          }
+          slot.errors.push({ issue, detail });
+          console.log(`- slot error for ${slot.name}: ${issue.type}`);
+        }
+      }
+      return slot;
+    }))
+    .flat()
+    .map(slot => {
+      let label = slot.name;
+      let backgroundColor = null;
+
+      console.log(`- slot errors for ${slot.name}: ${slot.errors?.length}`);
+      const trackConflicts = [... new Set(slot.errors
+        .filter(error => error.issue.type === 'track')
+        .map(error => error.detail.track))];
+      if (trackConflicts.length > 0) {
+        label += '\n\nSame track:\n' + trackConflicts.join(',\n');
+        backgroundColor = '#e1f2fa';
+      }
+
+      const groupConflicts = [... new Set(slot.errors
+        .filter(error => error.issue.type === 'group conflict')
+        .map(error => error.detail.names)
+        .flat())];
+      if (groupConflicts.length > 0) {
+        label += '\n\nGroup conflict:\n' + groupConflicts.join(',\n');
+        backgroundColor = '#ddaeff'
+      }
+
+      const chairConflicts = [... new Set(slot.errors
+        .filter(error => error.issue.type === 'chair conflict')
+        .map(error => error.detail.names)
+        .flat())];
+      if (chairConflicts.length > 0) {
+        label += '\n\nChair conflict:\n' + chairConflicts.join(',\n');
+        backgroundColor = '#ddaeff'
+      }
+
+      slot.backgroundColor = backgroundColor;
+      slot.value = SpreadsheetApp
+        .newRichTextValue()
+        .setText(label)
+        .build();
+      return slot;
+    });
   sheet.getRange(startRow, startCol + 1, repeatedSlots.length)
     .setVerticalAlignment('middle')
     .setHorizontalAlignment('center')
     .setFontWeight('bold')
-    .setBorder(true, true, null, true, null, null)
-    .setValues(repeatedSlots.map(slot => [slot.name]));
+    .setBorder(true, true, null, true, null, null);
+  repeatedSlots.map((slot, idx) => {
+    sheet.getRange(startRow + idx, startCol + 1, 1, 1)
+      .setBackground(slot.backgroundColor)
+      .setRichTextValue(slot.value);
+  });
   sheet
     .autoResizeColumns(startCol, startCol + 1)
     .setFrozenColumns(startCol + 1);

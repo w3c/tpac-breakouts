@@ -534,7 +534,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
       .map(track => project.sessions
         .filter(s => s !== session && s.labels.includes(track))
         .filter(s => meetsInParallelWith(s, meeting, project))
-        .map(s => Object.assign({ meeting, track, session, conflictsWith: s }))
+        .map(s => Object.assign({ meeting, track: track.replace(/^track: /, ''), session, conflictsWith: s }))
       )
     )
     .flat(2)
