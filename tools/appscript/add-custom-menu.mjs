@@ -9,11 +9,11 @@ export default function () {
     .addItem('Refresh sessions/groups (from GitHub)', 'importSessions')
     .addSubMenu(
       SpreadsheetApp.getUi()
-        .createMenu('Manage the schedule')
-        .addItem('Propose a new schedule', 'proposeGrid')
-        .addItem('Apply current schedule sheet', 'applySchedule')
+        .createMenu('Schedule sessions/groups')
+        .addItem('Propose schedule (to new sheet)', 'proposeGrid')
+        .addItem('Adopt schedule (on current sheet)', 'applySchedule')
     )
-    .addItem('Publish the schedule and calendar', 'exportGrid')
+    .addItem('Publish adopted schedule and calendar', 'exportGrid')
     .addSeparator()
     .addSubMenu(
       SpreadsheetApp.getUi()
