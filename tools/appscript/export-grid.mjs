@@ -1,10 +1,14 @@
-import { getProject } from './lib/project.mjs';
 import reportError from './lib/report-error.mjs';
+import {
+  getProject,
+  syncProjectMetadataWithGitHub
+} from './lib/project.mjs';
 import {
   fetchProjectFromGitHub,
   saveSessionMeetings,
   saveSessionNote } from '../common/project.mjs';
 import { exportMapping } from './lib/w3cid-map.mjs';
+import { exportRoomZoom } from './lib/room-zoom.mjs';
 
 export default async function () {
   try {
@@ -84,9 +88,17 @@ export default async function () {
     }
     console.log('Export updates when needed... done');
 
+    console.log('Export project metadata...');
+    await syncProjectMetadataWithGitHub(project, githubProject);
+    console.log('Export project metadata... done');
+
     console.log('Export W3CID_MAP mapping...');
     await exportMapping(project);
     console.log('Export W3CID_MAP mapping... done');
+
+    console.log('Export ROOM_ZOOM variable to GitHub...');
+    await exportRoomZoom(project);
+    console.log('Export ROOM_ZOOM variable to GitHub... done');
 
     if (updated.length > 0 &&
         project.metadata.calendar &&
