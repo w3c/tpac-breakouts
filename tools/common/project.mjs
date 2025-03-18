@@ -656,3 +656,25 @@ export async function saveSessionNote(session, note, project) {
     throw new Error(`GraphQL error, could not record "Note" for session #${session.number}`);
   }
 }
+
+
+/**
+ * Update the project's title and description on GitHub
+ */
+export async function exportProjectMetadata(project) {
+  const description = serializeProjectMetadata(project.metadata);
+  const response = await sendGraphQLRequest(`mutation {
+    updateProjectV2(input: {
+      clientMutationId: "mutatis mutandis",
+      projectId: "${project.id}",
+      shortDescription: "${description.replace(/"/g, '\\\"')}",
+      title: "${project.title.replace(/"/g, '\\\"')}"
+    }) {
+      clientMutationId
+    }
+  }`);
+  if (!response?.data?.updateProjectV2?.clientMutationId) {
+    console.log(JSON.stringify(response, null, 2));
+    throw new Error(`GraphQL error, could not update the project's title and description`);
+  }
+}

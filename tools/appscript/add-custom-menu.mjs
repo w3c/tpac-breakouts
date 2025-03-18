@@ -22,8 +22,7 @@ export default function () {
         .addItem('Retrieve latest published schedule (from GitHub)', 'importGrid')
         .addItem('Fetch event info, rooms, days, slots (from GitHub)', 'importMetadata')
         .addItem('Export event to files (HTML, JSON)', 'exportEventToFiles')
-        .addItem('Push the global W3C IDs spreadsheet (to GitHub)', 'exportW3CMap')
-        /*.addItem('Export event info, rooms, days, slots to GitHub', 'exportMetadata')*/
+        .addItem('Export event, chairs and Zoom info to GitHub', 'exportMetadata')
     )
     .addToUi();
 }

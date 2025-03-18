@@ -40,11 +40,11 @@ async function proposeGrid(spreadsheet) {
       error.type !== 'scheduling' &&
       error.type !== 'irc');
     const validSessions = project.sessions.filter(s =>
-      !errors.find(error => error.number === s.number));
+      !errors.find(error => error.session === s.number));
     const invalidSessions = project.sessions.filter(s =>
-      errors.find(error => error.number === s.number));
+      errors.find(error => error.session === s.number));
     project.sessions
-      .filter(s => errors.find(error => error.number === s.number))
+      .filter(s => errors.find(error => error.session === s.number))
       .forEach(s => s.blockingError = true);
     console.log(`- found ${validSessions.length} valid sessions among them: ${validSessions.map(s => s.number).join(', ')}`);
     console.log(`Validate sessions... done`);
@@ -120,7 +120,7 @@ async function proposeGrid(spreadsheet) {
     console.log('Report new grid in grid sheet...');
     if (invalidSessions.length > 0) {
       newErrors = invalidSessions
-        .map(session => errors.filter(error => error.number === s.number))
+        .map(s => errors.filter(error => error.session === s.number))
         .flat()
         .concat(newErrors);
     }
@@ -148,7 +148,7 @@ async function proposeGrid(spreadsheet) {
           I could not schedule the following sessions because they are invalid:
         </p>
         <ul>` +
-        invalidSessions.map(s => `<li>${s.title} (#${session.number})</li>`).join('\n') +
+        invalidSessions.map(s => `<li>${s.title} (#${s.number})</li>`).join('\n') +
         `</ul>`;
     }
     if (noschedule.length > 0) {

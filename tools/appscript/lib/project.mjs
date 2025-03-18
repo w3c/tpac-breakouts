@@ -1,4 +1,5 @@
 import { getSessionSections } from '../../common/session-sections.mjs';
+import { exportProjectMetadata } from '../../common/project.mjs';
 
 /**
  * Retrieve an indexed object that contains the list of sheets associated with
@@ -621,4 +622,27 @@ export async function saveSessionValidationInSheet(session, project) {
     session.validation.warning,
     session.validation.check
   ]]);
+}
+
+
+export async function syncProjectMetadataWithGitHub(project, githubProject) {
+  const metadata = {};
+  let needsUpdate = false;
+  for (const [key, val] of Object.entries(project.metadata)) {
+    if (['fullType', 'reponame'].includes(key)) {
+      continue;
+    }
+    metadata[key] = val;
+    if (val !== githubProject.metadata[key]) {
+      console.log(`- "${key}" metadata needs to be updated to "${val}"`);
+      needsUpdate = true;
+    }
+  }
+
+  if (needsUpdate || project.title !== githubProject.title) {
+    console.log('- export metadata to GitHub...');
+    githubProject.metadata = metadata;
+    githubProject.title = project.title;
+    await exportProjectMetadata(githubProject);
+  }
 }

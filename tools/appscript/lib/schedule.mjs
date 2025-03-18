@@ -48,6 +48,12 @@ export function fillGridSheet(spreadsheet, project, validationErrors) {
  * Fill the grid validation sheet
  */
 function fillGridValidationSheet(spreadsheet, project, gridVersion, validationErrors) {
+  // TODO: consider reporting "check" messages as well
+  validationErrors = validationErrors.filter(err => err.severity !== 'check');
+  if (validationErrors.length === 0) {
+    return;
+  }
+
   const sheet = spreadsheet.insertSheet(
     `Schedule v${gridVersion} issues`,
     spreadsheet.getSheets().length
@@ -64,9 +70,6 @@ function fillGridValidationSheet(spreadsheet, project, gridVersion, validationEr
   sheet
     .autoResizeColumns(2, headers.length)
     .setFrozenRows(1);
-
-  // TODO: consider reporting "check" messages as well
-  validationErrors = validationErrors.filter(err => err.severity !== 'check');
 
   const values = [];
   const sessions = project.sessions.filter(s =>
