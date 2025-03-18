@@ -9,7 +9,7 @@ export default function () {
     .addItem('Refresh sessions/groups (from GitHub)', 'importSessions')
     .addSubMenu(
       SpreadsheetApp.getUi()
-        .createMenu('Manage the schedule')
+        .createMenu('Schedule sessions/groups')
         .addItem('Propose schedule (to new sheet)', 'proposeGrid')
         .addItem('Adopt schedule (on current sheet)', 'applySchedule')
     )
