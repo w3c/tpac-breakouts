@@ -4,6 +4,7 @@ import {
   fetchProjectFromGitHub,
   saveSessionMeetings,
   saveSessionNote } from '../common/project.mjs';
+import { exportMapping } from './lib/w3cid-map.mjs';
 
 export default async function () {
   try {
@@ -51,9 +52,9 @@ export default async function () {
               (<a href="https://github.com/${ghSession.repository}/issues/${ghSession.number}">#${ghSession.number}</a>)
               </p>
             </blockquote>
-            <p>Please run <b>TPAC > Event sessions > Fetch the list of sessions from GitHub</b>
-            first to retrieve it.
-            You may also want to re-validate the grid afterwards!</p>`
+            <p>Please run <b>Event > Refresh sessions/groups (from GitHub)</b>
+            first to retrieve it. You may also need to propose and adopt a
+            new schedule afterwards!</p>`
           )
           .setWidth(400)
           .setHeight(400);
@@ -83,20 +84,65 @@ export default async function () {
     }
     console.log('Export updates when needed... done');
 
+    console.log('Export W3CID_MAP mapping...');
+    await exportMapping(project);
+    console.log('Export W3CID_MAP mapping... done');
+
+    if (updated.length > 0 &&
+        project.metadata.calendar &&
+        project.metadata.calendar !== 'no') {
+      console.log('Trigger calendar publication...');
+      const GRAPHQL_TOKEN = await getEnvKey('GRAPHQL_TOKEN');
+      const options = {
+        method : 'post',
+        contentType: 'application/json',
+        payload : JSON.stringify({
+          ref: 'main',
+          inputs: {
+            sessionNumber: 'all',
+            calendarstatus: project.metadata.calendar
+          }
+        }),
+        headers: {
+          Authorization: `Bearer ${GRAPHQL_TOKEN}`
+        },
+        muteHttpExceptions: true
+      };
+
+      const response = UrlFetchApp.fetch(
+        `https://api.github.com/repos/${repo.owner}/${repo.name}/actions/workflows/update-calendar.yml/dispatches`,
+        options);
+      if (status !== 200 && status !== 204) {
+        reportError(`I could not start the job that refreshes the W3C calendar.
+
+          You may need to do that manually through the GitHub repository.`
+        );
+        return;
+      }
+      console.log('Trigger calendar publication... done');
+    }
+
     console.log('Report result...');
     if (updated.length > 0) {
       const list = updated.map(s =>
         `${s.title} (<a href="https://github.com/${s.repository}/issues/${s.number}">#${s.number}</a>)`);
+      const calendar = (
+        project.metadata.calendar && project.metadata.calendar !== 'no'
+      ) ? `<p>
+        Please allow a few minutes for the W3C calendar to get updated,
+        and up to an hour for the schedule to reach the event's page on
+        w3.org (if it exists).
+        </p>` : '';
       const htmlOutput = HtmlService
         .createHtmlOutput(`
           <p>The following session${list.length > 1 ? 's were' : ' was'} updated:</p>
           <ul>
             <li>${list.join('</li><li>')}</li>
           </ul>
-        `)
+        ` + calendar)
         .setWidth(400)
         .setHeight(400);
-      SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Grid published');
+      SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Schedule published');
     }
     else {
       const htmlOutput = HtmlService
