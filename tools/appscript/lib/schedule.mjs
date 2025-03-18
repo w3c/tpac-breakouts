@@ -198,7 +198,6 @@ function createDaySlotColumns(sheet, days, slots, validationErrors) {
   }
 
   // Slots are repeated for all days
-  console.log(JSON.stringify(validationErrors, null, 2));
   const repeatedSlots = days
     .map(day => slots.map(slot => {
       slot = Object.assign({ errors: [] }, slot);
@@ -220,7 +219,6 @@ function createDaySlotColumns(sheet, days, slots, validationErrors) {
             continue;
           }
           slot.errors.push({ issue, detail });
-          console.log(`- slot error for ${slot.name}: ${issue.type}`);
         }
       }
       return slot;
@@ -230,7 +228,6 @@ function createDaySlotColumns(sheet, days, slots, validationErrors) {
       let label = slot.name;
       let backgroundColor = null;
 
-      console.log(`- slot errors for ${slot.name}: ${slot.errors?.length}`);
       const trackConflicts = [... new Set(slot.errors
         .filter(error => error.issue.type === 'track')
         .map(error => error.detail.track))];
