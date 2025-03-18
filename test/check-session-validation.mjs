@@ -189,7 +189,7 @@ describe('Session validation', function () {
       session: sessionNumber,
       severity: 'warning',
       type: 'track',
-      messages: ['Same day/slot "2042-04-05 13:00 - 14:00" as session in same track "track: debug": "Same time as previous session in same track" (#19)']
+      messages: ['Same day/slot "2042-04-05 13:00 - 14:00" as session in same track "debug": "Same time as previous session in same track" (#19)']
     }]);
   });
 

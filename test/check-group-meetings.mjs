@@ -217,7 +217,7 @@ describe('The group meetings module', function () {
       session: sessionNumber,
       severity: 'warning',
       type: 'track',
-      messages: ['Same day/slot "Monday (2042-02-10) 14:00 - 16:00" as session in same track "track: debug": "Generative AI CG" (#23)']
+      messages: ['Same day/slot "Monday (2042-02-10) 14:00 - 16:00" as session in same track "debug": "Generative AI CG" (#23)']
     }]);
   });
 
