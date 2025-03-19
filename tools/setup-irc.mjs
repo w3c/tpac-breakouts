@@ -25,7 +25,7 @@ import { validateSession } from './common/validate.mjs';
 import todoStrings from './common/todostrings.mjs';
 import irc from 'irc';
 
-const botName = 'tpac-breakout-bot';
+const botName = 'breakout-bot';
 const timeout = 60 * 1000;
 
 /**
@@ -292,6 +292,12 @@ async function main({ number, onlyCommands, dismissBots } = {}) {
 
     await say(channel, {
       to: 'RRSAgent',
+      message: `this meeting spans midnight`,
+      reply: `ok, ${botName}; I will not start a new log at midnight`
+    });
+
+    await say(channel, {
+      to: 'RRSAgent',
       message: `make logs ${session.description.attendance === 'restricted' ? 'member' : 'public'}`,
       reply: `I have made the request, ${botName}`
     });
@@ -343,13 +349,15 @@ async function main({ number, onlyCommands, dismissBots } = {}) {
       message: 'agenda+ Next steps / where discussion continues',
       reply: 'agendum 5 added'
     });
+    await say(channel, {
+      to: 'Zakim',
+      message: 'agenda+ Adjourn / Use IRC command: Zakim, end meeting',
+      reply: 'agendum 6 added'
+    });
   }
 
   async function draftMinutes(session, channelUsers) {
     const channel = getChannel(session);
-    if (channelUsers.includes('Zakim')) {
-      await say(channel, `Zakim, bye`);
-    }
     if (channelUsers.includes('RRSAgent')) {
       // Should have been already done in theory, but worth re-doing just in
       // case, especially since RRSAgent won't leave a channel until some
@@ -359,11 +367,15 @@ async function main({ number, onlyCommands, dismissBots } = {}) {
         message: `make logs ${session.description.attendance === 'restricted' ? 'member' : 'public'}`,
         reply: `I have made the request, ${botName}`
       });
+    }
+    if (channelUsers.includes('Zakim')) {
       await say(channel, {
-        to: 'RRSAgent',
-        message: 'draft minutes',
-        reply: 'I have made the request to generate'
+        to: 'Zakim',
+        message: `end meeting`,
+        reply: `I am happy to have been of service, ${botName}; please remember to excuse RRSAgent.  Goodbye`
       });
+    }
+    if (channelUsers.includes('RRSAgent')) {
       await say(channel, `RRSAgent, bye`);
     }
   }
