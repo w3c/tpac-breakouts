@@ -7,8 +7,21 @@ import {
   fetchProjectFromGitHub,
   saveSessionMeetings,
   saveSessionNote } from '../common/project.mjs';
+import { getEnvKey } from '../common/envkeys.mjs';
 import { exportMapping } from './lib/w3cid-map.mjs';
 import { exportRoomZoom } from './lib/room-zoom.mjs';
+
+/**
+ * Mapping for day gets done on the name or date for historical reasons.
+ */
+function getDate(day) {
+  if (day?.match(/ \((.+)\)$/)) {
+    return day.match(/ \((.*)\)$/)[1];
+  }
+  else {
+    return day ?? '';
+  }
+}
 
 export default async function () {
   try {
@@ -69,7 +82,7 @@ export default async function () {
       // TODO: handle meeting column for TPAC group meetings
 
       if (((ghSession.room ?? '') !== (ssSession.room ?? '')) ||
-          ((ghSession.day ?? '') !== (ssSession.day ?? '')) ||
+          (getDate(ghSession.day) !== getDate(ssSession.day)) ||
           ((ghSession.slot ?? '') !== (ssSession.slot ?? ''))) {
         console.warn(`- updating meeting info for #${ghSession.number}...`);
         ghSession.room = ssSession.room;
@@ -100,8 +113,7 @@ export default async function () {
     await exportRoomZoom(project);
     console.log('Export ROOM_ZOOM variable to GitHub... done');
 
-    if (updated.length > 0 &&
-        project.metadata.calendar &&
+    if (project.metadata.calendar &&
         project.metadata.calendar !== 'no') {
       console.log('Trigger calendar publication...');
       const GRAPHQL_TOKEN = await getEnvKey('GRAPHQL_TOKEN');
@@ -124,6 +136,7 @@ export default async function () {
       const response = UrlFetchApp.fetch(
         `https://api.github.com/repos/${repo.owner}/${repo.name}/actions/workflows/update-calendar.yml/dispatches`,
         options);
+      const status = response.getResponseCode();
       if (status !== 200 && status !== 204) {
         reportError(`I could not start the job that refreshes the W3C calendar.
 
@@ -157,9 +170,22 @@ export default async function () {
       SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Schedule published');
     }
     else {
+      const calendar = (
+        project.metadata.calendar && project.metadata.calendar !== 'no'
+      ) ? `<p>
+        I triggered an update of the W3C calendar to propagate possible changes
+        that I may have missed such as updates to session descriptions.
+        </p>
+        <p>
+        Please allow a few minutes for the W3C calendar to get updated,
+        and up to an hour for the schedule to reach the event's page on
+        w3.org (if it exists).
+        </p>` : '';
       const htmlOutput = HtmlService
         .createHtmlOutput(`
-          <p>Data seems up-to-date already, nothing to export!</p>`
+          <p>The schedule itself was already up-to-date,
+          sessions did not need to be updated.</p>` +
+          calendar
         )
         .setWidth(400)
         .setHeight(400);
