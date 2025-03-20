@@ -1,13 +1,13 @@
-import { getEnvKey } from '../../common/envkeys.mjs';
-import wrappedFetch from '../../common/wrappedfetch.mjs';
+import { getEnvKey } from './envkeys.mjs';
+import wrappedFetch from './wrappedfetch.mjs';
 
 /**
  * Generic function to export a variable to the project's GitHub repository
  * as a GitHub actions variable. The function updates the variable if it
  * already exists. It creates the variable otherwise.
  */
-export async function exportVariableToGitHub(project, name, value) {
-  const repoparts = project.metadata.reponame.split('/');
+export async function exportVariableToGitHub(repository, name, value) {
+  const repoparts = repository.split('/');
   const repo = {
     owner: repoparts.length > 1 ? repoparts[0] : 'w3c',
     name: repoparts.length > 1 ? repoparts[1] : repoparts[0]

@@ -1,6 +1,6 @@
 import { getSessionSections } from '../../common/session-sections.mjs';
 import { exportProjectMetadata } from '../../common/project.mjs';
-import { exportVariableToGitHub } from './export-variable.mjs';
+import { exportVariableToGitHub } from '../../common/export-variable.mjs';
 
 /**
  * Retrieve an indexed object that contains the list of sheets associated with
@@ -651,10 +651,11 @@ export async function syncProjectWithGitHub(project, githubProject) {
     await exportProjectMetadata(githubProject);
   }
 
-  await exportVariableToGitHub(project, 'EVENT', metadata)
-  await exportVariableToGitHub(project, 'ROOMS', project.rooms);
-  await exportVariableToGitHub(project, 'DAYS', project.days);
-  await exportVariableToGitHub(project, 'SLOTS', project.slots);
+  const reponame = project.metadata.reponame;
+  await exportVariableToGitHub(reponame, 'EVENT', metadata)
+  await exportVariableToGitHub(reponame, 'ROOMS', project.rooms);
+  await exportVariableToGitHub(reponame, 'DAYS', project.days);
+  await exportVariableToGitHub(reponame, 'SLOTS', project.slots);
 
   // TODO: drop once GitHub logic gets updated, already included in ROOMS
   await exportRoomZoom(project);
@@ -675,7 +676,7 @@ export async function exportSchedule(project) {
     session.slot,
     session.meeting
   ]);
-  await exportVariableToGitHub(project, 'SCHEDULE', schedule);
+  await exportVariableToGitHub(project.metadata.reponame, 'SCHEDULE', schedule);
 }
 
 
