@@ -1,7 +1,7 @@
 import reportError from './lib/report-error.mjs';
 import {
   getProject,
-  syncProjectMetadataWithGitHub
+  syncProjectWithGitHub
 } from './lib/project.mjs';
 import {
   fetchProjectFromGitHub,
@@ -9,7 +9,6 @@ import {
   serializeProjectMetadata
 } from '../common/project.mjs';
 import { exportMapping } from './lib/w3cid-map.mjs';
-import { exportRoomZoom } from './lib/room-zoom.mjs';
 
 
 export default async function () {
@@ -43,16 +42,12 @@ export default async function () {
     console.log('Fetch data from GitHub... done');
 
     console.log('Export metadata to GitHub...');
-    await syncProjectMetadataWithGitHub(project, githubProject);
+    await syncProjectWithGitHub(project, githubProject);
     console.log('Export metadata to GitHub... done');
 
     console.log('Push the mapping table to the GitHub repository...');
     await exportMapping(project);
     console.log('Push the mapping table to the GitHub repository... done');
-
-    console.log('Export ROOM_ZOOM variable to GitHub...');
-    await exportRoomZoom(project);
-    console.log('Export ROOM_ZOOM variable to GitHub... done');
   }
   catch(err) {
     reportError(err.toString());

@@ -1,7 +1,8 @@
 import reportError from './lib/report-error.mjs';
 import {
   getProject,
-  syncProjectMetadataWithGitHub
+  syncProjectWithGitHub,
+  exportSchedule
 } from './lib/project.mjs';
 import {
   fetchProjectFromGitHub,
@@ -9,7 +10,6 @@ import {
   saveSessionNote } from '../common/project.mjs';
 import { getEnvKey } from '../common/envkeys.mjs';
 import { exportMapping } from './lib/w3cid-map.mjs';
-import { exportRoomZoom } from './lib/room-zoom.mjs';
 
 /**
  * Mapping for day gets done on the name or date for historical reasons.
@@ -102,16 +102,16 @@ export default async function () {
     console.log('Export updates when needed... done');
 
     console.log('Export project metadata...');
-    await syncProjectMetadataWithGitHub(project, githubProject);
+    await syncProjectWithGitHub(project, githubProject);
     console.log('Export project metadata... done');
+
+    console.log('Export schedule...');
+    await exportSchedule(project, githubProject);
+    console.log('Export schedule... done');
 
     console.log('Export W3CID_MAP mapping...');
     await exportMapping(project);
     console.log('Export W3CID_MAP mapping... done');
-
-    console.log('Export ROOM_ZOOM variable to GitHub...');
-    await exportRoomZoom(project);
-    console.log('Export ROOM_ZOOM variable to GitHub... done');
 
     if (project.metadata.calendar &&
         project.metadata.calendar !== 'no') {
