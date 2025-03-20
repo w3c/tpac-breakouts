@@ -1,5 +1,6 @@
 import { getSessionSections } from '../../common/session-sections.mjs';
 import { exportProjectMetadata } from '../../common/project.mjs';
+import { exportVariableToGitHub } from './export-variable.mjs';
 
 /**
  * Retrieve an indexed object that contains the list of sheets associated with
@@ -625,7 +626,11 @@ export async function saveSessionValidationInSheet(session, project) {
 }
 
 
-export async function syncProjectMetadataWithGitHub(project, githubProject) {
+/**
+ * Synchronize the project's data (event metadata, rooms, days, slots) with
+ * GitHub.
+ */
+export async function syncProjectWithGitHub(project, githubProject) {
   const metadata = {};
   let needsUpdate = false;
   for (const [key, val] of Object.entries(project.metadata)) {
@@ -645,4 +650,49 @@ export async function syncProjectMetadataWithGitHub(project, githubProject) {
     githubProject.title = project.title;
     await exportProjectMetadata(githubProject);
   }
+
+  await exportVariableToGitHub(project, 'EVENT', metadata)
+  await exportVariableToGitHub(project, 'ROOMS', project.rooms);
+  await exportVariableToGitHub(project, 'DAYS', project.days);
+  await exportVariableToGitHub(project, 'SLOTS', project.slots);
+
+  // TODO: drop once GitHub logic gets updated, already included in ROOMS
+  await exportRoomZoom(project);
 }
+
+
+/**
+ * Export the schedule to a GitHub variable.
+ *
+ * Note: variables on GitHub have a maximum length of 48000 characters,
+ * we "compact" the schedule on purpose to avoid repeating keys.
+ */
+export async function exportSchedule(project) {
+  const schedule = project.sessions.map(session => [
+    session.number,
+    session.room,
+    session.day,
+    session.slot,
+    session.meeting
+  ]);
+  await exportVariableToGitHub(project, 'SCHEDULE', schedule);
+}
+
+
+/**
+ * Export the Zoom information for rooms to a GitHub variable.
+ */
+async function exportRoomZoom(project) {
+  const ROOM_ZOOM = {};
+  for (const room of project.rooms) {
+    if (room['Zoom link']) {
+      ROOM_ZOOM[room.name] = {
+        id: room['Zoom ID'],
+        passcode: room['Zoom passcode'],
+        link: room['Zoom link']
+      };
+    }
+  }
+  return exportVariableToGitHub(project, 'ROOM_ZOOM', ROOM_ZOOM);
+}
+
