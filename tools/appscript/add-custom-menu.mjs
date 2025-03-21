@@ -18,8 +18,8 @@ export default function () {
     .addSubMenu(
       SpreadsheetApp.getUi()
         .createMenu('Advanced')
-        .addItem('Validate metadata and existing schedule', 'validateGrid')
-        .addItem('Retrieve latest published schedule (from GitHub)', 'importGrid')
+        .addItem('Revalidate metadata / adopted schedule (after manual edits)', 'validateGrid')
+        .addItem('Recover published schedule (from GitHub)', 'importGrid')
         .addItem('Fetch event info, rooms, days, slots (from GitHub)', 'importMetadata')
         .addItem('Export event info, rooms, days, slots (to GitHub)', 'exportMetadata')
         .addItem('Export event to files (HTML, JSON)', 'exportEventToFiles')
