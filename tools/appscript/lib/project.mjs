@@ -686,14 +686,14 @@ export async function exportSchedule(project) {
 async function exportRoomZoom(project) {
   const ROOM_ZOOM = {};
   for (const room of project.rooms) {
-    if (room['Zoom link']) {
+    if (room['zoom link']) {
       ROOM_ZOOM[room.name] = {
-        id: room['Zoom ID'],
-        passcode: room['Zoom passcode'],
-        link: room['Zoom link']
+        id: room['zoom id'],
+        passcode: room['zoom passcode'],
+        link: room['zoom link']
       };
     }
   }
-  return exportVariableToGitHub(project, 'ROOM_ZOOM', ROOM_ZOOM);
+  return exportVariableToGitHub(project.metadata.reponame, 'ROOM_ZOOM', ROOM_ZOOM);
 }
 

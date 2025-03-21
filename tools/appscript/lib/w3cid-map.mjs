@@ -26,5 +26,5 @@ export async function fetchMapping() {
 export async function exportMapping(project) {
   console.log('- read the mapping table');
   const w3cIds = await fetchMapping();
-  return exportVariableToGitHub(project, 'W3CID_MAP', w3cIds);
+  return exportVariableToGitHub(project.metadata.reponame, 'W3CID_MAP', w3cIds);
 }
