@@ -677,6 +677,19 @@ export async function exportSchedule(project) {
     session.meeting
   ]);
   await exportVariableToGitHub(project.metadata.reponame, 'SCHEDULE', schedule);
+  await exportValidation(project);
+}
+
+
+/**
+ * Export validation notes to GitHub
+ */
+export async function exportValidation(project) {
+  const VALIDATION = {};
+  for (const session of project.sessions) {
+    VALIDATION[session.number] = session.validation;
+  }
+  await exportVariableToGitHub(project.metadata.reponame, 'VALIDATION', VALIDATION);
 }
 
 
