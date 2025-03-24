@@ -1,6 +1,9 @@
 export default {
-  allowMultipleMeetings: true,
-  description: 'meeting: Group meeting highlights, timezone: Etc/UTC, type: groups',
+  metadata: {
+    meeting: 'Group meeting highlights',
+    timezone: 'Etc/UTC',
+    type: 'groups'
+  },
 
   days: [
     'Monday (2042-02-10)'

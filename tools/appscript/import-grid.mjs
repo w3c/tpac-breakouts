@@ -3,7 +3,7 @@ import importFromGitHub from './lib/import-from-github.mjs';
 
 export default async function () {
   try {
-    const githubProject = await importFromGitHub('grid');
+    const githubProject = await importFromGitHub('schedule');
 
     console.log('Report result...');
     console.log('- TODO: say what got updated');

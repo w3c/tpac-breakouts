@@ -1,14 +1,8 @@
 import { initTestEnv } from './init-test-env.mjs';
-import { getEnvKey, setEnvKey } from '../tools/common/envkeys.mjs';
-import { fetchProject } from '../tools/node/lib/project.mjs';
+import { setEnvKey } from '../tools/common/envkeys.mjs';
+import { loadProject } from '../tools/node/lib/project.mjs';
 import { validateProject } from '../tools/common/project.mjs';
 import * as assert from 'node:assert';
-
-async function fetchTestProject() {
-  return fetchProject(
-    await getEnvKey('PROJECT_OWNER'),
-    await getEnvKey('PROJECT_NUMBER'));
-}
 
 describe('Project validation', function () {
   beforeEach(function () {
@@ -17,8 +11,8 @@ describe('Project validation', function () {
   });
 
   it('reports about missing meeting and timezone fields', async function () {
-    setEnvKey('PROJECT_NUMBER', 'project-validation-empty');
-    const project = await fetchTestProject();
+    setEnvKey('REPOSITORY', 'test/project-validation-empty');
+    const project = await loadProject();
     const errors = await validateProject(project);
     assert.deepStrictEqual(errors, [
       'The "meeting" info in the short description is missing. Should be something like "meeting: TPAC 2023"',
@@ -27,8 +21,8 @@ describe('Project validation', function () {
   });
 
   it('reports about an invalid timezone field', async function () {
-    setEnvKey('PROJECT_NUMBER', 'project-validation-timezone');
-    const project = await fetchTestProject();
+    setEnvKey('REPOSITORY', 'test/project-validation-timezone');
+    const project = await loadProject();
     const errors = await validateProject(project);
     assert.deepStrictEqual(errors, [
       'The "timezone" info in the short description is not a valid timezone. Value should be a "tz identifier" in https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'
@@ -36,8 +30,8 @@ describe('Project validation', function () {
   });
 
   it('reports about an invalid type field', async function () {
-    setEnvKey('PROJECT_NUMBER', 'project-validation-type');
-    const project = await fetchTestProject();
+    setEnvKey('REPOSITORY', 'test/project-validation-type');
+    const project = await loadProject();
     const errors = await validateProject(project);
     assert.deepStrictEqual(errors, [
       'The "type" info must be one of "groups" or "breakouts"'
@@ -45,8 +39,8 @@ describe('Project validation', function () {
   });
 
   it('reports about invalid slots', async function () {
-    setEnvKey('PROJECT_NUMBER', 'project-validation-slots');
-    const project = await fetchTestProject();
+    setEnvKey('REPOSITORY', 'test/project-validation-slots');
+    const project = await loadProject();
     const errors = await validateProject(project);
     assert.deepStrictEqual(errors, [
       'Invalid slot name "Too early". Format should be "HH:mm - HH:mm"',
@@ -56,8 +50,8 @@ describe('Project validation', function () {
   });
 
   it('reports about invalid days', async function () {
-    setEnvKey('PROJECT_NUMBER', 'project-validation-days');
-    const project = await fetchTestProject();
+    setEnvKey('REPOSITORY', 'test/project-validation-days');
+    const project = await loadProject();
     const errors = await validateProject(project);
     assert.deepStrictEqual(errors, [
       'Invalid day name "Soon". Format should be either "YYYY-MM-DD" or "[label] (YYYY-MM-DD)',

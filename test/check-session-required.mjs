@@ -1,14 +1,8 @@
 import { initTestEnv } from './init-test-env.mjs';
-import { getEnvKey, setEnvKey } from '../tools/common/envkeys.mjs';
-import { fetchProject } from '../tools/node/lib/project.mjs';
+import { setEnvKey } from '../tools/common/envkeys.mjs';
+import { loadProject } from '../tools/node/lib/project.mjs';
 import { validateSession } from '../tools/common/validate.mjs';
 import * as assert from 'node:assert';
-
-async function fetchTestProject() {
-  return fetchProject(
-    await getEnvKey('PROJECT_OWNER'),
-    await getEnvKey('PROJECT_NUMBER'));
-}
 
 function stripDetails(errors) {
   return errors.map(err => {
@@ -22,12 +16,12 @@ function stripDetails(errors) {
 describe('Session validation on required select fields', function () {
   before(function () {
     initTestEnv();
-    setEnvKey('PROJECT_NUMBER', 'session-required');
+    setEnvKey('REPOSITORY', 'test/session-required');
     setEnvKey('ISSUE_TEMPLATE', 'test/data/template-required.yml');
   });
 
   it('considers that a session is a breakout session by default', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 1;
     const session = project.sessions.find(s => s.number === sessionNumber);
     const errors = await validateSession(sessionNumber, project);
@@ -36,7 +30,7 @@ describe('Session validation on required select fields', function () {
   });
 
   it('sets a default capacity when none is given', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 2;
     const session = project.sessions.find(s => s.number === sessionNumber);
     const errors = await validateSession(sessionNumber, project);

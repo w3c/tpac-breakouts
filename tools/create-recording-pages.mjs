@@ -30,7 +30,7 @@ import path from 'path';
 import fs from 'fs/promises';
 import { convert } from './node/lib/webvtt2html.mjs';
 import { getEnvKey } from './common/envkeys.mjs';
-import { fetchProject } from './node/lib/project.mjs';
+import { loadProject } from './node/lib/project.mjs';
 import { validateSession } from './common/validate.mjs';
 import todoStrings from './common/todostrings.mjs';
 
@@ -94,18 +94,7 @@ async function createRecordingPage(recording, recordingFolder) {
 
 async function main() {
   // First, retrieve known information about the project
-  const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER', 'w3c');
-  const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
-  const W3CID_MAP = await getEnvKey('W3CID_MAP', {}, true);
-  console.log();
-  console.log(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER}...`);
-  const project = await fetchProject(PROJECT_OWNER, PROJECT_NUMBER);
-  if (!project) {
-    throw new Error(`Project ${PROJECT_OWNER}/${PROJECT_NUMBER} could not be retrieved`);
-  }
-  project.w3cIds = W3CID_MAP;
-  console.log(`- ${project.sessions.length} sessions`);
-  console.log(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER}... done`);
+  const project = await loadProject();
 
   console.log();
   console.log('List recordings...');

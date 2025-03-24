@@ -11,23 +11,14 @@
  */
 
 import { getEnvKey } from './common/envkeys.mjs';
-import { fetchProject } from './node/lib/project.mjs'
+import { loadProject } from './node/lib/project.mjs'
 import { validateSession } from './common/validate.mjs';
 import { updateSessionDescription } from './node/lib/session.mjs';
 import todoStrings from './common/todostrings.mjs';
 
 
 async function main(number) {
-  const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER', 'w3c');
-  const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
-  const W3CID_MAP = await getEnvKey('W3CID_MAP', {}, true);
-  console.log();
-  console.log(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER}...`);
-  const project = await fetchProject(PROJECT_OWNER, PROJECT_NUMBER);
-  if (!project) {
-    throw new Error(`Project ${PROJECT_OWNER}/${PROJECT_NUMBER} could not be retrieved`);
-  }
-  project.w3cIds = W3CID_MAP;
+  const project = await loadProject();
   let sessions = project.sessions.filter(s => s.day && s.slot && s.room &&
     (!number || s.number === number));
   sessions.sort((s1, s2) => s1.number - s2.number);
@@ -70,7 +61,6 @@ async function main(number) {
       console.log(`- found ${sessions.length} valid sessions that need minutes among them: ${sessions.map(s => s.number).join(', ')}`);
     }
   }
-  console.log(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER} and session(s)... done`);
 
   console.log();
   console.log('Link to minutes...');

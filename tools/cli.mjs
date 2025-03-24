@@ -12,7 +12,7 @@
 import packageConfig from '../package.json' with { type: 'json' };
 import { Command, InvalidArgumentError } from 'commander';
 import { getEnvKey } from './common/envkeys.mjs';
-import { fetchProject } from './node/lib/project.mjs';
+import { loadProject } from './node/lib/project.mjs';
 import schedule from './node/schedule.mjs';
 import synchronizeCalendar from './node/sync-calendar.mjs';
 import synchronizeSheet from './node/sync-sheet.mjs';
@@ -29,31 +29,6 @@ function myParseInt(value) {
     throw new InvalidArgumentError(`Expected a number as parameter, got "${value}"`);
   }
   return parsedValue;
-}
-
-
-/**
- * All commands start with loading the project associated with the repository
- * in which the command runs.
- */
-async function loadProject() {
-  const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER', 'w3c');
-  const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
-  console.warn();
-  console.warn(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER}...`);
-  const project = await fetchProject(PROJECT_OWNER, PROJECT_NUMBER);
-  if (!project) {
-    throw new Error(`Project ${PROJECT_OWNER}/${PROJECT_NUMBER} could not be retrieved`);
-  }
-  console.warn(`- found ${project.sessions.length} sessions`);
-
-  // Most commands also need the mappings between chairs and W3C IDs.
-  // Synchronization with the calendar needs the Zoom information per room.
-  project.w3cIds = await getEnvKey('W3CID_MAP', {}, true);
-  project.roomZoom = await getEnvKey('ROOM_ZOOM', {}, true);
-
-  console.warn(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER}... done`);
-  return project;
 }
 
 

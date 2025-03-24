@@ -14,16 +14,10 @@
  */
 
 import { getEnvKey } from './common/envkeys.mjs';
-import { fetchProject } from './node/lib/project.mjs';
+import { loadProject } from './node/lib/project.mjs';
 
 async function run() {
-  const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER', 'w3c');
-  const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
-  const project = await fetchProject(PROJECT_OWNER, PROJECT_NUMBER);
-  if (!project) {
-    throw new Error(`Project ${PROJECT_OWNER}/${PROJECT_NUMBER} could not be retrieved`);
-  }
-
+  const project = await loadProject();
   const rooms = {};
   for (const room of project.rooms) {
     rooms[room.label] = '@@';

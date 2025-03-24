@@ -1,3 +1,6 @@
 export default {
-  description: 'meeting: Timezone validation, timezone: My/Time'
+  metadata: {
+    meeting: 'Timezone validation',
+    timezone: 'My/Time'
+  }
 }

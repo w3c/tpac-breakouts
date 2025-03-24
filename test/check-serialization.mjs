@@ -1,26 +1,20 @@
 import { initTestEnv } from './init-test-env.mjs';
-import { getEnvKey, setEnvKey } from '../tools/common/envkeys.mjs';
-import { fetchProject } from '../tools/node/lib/project.mjs';
+import { setEnvKey } from '../tools/common/envkeys.mjs';
+import { loadProject } from '../tools/node/lib/project.mjs';
 import { initSectionHandlers,
          parseSessionBody,
          serializeSessionDescription } from '../tools/common/session.mjs';
 import * as assert from 'node:assert';
 
-async function fetchTestProject() {
-  return fetchProject(
-    await getEnvKey('PROJECT_OWNER'),
-    await getEnvKey('PROJECT_NUMBER'));
-}
-
 describe('The serialization of session descriptions', function () {
   beforeEach(function () {
     initTestEnv();
-    setEnvKey('PROJECT_NUMBER', 'session-validation');
+    setEnvKey('REPOSITORY', 'test/session-validation');
     setEnvKey('ISSUE_TEMPLATE', 'test/data/template-breakout.yml');
   });
 
   it('does not introduce changes if description is complete', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     await initSectionHandlers(project);
     const initialBody = `### Session description
 
@@ -64,7 +58,7 @@ _No response_`;
 
 
   it('completes description with additional sections as needed', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     await initSectionHandlers(project);
     const initialBody = `### Session description
 My session is rich.
@@ -113,9 +107,9 @@ _No response_`;
   });
 
   it('handles times choices correctly', async function () {
-    setEnvKey('PROJECT_NUMBER', 'tpac2023');
+    setEnvKey('REPOSITORY', 'test/tpac2023');
     setEnvKey('ISSUE_TEMPLATE', 'test/data/template-tpac2023.yml');
-    const project = await fetchTestProject();
+    const project = await loadProject();
     await initSectionHandlers(project);
     const initialBody = `### Estimate of in-person participants
 
@@ -162,9 +156,9 @@ _No response_`;
 
 
   it('adds times section if missing', async function () {
-    setEnvKey('PROJECT_NUMBER', 'tpac2023');
+    setEnvKey('REPOSITORY', 'test/tpac2023');
     setEnvKey('ISSUE_TEMPLATE', 'test/data/template-tpac2023.yml');
-    const project = await fetchTestProject();
+    const project = await loadProject();
     await initSectionHandlers(project);
     const initialBody = `### Estimate of in-person participants
 
@@ -214,9 +208,9 @@ _No response_`;
 
 
   it('handles times choices correctly', async function () {
-    setEnvKey('PROJECT_NUMBER', 'tpac2023');
+    setEnvKey('REPOSITORY', 'test/tpac2023');
     setEnvKey('ISSUE_TEMPLATE', 'test/data/template-tpac2023.yml');
-    const project = await fetchTestProject();
+    const project = await loadProject();
     await initSectionHandlers(project);
     const initialBody = `### Estimate of in-person participants
 
@@ -263,9 +257,9 @@ _No response_`;
 
 
   it('parses the discussion URL correctly', async function () {
-    setEnvKey('PROJECT_NUMBER', 'tpac2023');
+    setEnvKey('REPOSITORY', 'test/tpac2023');
     setEnvKey('ISSUE_TEMPLATE', 'test/data/template-tpac2023.yml');
-    const project = await fetchTestProject();
+    const project = await loadProject();
     await initSectionHandlers(project);
     const initialBody = `### Estimate of in-person participants
 

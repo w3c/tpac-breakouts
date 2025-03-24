@@ -1,7 +1,10 @@
 export default {
   "title": "TPAC 2023 meetings",
-  "description": "meeting: TPAC 2023 meetings, timezone: Europe/Madrid, type: groups",
-  "allowMultipleMeetings": true,
+  "metadata": {
+    "meeting": "TPAC 2023 meetings",
+    "timezone": "Europe/Madrid",
+    "type": "groups"
+  },
   "days": [
     "Monday (2023-09-11)",
     "Tuesday (2023-09-12)",

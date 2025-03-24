@@ -1,17 +1,10 @@
 import * as assert from 'node:assert';
 import { initTestEnv } from './init-test-env.mjs';
-import { getEnvKey, setEnvKey } from '../tools/common/envkeys.mjs';
-import { fetchProject } from '../tools/node/lib/project.mjs';
+import { setEnvKey } from '../tools/common/envkeys.mjs';
+import { loadProject } from '../tools/node/lib/project.mjs';
 import { validateGrid } from '../tools/common/validate.mjs';
 import { convertProjectToHTML } from '../tools/common/project2html.mjs';
 import { suggestSchedule } from '../tools/common/schedule.mjs';
-
-async function fetchTestProject() {
-  const project = await fetchProject(
-    await getEnvKey('PROJECT_OWNER'),
-    await getEnvKey('PROJECT_NUMBER'));
-  return project;
-}
 
 function stripDetails(errors) {
   return errors.map(err => {
@@ -25,12 +18,12 @@ function stripDetails(errors) {
 describe('When given invalid sessions, the scheduler', function () {
   before(function () {
     initTestEnv();
-    setEnvKey('PROJECT_NUMBER', 'session-validation');
+    setEnvKey('REPOSITORY', 'test/session-validation');
     setEnvKey('ISSUE_TEMPLATE', 'test/data/template-breakout.yml');
   });
 
   it('skips invalid sessions', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     project.sessions = project.sessions.filter(s => [1, 2, 3].includes(s.number));
     await validateGrid(project);
 

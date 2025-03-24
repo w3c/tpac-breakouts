@@ -1,5 +1,8 @@
 export default {
-  description: 'meeting: Validation of room metadata, timezone: Etc/UTC',
+  metadata: {
+    meeting: 'Validation of room metadata',
+    timezone: 'Etc/UTC'
+  },
 
   days: [
     '2042-04-05'
@@ -15,30 +18,25 @@ export default {
     'Inline (75 - basement) (VIP)',
     {
       name: 'VIP room',
-      description: `
-- capacity: 25
-- vip: true
-`
+      capacity: 25,
+      vip: true
     },
     {
       name: 'In the back',
-      description: `
-* location: 2nd floor
-* capacity: 40
-* vip: false
-* type: backroom`
+      location: '2nd floor',
+      capacity: 40,
+      vip: false,
+      type: 'backroom'
     },
     {
       name: 'Weird',
-      description: `
--
-- yes
-- location: somewhere`
+      yes: '',
+      location: 'somewhere'
     },
     {
       name: 'Hybrid (42)',
-      description: `capacity: 35
-location: on ze web`
+      capacity: 35,
+      location: 'on ze web'
     }
   ],
 

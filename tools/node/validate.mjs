@@ -1,6 +1,6 @@
 import path from 'path';
 import { updateSessionDescription } from '../common/session.mjs';
-import { saveSessionValidationResult } from './lib/project.mjs';
+import { exportProjectToGitHub } from '../common/project.mjs';
 import { validateSession, validateGrid } from '../common/validate.mjs';
 
 /**
@@ -56,9 +56,12 @@ export default async function (project, number, options) {
       session.validation.error = change.validation.error;
       session.validation.warning = change.validation.warning;
       session.validation.check = change.validation.check;
-      await saveSessionValidationResult(session, project);
       console.warn(`Save validation results for session ${change.number}... done`);
     }
+
+    console.warn(`Export validation results to GitHub...`);
+    await exportProjectToGitHub(project, 'validation');
+    console.warn(`Export validation results to GitHub... done`);
   }
   else {
     const sessionNumber = parseInt(number, 10);
@@ -123,7 +126,7 @@ export default async function (project, number, options) {
       }
       session.validation[severity] = results.join(', ');
     }
-    await saveSessionValidationResult(session, project);
+    await exportProjectToGitHub(project, 'validation');
     console.warn(`Save session validation results... done`);
 
     // Prefix IRC channel with '#' if not already done

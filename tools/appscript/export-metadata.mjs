@@ -1,13 +1,6 @@
 import reportError from './lib/report-error.mjs';
-import {
-  getProject,
-  syncProjectWithGitHub
-} from './lib/project.mjs';
-import {
-  fetchProjectFromGitHub,
-  exportProjectMetadata,
-  serializeProjectMetadata
-} from '../common/project.mjs';
+import { getProject } from './lib/project.mjs';
+import { exportProjectToGitHub } from '../common/project.mjs';
 import { exportMapping } from './lib/w3cid-map.mjs';
 
 
@@ -33,16 +26,8 @@ export default async function () {
       name: repoparts.length > 1 ? repoparts[1] : repoparts[0]
     };
 
-    console.log('Fetch data from GitHub...');
-    const githubProject = await fetchProjectFromGitHub(
-      repo.owner === 'w3c' ? repo.owner : `user/${repo.owner}`,
-      repo.name,
-      null
-    );
-    console.log('Fetch data from GitHub... done');
-
     console.log('Export metadata to GitHub...');
-    await syncProjectWithGitHub(project, githubProject);
+    await exportProjectToGitHub(project, { what: 'metadata' });
     console.log('Export metadata to GitHub... done');
 
     console.log('Push the mapping table to the GitHub repository...');

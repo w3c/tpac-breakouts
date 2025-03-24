@@ -1,5 +1,10 @@
 export default {
-  description: 'meeting: W3C Breakouts Day 2024, date: 2024-03-12, timezone: Etc/UTC, calendar: confirmed',
+  metadata: {
+    meeting: 'W3C Breakouts Day 2024',
+    date: '2024-03-12',
+    timezone: 'Etc/UTC',
+    calendar: 'confirmed'
+  },
 
   days: [
     '2024-03-12'

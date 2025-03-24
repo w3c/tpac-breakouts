@@ -1,6 +1,10 @@
 import timezones from './timezones.mjs';
-import { sendGraphQLRequest } from './graphql.mjs';
 import { getSessionSections } from './session-sections.mjs';
+import { sendGraphQLRequest } from './graphql.mjs';
+import {
+  importVariableFromGitHub,
+  exportVariableToGitHub
+} from './github-variable.mjs';
 
 /**
  * Retrieve available project data from GitHub.
@@ -15,8 +19,7 @@ import { getSessionSections } from './session-sections.mjs';
  * Returned object should look like:
  * {
  *   "title": "TPAC xxxx breakout sessions",
- *   "url": "https://github.com/orgs/w3c/projects/xx",
- *   "id": "xxxxxxx",
+ *   "metadata": { ... },
  *   "roomsFieldId": "xxxxxxx",
  *   "rooms": [
  *     { "id": "xxxxxxx", "name": "Salon Ecija (30)", "label": "Salon Ecija", "capacity": 30 },
@@ -58,436 +61,127 @@ import { getSessionSections } from './session-sections.mjs';
  *   ]
  * }
  */
-export async function fetchProjectFromGitHub(login, id, sessionTemplate) {
-  // Login is an organization name... or starts with "user/" to designate
-  // a user project.
-  const tokens = login.split('/');
-  const type = (tokens.length === 2) && tokens[0] === 'user' ?
-    'user' :
-    'organization';
-  login = (tokens.length === 2) ? tokens[1] : login;
-
-  // The ID is not the project number but the repository name, let's retrieve
-  // the project number from the repository
-  if (!('' + id).match(/^\d+$/)) {
-    const projResponse = await sendGraphQLRequest(`query {
-      ${type}(login: "${login}") {
-        repository(name: "${id}") {
-          projectsV2(first: 10) {
-            nodes {
-              number
-            }
-          }
-        }
-      }
-    }`);
-    id = projResponse.data[type].repository.projectsV2.nodes[0].number;
-  }
-
-  // Retrieve information about the list of rooms
-  const roomsResponse = await sendGraphQLRequest(`query {
-    ${type}(login: "${login}"){
-      projectV2(number: ${id}) {
-        id
-        url
-        title
-        shortDescription
-        field(name: "Room") {
-          ... on ProjectV2SingleSelectField {
-            id
-            name
-            options {
-              ... on ProjectV2SingleSelectFieldOption {
-                id
-                name
-                description
-              }
-            }
-          }
-        }
-      }
-    }
-  }`);
-  const project = roomsResponse.data[type].projectV2;
-  const rooms = project.field;
-
-  // Similar request to list time slots
-  const slotsResponse = await sendGraphQLRequest(`query {
-    ${type}(login: "${login}"){
-      projectV2(number: ${id}) {
-        field(name: "Slot") {
-          ... on ProjectV2SingleSelectField {
-            id
-            name
-            options {
-              ... on ProjectV2SingleSelectFieldOption {
-                id
-                name
-              }
-            }
-          }
-        }
-      }
-    }
-  }`);
-  const slots = slotsResponse.data[type].projectV2.field;
-
-  // Similar request to list event days
-  const daysResponse = await sendGraphQLRequest(`query {
-    ${type}(login: "${login}"){
-      projectV2(number: ${id}) {
-        field(name: "Day") {
-          ... on ProjectV2SingleSelectField {
-            id
-            name
-            options {
-              ... on ProjectV2SingleSelectFieldOption {
-                id
-                name
-              }
-            }
-          }
-        }
-      }
-    }
-  }`);
-  const days = daysResponse.data[type].projectV2.field;
-
-  // Similar requests to get the ids of the custom fields used for validation
-  const severityFieldIds = {};
-  for (const severity of ['Error', 'Warning', 'Check', 'Note']) {
-    const response = await sendGraphQLRequest(`query {
-      ${type}(login: "${login}"){
-        projectV2(number: ${id}) {
-          field(name: "${severity}") {
-            ... on ProjectV2FieldCommon {
-              id
-              name
-            }
-          }
-        }
-      }
-    }`);
-    severityFieldIds[severity] = response.data[type].projectV2.field.id;
-  }
-
-  // Project may also have a "Meeting" custom field when a session can be
-  // scheduled multiple times. The field contains the list of (room, day, slot)
-  // tuples that a session is associated with.
-  const meetingResponse = await sendGraphQLRequest(`query {
-    ${type}(login: "${login}"){
-      projectV2(number: ${id}) {
-        field(name: "Meeting") {
-          ... on ProjectV2FieldCommon {
-            id
-            name
-          }
-        }
-      }
-    }
-  }`);
-  const meeting = meetingResponse.data[type].projectV2.field;
-
-  // Project may also have a "Try me out" custom field to adjust the schedule
-  const tryMeetingResponse = await sendGraphQLRequest(`query {
-    ${type}(login: "${login}"){
-      projectV2(number: ${id}) {
-        field(name: "Try me out") {
-          ... on ProjectV2FieldCommon {
-            id
-            name
-          }
-        }
-      }
-    }
-  }`);
-  const tryMeeting = tryMeetingResponse.data[type].projectV2.field;
-
-  // And a "Registrants" custom field to record registrants to the session
-  const registrantsResponse = await sendGraphQLRequest(`query {
-    ${type}(login: "${login}"){
-      projectV2(number: ${id}) {
-        field(name: "Registrants") {
-          ... on ProjectV2FieldCommon {
-            id
-            name
-          }
-        }
-      }
-    }
-  }`);
-  const registrants = registrantsResponse.data[type].projectV2.field;
-
-  // Another request to retrieve the list of sessions associated with the project.
-  const sessionsResponse = await sendGraphQLRequest(`query {
-    ${type}(login: "${login}") {
-      projectV2(number: ${id}) {
-        items(first: 100) {
-          nodes {
-            id
-            content {
-              ... on Issue {
-                id
-                repository {
-                  owner {
-                    login
-                  }
-                  name
-                  nameWithOwner
-                }
-                number
-                state
-                title
-                body
-                labels(first: 20) {
-                  nodes {
-                    name
-                  }
-                }
-                author {
-                  ... on User {
-                    databaseId
-                  }
-                  login
-                }
-              }
-            }
-            fieldValues(first: 10) {
-              nodes {
-                ... on ProjectV2ItemFieldSingleSelectValue {
-                  name
-                  field {
-                    ... on ProjectV2SingleSelectField {
-                      name
-                    }
-                  }
-                }
-                ... on ProjectV2ItemFieldTextValue {
-                  text
-                  field {
-                    ... on ProjectV2FieldCommon {
-                      name
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }`);
-  const sessions = sessionsResponse.data[type].projectV2.items.nodes;
-
-  let labels = [];
-  if (sessions.length > 0) {
-    const repository = sessions[0].content.repository;
-    const labelsResponse = await sendGraphQLRequest(`query {
-      repository(owner: "${repository.owner.login}", name: "${repository.name}") {
-        labels(first: 50) {
-          nodes {
-            id
-            name
-          }
-        }
-      }
-    }`);
-    labels = labelsResponse.data.repository.labels.nodes;
-  }
-
-  // Let's combine and flatten the information a bit
-  return {
-    // Project's title and URL are more for internal reporting purpose.
-    title: project.title,
-    url: project.url,
-    id: project.id,
-
-    // Project's description should help us extract additional metadata:
-    // - the date of the breakout sessions
-    // - the timezone to use to interpret time slots
-    // - the "big meeting" value to associate calendar entries to TPAC
-    description: project.shortDescription,
-    metadata: parseProjectDescription(project.shortDescription),
-
-    // List of rooms. For each of them, we return the exact name of the option
-    // for the "Room" custom field in the project. If the exact name can be
-    // split into a room label, capacity in number of seats, location, and the
-    // possible "vip" flag, then that information is used to initialize the
-    // room's metadata. The room's full name should follow the pattern:
-    //   "label (xx - location) (vip)"
-    // Examples:
-    //  Catalina (25)
-    //  Utrecht (40 - 2nd floor)
-    //  Main (120) (vip)
-    //  Business (vip)
-    //  Small (15)
-    //  Plenary (150 - 18th floor) (vip)
-    // The exact same information can be provided using actual metadata in the
-    // description of the room, given as a list of key/value pairs such as:
-    // - capacity: 40
-    // - location: 2nd floor
-    // Possible metadata keys are expected to evolve over time. If the
-    // information is duplicated in the room name and in metadata, the
-    // information in the room name will be used
-    roomsFieldId: rooms.id,
-    rooms: rooms.options.map(room => {
-      const metadata = {};
-      (room.description ?? '')
-        .split(/\n/)
-        .map(line => line.trim().replace(/^[*\-] /, '').split(/:\s*/))
-        .filter(data => data[0] && data[1])
-        .filter(data => data[0].toLowerCase() !== 'capacity' || data[1]?.match(/^\d+$/))
-        .forEach(data => metadata[data[0].toLowerCase()] = data[1]);
-      const match = room.name.match(/^(.*?)(?:\s*\((\d+)\s*(?:\-\s*([^\)]+))?\))?(?:\s*\((vip)\))?$/i);
-      return Object.assign(metadata, {
-        id: room.id,
-        name: match[0],
-        label: match[1],
-        location: match[3] ?? metadata.location ?? '',
-        capacity: parseInt(match[2] ?? metadata.capacity ?? '30', 10),
-        vip: !!match[4] || (metadata.vip === 'true')
-      });
-    }),
-
-    // IDs of custom fields used to store validation problems
-    severityFieldIds: severityFieldIds,
-
-    // List of slots. For each of them, we return the exact name of the option
-    // for the "Slot" custom field in the project, the start and end times and
-    // the duration in minutes.
-    slotsFieldId: slots.id,
-    slots: slots.options.map(slot => {
-      const times = slot.name.match(/^(\d+):(\d+)\s*-\s*(\d+):(\d+)$/) ??
-        [null, '00', '00', '01', '00'];
-      return {
-        id: slot.id,
-        name: slot.name,
-        start: `${times[1]}:${times[2]}`,
-        end: `${times[3]}:${times[4]}`,
-        duration:
-          (parseInt(times[3], 10) * 60 + parseInt(times[4], 10)) -
-          (parseInt(times[1], 10) * 60 + parseInt(times[2], 10))
-      };
-    }),
-
-    // List of days. For single-day events, there will be only one day, and
-    // all sessions will be associated with it.
-    daysFieldId: days.id,
-    days: days.options.map(day => {
-      const metadata = {};
-      (day.description ?? '')
-        .split(/\n/)
-        .map(line => line.trim().replace(/^[*\-] /, '').split(/:\s*/))
-        .filter(data => data[0] && data[1])
-        .forEach(data => metadata[data[0].toLowerCase()] = data[1]);
-      const match =
-        day.name.match(/(.*) \((\d{4}\-\d{2}\-\d{2})\)$/) ??
-        [day.name, metadata.weekday ?? day.name, day.name];
-      return {
-        id: day.id,
-        name: match[0],
-        label: match[1],
-        date: match[2]
-      };
-    }),
-
-    // ID of the "Meeting" custom field, if it exists
-    // (it signals the fact that sessions may be scheduled more than once)
-    meetingsFieldId: meeting?.id,
-    allowMultipleMeetings: !!meeting?.id,
-
-    // ID of the "Try me out" custom field, if it exists
-    // (it signals the ability to try schedule adjustments from GitHub)
-    trymeoutsFieldId: tryMeeting?.id,
-    allowTryMeOut: !!tryMeeting?.id,
-
-    // ID of the "Registrants" custom field, if it exists
-    // (it signals the ability to look at registrants to select rooms)
-    // (note: the double "s" is needed because our convention was to make that
-    // a plural of the custom field name, which happens to be a plural already)
-    registrantssFieldId: registrants?.id,
-    allowRegistrants: !!registrants?.id,
-
-    // Sections defined in the issue template
-    sessionTemplate: sessionTemplate,
-    sessionSections: getSessionSections(sessionTemplate),
-
-    // List of open sessions linked to the project (in other words, all of the
-    // issues that have been associated with the project). For each session, we
-    // return detailed information, including its title, full body, author,
-    // labels, and the room and slot that may already have been assigned.
-    sessions: sessions
-      .filter(session => session.content.state === 'OPEN')
-      .map(session => {
-        return {
-          projectItemId: session.id,
-          id: session.content.id,
-          repository: session.content.repository.nameWithOwner,
-          number: session.content.number,
-          title: session.content.title,
-          body: session.content.body,
-          labels: session.content.labels.nodes.map(label => label.name),
-          author: {
-            databaseId: session.content.author.databaseId,
-            login: session.content.author.login
-          },
-          room: session.fieldValues.nodes
-            .find(value => value.field?.name === 'Room')?.name,
-          day: session.fieldValues.nodes
-            .find(value => value.field?.name === 'Day')?.name,
-          slot: session.fieldValues.nodes
-            .find(value => value.field?.name === 'Slot')?.name,
-          meeting: session.fieldValues.nodes
-            .find(value => value.field?.name === 'Meeting')?.text,
-          trymeout: session.fieldValues.nodes
-            .find(value => value.field?.name === 'Try me out')?.text,
-          registrants: session.fieldValues.nodes
-            .find(value => value.field?.name === 'Registrants')?.text,
-          validation: {
-            check: session.fieldValues.nodes.find(value => value.field?.name === 'Check')?.text,
-            warning: session.fieldValues.nodes.find(value => value.field?.name === 'Warning')?.text,
-            error: session.fieldValues.nodes.find(value => value.field?.name === 'Error')?.text,
-            note: session.fieldValues.nodes.find(value => value.field?.name === 'Note')?.text
-          }
-        };
-      }),
-
-      // Labels defined in the associated repository
-      // (note all sessions should belong to the same repository!)
-      labels: labels
+export async function fetchProjectFromGitHub(reponame, sessionTemplate) {
+  const project = {
+    metadata: await importVariableFromGitHub(reponame, 'EVENT') ?? {},
+    rooms: await importVariableFromGitHub(reponame, 'ROOMS'),
+    days: await importVariableFromGitHub(reponame, 'DAYS'),
+    slots: await importVariableFromGitHub(reponame, 'SLOTS'),
+    sessions: await fetchSessions(reponame)
   };
+
+  const schedule = await importVariableFromGitHub(reponame, 'SCHEDULE');
+  if (schedule) {
+    for (const row of schedule) {
+      const meeting = {
+        room: row[1],
+        day: row[2],
+        slot: row[3],
+        meeting: row[4]
+      };
+      const session = project.sessions.find(s => s.number === meeting.session);
+      if (session) {
+        Object.assign(session, meeting);
+      }
+    }
+  }
+
+  const validation = await importVariableFromGitHub(reponame, 'VALIDATION');
+  for (const session of project.sessions) {
+    session.validation = validation[session.number] ?? {
+      check: null,
+      warning: null,
+      error: null,
+      note: null
+    };
+  }
+
+  // TODO: do we need to retrieve the list of labels defined in the
+  // repository? Depends on how we handle session label updates...
+
+  project.allowMultipleMeetings = project.metadata?.type === 'groups';
+  // TODO: figure out how to set up allowRegistrants (do we need it?)
+
+  // Sections defined in the issue template
+  project.sessionTemplate = sessionTemplate;
+  project.sessionSections = getSessionSections(sessionTemplate);
+
+  return project;
 }
 
+
 /**
- * Helper function to parse a project description and extract additional
- * metadata about breakout sessions: date, timezone, big meeting id
- *
- * Description needs to be a comma-separated list of parameters. Example:
- * "meeting: tpac2023, day: 2023-09-13, timezone: Europe/Madrid"
+ * Synchronize the project's data (event metadata, rooms, days, slots) with
+ * GitHub.
  */
-export function parseProjectDescription(desc) {
-  const metadata = {};
-  if (desc) {
-    desc.split(/,/)
-      .map(param => param.trim())
-      .map(param => param.split(/:/).map(val => val.trim()))
-      .map(param => metadata[param[0]] = param[1]);
+export async function exportProjectToGitHub(project, { what }) {
+  const reponame = project.metadata.reponame;
+
+  if (!what || what === 'all' || what === 'metadata') {
+    await exportVariableToGitHub(reponame, 'EVENT', project.metadata);
+    await exportVariableToGitHub(reponame, 'ROOMS', project.rooms);
+    await exportVariableToGitHub(reponame, 'DAYS', project.days);
+    await exportVariableToGitHub(reponame, 'SLOTS', project.slots);
+
+    // TODO: drop once GitHub logic gets updated, already included in ROOMS
+    await exportRoomZoom(project);
   }
-  return metadata;
+
+  if (!what || what === 'all' || what === 'schedule') {
+    await exportSchedule(project);
+  }
+
+  if (!what || what === 'all' || what === 'schedule' || what === 'validation') {
+    await exportValidation(project);
+  }
 }
 
 
 /**
- * Helper function to serialize project metadata into a description
+ * Export the schedule to a GitHub variable.
  *
- * Metadata needs to have been parsed with parseProjectDescription
+ * Note: variables on GitHub have a maximum length of 48000 characters,
+ * we "compact" the schedule on purpose to avoid repeating keys.
  */
-export function serializeProjectMetadata(metadata) {
-  const description = [];
-  for (const [param, value] of Object.entries(metadata)) {
-    description.push(`${param}: ${value}`);
+async function exportSchedule(project) {
+  const schedule = project.sessions.map(session => [
+    session.number,
+    session.room,
+    session.day,
+    session.slot,
+    session.meeting
+  ]);
+  await exportVariableToGitHub(project.metadata.reponame, 'SCHEDULE', schedule);
+}
+
+
+/**
+ * Export validation notes to GitHub
+ */
+async function exportValidation(project) {
+  const VALIDATION = {};
+  for (const session of project.sessions) {
+    VALIDATION[session.number] = session.validation;
   }
-  return description.join(', ');
+  await exportVariableToGitHub(project.metadata.reponame, 'VALIDATION', VALIDATION);
+}
+
+
+/**
+ * Export the Zoom information for rooms to a GitHub variable.
+ */
+async function exportRoomZoom(project) {
+  const ROOM_ZOOM = {};
+  for (const room of project.rooms) {
+    if (room['zoom link']) {
+      ROOM_ZOOM[room.name] = {
+        id: room['zoom id'],
+        passcode: room['zoom passcode'],
+        link: room['zoom link']
+      };
+    }
+  }
+  return exportVariableToGitHub(project.metadata.reponame, 'ROOM_ZOOM', ROOM_ZOOM);
 }
 
 
@@ -549,11 +243,8 @@ export function convertProjectToJSON(project) {
   const toNameList = list => list.map(item => item.name);
   const data = {
     title: project.title,
-    description: project.description
+    metadata: project.metadata
   };
-  if (project.allowMultipleMeetings) {
-    data.allowMultipleMeetings = true;
-  }
   if (project.allowTryMeOut) {
     data.allowTryMeOut = true;
   }
@@ -585,96 +276,51 @@ export function convertProjectToJSON(project) {
 }
 
 
-/**
- * Record the meetings assignments for the provided session
- */
-export async function saveSessionMeetings(session, project, options) {
-  // Project may not have some of the custom fields, and we may only
-  // be interested in a restricted set of them
-  const fields = ['room', 'day', 'slot', 'meeting', 'trymeout', 'registrants']
-    .filter(field => project[field + 'sFieldId'])
-    .filter(field => !options || !options.fields || options.fields.includes(field));
-  for (const field of fields) {
-    const prop = ['meeting', 'trymeout', 'registrants'].includes(field) ?
-      'text': 'singleSelectOptionId';
-    let value = null;
-    if (prop === 'text') {
-      // Text field
-      if (session[field]) {
-        value = `"${session[field]}"`;
-      }
-    }
-    else {
-      // Option in a selection field
-      const obj = project[field + 's'].find(o =>
-        o.name === session[field] || o.date === session[field]);
-      if (obj) {
-        value = `"${obj.id}"`;
-      }
-    }
-    const resField = await sendGraphQLRequest(`mutation {
-      updateProjectV2ItemFieldValue(input: {
-        clientMutationId: "mutatis mutandis",
-        fieldId: "${project[field + 'sFieldId']}",
-        itemId: "${session.projectItemId}",
-        projectId: "${project.id}",
-        value: {
-          ${prop}: ${value}
+async function fetchSessions(reponame) {
+  const repoparts = reponame.split('/');
+  const repo = {
+    type: repoparts.length > 1 && repoparts[0].startsWith('user:') ? 'user': 'organization',
+    owner: repoparts.length > 1 ? repoparts[0].replace(/^user:/, '') : 'w3c',
+    name: repoparts.length > 1 ? repoparts[1] : repoparts[0]
+  };
+  const sessionsResponse = await sendGraphQLRequest(`query {
+    ${repo.type}(login: "${repo.owner}") {
+      repository(name: "${repo.name}") {
+        issues(states: OPEN, first: 100) {
+          nodes {
+            id
+            repository {
+              owner {
+                login
+              }
+              name
+              nameWithOwner
+            }
+            number
+            state
+            title
+            body
+            labels(first: 20) {
+              nodes {
+                name
+              }
+            }
+            author {
+              ... on User {
+                databaseId
+              }
+              login
+            }
+          }
         }
-      }) {
-        clientMutationId
       }
-    }`);
-    if (!resField?.data?.updateProjectV2ItemFieldValue?.clientMutationId) {
-      console.log(JSON.stringify(resField, null, 2));
-      throw new Error(`GraphQL error, could not assign session #${session.number} to ${field} value "${session[field]}"`);
-    }
-  }
-}
-
-
-/**
- * Record session note
- */
-export async function saveSessionNote(session, note, project) {
-  const fieldId = project.severityFieldIds.Note;
-  const response = await sendGraphQLRequest(`mutation {
-    updateProjectV2ItemFieldValue(input: {
-      clientMutationId: "mutatis mutandis",
-      fieldId: "${fieldId}",
-      itemId: "${session.projectItemId}",
-      projectId: "${project.id}",
-      value: {
-        text: "${note ?? ''}"
-      }
-    }) {
-      clientMutationId
     }
   }`);
-  if (!response?.data?.updateProjectV2ItemFieldValue?.clientMutationId) {
-    console.log(JSON.stringify(response, null, 2));
-    throw new Error(`GraphQL error, could not record "Note" for session #${session.number}`);
-  }
-}
-
-
-/**
- * Update the project's title and description on GitHub
- */
-export async function exportProjectMetadata(project) {
-  const description = serializeProjectMetadata(project.metadata);
-  const response = await sendGraphQLRequest(`mutation {
-    updateProjectV2(input: {
-      clientMutationId: "mutatis mutandis",
-      projectId: "${project.id}",
-      shortDescription: "${description.replace(/"/g, '\\\"')}",
-      title: "${project.title.replace(/"/g, '\\\"')}"
-    }) {
-      clientMutationId
-    }
-  }`);
-  if (!response?.data?.updateProjectV2?.clientMutationId) {
-    console.log(JSON.stringify(response, null, 2));
-    throw new Error(`GraphQL error, could not update the project's title and description`);
-  }
+  const sessions = sessionsResponse.data[repo.type].repository.issues.nodes;
+  return sessions
+    .filter(session => session.labels.nodes.find(label => label.name === 'session'))
+    .map(session => Object.assign(session, {
+      repository: session.repository.nameWithOwner,
+      labels: session.labels.nodes.map(label => label.name)
+    }));
 }

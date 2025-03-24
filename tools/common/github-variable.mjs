@@ -1,18 +1,87 @@
 import { getEnvKey } from './envkeys.mjs';
 import wrappedFetch from './wrappedfetch.mjs';
 
+
+/**
+ * In test mode, use a stub. Note an ES6 module cannot be stubbed directly
+ * because "import" statements make things immutable, so the module itself
+ * needs to have "test code".
+ */
+let stubs = null;
+
+
+
+/**
+ * Split a repository name into an owner and a name
+ */
+function parseRepositoryName(reponame) {
+  const repoparts = reponame.split('/');
+  return {
+    type: repoparts.length > 1 && repoparts[0].startsWith('user:') ? 'user': 'organization',
+    owner: repoparts.length > 1 ? repoparts[0].replace(/^user:/, '') : 'w3c',
+    name: repoparts.length > 1 ? repoparts[1] : repoparts[0]
+  };
+}
+
+
+/**
+ * Generic function to import a variable from the project's GitHub repository.
+ */
+export async function importVariableFromGitHub(reponame, name) {
+  // Use stub version when running tests
+  // Note the function cannot be stubbed from an external perspective, due to
+  // it being an ES6 module.
+  const STUB_REQUESTS = await getEnvKey('STUB_REQUESTS', '');
+  if (STUB_REQUESTS) {
+    if (!stubs) {
+      stubs = await import(`../../test/stubs.mjs`);
+    }
+    return stubs.importVariableFromGitHub(name);
+  }
+
+  const repo = parseRepositoryName(reponame);
+  const GRAPHQL_TOKEN = await getEnvKey('GRAPHQL_TOKEN');
+  let res = await wrappedFetch(
+    `https://api.github.com/repos/${repo.owner}/${repo.name}/actions/variables/${name}`,
+    {
+      method: 'GET',
+      headers: {
+        'Authorization': `bearer ${GRAPHQL_TOKEN}`,
+        'Accept': 'application/vnd.github+json'
+      }
+    }
+  );
+  if (res.status === 200) {
+    const json = await res.json();
+    return JSON.parse(json.value);
+  }
+  else if (res.status === 404) {
+    return null;
+  }
+  else {
+    throw new Error(`GitHub REST API server returned an unexpected HTTP status ${res.status} for GET request on variable ${name}`);
+  }
+}
+
+
 /**
  * Generic function to export a variable to the project's GitHub repository
  * as a GitHub actions variable. The function updates the variable if it
  * already exists. It creates the variable otherwise.
  */
-export async function exportVariableToGitHub(repository, name, value) {
-  const repoparts = repository.split('/');
-  const repo = {
-    owner: repoparts.length > 1 ? repoparts[0] : 'w3c',
-    name: repoparts.length > 1 ? repoparts[1] : repoparts[0]
-  };
+export async function exportVariableToGitHub(reponame, name, value) {
+  // Use stub version when running tests
+  // Note the function cannot be stubbed from an external perspective, due to
+  // it being an ES6 module.
+  const STUB_REQUESTS = await getEnvKey('STUB_REQUESTS', '');
+  if (STUB_REQUESTS) {
+    if (!stubs) {
+      stubs = await import(`../../test/stubs.mjs`);
+    }
+    return stubs.exportVariableToGitHub(name, value);
+  }
 
+  const repo = parseRepositoryName(reponame);
   const valueStr = JSON.stringify(value, null, 2);
 
   console.log(`- check whether the ${name} variable exists`);

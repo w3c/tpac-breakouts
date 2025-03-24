@@ -1,25 +1,19 @@
 import * as assert from 'node:assert';
 import { initTestEnv } from './init-test-env.mjs';
 import { getEnvKey, setEnvKey } from '../tools/common/envkeys.mjs';
-import { fetchProject } from '../tools/node/lib/project.mjs';
+import { loadProject } from '../tools/node/lib/project.mjs';
 import { validateProject } from '../tools/common/project.mjs';
 import { validateSession } from '../tools/common/validate.mjs';
 import { groupSessionMeetings } from '../tools/common/meetings.mjs';
 import { convertProjectToHTML } from '../tools/common/project2html.mjs';
 import { readFile, writeFile } from 'node:fs/promises';
 
-async function fetchTestProject() {
-  return fetchProject(
-    await getEnvKey('PROJECT_OWNER'),
-    await getEnvKey('PROJECT_NUMBER'));
-}
-
 function toGroupNames(groups) {
   return groups ? groups.map(group => group.name) : [];
 }
 
 async function assertSameAsRef(html) {
-  const refName = await getEnvKey('PROJECT_NUMBER');
+  const refName = (await getEnvKey('REPOSITORY')).replace(/^test\//, '');
   const refFilename = `test/data/ref-${refName}.html`;
   const updateRef = await getEnvKey('UPDATE_REFS', false);
   if (updateRef) {
@@ -33,12 +27,12 @@ async function assertSameAsRef(html) {
 describe('The group meetings highlight code', function () {
   before(function () {
     initTestEnv();
-    setEnvKey('PROJECT_NUMBER', 'group-highlight');
+    setEnvKey('REPOSITORY', 'test/group-highlight');
     setEnvKey('ISSUE_TEMPLATE', 'test/data/template-group.yml');
   });
 
   it('finds the group name from a title with highlight (":")', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 1;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
@@ -50,7 +44,7 @@ describe('The group meetings highlight code', function () {
   });
 
   it('finds the group name from a title with highlight (">")', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 4;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
@@ -62,7 +56,7 @@ describe('The group meetings highlight code', function () {
   });
 
   it('does not get confused by a ":" in the group name', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 3;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
@@ -74,7 +68,7 @@ describe('The group meetings highlight code', function () {
   });
 
   it('finds group names from a joint meeting title with highlight', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 5;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
@@ -86,7 +80,7 @@ describe('The group meetings highlight code', function () {
   });
 
   it('reports an error when meeting is only an highlight', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 6;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, [{
@@ -100,7 +94,7 @@ describe('The group meetings highlight code', function () {
   });
 
   it('finds group names even when no acronym is used', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 7;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
@@ -112,7 +106,7 @@ describe('The group meetings highlight code', function () {
   });
 
   it('does not merge meetings when an highlight is used in one of them', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const errors = await validateProject(project);
 
     const sessionNumber = 2;
@@ -135,7 +129,7 @@ describe('The group meetings highlight code', function () {
   });
 
   it('reports highlights in the group view in the generated HTML page', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const html = await convertProjectToHTML(project);
     await assertSameAsRef(html);
   });

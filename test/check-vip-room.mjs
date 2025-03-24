@@ -1,17 +1,10 @@
 import * as assert from 'node:assert';
 import { initTestEnv } from './init-test-env.mjs';
-import { getEnvKey, setEnvKey } from '../tools/common/envkeys.mjs';
-import { fetchProject } from '../tools/node/lib/project.mjs';
+import { setEnvKey } from '../tools/common/envkeys.mjs';
+import { loadProject } from '../tools/node/lib/project.mjs';
 import { validateGrid } from '../tools/common/validate.mjs';
 import { convertProjectToHTML } from '../tools/common/project2html.mjs';
 import { suggestSchedule } from '../tools/common/schedule.mjs';
-
-async function fetchTestProject() {
-  const project = await fetchProject(
-    await getEnvKey('PROJECT_OWNER'),
-    await getEnvKey('PROJECT_NUMBER'));
-  return project;
-}
 
 function stripDetails(errors) {
   return errors.map(err => {
@@ -25,12 +18,12 @@ function stripDetails(errors) {
 describe('The VIP system', function () {
   before(function () {
     initTestEnv();
-    setEnvKey('PROJECT_NUMBER', 'vip-room');
+    setEnvKey('REPOSITORY', 'test/vip-room');
     setEnvKey('ISSUE_TEMPLATE', 'test/data/template-group.yml');
   });
 
   it('schedules VIP/non-VIP groups to VIP/non-VIP rooms', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const { errors } = await validateGrid(project);
     assert.deepStrictEqual(errors, []);
 

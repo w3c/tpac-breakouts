@@ -26,6 +26,7 @@ let userCache = [];
  */
 let testDataCache = {};
 async function getTestData(testDataId) {
+  testDataId = testDataId.replace(/^test\//, '');
   if (testDataCache[testDataId]) {
     return JSON.parse(JSON.stringify(testDataCache[testDataId]));
   }
@@ -47,13 +48,66 @@ async function getTestData(testDataId) {
         };
       }
       else {
-        return {
-          id: `id_${uid++}`,
-          name: item.name,
-          description: item.description
-        };
+        return Object.assign(item, {
+          id: `id_${uid++}`
+        });
       }
     });
+  }
+
+  function toGraphQLRoomList(arr) {
+    return arr
+      .map(item => {
+        if (typeof item === 'string') {
+          return { name: item };
+        }
+        return item;
+      })
+      .map(item => {
+        const match = item.name.match(/^(.*?)(?:\s*\((\d+)\s*(?:\-\s*([^\)]+))?\))?(?:\s*\((vip)\))?$/i);
+        item.label = item.label ?? match[1];
+        item.location = item.location ?? match[3] ?? '';
+        item.capacity = item.capacity ?? parseInt(match[2] ?? '30', 10);
+        item.vip = !!item.vip || !!match[4];
+        return item;
+      });
+  }
+
+  function toGraphQLDayList(arr) {
+    return arr
+      .map(item => {
+        if (typeof item === 'string') {
+          return { name: item };
+        }
+        return item;
+      })
+      .map(item => {
+        const match = item.name.match(/(.*) \((\d{4}\-\d{2}\-\d{2})\)$/) ??
+          [item.name, item.name, item.name];
+        item.label = item.label ?? match[1];
+        item.date = item.date ?? match[2];
+        return item;
+      });
+  }
+
+  function toGraphQLSlotList(arr) {
+    return arr
+      .map(item => {
+        if (typeof item === 'string') {
+          return { name: item };
+        }
+        return item;
+      })
+      .map(item => {
+        const times = item.name.match(/^(\d+):(\d+)\s*-\s*(\d+):(\d+)$/) ??
+          [null, '00', '00', '01', '00'];
+        item.start = item.start ?? `${times[1]}:${times[2]}`;
+        item.end = item.end ?? `${times[3]}:${times[4]}`;
+        item.duration =
+          (parseInt(times[3], 10) * 60 + parseInt(times[4], 10)) -
+          (parseInt(times[1], 10) * 60 + parseInt(times[2], 10));
+        return item;
+      });
   }
 
   function toGraphQLAuthor(login) {
@@ -71,76 +125,41 @@ async function getTestData(testDataId) {
 
   let sessionNumber = 1;
   function toGraphQLSession(session) {
-    const fields = [];
-    for (const field of ['Room', 'Day', 'Slot']) {
-      if (session[field.toLowerCase()]) {
-        fields.push({
-          name: session[field.toLowerCase()],
-          field: { name: field }
-        });
-      }
-    }
-    for (const field of ['Error', 'Warning', 'Check', 'Note']) {
-      if (session[field.toLowerCase()]) {
-        fields.push({
-          text: session[field.toLowerCase()],
-          field: { name: field }
-        });
-      }
-    }
-    if (session.meeting) {
-      fields.push({
-        text: session.meeting,
-        field: { name: 'Meeting' }
-      });
-    }
-    if (session.trymeout) {
-      fields.push({
-        text: session.trymeout,
-        field: { name: 'Try me out' }
-      });
-    }
-    if (session.registrants) {
-      fields.push({
-        text: session.registrants,
-        field: { name: 'Registrants' }
-      });
-    }
-
     return {
       id: `id_${uid++}`,
-      content: {
-        id: `id_${uid++}`,
-        repository: {
-          owner: {
-            login: 'w3c'
-          },
-          name: 'tpac-breakouts',
-          nameWithOwner: 'w3c/tpac-breakouts'
+      repository: {
+        owner: {
+          login: 'w3c'
         },
-        number: session.number ?? sessionNumber++,
-        state: 'OPEN',
-        title: session.title ?? `A session for ${testDataId}`,
-        body: session.body ?? '',
-        labels: {
-          nodes: toGraphQLNameList(session.labels ?? ['session'])
-        },
-        author: toGraphQLAuthor(session.author ?? 'testbot')
+        name: 'tpac-breakouts',
+        nameWithOwner: 'w3c/tpac-breakouts'
       },
-      fieldValues: {
-        nodes: fields
-      }
-    }
+      number: session.number ?? sessionNumber++,
+      state: 'OPEN',
+      title: session.title ?? `A session for ${testDataId}`,
+      body: session.body ?? '',
+      labels: {
+        nodes: toGraphQLNameList(session.labels ?? ['session'])
+      },
+      author: toGraphQLAuthor(session.author ?? 'testbot'),
+      room: session.room,
+      day: session.day,
+      slot: session.slot,
+      meeting: session.meeting
+    };
   };
 
   const testData = {
-    url: `https://github.com/orgs/w3c/projects/${testDataId}`,
     id: `id_project_${testDataId}`,
     title: custom.title ?? testDataId,
-    shortDescription: custom.description ?? 'meeting: Breakouts Test Event, timezone: Etc/UTC',
-    rooms: toGraphQLNameList(custom.rooms ?? ['Panic room (25)']),
-    days: toGraphQLNameList(custom.days ?? ['Monday (2042-04-07)']),
-    slots: toGraphQLNameList(custom.slots ?? ['9:00 - 10:00']),
+    metadata: custom.metadata ?? {
+      meeting: 'Breakouts Test Event',
+      timezone: 'Etc/UTC',
+      reponame: 'test/' + testDataId
+    },
+    rooms: toGraphQLRoomList(custom.rooms ?? ['Panic room (25)']),
+    days: toGraphQLDayList(custom.days ?? ['Monday (2042-04-07)']),
+    slots: toGraphQLSlotList(custom.slots ?? ['9:00 - 10:00']),
     labels: toGraphQLNameList(custom.labels ?? ['session']),
     sessions: toGraphQLSessions(custom.sessions ?? [
       { number: 1, title: 'A test session' }
@@ -168,7 +187,7 @@ async function getTestData(testDataId) {
  * request to GitHub.
  *
  * For query requests, the function returns suitable test data, depending on
- * the environment variable PROJECT_NUMBER.
+ * the environment variable REPOSITORY.
  *
  * For mutation requests, the function returns an ok response without applying
  * any actual mutation.
@@ -176,69 +195,22 @@ async function getTestData(testDataId) {
  * Function throws if the request cannot be handled.
  */
 export async function sendGraphQLRequest(query, acceptHeader = '') {
-  const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
-  const testData = await getTestData(PROJECT_NUMBER);
+  const REPOSITORY = await getEnvKey('REPOSITORY');
+  const testData = await getTestData(REPOSITORY);
 
   if (query.startsWith('query')) {
-    if (query.includes('projectV2(number: ')) {
-      const match = query.match(/field\(name: "([^"]+)"\) {/);
-      if (match) {
-        const name = match[1];
-        let field;
-        if ((name === 'Meeting') && !testData.allowMultipleMeetings) {
-          field = null;
-        }
-        else if ((name === 'Try me out') && !testData.allowTryMeOut) {
-          field = null;
-        }
-        else if ((name === 'Registrants') && !testData.allowRegistrants) {
-          field = null;
-        }
-        else {
-          field = {
-            id: `id_field_${name}`,
-            name
-          };
-        }
-        if (name === 'Room') {
-          field.options = testData.rooms;
-        }
-        else if (name === 'Day') {
-          field.options = testData.days;
-        }
-        else if (name === 'Slot') {
-          field.options = testData.slots;
-        }
-        return {
-          data: {
-            organization: {
-              projectV2: {
-                id: testData.id,
-                url: testData.url,
-                title: testData.title,
-                shortDescription: testData.shortDescription,
-                field
+    if (query.includes('issues(states: OPEN,')) {
+      return {
+        data: {
+          organization: {
+            repository: {
+              issues: {
+                nodes: testData.sessions
               }
             }
           }
-        };
-      }
-      else if (query.includes('items(')) {
-        return {
-          data: {
-            organization: {
-              projectV2: {
-                items: {
-                  nodes: testData.sessions
-                }
-              }
-            }
-          }
-        };
-      }
-      else {
-        throw new Error('Unexpected GraphQL projectV2 query request, cannot fake it!', { cause: query });
-      }
+        }
+      };
     }
     else if (query.includes('user(login: ')) {
       const match = query.match(/user\(login: "([^"]+)"/);
@@ -268,21 +240,6 @@ export async function sendGraphQLRequest(query, acceptHeader = '') {
         }
       };
     }
-    else if (query.includes('projectsV2(')) {
-      const type = query.includes('organization(') ? 'organization' : 'user'
-      const id = query.match(/repository\(name: "([^"]+)"\)/)[1];
-      const result = { data: {} };
-      result.data[type] = {
-        repository: {
-          projectsV2: {
-            nodes: [{
-              number: id
-            }]
-          }
-        }
-      };
-      return result;
-    }
     else {
       throw new Error('Unexpected GraphQL query request, cannot fake it!', { cause: query });
     }
@@ -300,8 +257,8 @@ export async function sendGraphQLRequest(query, acceptHeader = '') {
  * Stub for the fetchW3CAccount function
  */
 export async function fetchW3CAccount(databaseId) {
-  const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
-  const testData = await getTestData(PROJECT_NUMBER);
+  const REPOSITORY = await getEnvKey('REPOSITORY');
+  const testData = await getTestData(REPOSITORY);
 
   const user = userCache.find(user => user.databaseId === databaseId);
   if (!user) {
@@ -338,9 +295,59 @@ export async function fetchW3CAccount(databaseId) {
  * Stub for the fetchW3CGroups function
  */
 export async function fetchW3CGroups() {
-  const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
-  const testData = await getTestData(PROJECT_NUMBER);
+  const REPOSITORY = await getEnvKey('REPOSITORY');
+  const testData = await getTestData(REPOSITORY);
   return testData.w3cGroups ?? [];
+}
+
+
+/**
+ * Stub for the importVariableFromGitHub function
+ */
+export async function importVariableFromGitHub(name) {
+  const REPOSITORY = await getEnvKey('REPOSITORY');
+  const testData = await getTestData(REPOSITORY);
+  if (testData[name]) {
+    return testData[name];
+  }
+  if (name === 'EVENT') {
+    return testData.metadata;
+  }
+  else if (name === 'SCHEDULE') {
+    return testData.sessions.map(session => [
+      session.number,
+      session.room,
+      session.day,
+      session.slot,
+      session.meeting
+    ]);
+  }
+  else if (name === 'VALIDATION') {
+    const validation = {};
+    for (const session of testData.sessions) {
+      validation[session.number] = {
+        error: session.validation?.error,
+        warning: session.validation?.warning,
+        check: session.validation?.check,
+        note: session.validation?.note,
+      }
+    }
+    return validation;
+  }
+  else if (testData[name.toLowerCase()]) {
+    return testData[name.toLowerCase()];
+  }
+  else {
+    throw new Error(`No test data for ${name}`);
+  }
+}
+
+
+/**
+ * Stub for the exportVariableToGitHub function
+ */
+export async function exportVariableToGitHub(name, value) {
+  return;
 }
 
 /**

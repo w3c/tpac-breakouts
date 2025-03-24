@@ -1,5 +1,6 @@
 let localConfig = {};
 let fileConfig = null;
+let repoName = null;
 let repoConfig = null;
 
 /**
@@ -44,27 +45,8 @@ export async function getEnvKey(key, defaultValue, json) {
     return fileConfig[key];
   }
 
-  // Retrieve variables from the GitHub repo directly through the "gh" CLI.
-  if (!repoConfig) {
-    repoConfig = {};
-    if (typeof process !== 'undefined') {
-      const childProcess = await import('node:child_process');
-      const execSync = childProcess.execSync;
-      try {
-        const repoVariablesStr = execSync(`gh variable list --json name,value`);
-        const repoVariables = JSON.parse(repoVariablesStr);
-        for (const variable of repoVariables) {
-          repoConfig[variable.name] = variable.value;
-        }
-      }
-      catch {
-      }
-    }
-  }
-  if (Object.hasOwn(repoConfig, key)) {
-    return json ? JSON.parse(repoConfig[key]) : repoConfig[key];
-  }
-
+  // Retrieve the variable from sheet environment properties if the code
+  // runs within the context of an AppScript.
   if (typeof PropertiesService !== 'undefined') {
     const scriptProperties = PropertiesService.getScriptProperties();
     const value = scriptProperties.getProperty(key);
@@ -73,6 +55,41 @@ export async function getEnvKey(key, defaultValue, json) {
     }
   }
 
+  // If we're running in a node.js process, leverage the `gh` CLI command to
+  // get the variable, either from the local context for the repository name
+  // or from the GitHub repository itself.
+  if (typeof process !== 'undefined') {
+    if (key === 'REPOSITORY' || !repoConfig) {
+      const childProcess = await import('node:child_process');
+      const execSync = childProcess.execSync;
+
+      try {
+        if (key === 'REPOSITORY') {
+          if (!repoName) {
+            const repoStr = execSync(`gh repo view --json nameWithOwner`);
+            repoName = JSON.parse(repoVariablesStr).nameWithOwner;
+          }
+          return repoName;
+        }
+        else {
+          repoConfig = {};
+          const repoVariablesStr = execSync(`gh variable list --json name,value`);
+          const repoVariables = JSON.parse(repoVariablesStr);
+          for (const variable of repoVariables) {
+            repoConfig[variable.name] = variable.value;
+          }
+        }
+      }
+      catch {
+      }
+    }
+  }
+  if (repoConfig && Object.hasOwn(repoConfig, key)) {
+    return json ? JSON.parse(repoConfig[key]) : repoConfig[key];
+  }
+
+  // Variable not found, return default value otherwise, or alert that
+  // it's missing.
   if (defaultValue !== undefined) {
     return defaultValue;
   }
