@@ -196,7 +196,6 @@ export function getProject(spreadsheet) {
       }),
 
     allowMultipleMeetings: projectType === 'groups',
-    allowRegistrants: false,
 
     sessionTemplate,
     sessionSections,

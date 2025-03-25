@@ -2,16 +2,8 @@ import path from 'node:path';
 import fs from 'fs/promises';
 import { exec } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { exportProjectToGitHub } from '../common/project.mjs';
 import util from 'node:util';
-import { serializeProjectMetadata } from '../common/project.mjs';
-
-/**
- * The project templates on GitHub for group meetings and breakouts
- */
-const projectTemplates = {
-  group: 156,      // https://github.com/orgs/w3c/projects/156/views/1
-  breakouts: 157   // https://github.com/orgs/w3c/projects/157/views/1
-}
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
@@ -225,107 +217,12 @@ export default async function (jsonfile, options) {
     const { stdout } = await run(`gh label create session --color C2E0C6 --description "${desc}" --force`, { cwd: repo.name });
   }
 
-  // Step: Create GitHub project if needed
-  const gProject = {};
-  {
-    console.log(`- Retrieve/Create associated GitHub project`);
-    const { stdout } = await run('gh repo view --json projectsV2', { cwd: repo.name });
-    const projectsV2 = JSON.parse(stdout);
-    if (projectsV2?.projectsV2?.Nodes?.length === 0) {
-      const { stdout } = await run(`gh project copy ${projectTemplates[project.metadata.type]} --source-owner w3c --target-owner ${repo.owner} --title "${project.title}" --format json`);
-      const desc = JSON.parse(stdout);
-      gProject.url = desc.url;
-      gProject.number = desc.number;
-      await run(`gh project link ${gProject.number} --owner ${repo.owner}`, { cwd: repo.name });
-    }
-    else {
-      gProject.number = projectsV2.projectsV2.Nodes[0].number,
-      gProject.url = projectsV2.projectsV2.Nodes[0].url;
-    }
-  }
-
-  // Step: Refresh project settings as needed
-  {
-    console.log(`- Refresh project title and description`);
-    const settings = {
-      meeting: project.metadata.meeting || '@@',
-      type: project.metadata.type || 'breakouts',
-      timezone: project.metadata.timezone || 'Etc/UTC',
-      calendar: project.metadata.calendar || 'no',
-      rooms: project.metadata.rooms || 'show'
-    };
-    await run(`gh project edit ${gProject.number} --owner ${repo.owner} --title "${project.title}" --description "${serializeProjectMetadata(settings)}"`);
-  }
-
-  // Step: Retrieve the IDs of the custom fields in the GitHub project
-  {
-    console.log(`- Retrieve custom fields' IDs`);
-    const { stdout } = await run(`gh project field-list ${gProject.number} --owner ${repo.owner} --format json`);
-    const desc = JSON.parse(stdout);
-
-    const room = desc.fields.find(field => field.name === "Room");
-    gProject.roomsFieldId = room.id;
-    gProject.rooms = room.options;
-
-    const day = desc.fields.find(field => field.name === 'Day');
-    gProject.daysFieldId = day.id;
-    gProject.days = day.options;
-
-    const slot = desc.fields.find(field => field.name === 'Slot');
-    gProject.slotsFieldId = slot.id;
-    gProject.slots = slot.options;
-  }
-
-  // Step: Refresh the list of options for each custom field
-  for (const field of ['rooms', 'days', 'slots']) {
-    console.log(`- Refresh list of ${field}`);
-    const singleSelectOptions = project[field].map(item => {
-      let desc = [];
-      if (field === 'rooms') {
-        for (const [key, value] of Object.entries(item)) {
-          if (key !== 'id' && key !== 'name' &&
-              value !== false && value !== null) {
-            desc.push(`- ${key}: ${value}`);
-          }
-        }
-      }
-      return `{ name: "${item.name}", description: "${desc.join('\\n')}", color: GRAY }`;
-    });
-    const query = `
-mutation($fieldId: ID!) {
-  updateProjectV2Field(input: {
-    clientMutationId: "mutatis mutandis",
-    fieldId: $fieldId,
-    singleSelectOptions: [${singleSelectOptions.join(',\n')}]
-  }) {
-    clientMutationId
-  }
-}
-    `;
-    const queryFile = path.join(repo.name, 'query.graphql');
-    await fs.writeFile(queryFile, query, 'utf8');
-    const fieldId = gProject[field + 'FieldId'];
-    const { stdout } = await run(
-      `gh api graphql -F fieldId=${fieldId} -F query=@query.graphql`,
-      { cwd: repo.name }
-    );
-    const res = JSON.parse(stdout);
-    if (res?.data?.updateProjectV2Field?.clientMutationId !== 'mutatis mutandis') {
-      console.error(`Could not refresh the list of ${field} in project ${gProject.number}`);
-      console.error(stdout);
-      process.exit(1);
-    }
-    await fs.unlink(queryFile);
-  }
-
   // Step: Setup repository variables
   {
     console.log(`- Setup repository variables`);
-    if (repo.owner !== 'w3c') {
-      await run(`gh variable set PROJECT_OWNER --body "${repo.owner}"`, { cwd: repo.name });
-    }
-    await run(`gh variable set PROJECT_NUMBER --body "${gProject.number}"`, { cwd: repo.name });
+    await exportProjectToGitHub(project, { what: 'all'});
 
+    // TODO: export W3CID_MAP variable when this runs in the spreadsheet
     const { stdout } = await run(`gh variable list --json name`, { cwd: repo.name });
     const variables = JSON.parse(stdout);
     if (!variables.find(v => v.name === 'W3CID_MAP')) {
@@ -343,13 +240,10 @@ mutation($fieldId: ID!) {
 The following should now exist:
 - Repository: https://github.com/${repo.owner}/${repo.name}
 - Repository clone: in "${repo.name}" subfolder
-- Project: ${gProject.url}
 
 But you still have work to do!
 
 Run the following actions (in any order):
-- Give @tpac-breakout-bot write permissions onto the project at:
-   ${gProject.url}/settings/access
 - Give @tpac-breakout-bot write access to the repository at:
    https://github.com/${repo.owner}/${repo.name}/settings/access
 - Set "watch" to "All Activity" for the repository to receive comments left on issues:

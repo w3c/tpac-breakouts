@@ -57,29 +57,27 @@ import {
 export async function fetchProjectFromGitHub(reponame, sessionTemplate) {
   const project = {
     metadata: await importVariableFromGitHub(reponame, 'EVENT') ?? {},
-    rooms: await importVariableFromGitHub(reponame, 'ROOMS'),
-    days: await importVariableFromGitHub(reponame, 'DAYS'),
-    slots: await importVariableFromGitHub(reponame, 'SLOTS'),
+    rooms: await importVariableFromGitHub(reponame, 'ROOMS') ?? [],
+    days: await importVariableFromGitHub(reponame, 'DAYS') ?? [],
+    slots: await importVariableFromGitHub(reponame, 'SLOTS') ?? [],
     sessions: await fetchSessions(reponame)
   };
 
-  const schedule = await importVariableFromGitHub(reponame, 'SCHEDULE');
-  if (schedule) {
-    for (const row of schedule) {
-      const meeting = {
-        room: row[1],
-        day: row[2],
-        slot: row[3],
-        meeting: row[4]
-      };
-      const session = project.sessions.find(s => s.number === meeting.session);
-      if (session) {
-        Object.assign(session, meeting);
-      }
+  const schedule = await importVariableFromGitHub(reponame, 'SCHEDULE') ?? [];
+  for (const row of schedule) {
+    const meeting = {
+      room: row[1],
+      day: row[2],
+      slot: row[3],
+      meeting: row[4]
+    };
+    const session = project.sessions.find(s => s.number === meeting.session);
+    if (session) {
+      Object.assign(session, meeting);
     }
   }
 
-  const validation = await importVariableFromGitHub(reponame, 'VALIDATION');
+  const validation = await importVariableFromGitHub(reponame, 'VALIDATION') ?? {};
   for (const session of project.sessions) {
     session.validation = validation[session.number] ?? {
       check: null,
@@ -89,8 +87,16 @@ export async function fetchProjectFromGitHub(reponame, sessionTemplate) {
     };
   }
 
+  const registrants = await importVariableFromGitHub(reponame, 'REGISTRANTS') ?? {};
+  for (const session of project.sessions) {
+    session.registrants = registrants[session.number] ?? {
+      participants: null,
+      observers: null,
+      url: null
+    };
+  }
+
   project.allowMultipleMeetings = project.metadata?.type === 'groups';
-  // TODO: figure out how to set up allowRegistrants (do we need it?)
 
   // Sections defined in the issue template
   project.sessionTemplate = sessionTemplate;
@@ -120,6 +126,10 @@ export async function exportProjectToGitHub(project, { what }) {
 
   if (!what || what === 'all' || what === 'schedule' || what === 'validation') {
     await exportValidation(project);
+  }
+
+  if (!what || what === 'all' || what === 'registrants') {
+    await exportRegistrants(project);
   }
 }
 
@@ -152,6 +162,20 @@ async function exportValidation(project) {
   }
   await exportVariableToGitHub(project.metadata.reponame, 'VALIDATION', VALIDATION);
 }
+
+
+/**
+ * Export session registrants to GitHub
+ */
+async function exportRegistrants(project) {
+  const REGISTRANTS = {};
+  for (const session of project.sessions) {
+    REGISTRANTS[session.number] = session.registrants;
+  }
+  await exportVariableToGitHub(project.metadata.reponame, 'REGISTRANTS', REGISTRANTS);
+}
+
+
 
 
 /**
@@ -214,9 +238,6 @@ export function convertProjectToJSON(project) {
     title: project.title,
     metadata: project.metadata
   };
-  if (project.allowRegistrants) {
-    data.allowRegistrants = true;
-  }
   for (const list of ['days', 'rooms', 'slots', 'labels']) {
     data[list] = toNameList(project[list]);
   }

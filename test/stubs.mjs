@@ -170,12 +170,6 @@ async function getTestData(testDataId) {
   if (custom.allowMultipleMeetings) {
     testData.allowMultipleMeetings = custom.allowMultipleMeetings;
   }
-  if (custom.allowTryMeOut) {
-    testData.allowTryMeOut = custom.allowTryMeOut;
-  }
-  if (custom.allowRegistrants) {
-    testData.allowRegistrants = custom.allowRegistrants;
-  }
 
   testDataCache[testDataId] = testData;
   return JSON.parse(JSON.stringify(testData));
@@ -336,6 +330,9 @@ export async function importVariableFromGitHub(name) {
   }
   else if (testData[name.toLowerCase()]) {
     return testData[name.toLowerCase()];
+  }
+  else if (name === 'REGISTRANTS') {
+    return null;
   }
   else {
     throw new Error(`No test data for ${name}`);
