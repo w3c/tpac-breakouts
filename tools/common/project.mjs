@@ -112,9 +112,6 @@ export async function exportProjectToGitHub(project, { what }) {
     await exportVariableToGitHub(reponame, 'ROOMS', project.rooms);
     await exportVariableToGitHub(reponame, 'DAYS', project.days);
     await exportVariableToGitHub(reponame, 'SLOTS', project.slots);
-
-    // TODO: drop once GitHub logic gets updated, already included in ROOMS
-    await exportRoomZoom(project);
   }
 
   if (!what || what === 'all' || what === 'schedule') {
@@ -154,24 +151,6 @@ async function exportValidation(project) {
     VALIDATION[session.number] = session.validation;
   }
   await exportVariableToGitHub(project.metadata.reponame, 'VALIDATION', VALIDATION);
-}
-
-
-/**
- * Export the Zoom information for rooms to a GitHub variable.
- */
-async function exportRoomZoom(project) {
-  const ROOM_ZOOM = {};
-  for (const room of project.rooms) {
-    if (room['zoom link']) {
-      ROOM_ZOOM[room.name] = {
-        id: room['zoom id'],
-        passcode: room['zoom passcode'],
-        link: room['zoom link']
-      };
-    }
-  }
-  return exportVariableToGitHub(project.metadata.reponame, 'ROOM_ZOOM', ROOM_ZOOM);
 }
 
 

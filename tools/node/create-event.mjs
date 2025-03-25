@@ -331,9 +331,6 @@ mutation($fieldId: ID!) {
     if (!variables.find(v => v.name === 'W3CID_MAP')) {
       await run(`gh variable set W3CID_MAP --body "{}"`, { cwd: repo.name });
     }
-    if (!variables.find(v => v.name === 'ROOM_ZOOM')) {
-      await run(`gh variable set ROOM_ZOOM --body "{}"`, { cwd: repo.name });
-    }
     if (!variables.find(v => v.name === 'W3C_LOGIN')) {
       await run(`gh variable set W3C_LOGIN --body "fd"`, { cwd: repo.name });
     }

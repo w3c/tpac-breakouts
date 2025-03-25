@@ -91,7 +91,6 @@ export async function loadProject() {
   // Most commands also need the mappings between chairs and W3C IDs.
   // Synchronization with the calendar needs the Zoom information per room.
   project.w3cIds = await getEnvKey('W3CID_MAP', {}, true);
-  project.roomZoom = await getEnvKey('ROOM_ZOOM', {}, true);
 
   console.warn(`Retrieve project from ${REPOSITORY}... done`);
   return project;
