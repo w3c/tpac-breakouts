@@ -99,13 +99,6 @@ export function getProjectSheets(spreadsheet) {
  *       "slot": "9:30 - 10:30"
  *     },
  *     ...
- *   ],
- *   "labels": [
- *     {
- *       "id": "xxxxxxx",
- *       "name": "error: format"
- *     },
- *     ...
  *   ]
  * }
  */
@@ -202,15 +195,11 @@ export function getProject(spreadsheet) {
         };
       }),
 
-    allowMultipleMeetings: getSetting('Type') === 'group',
-    allowTryMeOut: false,
+    allowMultipleMeetings: projectType === 'groups',
     allowRegistrants: false,
 
     sessionTemplate,
     sessionSections,
-
-    // TODO: how to retrieve the labels?
-    labels: [],
 
     // TODO: complete with meetings sheet if it exists
     sessions: (sheets.sessions?.values ?? []).map(session =>

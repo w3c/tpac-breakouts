@@ -51,13 +51,6 @@ import {
  *       "slot": "9:30 - 10:30"
  *     },
  *     ...
- *   ],
- *   "labels": [
- *     {
- *       "id": "xxxxxxx",
- *       "name": "error: format"
- *     },
- *     ...
  *   ]
  * }
  */
@@ -95,9 +88,6 @@ export async function fetchProjectFromGitHub(reponame, sessionTemplate) {
       note: null
     };
   }
-
-  // TODO: do we need to retrieve the list of labels defined in the
-  // repository? Depends on how we handle session label updates...
 
   project.allowMultipleMeetings = project.metadata?.type === 'groups';
   // TODO: figure out how to set up allowRegistrants (do we need it?)
@@ -245,9 +235,6 @@ export function convertProjectToJSON(project) {
     title: project.title,
     metadata: project.metadata
   };
-  if (project.allowTryMeOut) {
-    data.allowTryMeOut = true;
-  }
   if (project.allowRegistrants) {
     data.allowRegistrants = true;
   }

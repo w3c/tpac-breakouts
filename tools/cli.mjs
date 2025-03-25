@@ -19,7 +19,6 @@ import synchronizeSheet from './node/sync-sheet.mjs';
 import validate from './node/validate.mjs';
 import viewEvent from './node/view-event.mjs';
 import viewRegisrants from './node/view-registrants.mjs';
-import tryChanges from './node/try-changes.mjs';
 import createEvent from './node/create-event.mjs';
 
 function myParseInt(value) {
@@ -174,30 +173,6 @@ Usage notes for the options:
   For example:
     $ npx tpac-breakouts --seed 12345 --changes changes.yml
     $ npx tpac-breakouts --seed 54321 --apply
-`);
-
-
-/******************************************************************************
- * The "try-changes" command
- *****************************************************************************/
-program
-  .command('try-changes')
-  .summary('Try schedule changes in "Try me out" field.')
-  .description('Update the schedule with the meeting changes proposed in the "Try me out" field and report the adjusted grid and validation issues.')
-  .option('-a, --apply', 'apply the adjusted schedule, updating events information on GitHub')
-  .action(getProjectCommandRunner(tryChanges))
-  .addHelpText('after', `
-Output:
-  The command returns the generated schedule grid as HTML content (same structure as the one returned by the \`view\` command). You may want to redirect the output to a file. For example:
-    $ npx tpac-breakouts try-changes > grid.html
-
-  The command also emits warnings to the console to report on progress.
-
-Usage notes for the options:
--a, --apply
-  When the option is not set, the command merely reports the adjusted schedule.
-
-  When the option is set, the command applies the adjusted schedule, meaning it updates the scheduling information in the GitHub project associated with the event repository. It resets the "Try me out" field accordingly.
 `);
 
 
