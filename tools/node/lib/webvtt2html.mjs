@@ -36,11 +36,13 @@ export async function convert(vttUrl, options) {
     cues.forEach(c => c.text = c.text.replace(/^slide [0-9]+$/i, ''));
   }
 
+  const reSpeaker = /^([^:]*):\s*(.*)$/;
   const divs = [{
     slide: "1",
     paragraphs: []
   }];
   let p = '';
+  let currentSpeaker = '';
   cues.forEach(c => {
     if (c.id.startsWith("slide-")) {
       if (cleanSentence(p)) {
@@ -54,17 +56,30 @@ export async function convert(vttUrl, options) {
     } else if (c.id.endsWith("-p")) {
       if (cleanSentence(p)) {
         divs[divs.length-1].paragraphs.push(cleanSentence(p));
-        p = c.text;
+        currentSpeaker = '';
       }
       p = '';
-    } else if (c.text.match(/:/)) {
+    } else if (c.text.match(reSpeaker) &&
+        c.text.match(reSpeaker)[1] !== currentSpeaker) {
       if (cleanSentence(p)) {
         divs[divs.length-1].paragraphs.push(cleanSentence(p));
-        p = c.text;
+        currentSpeaker = '';
       }
       p = '';
     }
-    p += (p ? ' ' : '') + c.text;
+    if (c.text.match(reSpeaker)) {
+      const match = c.text.match(reSpeaker);
+      if (match[1] === currentSpeaker) {
+        p += (p ? ' ' : '') + match[2];
+      }
+      else {
+        p += (p ? ' ' : '') + c.text;
+      }
+      currentSpeaker = match[1];
+    }
+    else {
+      p += (p ? ' ' : '') + c.text;
+    }
   });
 
   // Output final sentence
@@ -83,7 +98,7 @@ export async function convert(vttUrl, options) {
       content += (options.markupStart || `<div>`) + "\n";
 
       for (const p of divs[i].paragraphs) {
-        const match = p.match(/^(.*):\s*(.*)$/);
+        const match = p.match(reSpeaker);
         if (match) {
           content += `  <p id="tp-${pid}"><cite>${match[1]}:</cite> ${match[2]}</p>\n`;
         }
@@ -101,7 +116,7 @@ export async function convert(vttUrl, options) {
     let last = '';
     content += '<p>';
     for (const p of divs.map(d => d.paragraphs).flat().flat()) {
-      const match = p.match(/^(.*):\s*(.*)$/);
+      const match = p.match(reSpeaker);
       if (match) {
         if (last && match[1] === last) {
           content += `<br/>\n  … ${match[2]}`;

@@ -62,7 +62,7 @@ async function listRecordings(accountId, authToken, recordingPrefix) {
 async function createRecordingPage(recording, recordingFolder) {
   let template = await fs.readFile(path.join(recordingFolder, 'recording-template.html'), 'utf8');
 
-  recording.transcript = await convert(recording.captions, { clean: true });
+  recording.transcript = await convert(recording.captions, { clean: true, splitPerSlide: true });
 
   // Replace content that needs to be serialized as JSON
   for (const property of Object.keys(recording)) {
