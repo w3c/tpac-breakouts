@@ -13,7 +13,7 @@
 import { getEnvKey } from './common/envkeys.mjs';
 import { fetchProject } from './node/lib/project.mjs'
 import { validateSession } from './common/validate.mjs';
-import { updateSessionDescription } from './node/lib/session.mjs';
+import { updateSessionDescription } from './common/session.mjs';
 import todoStrings from './common/todostrings.mjs';
 
 
