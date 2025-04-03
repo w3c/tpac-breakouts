@@ -1,4 +1,5 @@
 config.json
 node_modules
 tools/appscript/bundle.js
+files/bundle.mjs
 .clasp.json

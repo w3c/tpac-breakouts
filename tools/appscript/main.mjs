@@ -25,6 +25,7 @@ import _importMetadata from './import-metadata.mjs';
 import _exportMetadata from './export-metadata.mjs';
 import _exportEventToFiles from './export-event-to-files.mjs';
 import _applySchedule from './apply-schedule.mjs';
+import _createRepository from './create-repository.mjs';
 
 function main() { _createOnOpenTrigger(); }
 function addTPACMenu() { _addTPACMenu(); }
@@ -37,3 +38,4 @@ function importMetadata() { _importMetadata(); }
 function exportMetadata() { _exportMetadata(); }
 function exportEventToFiles() { _exportEventToFiles(); }
 function applySchedule() { _applySchedule(); }
+function createRepository() { _createRepository(); }

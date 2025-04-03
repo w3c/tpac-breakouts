@@ -1,4 +1,5 @@
 import { getSessionSections } from '../../common/session-sections.mjs';
+import { parseRepositoryName } from '../../common/repository.mjs';
 
 /**
  * Retrieve an indexed object that contains the list of sheets associated with
@@ -138,11 +139,7 @@ export function getProject(spreadsheet) {
   }
 
   const reponame = getSetting('GitHub repository name');
-  const repoparts = reponame.split('/');
-  const repo = {
-    owner: repoparts.length > 1 ? repoparts[0] : 'w3c',
-    name: repoparts.length > 1 ? repoparts[1] : repoparts[0]
-  };
+  const repo = parseRepositoryName(reponame);
 
   const project = {
     title: spreadsheet.getName(),

@@ -18,6 +18,7 @@ export default function () {
     .addSubMenu(
       SpreadsheetApp.getUi()
         .createMenu('Advanced')
+        .addItem('Create GitHub repository', 'createRepository')
         .addItem('Revalidate metadata / adopted schedule (after manual edits)', 'validateGrid')
         .addItem('Recover published schedule (from GitHub)', 'importGrid')
         .addItem('Fetch event info, rooms, days, slots (from GitHub)', 'importMetadata')

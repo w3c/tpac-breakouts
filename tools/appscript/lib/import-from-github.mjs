@@ -1,5 +1,6 @@
 import { getProject } from './project.mjs';
 import reportError from './report-error.mjs';
+import { parseRepositoryName } from '../../common/repository.mjs';
 import { fetchProjectFromGitHub } from '../../common/project.mjs';
 import { refreshProject } from './project.mjs';
 import * as YAML from '../../../node_modules/yaml/browser/index.js';
@@ -22,11 +23,7 @@ If not, ask François or Ian to run the required initialization steps.`);
     return;
   }
 
-  const repoparts = project.metadata.reponame.split('/');
-  const repo = {
-    owner: repoparts.length > 1 ? repoparts[0] : 'w3c',
-    name: repoparts.length > 1 ? repoparts[1] : repoparts[0]
-  };
+  const repo = parseRepositoryName(project.metadata.reponame);
 
   let template = null;
   if (type === 'all' || type === 'metadata') {
@@ -40,11 +37,7 @@ If not, ask François or Ian to run the required initialization steps.`);
   }
 
   console.log('Fetch data from GitHub...');
-  const githubProject = await fetchProjectFromGitHub(
-    repo.owner === 'w3c' ? repo.owner : `user/${repo.owner}`,
-    repo.name,
-    template
-  );
+  const githubProject = await fetchProjectFromGitHub(reponame, template);
   console.log('Fetch data from GitHub... done');
 
   console.log('Refresh spreadsheet data...');

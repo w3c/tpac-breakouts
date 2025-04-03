@@ -2,6 +2,7 @@ import reportError from './lib/report-error.mjs';
 import { getProject } from './lib/project.mjs';
 import { exportMapping } from './lib/w3cid-map.mjs';
 import { getEnvKey } from '../common/envkeys.mjs';
+import { parseRepositoryName } from '../common/repository.mjs';
 import {
   fetchProjectFromGitHub,
   exportProjectToGitHub
@@ -24,18 +25,11 @@ export default async function () {
       return;
     }
 
-    const repoparts = project.metadata.reponame.split('/');
-    const repo = {
-      owner: repoparts.length > 1 ? repoparts[0] : 'w3c',
-      name: repoparts.length > 1 ? repoparts[1] : repoparts[0]
-    };
+    const repo = parseRepositoryName(project.metadata.reponame);
 
     console.log('Fetch data from GitHub...');
     const githubProject = await fetchProjectFromGitHub(
-      repo.owner === 'w3c' ? repo.owner : `user/${repo.owner}`,
-      repo.name,
-      null
-    );
+      project.metadata.reponame, null);
     console.log('Fetch data from GitHub... done');
 
     console.log('Check consistency with GitHub...');

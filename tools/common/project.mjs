@@ -1,4 +1,5 @@
 import timezones from './timezones.mjs';
+import { parseRepositoryName } from './repository.mjs';
 import { getSessionSections } from './session-sections.mjs';
 import { sendGraphQLRequest } from './graphql.mjs';
 import {
@@ -264,12 +265,7 @@ export function convertProjectToJSON(project) {
 
 
 async function fetchSessions(reponame) {
-  const repoparts = reponame.split('/');
-  const repo = {
-    type: repoparts.length > 1 && repoparts[0].startsWith('user:') ? 'user': 'organization',
-    owner: repoparts.length > 1 ? repoparts[0].replace(/^user:/, '') : 'w3c',
-    name: repoparts.length > 1 ? repoparts[1] : repoparts[0]
-  };
+  const repo = parseRepositoryName(reponame);
   const sessionsResponse = await sendGraphQLRequest(`query {
     ${repo.type}(login: "${repo.owner}") {
       repository(name: "${repo.name}") {

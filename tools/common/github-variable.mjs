@@ -1,4 +1,5 @@
 import { getEnvKey } from './envkeys.mjs';
+import { parseRepositoryName } from './repository.mjs';
 import wrappedFetch from './wrappedfetch.mjs';
 
 
@@ -8,20 +9,6 @@ import wrappedFetch from './wrappedfetch.mjs';
  * needs to have "test code".
  */
 let stubs = null;
-
-
-
-/**
- * Split a repository name into an owner and a name
- */
-function parseRepositoryName(reponame) {
-  const repoparts = reponame.split('/');
-  return {
-    type: repoparts.length > 1 && repoparts[0].startsWith('user:') ? 'user': 'organization',
-    owner: repoparts.length > 1 ? repoparts[0].replace(/^user:/, '') : 'w3c',
-    name: repoparts.length > 1 ? repoparts[1] : repoparts[0]
-  };
-}
 
 
 /**
