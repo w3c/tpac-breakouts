@@ -23,7 +23,8 @@ If not, ask François or Ian to run the required initialization steps.`);
     return;
   }
 
-  const repo = parseRepositoryName(project.metadata.reponame);
+  const reponame = project.metadata.reponame;
+  const repo = parseRepositoryName(reponame);
 
   let template = null;
   if (type === 'all' || type === 'metadata') {

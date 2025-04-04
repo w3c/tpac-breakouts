@@ -46,7 +46,7 @@ export default async function () {
     }
     console.log('Apply the schedule... done');
 
-    console.log(`Validate new grid...`);
+    console.log(`Validate new schedule...`);
     const { errors: newErrors, changes: newChanges } = await validateGrid(project, { what: 'scheduling' })
     if (newErrors.length) {
       for (const error of newErrors) {
@@ -64,10 +64,10 @@ export default async function () {
       session.validation.check = change.validation.check;
       await saveSessionValidationInSheet(session, project);
     }
-    console.warn(`Validate new grid... done`);
+    console.log(`Validate new schedule... done`);
 
     console.log('Update meeting info in sessions sheet...');
-    refreshProject(spreadsheet, project, { what: 'grid' });
+    refreshProject(spreadsheet, project, { what: 'schedule' });
     console.log('Update meeting info in sessions sheet... done');
   }
   catch(err) {
