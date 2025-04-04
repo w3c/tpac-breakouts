@@ -1,8 +1,8 @@
 import { sendGraphQLRequest } from './graphql.mjs';
+import { getEnvKey } from './envkeys.mjs';
 import { base64Encode } from './base64.mjs';
+import { sleep } from './sleep.mjs';
 import bundleFiles from '../../files/bundle.mjs';
-
-const REPO_TEMPLATE = 'tidoust/tpac-breakouts-template';
 
 /**
  * Parse a reponame string to get the type (user or organization), owner and
@@ -24,34 +24,43 @@ export async function createRepository(project) {
   // Gather the repository owner ID and make sure the repository does not
   // exist yet
   const repo = parseRepositoryName(project.metadata.reponame);
+  console.log(`Retrieve the ID of GitHub owner ${repo.owner}`);
   repo.ownerId = await getRepositoryOwnerId(repo);
   if (!repo.ownerId) {
     return repo;
   }
 
   // Create the repository
-  const repoId = await cloneTemplateRepository(repo);
-
-  // Copy files to the repository
-  await copyFiles(project);
+  console.log(`Create new ${repo.type} repository ${repo.owner}/${repo.name}`);
+  repo.repoId = await cloneTemplateRepository(repo);
 
   // Create "session" label
-  await createSessionLabel(repo);
+  console.log(`Create "session" label`);
+  await createSessionLabel(repo.repoId);
+
+  // Copy files to the repository
+  console.log(`Copy files to the newly created repository`);
+  await copyFiles(project);
 
   return repo;
 }
 
 
+/**
+ * Get the GitHub ID of the repository owner
+ */
 async function getRepositoryOwnerId(repo) {
   const query = `query {
-    ${repo.type} (login: "${repo.owner}") {
+    ${repo.type}(login: "${repo.owner}") {
       id
       repository(name: "${repo.name}") {
         id
       }
-    }`;
+    }
+  }`;
   const res = await sendGraphQLRequest(query);
   if (!res?.data?.[repo.type]?.id) {
+    console.log(query);
     console.log(JSON.stringify(res, null, 2));
     throw new Error(`GraphQL error, could not retrieve the GitHub repository owner ID`);
   }
@@ -62,19 +71,26 @@ async function getRepositoryOwnerId(repo) {
   return res.data[repo.type].id;
 }
 
+
+/**
+ * Clone the template repository into a new one.
+ *
+ * Note: The clone query returns before Git operations take place and there's
+ * no easy way to tell when the operation is going to be over. The function
+ * sleeps 30s after the clone query to give GitHub some time to perform them.
+ * The `getGitObjectId` function will also retry the query a few times if
+ * needed.
+ */
 async function cloneTemplateRepository(repo) {
-  const templateRepo = {
-    type: 'user',
-    owner: 'tidoust',
-    name: 'tpac-breakouts-template'
-  };
-  const templateId = await getRepository(templateRepo);
+  const REPO_TEMPLATE = await getEnvKey('REPO_TEMPLATE');
+  const templateRepo = parseRepositoryName(REPO_TEMPLATE);
+  const templateId = await getRepositoryId(templateRepo);
   const query = `mutation {
     cloneTemplateRepository(input: {
       clientMutationId: "mutatis mutandis"
       name: "${repo.name}"
       ownerId: "${repo.ownerId}"
-      visibility: PRIVATE
+      visibility: PUBLIC
       repositoryId: "${templateId}"
     }) {
       repository {
@@ -83,14 +99,49 @@ async function cloneTemplateRepository(repo) {
     }
   }`;
 
-  const res = await sendGraphQLRequest(createQuery);
-  if (!res?.data?.repository?.id) {
+  const res = await sendGraphQLRequest(query);
+  if (!res?.data?.cloneTemplateRepository?.repository?.id) {
+    console.log(query);
     console.log(JSON.stringify(res, null, 2));
     throw new Error(`GraphQL error, could not clone template repository`);
   }
-  return res.data.repository.id;
+  await sleep(30000);
+  return res.data.cloneTemplateRepository.repository.id;
 }
 
+
+/**
+ * Create the "session" label needed by the issue template
+ */
+async function createSessionLabel(repoId) {
+  const query = `mutation {
+    createLabel(input: {
+      repositoryId: "${repoId}"
+      name: "session"
+      color: "C2E0C6"
+      description: "Breakout session proposal"
+      clientMutationId: "mutatis mutandis"
+    }) {
+      label {
+        id
+      }
+    }
+  }`;
+  const res = await sendGraphQLRequest(query);
+  if (!res?.data?.createLabel?.label?.id) {
+    console.log(query);
+    console.log(JSON.stringify(res, null, 2));
+    throw new Error(`GraphQL error, could not create "session" label`);
+  }
+}
+
+
+/**
+ * Copy workflows and issue template files to the cloned repository
+ *
+ * Note: the GRAPHQL_TOKEN token must have GitHub actions workflows update
+ * permissions otherwise function will fail!
+ */
 async function copyFiles(project) {
   const repo = parseRepositoryName(project.metadata.reponame);
 
@@ -125,7 +176,12 @@ async function copyFiles(project) {
         contents: base64Encode(contents)
       };
     })
-    .filter(change => change);
+    .filter(change => change)
+    .map(change => `{
+      path: "${change.path}",
+      contents: "${change.contents}"
+    }`)
+    .join(',\n');
 
   // Retrieve the last commit
   const headOid = await getGitObjectId(repo);
@@ -142,7 +198,7 @@ async function copyFiles(project) {
       }
       expectedHeadOid: "${headOid}"
       fileChanges: {
-        additions: ${JSON.stringify(fileChanges, null, 2)}
+        additions: [${fileChanges}]
       }
     }) {
       commit {
@@ -152,61 +208,71 @@ async function copyFiles(project) {
     }
   }`;
   const res = await sendGraphQLRequest(query);
-  if (!res?.data?.commit?.id) {
+  if (!res?.data?.createCommitOnBranch?.commit?.id) {
+    console.log(query);
     console.log(JSON.stringify(res, null, 2));
     throw new Error(`GraphQL error, could not add files to the repository`);
   }
 }
 
-async function createSessionLabel(repoId) {
-  const query = `mutation {
-    createLabel(input: {
-      repositoryId: "${repoId}",
-      name: "session",
-      color: "C2E0C6",
-      description: "Breakout session proposal",
-      clientMutationId: "mutatis mutandis"
-    }) {
-      label {
-        id
-      }
-    }
-  }`
-  const res = await sendGraphQLRequest(query);
-  if (!res?.data?.label?.id) {
-    console.log(JSON.stringify(res, null, 2));
-    throw new Error(`GraphQL error, could not create "session" label`);
-  }
-}
 
+/**
+ * Retrieve the GitHub ID of a repository
+ */
 async function getRepositoryId(repo) {
   const query = `query {
-    ${repo.type} (login: "${repo.owner}") {
+    ${repo.type}(login: "${repo.owner}") {
       repository(name: "${repo.name}") {
         id
       }
-    }`;
+    }
+  }`;
   const res = await sendGraphQLRequest(query);
-  if (!res?.data?.repository?.id) {
+  if (!res?.data?.[repo.type]?.repository?.id) {
+    console.log(query);
     console.log(JSON.stringify(res, null, 2));
-    throw new Error(`GraphQL error, could not retrieve last commit ID`);
+    throw new Error(`GraphQL error, could not retrieve the repository ID`);
   }
-  return res.data.repository.id;
+  return res.data[repo.type].repository.id;
 }
 
-async function getGitObjectId(repo) {
+
+/**
+ * Retrieve the HEAD's Git commit ID
+ *
+ * Note: The function retries a few times before it surrenders to give the
+ * clone operation more time to finish if needed.
+ */
+async function getGitObjectId(repo, counter) {
   const query = `query {
-    ${repo.type} (login: "${repo.owner}") {
+    ${repo.type}(login: "${repo.owner}") {
       repository(name: "${repo.name}") {
         object(expression: "HEAD") {
           oid
         }
       }
-    }`;
+    }
+  }`;
   const res = await sendGraphQLRequest(query);
-  if (!res?.data?.repository?.object?.oid) {
+  if (!res?.data?.[repo.type]?.repository) {
+    console.log(query);
     console.log(JSON.stringify(res, null, 2));
     throw new Error(`GraphQL error, could not retrieve last commit ID`);
   }
-  return res.data.repository.object.oid;
+  if (!res.data[repo.type].repository.object) {
+    // Not yet available, we should wait a bit before we try again, as cloning
+    // takes some time. We'll just surrender after a while.
+    if (counter) {
+      counter += 1;
+    }
+    else {
+      counter = 1;
+    }
+    if (counter > 10) {
+      throw new Error(`Still no content in repository after a while!`);
+    }
+    await sleep(5000);
+    return getGitObjectId(repo, counter);
+  }
+  return res.data[repo.type].repository.object.oid;
 }

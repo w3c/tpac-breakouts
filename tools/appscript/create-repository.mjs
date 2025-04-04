@@ -24,64 +24,65 @@ export default async function () {
     const repo = await createRepository(project);
     console.log('Create GitHub repository... done');
 
-    console.log('Export project to GitHub...');
-    await exportProjectToGitHub(project, { what: 'all' });
-    console.log('Export project to GitHub... done');
-
-    console.log('Export W3CID_MAP mapping...');
-    await exportMapping(project);
-    console.log('Export W3CID_MAP mapping... done');
-
-    console.log('Report result...');
-    const repoUrl = `https://github.com/${repo.owner}/${repo.name}`;
     if (repo.ownerId) {
+      console.log('Export project to GitHub...');
+      await exportProjectToGitHub(project, { what: 'all' });
+      console.log('Export project to GitHub... done');
+
+      console.log('Export W3CID_MAP mapping...');
+      await exportMapping(project);
+      console.log('Export W3CID_MAP mapping... done');
+
+      console.log('Report result...');
+      const repoUrl = `https://github.com/${repo.owner}/${repo.name}`;
+
       const htmlOutput = HtmlService
         .createHtmlOutput(`
           <p>The
-          <a href="${repoUrl}">${repo.owner}/${repo.name}</a>
+          <a target="_blank" href="${repoUrl}">${repo.owner}/${repo.name}</a>
           repository was created and initialized.</p>
           <p>Manual steps are still needed. Please run the following actions
           (in any order):</p>
           <ul>
-            <li>In the <a href="${repoUrl}/settings/access">repo settings</a>,
+            <li>In the <a target="_blank" href="${repoUrl}/settings/access">repo settings</a>,
             give write access to
-            <a href="https://github.com/tpac-breakout-bot">@tpac-breakout-bot</a>.
+            <a target="_blank" href="https://github.com/tpac-breakout-bot">@tpac-breakout-bot</a>.
             </li>
             <li>Set "watch" to "All Activity" for the repository to receive
             comments left on issues (look for the dropdown menu named "Watch"
-            or "Unwatch" on the <a href="${repoUrl}">repo page</a>).</li>
+            or "Unwatch" on the <a target="_blank" href="${repoUrl}">repo page</a>).</li>
             <li>Ask François (fd@w3.org) to set the <code>GRAPHQL_TOKEN</code>
             and <code>W3C_PASSWORD</code>
-            <a href="${repoUrl}/settings/secrets/actions">repository secrets</a>.
+            <a target="_blank" href="${repoUrl}/settings/secrets/actions">repository secrets</a>.
             </li>
           </ul>
 
           <p>You may also want to add documentation to the repository:</p>
           <ul>
-            <li><a href="${repoUrl}/wiki">Wiki pages<a/>, e.g., taking
+            <li><a target="_blank" href="${repoUrl}/wiki">Wiki pages<a/>, e.g., taking
             inspiration from
-            <a href="https://github.com/w3c/tpac2024-breakouts/wiki">TPAC 2024
+            <a target="_blank" href="https://github.com/w3c/tpac2024-breakouts/wiki">TPAC 2024
             breakouts Wiki pages</a>.</li>
-            <li><a href="${repoUrl}/blob/main/README.md">README.md, e.g.,
+            <li><a target="_blank" href="${repoUrl}/blob/main/README.md">README.md</a>, e.g.,
             taking inspiration from the
-            <a href="https://github.com/w3c/tpac2024-breakouts/blob/main/README.md">TPAC
+            <a target="_blank" href="https://github.com/w3c/tpac2024-breakouts/blob/main/README.md">TPAC
             2024 README</a>.</li>
           </ul>`)
         .setWidth(400)
         .setHeight(400);
       SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'GitHub repository created');
+      console.log('Report result... done');
     }
     else {
       const htmlOutput = HtmlService
         .createHtmlOutput(`
           <p><b>Nothing done!</b> As far as I can tell, the
-          <a href="https://github.com/${repo.owner}/${repo.name}">${repo.owner}/${repo.name}</a>
+          <a target="_blank" href="https://github.com/${repo.owner}/${repo.name}">${repo.owner}/${repo.name}</a>
           repository already exists.</p>`)
         .setWidth(400)
         .setHeight(400);
       SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'GitHub repository already exists');
     }
-    console.log('Report result... done');
   }
   catch(err) {
     reportError(err.toString());
