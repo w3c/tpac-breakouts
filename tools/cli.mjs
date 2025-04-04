@@ -15,11 +15,9 @@ import { getEnvKey } from './common/envkeys.mjs';
 import { loadProject } from './node/lib/project.mjs';
 import schedule from './node/schedule.mjs';
 import synchronizeCalendar from './node/sync-calendar.mjs';
-import synchronizeSheet from './node/sync-sheet.mjs';
 import validate from './node/validate.mjs';
 import viewEvent from './node/view-event.mjs';
 import viewRegisrants from './node/view-registrants.mjs';
-import createEvent from './node/create-event.mjs';
 
 function myParseInt(value) {
   // parseInt takes a string and a radix
@@ -199,33 +197,6 @@ Examples:
 
 
 /******************************************************************************
- * The "sync-sheet" command
- *****************************************************************************/
-program
-  .command('sync-sheet')
-  .summary('Synchronize the project with a Google sheet.')
-  .description('Create/Update a Google sheet that contains all project\'s data, including the schedule.')
-  .option('-s, --sheet <id>', 'ID of the Google Sheet to update, "new" to create a new one. Default: value of the GOOGLE_SHEET_ID environment variable.')
-  .option('-d, --drive <id>', 'ID of the Google shared drive in which to create the new sheet')
-  .action(getProjectCommandRunner(synchronizeSheet))
-  .addHelpText('after', `
-Notes:
-  - Local environment must define a \`GOOGLE_KEY_FILE\` variable.
-  The variable must be the path to a JSON file that contains the
-  private key of a service account with the appropriate rights, created
-  in Google Cloud: https://console.cloud.google.com/.
-
-  - If the --drive option is set while the sheet already exists, the code
-  will try to move the sheet to the provided shared drive. That may not
-  succeed depending on the permissions associated with the key.
-
-Examples:
-  $ npx tpac-breakouts sync-sheet
-  $ npx tpac-breakouts sync-sheet --sheet new
-`);
-
-
-/******************************************************************************
  * The "view-registrants" command
  *****************************************************************************/
 program
@@ -245,30 +216,5 @@ Examples:
   $ npx tpac-breakouts view-registrants all --fetch --save
   $ npx tpac-breakouts view-registrants all --fetch --url https://example.org/registrants
 `);
-
-
-/******************************************************************************
- * The "create" command
- *****************************************************************************/
-program
-  .command('create')
-  .summary('Create a new event.')
-  .description('Initialize a new event on GitHub from a JSON file.')
-  .argument('<jsonfile>', 'relative path to a JSON file that contains the event\'s metadata.')
-  .action(async function (jsonfile) {
-    return createEvent(...arguments);
-  })
-  .addHelpText('after', `
-Output:
-  The command reports progress and remaining tasks as text.
-
-  It will create a local folder in the current directory named after the GitHub repository name of the event. The folder will contain a clone of the created repository.
-
-Usage notes:
-  - The JSON file should typically have been generated from the custom "TPAC" menu of a Google spreadsheet that follows the right template.
-  - The command will create a GitHub repository for the event and a GitHub project, and initialize things correctly.
-  - Additional manual tasks will be needed afterwards to set permissions and access tokens.
-`);
-
 
 program.parseAsync(process.argv);
