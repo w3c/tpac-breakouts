@@ -222,7 +222,7 @@ function getZoomInstructions(zoomInfo) {
     return '';
   }
   if (!link.includes('/' + id.replace(/\s/g, ''))) {
-    throw new Error(`Inconsistent info in ROOM_ZOOM: meeting ID "${id}" could not be found in meeting link "${link}"`);
+    throw new Error(`Inconsistent Zoom info: meeting ID "${id}" could not be found in meeting link "${link}"`);
   }
 
   return `Join the Zoom meeting through:
@@ -618,11 +618,10 @@ async function cancelCalendarEntry(
  *
  * Function parameters should be relatively straightforward. The `status`
  * parameter tells whether calendar entries should be "draft", "tentative" or
- * "confirmed". The `roomZoom` parameter provides the mapping between room
- * names and Zoom info.
+ * "confirmed".
  */
 export async function synchronizeSessionWithCalendar(
-    { browser, session, project, calendarServer, login, password, status, roomZoom }) {
+    { browser, session, project, calendarServer, login, password, status }) {
   // First, retrieve known information about the project and the session,
   // and make sure the session is valid.
   const sessionErrors = (await validateSession(session.number, project))
@@ -695,7 +694,7 @@ export async function synchronizeSessionWithCalendar(
   for (const entry of actions.update) {
     console.log(`- refresh calendar entry ${entry.url}, meeting in ${entry.meeting.room} on ${entry.day} ${entry.start} - ${entry.end}`);
     const room = project.rooms.find(room => room.name === entry.meeting.room);
-    const zoom = project.metadata.rooms === 'hide' ? null : roomZoom[room.label];
+    const zoom = project.metadata.rooms === 'hide' ? null : room;
     entry.url = await updateCalendarEntry({
       calendarUrl: entry.url,
       calendarServer,
@@ -707,7 +706,7 @@ export async function synchronizeSessionWithCalendar(
   for (const entry of actions.create) {
     console.log(`- create new calendar entry, meeting in ${entry.meeting.room} on ${entry.day} ${entry.start} - ${entry.end}`);
     const room = project.rooms.find(room => room.name === entry.meeting.room);
-    const zoom = project.metadata.rooms === 'hide' ? null : roomZoom[room.label];
+    const zoom = project.metadata.rooms === 'hide' ? null : room;
     entry.url = await updateCalendarEntry({
       calendarUrl: null,
       calendarServer,

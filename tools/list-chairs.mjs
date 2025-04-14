@@ -8,7 +8,7 @@
  */
 
 import { getEnvKey } from './common/envkeys.mjs';
-import { fetchProject } from './node/lib/project.mjs'
+import { loadProject } from './node/lib/project.mjs'
 import { validateGrid } from './common/validate.mjs';
 import { authenticate } from './node/lib/calendar.mjs';
 import checkRegistrants from './node/lib/check-registrants.mjs';
@@ -21,20 +21,9 @@ function sleep(ms) {
 async function main(format) {
   format = format ?? 'text';
 
-  const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER', 'w3c');
-  const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
-  const W3CID_MAP = await getEnvKey('W3CID_MAP', {}, true);
   const W3C_LOGIN = await getEnvKey('W3C_LOGIN');
   const W3C_PASSWORD = await getEnvKey('W3C_PASSWORD');
-  console.warn();
-  console.warn(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER}...`);
-  const project = await fetchProject(PROJECT_OWNER, PROJECT_NUMBER);
-  if (!project) {
-    throw new Error(`Project ${PROJECT_OWNER}/${PROJECT_NUMBER} could not be retrieved`);
-  }
-  project.w3cIds = W3CID_MAP;
-  const { errors } = await validateGrid(project)
-  console.warn(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER}... done`);
+  const project = await loadProject();
 
   const sessions = project.sessions.filter(session => session.chairs);
   sessions.sort((s1, s2) => s1.number - s2.number);

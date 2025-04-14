@@ -1,5 +1,8 @@
 export default {
-  description: 'meeting: Scheduling of tracks with sessions that have constraints, timezone: Etc/UTC, ',
+  metadata: {
+    meeting: 'Scheduling of tracks with sessions that have constraints',
+    timezone: 'Etc/UTC'
+  },
 
   days: [
     '2042-04-05'

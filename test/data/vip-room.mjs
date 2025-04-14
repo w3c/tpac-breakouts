@@ -1,5 +1,9 @@
 export default {
-  description: 'meeting: Validation of "VIP" rooms, timezone: Etc/UTC, type: groups',
+  metadata: {
+    meeting: 'Validation of "VIP" rooms',
+    timezone: 'Etc/UTC',
+    type: 'groups'
+  },
 
   days: [
     '2042-04-05'

@@ -38,8 +38,10 @@ jobs:
         with:
           ref: main
 
+      # Note: no "package-lock.json" and no "npm ci" on purpose to retrieve
+      # latest version of w3c/tpac-breakouts tools (which are unversioned)
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Add issue to TPAC breakout session project
         if: ${{ github.event.action == 'opened' || github.event.action == 'reopened' }}

@@ -2,18 +2,10 @@ import * as assert from 'node:assert';
 import { readFile, writeFile } from 'node:fs/promises';
 import { initTestEnv } from './init-test-env.mjs';
 import { getEnvKey, setEnvKey } from '../tools/common/envkeys.mjs';
-import { fetchProject } from '../tools/node/lib/project.mjs';
+import { loadProject } from '../tools/node/lib/project.mjs';
 import { validateSession, validateGrid } from '../tools/common/validate.mjs';
 import { convertProjectToHTML } from '../tools/common/project2html.mjs';
 import { suggestSchedule } from '../tools/common/schedule.mjs';
-
-async function fetchTestProject() {
-  const project = await fetchProject(
-    await getEnvKey('PROJECT_OWNER'),
-    await getEnvKey('PROJECT_NUMBER'));
-  project.w3cIds = nonW3CGroupMeetings;
-  return project;
-}
 
 function stripDetails(errors) {
   return errors.map(err => {
@@ -39,7 +31,7 @@ function checkMeetingsAgainstTimes(project) {
 }
 
 async function assertSameAsRef(html) {
-  const refName = await getEnvKey('PROJECT_NUMBER');
+  const refName = (await getEnvKey('REPOSITORY')).replace(/^test\//, '');
   const refFilename = `test/data/ref-${refName}.html`;
   const updateRef = await getEnvKey('UPDATE_REFS', false);
   if (updateRef) {
@@ -66,32 +58,33 @@ describe('Scheduling of TPAC meetings', function () {
 
   before(function () {
     initTestEnv();
-    setEnvKey('PROJECT_NUMBER', 'tpac2023');
+    setEnvKey('REPOSITORY', 'test/tpac2023');
     setEnvKey('ISSUE_TEMPLATE', 'test/data/template-tpac2023.yml');
+    setEnvKey('W3CID_MAP', JSON.stringify(nonW3CGroupMeetings, null, 2));
   });
 
   it('parses a group issue', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 61;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
   });
 
   it('validates the Advisory Committee meeting issue', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 29;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
   });
 
   it('validates all TPAC 2023 meetings', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const { errors } = await validateGrid(project);
     assert.deepStrictEqual(errors, []);
   });
 
   it('respects requested times', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const { errors } = await validateGrid(project);
     assert.deepStrictEqual(errors, []);
 
@@ -104,7 +97,7 @@ describe('Scheduling of TPAC meetings', function () {
   });
 
   it('respects requested times regardless of seed', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const { errors } = await validateGrid(project);
     assert.deepStrictEqual(errors, []);
 
@@ -113,7 +106,7 @@ describe('Scheduling of TPAC meetings', function () {
   });
 
   it('reports a validation warning when requested times cannot be respected', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const session = project.sessions.find(s => s.number === 42);
 
     // Create an artificial conflict between #42 and #58, with same group.
@@ -174,7 +167,7 @@ _No response_`;
   });
 
   it('creates an appropriate HTML page', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const { errors } = await validateGrid(project);
     assert.deepStrictEqual(errors, []);
 

@@ -1,5 +1,9 @@
 export default {
-  description: 'meeting: Mapping of unknown group names, timezone: Etc/UTC, type: groups',
+  metadata: {
+    meeting: 'Mapping of unknown group names',
+    timezone: 'Etc/UTC',
+    type: 'groups'
+  },
 
   sessions: [
     {

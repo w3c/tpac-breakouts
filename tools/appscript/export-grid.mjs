@@ -1,27 +1,13 @@
 import reportError from './lib/report-error.mjs';
-import {
-  getProject,
-  syncProjectWithGitHub,
-  exportSchedule
-} from './lib/project.mjs';
+import { getProject } from './lib/project.mjs';
+import { exportMapping } from './lib/w3cid-map.mjs';
+import { getEnvKey } from '../common/envkeys.mjs';
+import { parseRepositoryName } from '../common/repository.mjs';
 import {
   fetchProjectFromGitHub,
-  saveSessionMeetings,
-  saveSessionNote } from '../common/project.mjs';
-import { getEnvKey } from '../common/envkeys.mjs';
-import { exportMapping } from './lib/w3cid-map.mjs';
+  exportProjectToGitHub
+} from '../common/project.mjs';
 
-/**
- * Mapping for day gets done on the name or date for historical reasons.
- */
-function getDate(day) {
-  if (day?.match(/ \((.+)\)$/)) {
-    return day.match(/ \((.*)\)$/)[1];
-  }
-  else {
-    return day ?? '';
-  }
-}
 
 export default async function () {
   try {
@@ -39,21 +25,14 @@ export default async function () {
       return;
     }
 
-    const repoparts = project.metadata.reponame.split('/');
-    const repo = {
-      owner: repoparts.length > 1 ? repoparts[0] : 'w3c',
-      name: repoparts.length > 1 ? repoparts[1] : repoparts[0]
-    };
+    const repo = parseRepositoryName(project.metadata.reponame);
 
     console.log('Fetch data from GitHub...');
     const githubProject = await fetchProjectFromGitHub(
-      repo.owner === 'w3c' ? repo.owner : `user/${repo.owner}`,
-      repo.name,
-      null
-    );
+      project.metadata.reponame, null);
     console.log('Fetch data from GitHub... done');
 
-    console.log('Export updates when needed...');
+    console.log('Check consistency with GitHub...');
     const updated = [];
     for (const ghSession of githubProject.sessions) {
       const ssSession = project.sessions.find(s =>
@@ -78,36 +57,12 @@ export default async function () {
         SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Not up-to-date!');
         return;
       }
-
-      // TODO: handle meeting column for TPAC group meetings
-
-      if (((ghSession.room ?? '') !== (ssSession.room ?? '')) ||
-          (getDate(ghSession.day) !== getDate(ssSession.day)) ||
-          ((ghSession.slot ?? '') !== (ssSession.slot ?? ''))) {
-        console.warn(`- updating meeting info for #${ghSession.number}...`);
-        ghSession.room = ssSession.room;
-        ghSession.day = ssSession.day;
-        ghSession.slot = ssSession.slot;
-        await saveSessionMeetings(ghSession, githubProject);
-        updated.push(ghSession);
-        console.warn(`- updating meeting info for #${ghSession.number}... done`);
-      }
-
-      if ((ghSession.validation.note ?? '') !== (ssSession.validation.note ?? '')) {
-        console.warn(`- updating note for #${ghSession.number}...`);
-        await saveSessionNote(ghSession, ssSession.validation.note, githubProject);
-        console.warn(`- updating note for #${ghSession.number}... done`);
-      }
     }
-    console.log('Export updates when needed... done');
+    console.log('Check consistency with GitHub... done');
 
-    console.log('Export project metadata...');
-    await syncProjectWithGitHub(project, githubProject);
-    console.log('Export project metadata... done');
-
-    console.log('Export schedule...');
-    await exportSchedule(project, githubProject);
-    console.log('Export schedule... done');
+    console.log('Export project to GitHub...');
+    await exportProjectToGitHub(project, { what: 'all' });
+    console.log('Export project to GitHub... done');
 
     console.log('Export W3CID_MAP mapping...');
     await exportMapping(project);

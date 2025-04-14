@@ -1,6 +1,6 @@
 import { readFile } from 'fs/promises';
 import { convertProjectToHTML } from '../common/project2html.mjs';
-import { saveSessionMeetings } from '../common/project.mjs';
+import { exportProjectToGitHub } from '../common/project.mjs';
 import { parseMeetingsChanges, applyMeetingsChanges } from './lib/meetings.mjs';
 import { validateGrid } from '../common/validate.mjs';
 import { suggestSchedule } from '../common/schedule.mjs';
@@ -86,7 +86,6 @@ export default async function (project, options) {
       for (const field of ['room', 'day', 'slot', 'meeting']) {
         if (session[field]) {
           delete session[field];
-          session.updated = true;
         }
       }
     }
@@ -144,12 +143,7 @@ export default async function (project, options) {
   if (options.apply) {
     console.warn();
     console.warn(`Apply created grid...`);
-    const sessionsToUpdate = project.sessions.filter(s => s.updated);
-    for (const session of sessionsToUpdate) {
-      console.warn(`- updating #${session.number}...`);
-      await saveSessionMeetings(session, project);
-      console.warn(`- updating #${session.number}... done`);
-    }
+    await exportProjectToGitHub(project, { what: 'schedule' });
     console.warn(`Apply created grid... done`);
   }
 }

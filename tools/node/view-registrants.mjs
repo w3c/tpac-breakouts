@@ -2,7 +2,7 @@ import puppeteer from 'puppeteer';
 import { validateSession } from '../common/validate.mjs';
 import { authenticate } from './lib/calendar.mjs';
 import { getEnvKey } from '../common/envkeys.mjs';
-import { saveSessionMeetings } from '../common/project.mjs';
+import { exportProjectToGitHub } from '../common/project.mjs';
 import { parseSessionMeetings } from '../common/meetings.mjs';
 
 export default async function (project, number, options) {
@@ -123,14 +123,12 @@ export default async function (project, number, options) {
             groups.every(group => session.groups.find(g => g.name === group)));
       });
       if (sessionRegistrants) {
-        const registrants = '' + sessionRegistrants.participants +
-          '+' + sessionRegistrants.observers;
-        if (session.registrants !== registrants) {
-          console.warn(`- update ${session.title}: "${registrants}" (was "${session.registrants ?? ''}")`);
-          session.registrants = registrants;
-          session.registrantsUrl = `${registrantsUrl}#${sessionRegistrants.id}`;
-          session.updated = true;
-        }
+        console.warn(`- update ${session.title}`);
+        session.registrants = {
+          participants: sessionRegistrants.participants,
+          observers: sessionRegistrants.observers,
+          url: `${registrantsUrl}#${sessionRegistrants.id}`
+        };
       }
       else {
         console.warn(`- warning: coud not find registrants for "${session.title}"`);
@@ -141,14 +139,12 @@ export default async function (project, number, options) {
 
   console.warn('Expand registrants info...');
   const expanded = sessions.map(session => {
-    const match = (session.registrants ?? '')
-      .match(/^\s*(\d+)\s*(?:\+\s*(\d+)\s*)?$/);
-    const participants = parseInt(match?.[1] ?? '0', 10);
-    const observers = parseInt(match?.[2] ?? '0', 10);
     const sessionUrl =
       `https://github.com/${session.repository}/issues/${session.number}`;
-    const registrantsUrl = session.registrantsUrl ?? sessionUrl;
-    const markdown = session.registrantsUrl ?
+    const participants = session.registrants?.participants ?? 0;
+    const observers = session.registrants?.observers ?? 0;
+    const registrantsUrl = session.registrants?.url ?? sessionUrl;
+    const markdown = session.registrants?.url ?
       `[${session.title}](${sessionUrl}) - [${participants} participants plus ${observers} observers](${registrantsUrl}), total: ${participants + observers}` :
       `[${session.title}](${sessionUrl}) - ${participants} participants plus ${observers} observers, total: ${participants + observers}`;
     return {
@@ -177,16 +173,12 @@ export default async function (project, number, options) {
 
   if (options?.save) {
     console.warn('Record registrants in project...');
-    if (project.allowRegistrants) {
-      const sessionsToUpdate = project.sessions.filter(s => s.updated);
-      for (const session of sessionsToUpdate) {
-        console.warn(`- updating #${session.number}...`);
-        await saveSessionMeetings(session, project, { fields: ['registrants'] });
-        console.warn(`- updating #${session.number}... done`);
-      }
-    }
-    else {
-      console.warn('- no "Registrants" custom field found in project');
+    await exportProjectToGitHub
+    const sessionsToUpdate = project.sessions.filter(s => s.updated);
+    for (const session of sessionsToUpdate) {
+      console.warn(`- updating #${session.number}...`);
+      await saveSessionMeetings(session, project, { fields: ['registrants'] });
+      console.warn(`- updating #${session.number}... done`);
     }
     console.warn('Record registrants in project... done');
   }

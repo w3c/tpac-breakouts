@@ -1,5 +1,8 @@
 export default {
-  description: 'meeting: Validation of "None" select option, timezone: Etc/UTC',
+  metadata: {
+    meeting: 'Validation of "None" select option',
+    timezone: 'Etc/UTC'
+  },
 
   days: [
     '2042-04-05'

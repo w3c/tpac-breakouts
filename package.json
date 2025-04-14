@@ -27,18 +27,17 @@
     "tpac-breakouts": "./tools/cli.mjs",
     "add-minutes": "./tools/add-minutes.mjs",
     "create-recording-pages": "./tools/create-recording-pages.mjs",
-    "init-repo-labels": "./tools/init-repo-labels.mjs",
-    "init-room-zoom": "./tools/init-room-zoom.mjs",
     "list-chairs": "./tools/list-chairs.mjs",
     "minutes-to-w3c": "./tools/minutes-to-w3c.mjs",
     "setup-irc": "./tools/setup-irc.mjs",
     "truncate-recording": "./tools/truncate-recording.mjs"
   },
   "scripts": {
-    "test": "mocha",
+    "prepare": "node tools/bundle-files.mjs",
+    "test": "node tools/bundle-files.mjs && mocha",
     "appscript-pull": "clasp pull",
     "appscript-push": "clasp push",
-    "appscript-bundle": "rollup tools/appscript/main.mjs --file tools/appscript/bundle.js --no-treeshake --external ../../test/stubs.mjs",
+    "appscript-bundle": "node tools/bundle-files.mjs && rollup tools/appscript/main.mjs --file tools/appscript/bundle.js --no-treeshake --external ../../test/stubs.mjs",
     "appscript": "npm run appscript-bundle && npm run appscript-push"
   },
   "engines": {

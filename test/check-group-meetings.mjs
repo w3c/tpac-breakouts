@@ -1,7 +1,7 @@
 import * as assert from 'node:assert';
 import { initTestEnv } from './init-test-env.mjs';
-import { getEnvKey, setEnvKey } from '../tools/common/envkeys.mjs';
-import { fetchProject } from '../tools/node/lib/project.mjs';
+import { setEnvKey } from '../tools/common/envkeys.mjs';
+import { loadProject } from '../tools/node/lib/project.mjs';
 import { validateSession } from '../tools/common/validate.mjs';
 import { groupSessionMeetings,
          computeSessionCalendarUpdates,
@@ -9,12 +9,6 @@ import { groupSessionMeetings,
          serializeSessionMeetings } from '../tools/common/meetings.mjs';
 import { parseMeetingsChanges,
          applyMeetingsChanges } from '../tools/node/lib/meetings.mjs';
-
-async function fetchTestProject() {
-  return fetchProject(
-    await getEnvKey('PROJECT_OWNER'),
-    await getEnvKey('PROJECT_NUMBER'));
-}
 
 function stripDetails(errors) {
   return errors.map(err => {
@@ -28,26 +22,26 @@ function stripDetails(errors) {
 describe('The group meetings module', function () {
   before(function () {
     initTestEnv();
-    setEnvKey('PROJECT_NUMBER', 'group-meetings');
+    setEnvKey('REPOSITORY', 'test/group-meetings');
     setEnvKey('ISSUE_TEMPLATE', 'test/data/template-group.yml');
   });
 
   it('validates a valid group meeting', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 1;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
   });
 
   it('does not validate the author of the issue', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 2;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
   });
 
   it('reports invalid groups', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 3;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, [{
@@ -59,7 +53,7 @@ describe('The group meetings module', function () {
   });
 
   it('reports groups that have more than one issue', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 4;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, [{
@@ -71,28 +65,28 @@ describe('The group meetings module', function () {
   });
 
   it('supports group names that use an expanded type', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 6;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
   });
 
   it('understands joint meetings', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 7;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
   });
 
   it('understands tripartite joint meetings', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 8;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
   });
 
   it('reports joint meetings that target only one group', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 9;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, [{
@@ -104,7 +98,7 @@ describe('The group meetings module', function () {
   });
 
   it('reports scheduling format issues', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 10;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, [{
@@ -116,14 +110,14 @@ describe('The group meetings module', function () {
   });
 
   it('does not report missing minutes when a meeting is past', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 11;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
   });
 
   it('reports an error when two sessions are scheduled in the same room at the same time', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 12;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(stripDetails(errors), [{
@@ -135,7 +129,7 @@ describe('The group meetings module', function () {
   });
 
   it('warns about capacity problems', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 14;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(stripDetails(errors), [{
@@ -147,7 +141,7 @@ describe('The group meetings module', function () {
   });
 
   it('warns about room switches', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 25;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(stripDetails(errors), [{
@@ -162,7 +156,7 @@ describe('The group meetings module', function () {
   });
 
   it('reports an error when a group needs to be at two places at once', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 15;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(stripDetails(errors), [{
@@ -174,7 +168,7 @@ describe('The group meetings module', function () {
   });
 
   it('warns when conflicting sessions are scheduled at the same time', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 17;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(stripDetails(errors), [{
@@ -186,7 +180,7 @@ describe('The group meetings module', function () {
   });
 
   it('reports an error when a group is scheduled more than once in the same slot', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 19;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(stripDetails(errors), [{
@@ -198,7 +192,7 @@ describe('The group meetings module', function () {
   });
 
   it('reports an error when two sessions use the same IRC channel at the same time', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 20;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, [{
@@ -210,7 +204,7 @@ describe('The group meetings module', function () {
   });
 
   it('warns when sessions in same track are scheduled at the same time', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 22;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(stripDetails(errors), [{
@@ -222,7 +216,7 @@ describe('The group meetings module', function () {
   });
 
   it('parses and serializes meetings', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 11;
     await validateSession(sessionNumber, project);
     const session = project.sessions.find(s => s.number === sessionNumber);
@@ -235,7 +229,7 @@ describe('The group meetings module', function () {
   });
 
   it('merges contiguous slots for calendaring purpose', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 24;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);
@@ -281,7 +275,7 @@ describe('The group meetings module', function () {
   });
 
   it('computes calendar sync update actions', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const sessionNumber = 24;
     const errors = await validateSession(sessionNumber, project);
     assert.deepStrictEqual(errors, []);

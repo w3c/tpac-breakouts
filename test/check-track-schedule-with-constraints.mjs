@@ -1,26 +1,19 @@
 import * as assert from 'node:assert';
 import { initTestEnv } from './init-test-env.mjs';
-import { getEnvKey, setEnvKey } from '../tools/common/envkeys.mjs';
-import { fetchProject } from '../tools/node/lib/project.mjs';
+import { setEnvKey } from '../tools/common/envkeys.mjs';
+import { loadProject } from '../tools/node/lib/project.mjs';
 import { validateGrid } from '../tools/common/validate.mjs';
 import { suggestSchedule } from '../tools/common/schedule.mjs';
-
-async function fetchTestProject() {
-  const project = await fetchProject(
-    await getEnvKey('PROJECT_OWNER'),
-    await getEnvKey('PROJECT_NUMBER'));
-  return project;
-}
 
 describe('When given track sessions with constraints, the scheduler', function () {
   before(function () {
     initTestEnv();
-    setEnvKey('PROJECT_NUMBER', 'track-schedule-with-constraints');
+    setEnvKey('REPOSITORY', 'test/track-schedule-with-constraints');
     setEnvKey('ISSUE_TEMPLATE', 'test/data/template-breakout.yml');
   });
 
   it('priorities the session with time slot constraints', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const { errors } = await validateGrid(project);
     assert.deepStrictEqual(errors, []);
     const sessionWithoutConflicts = project.sessions.find(s => s.number === 2);
@@ -31,7 +24,7 @@ describe('When given track sessions with constraints, the scheduler', function (
   });
 
   it('priorities the session with time slot constraints even when initial order suggests the opposite', async function () {
-    const project = await fetchTestProject();
+    const project = await loadProject();
     const { errors } = await validateGrid(project);
     assert.deepStrictEqual(errors, []);
     const sessionWithoutConflicts = project.sessions.find(s => s.number === 2);

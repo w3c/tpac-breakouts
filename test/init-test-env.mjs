@@ -9,5 +9,4 @@ export function initTestEnv() {
   resetSectionHandlers();
   resetW3CCache();
   setEnvKey('STUB_REQUESTS', true);
-  setEnvKey('PROJECT_OWNER', 'test');
 }

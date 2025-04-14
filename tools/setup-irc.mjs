@@ -20,7 +20,7 @@
  */
 
 import { getEnvKey } from './common/envkeys.mjs';
-import { fetchProject } from './node/lib/project.mjs'
+import { loadProject } from './node/lib/project.mjs'
 import { validateSession } from './common/validate.mjs';
 import todoStrings from './common/todostrings.mjs';
 import irc from 'irc';
@@ -63,25 +63,16 @@ async function waitForIRCMessage(what) {
  * Main function
  */
 async function main({ number, onlyCommands, dismissBots } = {}) {
-  const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER', 'w3c');
-  const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
-  const W3CID_MAP = await getEnvKey('W3CID_MAP', {}, true);
-  console.log();
-  console.log(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER}...`);
-  const project = await fetchProject(PROJECT_OWNER, PROJECT_NUMBER);
-  if (!project) {
-    throw new Error(`Project ${PROJECT_OWNER}/${PROJECT_NUMBER} could not be retrieved`);
-  }
-  project.w3cIds = W3CID_MAP;
+  const project = await loadProject();
   let sessions = project.sessions.filter(s => s.day && s.slot &&
     (!number || s.number === number));
   sessions.sort((s1, s2) => s1.number - s2.number);
   if (number) {
     if (sessions.length === 0) {
-      throw new Error(`Session ${number} not found in project ${PROJECT_OWNER}/${PROJECT_NUMBER}`);
+      throw new Error(`Session ${number} not found`);
     }
     else if (!sessions[0].day || !sessions[0].slot) {
-      throw new Error(`Session ${number} not assigned to a slot in project ${PROJECT_OWNER}/${PROJECT_NUMBER}`);
+      throw new Error(`Session ${number} not assigned to a slot`);
     }
   }
   else {
@@ -107,7 +98,6 @@ async function main({ number, onlyCommands, dismissBots } = {}) {
   else {
     console.log(`- found ${sessions.length} valid sessions among them: ${sessions.map(s => s.number).join(', ')}`);
   }
-  console.log(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER} and session(s)... done`);
 
   console.log('Compute IRC channels...');
   const channels = {};

@@ -1,5 +1,5 @@
 import { getEnvKey } from '../../common/envkeys.mjs';
-import { exportVariableToGitHub } from '../../common/export-variable.mjs';
+import { exportVariableToGitHub } from '../../common/github-variable.mjs';
 
 /**
  * Fetch private chairs/groups mapping information from the dedicated Google

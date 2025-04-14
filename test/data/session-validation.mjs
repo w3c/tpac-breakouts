@@ -1,5 +1,9 @@
 export default {
-  description: 'meeting: Validation test event, timezone: Etc/UTC, plenary holds: 3',
+  metadata: {
+    meeting: 'Validation test event',
+    timezone: 'Etc/UTC',
+    'plenary holds': '3'
+  },
 
   // Event scheduled in the past... and in the future
   days: [

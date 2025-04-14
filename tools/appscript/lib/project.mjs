@@ -1,6 +1,5 @@
 import { getSessionSections } from '../../common/session-sections.mjs';
-import { exportProjectMetadata } from '../../common/project.mjs';
-import { exportVariableToGitHub } from '../../common/export-variable.mjs';
+import { parseRepositoryName } from '../../common/repository.mjs';
 
 /**
  * Retrieve an indexed object that contains the list of sheets associated with
@@ -101,13 +100,6 @@ export function getProjectSheets(spreadsheet) {
  *       "slot": "9:30 - 10:30"
  *     },
  *     ...
- *   ],
- *   "labels": [
- *     {
- *       "id": "xxxxxxx",
- *       "name": "error: format"
- *     },
- *     ...
  *   ]
  * }
  */
@@ -147,11 +139,7 @@ export function getProject(spreadsheet) {
   }
 
   const reponame = getSetting('GitHub repository name');
-  const repoparts = reponame.split('/');
-  const repo = {
-    owner: repoparts.length > 1 ? repoparts[0] : 'w3c',
-    name: repoparts.length > 1 ? repoparts[1] : repoparts[0]
-  };
+  const repo = parseRepositoryName(reponame);
 
   const project = {
     title: spreadsheet.getName(),
@@ -204,15 +192,10 @@ export function getProject(spreadsheet) {
         };
       }),
 
-    allowMultipleMeetings: getSetting('Type') === 'group',
-    allowTryMeOut: false,
-    allowRegistrants: false,
+    allowMultipleMeetings: projectType === 'groups',
 
     sessionTemplate,
     sessionSections,
-
-    // TODO: how to retrieve the labels?
-    labels: [],
 
     // TODO: complete with meetings sheet if it exists
     sessions: (sheets.sessions?.values ?? []).map(session =>
@@ -522,7 +505,7 @@ export function refreshProject(spreadsheet, project, { what }) {
   }
 
   // Refresh sessions
-  if (['all', 'sessions', 'grid'].includes(what)) {
+  if (['all', 'sessions', 'schedule'].includes(what)) {
     if (!sheets.sessions.sheet) {
       sheets.sessions.sheet = createSessionsSheet(spreadsheet, sheets, project);
       sheets.sessions.headers = getHeaders(sheets.sessions.sheet);
@@ -624,89 +607,3 @@ export async function saveSessionValidationInSheet(session, project) {
     session.validation.check
   ]]);
 }
-
-
-/**
- * Synchronize the project's data (event metadata, rooms, days, slots) with
- * GitHub.
- */
-export async function syncProjectWithGitHub(project, githubProject) {
-  const metadata = {};
-  let needsUpdate = false;
-  for (const [key, val] of Object.entries(project.metadata)) {
-    if (['fullType', 'reponame'].includes(key)) {
-      continue;
-    }
-    metadata[key] = val;
-    if (val !== githubProject.metadata[key]) {
-      console.log(`- "${key}" metadata needs to be updated to "${val}"`);
-      needsUpdate = true;
-    }
-  }
-
-  if (needsUpdate || project.title !== githubProject.title) {
-    console.log('- export metadata to GitHub...');
-    githubProject.metadata = metadata;
-    githubProject.title = project.title;
-    await exportProjectMetadata(githubProject);
-  }
-
-  const reponame = project.metadata.reponame;
-  await exportVariableToGitHub(reponame, 'EVENT', metadata)
-  await exportVariableToGitHub(reponame, 'ROOMS', project.rooms);
-  await exportVariableToGitHub(reponame, 'DAYS', project.days);
-  await exportVariableToGitHub(reponame, 'SLOTS', project.slots);
-
-  // TODO: drop once GitHub logic gets updated, already included in ROOMS
-  await exportRoomZoom(project);
-}
-
-
-/**
- * Export the schedule to a GitHub variable.
- *
- * Note: variables on GitHub have a maximum length of 48000 characters,
- * we "compact" the schedule on purpose to avoid repeating keys.
- */
-export async function exportSchedule(project) {
-  const schedule = project.sessions.map(session => [
-    session.number,
-    session.room,
-    session.day,
-    session.slot,
-    session.meeting
-  ]);
-  await exportVariableToGitHub(project.metadata.reponame, 'SCHEDULE', schedule);
-  await exportValidation(project);
-}
-
-
-/**
- * Export validation notes to GitHub
- */
-export async function exportValidation(project) {
-  const VALIDATION = {};
-  for (const session of project.sessions) {
-    VALIDATION[session.number] = session.validation;
-  }
-  await exportVariableToGitHub(project.metadata.reponame, 'VALIDATION', VALIDATION);
-}
-
-
-/**
- * Export the Zoom information for rooms to a GitHub variable.
- */
-async function exportRoomZoom(project) {
-  const ROOM_ZOOM = {};
-  for (const room of project.rooms) {
-    if (room['zoom link']) {
-      ROOM_ZOOM[room.name] = {
-        id: room['zoom id'],
-        passcode: room['zoom passcode'],
-        link: room['zoom link']
-      };
-    }
-  }
-  return exportVariableToGitHub(project.metadata.reponame, 'ROOM_ZOOM', ROOM_ZOOM);
-}
-

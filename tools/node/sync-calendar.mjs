@@ -58,8 +58,7 @@ export default async function (project, number, options) {
           calendarServer: CALENDAR_SERVER,
           login: W3C_LOGIN,
           password: W3C_PASSWORD,
-          status: options.status ?? project.metadata.calendar,
-          roomZoom: project.roomZoom
+          status: options.status ?? project.metadata.calendar
         });
         console.warn(`Convert session ${session.number} to calendar entries... done`);
         console.warn('Wait 2s to ease load on calendar server...');
@@ -108,8 +107,7 @@ export default async function (project, number, options) {
         calendarServer: CALENDAR_SERVER,
         login: W3C_LOGIN,
         password: W3C_PASSWORD,
-        status: options.status ?? project.metadata.calendar,
-        roomZoom: project.roomZoom
+        status: options.status ?? project.metadata.calendar
       });
       console.warn(`Convert session ${session.number} to calendar entries... done`);
     }

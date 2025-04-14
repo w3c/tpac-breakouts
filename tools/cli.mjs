@@ -12,15 +12,12 @@
 import packageConfig from '../package.json' with { type: 'json' };
 import { Command, InvalidArgumentError } from 'commander';
 import { getEnvKey } from './common/envkeys.mjs';
-import { fetchProject } from './node/lib/project.mjs';
+import { loadProject } from './node/lib/project.mjs';
 import schedule from './node/schedule.mjs';
 import synchronizeCalendar from './node/sync-calendar.mjs';
-import synchronizeSheet from './node/sync-sheet.mjs';
 import validate from './node/validate.mjs';
 import viewEvent from './node/view-event.mjs';
 import viewRegisrants from './node/view-registrants.mjs';
-import tryChanges from './node/try-changes.mjs';
-import createEvent from './node/create-event.mjs';
 
 function myParseInt(value) {
   // parseInt takes a string and a radix
@@ -29,31 +26,6 @@ function myParseInt(value) {
     throw new InvalidArgumentError(`Expected a number as parameter, got "${value}"`);
   }
   return parsedValue;
-}
-
-
-/**
- * All commands start with loading the project associated with the repository
- * in which the command runs.
- */
-async function loadProject() {
-  const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER', 'w3c');
-  const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
-  console.warn();
-  console.warn(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER}...`);
-  const project = await fetchProject(PROJECT_OWNER, PROJECT_NUMBER);
-  if (!project) {
-    throw new Error(`Project ${PROJECT_OWNER}/${PROJECT_NUMBER} could not be retrieved`);
-  }
-  console.warn(`- found ${project.sessions.length} sessions`);
-
-  // Most commands also need the mappings between chairs and W3C IDs.
-  // Synchronization with the calendar needs the Zoom information per room.
-  project.w3cIds = await getEnvKey('W3CID_MAP', {}, true);
-  project.roomZoom = await getEnvKey('ROOM_ZOOM', {}, true);
-
-  console.warn(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER}... done`);
-  return project;
 }
 
 
@@ -203,30 +175,6 @@ Usage notes for the options:
 
 
 /******************************************************************************
- * The "try-changes" command
- *****************************************************************************/
-program
-  .command('try-changes')
-  .summary('Try schedule changes in "Try me out" field.')
-  .description('Update the schedule with the meeting changes proposed in the "Try me out" field and report the adjusted grid and validation issues.')
-  .option('-a, --apply', 'apply the adjusted schedule, updating events information on GitHub')
-  .action(getProjectCommandRunner(tryChanges))
-  .addHelpText('after', `
-Output:
-  The command returns the generated schedule grid as HTML content (same structure as the one returned by the \`view\` command). You may want to redirect the output to a file. For example:
-    $ npx tpac-breakouts try-changes > grid.html
-
-  The command also emits warnings to the console to report on progress.
-
-Usage notes for the options:
--a, --apply
-  When the option is not set, the command merely reports the adjusted schedule.
-
-  When the option is set, the command applies the adjusted schedule, meaning it updates the scheduling information in the GitHub project associated with the event repository. It resets the "Try me out" field accordingly.
-`);
-
-
-/******************************************************************************
  * The "sync-calendar" command
  *****************************************************************************/
 program
@@ -245,33 +193,6 @@ Notes:
 Examples:
   $ npx tpac-breakouts sync-calendar all --status tentative
   $ npx tpac-breakouts sync-calendar 42 --status confirmed
-`);
-
-
-/******************************************************************************
- * The "sync-sheet" command
- *****************************************************************************/
-program
-  .command('sync-sheet')
-  .summary('Synchronize the project with a Google sheet.')
-  .description('Create/Update a Google sheet that contains all project\'s data, including the schedule.')
-  .option('-s, --sheet <id>', 'ID of the Google Sheet to update, "new" to create a new one. Default: value of the GOOGLE_SHEET_ID environment variable.')
-  .option('-d, --drive <id>', 'ID of the Google shared drive in which to create the new sheet')
-  .action(getProjectCommandRunner(synchronizeSheet))
-  .addHelpText('after', `
-Notes:
-  - Local environment must define a \`GOOGLE_KEY_FILE\` variable.
-  The variable must be the path to a JSON file that contains the
-  private key of a service account with the appropriate rights, created
-  in Google Cloud: https://console.cloud.google.com/.
-
-  - If the --drive option is set while the sheet already exists, the code
-  will try to move the sheet to the provided shared drive. That may not
-  succeed depending on the permissions associated with the key.
-
-Examples:
-  $ npx tpac-breakouts sync-sheet
-  $ npx tpac-breakouts sync-sheet --sheet new
 `);
 
 
@@ -295,30 +216,5 @@ Examples:
   $ npx tpac-breakouts view-registrants all --fetch --save
   $ npx tpac-breakouts view-registrants all --fetch --url https://example.org/registrants
 `);
-
-
-/******************************************************************************
- * The "create" command
- *****************************************************************************/
-program
-  .command('create')
-  .summary('Create a new event.')
-  .description('Initialize a new event on GitHub from a JSON file.')
-  .argument('<jsonfile>', 'relative path to a JSON file that contains the event\'s metadata.')
-  .action(async function (jsonfile) {
-    return createEvent(...arguments);
-  })
-  .addHelpText('after', `
-Output:
-  The command reports progress and remaining tasks as text.
-
-  It will create a local folder in the current directory named after the GitHub repository name of the event. The folder will contain a clone of the created repository.
-
-Usage notes:
-  - The JSON file should typically have been generated from the custom "TPAC" menu of a Google spreadsheet that follows the right template.
-  - The command will create a GitHub repository for the event and a GitHub project, and initialize things correctly.
-  - Additional manual tasks will be needed afterwards to set permissions and access tokens.
-`);
-
 
 program.parseAsync(process.argv);

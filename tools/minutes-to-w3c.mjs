@@ -11,25 +11,18 @@
  */
 
 import { getEnvKey } from './common/envkeys.mjs';
-import { fetchProject } from './node/lib/project.mjs'
+import { loadProject } from './node/lib/project.mjs'
 import { validateSession } from './node/lib/validate.mjs';
 import fs from 'node:fs/promises';
 
 async function main(number, minutesPrefix) {
-  const PROJECT_OWNER = await getEnvKey('PROJECT_OWNER', 'w3c');
-  const PROJECT_NUMBER = await getEnvKey('PROJECT_NUMBER');
-  console.warn();
-  console.warn(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER}...`);
-  const project = await fetchProject(PROJECT_OWNER, PROJECT_NUMBER);
-  if (!project) {
-    throw new Error(`Project ${PROJECT_OWNER}/${PROJECT_NUMBER} could not be retrieved`);
-  }
+  const project = await loadProject();
   let sessions = project.sessions.filter(s => s.day && s.slot && s.room &&
     (!number || s.number === number));
   sessions.sort((s1, s2) => s1.number - s2.number);
   if (number) {
     if (sessions.length === 0) {
-      throw new Error(`Session ${number} not found (or did not take place) in project ${PROJECT_OWNER}/${PROJECT_NUMBER}`);
+      throw new Error(`Session ${number} not found (or did not take place)`);
     }
   }
   else {
@@ -76,7 +69,6 @@ async function main(number, minutesPrefix) {
       console.warn(`- ${session.number}: need to get minutes at ${url}`);
     }
   }
-  console.warn(`Retrieve project ${PROJECT_OWNER}/${PROJECT_NUMBER} and session(s)... done`);
 }
 
 

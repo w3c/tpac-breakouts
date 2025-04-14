@@ -1,5 +1,8 @@
 export default {
-  description: 'meeting: Days validation, timezone: Etc/UTC',
+  metadata: {
+    meeting: 'Days validation',
+    timezone: 'Etc/UTC'
+  },
   days: [
     'Soon',
     '2024-14-35',

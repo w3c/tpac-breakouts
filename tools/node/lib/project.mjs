@@ -3,9 +3,7 @@ import { getEnvKey } from '../../common/envkeys.mjs';
 import { readFile } from 'node:fs/promises';
 import * as path from 'node:path';
 import * as YAML from 'yaml';
-import {
-  fetchProjectFromGitHub,
-  parseProjectDescription } from '../../common/project.mjs';
+import { fetchProjectFromGitHub } from '../../common/project.mjs';
 
 /**
  * Retrieve available project data.
@@ -63,7 +61,7 @@ import {
  *   ]
  * }
  */
-export async function fetchProject(login, id) {
+async function fetchProject(reponame) {
   // Time to read the issue template that goes with the project
   // TODO: the template file should rather be passed as function parameter!
   const templateDefault = path.join('.github', 'ISSUE_TEMPLATE', 'session.yml');
@@ -72,33 +70,28 @@ export async function fetchProject(login, id) {
     path.join(process.cwd(), templateFile),
     'utf8');
   const template = YAML.parse(templateYaml);
-  return fetchProjectFromGitHub(login, id, template);
+  return fetchProjectFromGitHub(reponame, template);
 }
 
 
 /**
- * Record session validation problems
+ * All commands start with loading the project associated with the repository
+ * in which the command runs.
  */
-export async function saveSessionValidationResult(session, project) {
-  for (const severity of ['Check', 'Warning', 'Error']) {
-    const fieldId = project.severityFieldIds[severity];
-    const value = session.validation[severity.toLowerCase()] ?? '';
-    const response = await sendGraphQLRequest(`mutation {
-      updateProjectV2ItemFieldValue(input: {
-        clientMutationId: "mutatis mutandis",
-        fieldId: "${fieldId}",
-        itemId: "${session.projectItemId}",
-        projectId: "${project.id}",
-        value: {
-          text: "${value}"
-        }
-      }) {
-        clientMutationId
-      }
-    }`);
-    if (!response?.data?.updateProjectV2ItemFieldValue?.clientMutationId) {
-      console.log(JSON.stringify(response, null, 2));
-      throw new Error(`GraphQL error, could not record "${severity}" for session #${session.number}`);
-    }
+export async function loadProject() {
+  const REPOSITORY = await getEnvKey('REPOSITORY');
+  console.warn();
+  console.warn(`Retrieve project from ${REPOSITORY}...`);
+  const project = await fetchProject(REPOSITORY);
+  if (!project) {
+    throw new Error(`Project could not be retrieved from ${REPOSITORY}`);
   }
+  console.warn(`- found ${project.sessions.length} sessions`);
+
+  // Most commands also need the mappings between chairs and W3C IDs.
+  // Synchronization with the calendar needs the Zoom information per room.
+  project.w3cIds = await getEnvKey('W3CID_MAP', {}, true);
+
+  console.warn(`Retrieve project from ${REPOSITORY}... done`);
+  return project;
 }
