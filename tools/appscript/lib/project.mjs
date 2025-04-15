@@ -1,5 +1,8 @@
 import { getSessionSections } from '../../common/session-sections.mjs';
 import { parseRepositoryName } from '../../common/repository.mjs';
+import {
+  parseSessionMeetings,
+  serializeSessionMeetings } from '../../common/meetings.mjs';
 
 /**
  * Retrieve an indexed object that contains the list of sheets associated with
@@ -197,7 +200,6 @@ export function getProject(spreadsheet) {
     sessionTemplate,
     sessionSections,
 
-    // TODO: complete with meetings sheet if it exists
     sessions: (sheets.sessions?.values ?? []).map(session =>
       Object.assign(session, {
         author: {
@@ -217,6 +219,26 @@ export function getProject(spreadsheet) {
 
     sheets: sheets
   };
+
+  // For TPAC group events, the "meetings" sheet takes priority over the
+  // meeting column in the "sessions" sheet. This gives admins a more directly
+  // useful way to adjust meetings.
+  // TODO: convert "number - title" to "number" and "title" once we switch to that
+  if (project.metadata.type === 'groups' &&
+      sheets.meetings?.values) {
+    const allMeetings = Object.groupBy(sheets.meetings.values, ({ number }) => number);
+    for (const [number, meetings] of Object.entries(allMeetings)) {
+      const session = project.sessions.find(s => s.number === number);
+      if (!session) {
+        continue;
+      }
+      session.meetings = meetings;
+      // TODO: Get rid of "meeting" column altogether
+      const { room, meeting } = serializeSessionMeetings(meetings, project);
+      session.room = room;
+      session.meeting = meeting;
+    }
+  }
 
   return project;
 }
@@ -354,18 +376,19 @@ export function refreshProject(spreadsheet, project, { what }) {
   const sheets = getProjectSheets(spreadsheet);
 
   function setSetting(name, value) {
-    const metadataRows = sheets.event.sheet.getDataRange().getValues();
+    const sheet = sheets.event.sheet;
+    const metadataRows = sheet.getDataRange().getValues();
     const rowIdx = metadataRows.findIndex(row => row[0] === name);
     let cell;
     if (rowIdx === -1) {
-      const lastRow = metadataRows.getLastRow();
-      cell = sheets.event.sheet.getRange(lastRow + 1, 1);
+      const lastRow = sheet.getLastRow();
+      cell = sheet.getRange(lastRow + 1, 1);
       cell.setValue(name);
-      cell = sheets.event.sheet.getRange(lastRow + 1, 2);
+      cell = sheet.getRange(lastRow + 1, 2);
       cell.setValue(value);
     }
     else {
-      cell = sheets.event.sheet.getRange(rowIdx + 1, 2);
+      cell = sheet.getRange(rowIdx + 1, 2);
       cell.setValue(value);
     }
   }
@@ -386,14 +409,39 @@ export function refreshProject(spreadsheet, project, { what }) {
     else if (type === 'sessions') {
       idKey = 'number';
     }
-    const values = sheets[type].values ?? [];
+    else if (type === 'meetings') {
+      // Note: The "meetings" sheet is a view of sessions meetings
+      // and there is no ID key
+      idKey = '';
+    }
+
+    // TODO: Get rid of "meeting" column altogether
+    const sheetValues = sheets[type].values ?? [];
+    const projectValues = type === 'meetings' ?
+      project.sessions
+        .map(session =>
+          (session.meetings ?? parseSessionMeetings(session, project))
+            .map(meeting => Object.assign({
+              number: session.number,
+              title: session.title,
+              group: `${session.number} - ${session.title}`
+            }, meeting))
+        )
+        .flat() :
+      project[type];
     const seen = [];
-    for (let obj of project[type]) {
+    for (let obj of projectValues) {
       // Validation notes are nested under a "validation" key in the
       // internal representation of a project, but are at the root level
       // in the spreadsheet. Let's copy them to the root level as well.
       obj = Object.assign({}, obj, obj.validation);
-      const value = values.find(val => val[idKey] === obj[idKey]);
+      const value = type === 'meetings' ?
+        sheetValues.find(val =>
+          val.number === obj.number &&
+          val.room === obj.room &&
+          val.day === obj.day &&
+          val.slot === obj.slot) :
+        sheetValues.find(val => val[idKey] === obj[idKey]);
       if (value) {
         // Existing item, refresh the data, except if the user is only
         // willing to refresh the list of sessions itself.
@@ -412,11 +460,11 @@ export function refreshProject(spreadsheet, project, { what }) {
         // New item, add to the end of the list
         // Note: for new sessions, we do copy the meeting info no matter what
         // as "new" info that should inform the local grid
-        values.push(obj);
+        sheetValues.push(obj);
         seen.push(obj);
       }
     }
-    const toset = values.filter(value => seen.includes(value));
+    const toset = sheetValues.filter(value => seen.includes(value));
     console.log(`- import ${toset.length} ${type}...`);
     setValues(sheets[type].sheet, toset);
     console.log(`- import ${toset.length} ${type}... done`);
@@ -466,7 +514,7 @@ export function refreshProject(spreadsheet, project, { what }) {
     // Refresh the session template
     const sessionTemplate = spreadsheet.getDeveloperMetadata()
       .find(data => data.getKey() === 'session-template');
-    const value = JSON.stringify(project.sessionTemplate, null, 2)
+    const value = JSON.stringify(project.sessionTemplate, null, 2);
     if (sessionTemplate) {
       sessionTemplate.setValue(value);
     }
@@ -474,11 +522,22 @@ export function refreshProject(spreadsheet, project, { what }) {
       spreadsheet.addDeveloperMetadata('session-template', value);
     }
 
-    // TODO: Refresh the list of labels
-
     for (const [name, value] of Object.entries(project.metadata)) {
       if (name === 'type') {
-        // TODO: Refresh event type? There's one more type in the spreadsheet
+        // Event type is generated from the "fullType"
+      }
+      else if (name === 'fullType') {
+        let actualValue = '';
+        if (value === 'groups') {
+          actualValue = 'TPAC group meetings';
+        }
+        else if (value === 'tpac-breakouts') {
+          actualValue = 'TPAC breakouts';
+        }
+        else {
+          actualValue = 'Breakouts day';
+        }
+        setSetting('Type', actualValue);
       }
       else if (name === 'rooms') {
         setSetting('Show rooms in calendar', !!value ? 'yes' : 'no');
@@ -491,6 +550,9 @@ export function refreshProject(spreadsheet, project, { what }) {
       }
       else if (name === 'meeting') {
         setSetting('Meeting name in calendar', value);
+      }
+      else if (name === 'reponame') {
+        setSetting('GitHub repository name', value);
       }
       else {
         setSetting(name, value);
@@ -511,9 +573,17 @@ export function refreshProject(spreadsheet, project, { what }) {
       sheets.sessions.headers = getHeaders(sheets.sessions.sheet);
     }
     refreshData('sessions');
-  }
 
-  // TODO: refresh meetings (only for TPAC events)
+    if (project.metadata.type === 'groups') {
+      if (!sheets.meetings.sheet ||
+          sheets.meetings.sheet === sheets.sessions.sheet) {
+        sheets.meetings.sheet = createMeetingsSheet(spreadsheet, sheets, project);
+        sheets.meetings.headers = getHeaders(sheets.meetings.sheet);
+        sheets.meetings.values = null;
+      }
+      refreshData('meetings');
+    }
+  }
 }
 
 function createSessionsSheet(spreadsheet, sheets, project) {
@@ -587,6 +657,71 @@ function createSessionsSheet(spreadsheet, sheets, project) {
     .protect()
     .setDescription(`${title} - content from GitHub`)
     .setWarningOnly(true);
+
+  return sheet;
+}
+
+
+// TODO: Bind ID column with list of sessions, and use "group" (number - title)
+// to ease admin work.
+function createMeetingsSheet(spreadsheet, sheets, project) {
+  // Create the new sheet
+  const title = 'Meetings';
+  const sheet = spreadsheet.insertSheet(title);
+
+  // Set the headers row
+  const headers = [
+    'Number', 'Room', 'Day', 'Slot'
+  ];
+  const headersRow = sheet.getRange(1, 1, 1, headers.length);
+  headersRow.setValues([headers]);
+  headersRow.setFontWeight('bold');
+  sheet.setFrozenRows(1);
+  headersRow
+    .protect()
+    .setDescription(`${title} - headers`)
+    .setWarningOnly(true);
+
+  sheet.setColumnWidths(headers.findIndex(h => h === 'Number') + 1, 1, 60);
+  sheet.setColumnWidths(headers.findIndex(h => h === 'Room') + 1, 1, 150);
+  sheet.setColumnWidths(headers.findIndex(h => h === 'Day') + 1, 1, 150);
+  sheet.setColumnWidths(headers.findIndex(h => h === 'Slot') + 1, 1, 150);
+
+  // TODO: this assumes that room name is in column "A".
+  const roomValuesRange = sheets.rooms.sheet.getRange('A2:A');
+  const roomRule = SpreadsheetApp
+    .newDataValidation()
+    .requireValueInRange(roomValuesRange)
+    .setAllowInvalid(false)
+    .build();
+  const roomRange = sheet.getRange(
+    2, headers.findIndex(h => h === 'Room') + 1,
+    sheet.getMaxRows() - 1, 1);
+  roomRange.setDataValidation(roomRule);
+
+  // TODO: this assumes that day name is in column "A".
+  const dayValuesRange = sheets.days.sheet.getRange('A2:A');
+  const dayRule = SpreadsheetApp
+    .newDataValidation()
+    .requireValueInRange(dayValuesRange)
+    .setAllowInvalid(false)
+    .build();
+  const dayRange = sheet.getRange(
+    2, headers.findIndex(h => h === 'Day') + 1,
+    sheet.getMaxRows() - 1, 1);
+  dayRange.setDataValidation(dayRule);
+
+  // TODO: this assumes that slot name is in column "C".
+  const slotValuesRange = sheets.slots.sheet.getRange('C2:C');
+  const slotRule = SpreadsheetApp
+    .newDataValidation()
+    .requireValueInRange(slotValuesRange)
+    .setAllowInvalid(false)
+    .build();
+  const slotRange = sheet.getRange(
+    2, headers.findIndex(h => h === 'Slot') + 1,
+    sheet.getMaxRows() - 1, 1);
+  slotRange.setDataValidation(slotRule);
 
   return sheet;
 }

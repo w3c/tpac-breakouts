@@ -157,7 +157,7 @@ async function copyFiles(project) {
     'repo-type': 'project'
   });
 
-  bundleFiles['README.md'] = `# ${project.metadata.title}`;
+  bundleFiles['README.md'] = `# ${project.title}`;
 
   const fileChanges = Object.entries(bundleFiles)
     .map(([file, contents]) => {

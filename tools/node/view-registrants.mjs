@@ -165,8 +165,8 @@ export default async function (project, number, options) {
       .filter(room => !!room)
       .filter((room, idx, list) => list.findIndex(r => r.name === room.name) === idx)
       .map(room => Object.assign({}, room, {
-        diffParticipants: entry.participants - room.capacity,
-        diffTotal: entry.total - room.capacity
+        diffParticipants: entry.participants - (room.capacity ?? 30),
+        diffTotal: entry.total - (room.capacity ?? 30)
       }));
   }
   console.warn('Retrieve session rooms... done');
@@ -191,20 +191,20 @@ export default async function (project, number, options) {
   };
   for (const entry of expanded) {
     const greatBigRooms = entry.rooms.filter(room =>
-      room.capacity >= entry.total);
+      (room.capacity ?? 30) >= entry.total);
     if (greatBigRooms.length > 0) {
       report.greatBigRooms.push(
         Object.assign({}, entry, { rooms: greatBigRooms }));
     }
     const middleSizedRooms = entry.rooms.filter(room =>
-      room.capacity < entry.total &&
-      room.capacity >= entry.participants);
+      (room.capacity ?? 30) < entry.total &&
+      (room.capacity ?? 30) >= entry.participants);
     if (middleSizedRooms.length > 0) {
       report.middleSizedRooms.push(
         Object.assign({}, entry, { rooms: middleSizedRooms }));
     }
     const littleWeeRooms = entry.rooms.filter(room =>
-      room.capacity < entry.participants);
+      (room.capacity ?? 30) < entry.participants);
     if (littleWeeRooms.length > 0) {
       report.littleWeeRooms.push(
         Object.assign({}, entry, { rooms: littleWeeRooms }));
@@ -216,7 +216,7 @@ export default async function (project, number, options) {
     for (const entry of report.greatBigRooms) {
       console.log(`- ${entry.markdown}`);
       for (const room of entry.rooms) {
-        console.log(`  - in ${room.label}: capacity is ${room.capacity}, ${0 - room.diffTotal} seat${0 - room.diffTotal <= 1 ? '' : 's'} available.`);
+        console.log(`  - in ${room.label}: capacity is ${room.capacity ?? '30 (assumed)'}, ${0 - room.diffTotal} seat${0 - room.diffTotal <= 1 ? '' : 's'} available.`);
       }
     }
   }
@@ -226,7 +226,7 @@ export default async function (project, number, options) {
     for (const entry of report.littleWeeRooms) {
       console.log(`- ${entry.markdown}`);
       for (const room of entry.rooms) {
-        console.log(`  - in ${room.label}: capacity is ${room.capacity}, ${room.diffParticipants} seat${room.diffParticipants <= 1 ? '' : 's'} missing.`);
+        console.log(`  - in ${room.label}: capacity is ${room.capacity ?? '30 (assumed)'}, ${room.diffParticipants} seat${room.diffParticipants <= 1 ? '' : 's'} missing.`);
       }
     }
   }
@@ -236,7 +236,7 @@ export default async function (project, number, options) {
     for (const entry of report.middleSizedRooms) {
       console.log(`- ${entry.markdown}`);
       for (const room of entry.rooms) {
-        console.log(`  - in ${room.label}: capacity is ${room.capacity}, ${room.diffTotal} seat${room.diffTotal <= 1 ? '' : 's'} missing.`);
+        console.log(`  - in ${room.label}: capacity is ${room.capacity ?? '30 (assumed)'}, ${room.diffTotal} seat${room.diffTotal <= 1 ? '' : 's'} missing.`);
       }
     }
   }

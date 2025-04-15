@@ -3,6 +3,8 @@ import { getProject } from './lib/project.mjs';
 import { exportMapping } from './lib/w3cid-map.mjs';
 import { exportProjectToGitHub } from '../common/project.mjs';
 import { createRepository } from '../common/repository.mjs';
+import bundleFiles from '../../files/bundle.mjs';
+import * as YAML from '../../node_modules/yaml/browser/index.js';
 
 
 export default async function () {
@@ -23,6 +25,23 @@ export default async function () {
     console.log('Create GitHub repository...');
     const repo = await createRepository(project);
     console.log('Create GitHub repository... done');
+
+    console.log('Save issue template...');
+    let template = null;
+    const yamlTemplate = bundleFiles[`issue-template/${project.metadata.fullType}.yml`];
+    template = YAML.parse(yamlTemplate);
+    const sessionTemplate = SpreadsheetApp.getActiveSpreadsheet()
+      .getDeveloperMetadata()
+      .find(data => data.getKey() === 'session-template');
+    const templateValue = JSON.stringify(template, null, 2);
+    if (sessionTemplate) {
+      sessionTemplate.setValue(templateValue);
+    }
+    else {
+      SpreadsheetApp.getActiveSpreadsheet()
+        .addDeveloperMetadata('session-template', templateValue);
+    }
+    console.log('Save issue template... done');
 
     if (repo.ownerId) {
       console.log('Export project to GitHub...');

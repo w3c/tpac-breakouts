@@ -393,7 +393,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
       .filter(meeting => meeting.room)
       .map(meeting => {
         const room = project.rooms.find(s => s.name === meeting.room);
-        if (room.capacity < session.description.capacity) {
+        if ((room.capacity ?? 30) < session.description.capacity) {
           return { meeting, session, room };
         }
         return null;
@@ -404,7 +404,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         session: sessionNumber,
         severity: 'warning',
         type: 'capacity',
-        messages: capacityWarnings.map(warn => `Capacity of "${warn.room.label}" (${warn.room.capacity}) is lower than requested capacity (${session.description.capacity})`),
+        messages: capacityWarnings.map(warn => `Capacity of "${warn.room.label}" (${warn.room.capacity ?? '30 (assumed)'}) is lower than requested capacity (${session.description.capacity})`),
         details: capacityWarnings
       });
     }

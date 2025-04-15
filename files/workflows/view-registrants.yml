@@ -42,14 +42,6 @@ jobs:
       - name: View/Update registrants
         run: npx tpac-breakouts view-registrants ${{ inputs.sessionNumber }} --fetch --save > .registrants/index.md
         env:
-          # URL of the annual TPAC XXXX breakout project.
-          # The PROJECT_OWNER and PROJECT_NUMBER variables must be defined on
-          # the repository. PROJECT_OWNER_TYPE needs to be set to "user" if
-          # project belongs to a user. It may be omitted otherwise (or set to
-          # 'org"').
-          PROJECT_OWNER: ${{ vars.PROJECT_OWNER_TYPE || 'organization' }}/${{ vars.PROJECT_OWNER || 'w3c' }}
-          PROJECT_NUMBER: ${{ vars.PROJECT_NUMBER }}
-
           # Same valid Personal Access Token (classic version) as above, with
           # project and public_repo scope.
           GRAPHQL_TOKEN: ${{ secrets.GRAPHQL_TOKEN }}
@@ -60,10 +52,6 @@ jobs:
           # as a secret!
           W3C_LOGIN: ${{ vars.W3C_LOGIN }}
           W3C_PASSWORD: ${{ secrets.W3C_PASSWORD }}
-
-          # Mapping between chair GitHub identities and W3C IDs must be stored
-          # in a variable. Structure is a JSON object with identities as keys.
-          W3CID_MAP: ${{ vars.W3CID_MAP }}
 
       - name: Create ZIP artifact
         uses: actions/upload-artifact@v4

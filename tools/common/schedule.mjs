@@ -188,7 +188,7 @@ export function suggestSchedule(project, { seed }) {
       (total, curr) => curr.track === track ? total : total + 1,
       0);
     const byAvailability = (r1, r2) => slotsTaken(r1) - slotsTaken(r2);
-    const meetCapacity = room => room.capacity >= largestSession.description.capacity;
+    const meetCapacity = room => (room.capacity ?? 30) >= largestSession.description.capacity;
     const meetSameRoom = room => slotsTaken(room) + trackSessions.length <= daysAndSlots.length;
     const meetAll = room => meetCapacity(room) && meetSameRoom(room);
 
@@ -230,8 +230,8 @@ export function suggestSchedule(project, { seed }) {
     trackRoom, numberOfMeetings, sameRoom, strictDuration, strictTimes,
     meetDuration, meetCapacity, meetConflicts
   }) {
-    const byCapacity = (r1, r2) => r1.capacity - r2.capacity;
-    const byCapacityDesc = (r1, r2) => r2.capacity - r1.capacity;
+    const byCapacity = (r1, r2) => (r1.capacity ?? 30) - (r2.capacity ?? 30);
+    const byCapacityDesc = (r1, r2) => (r2.capacity ?? 30) - (r1.capacity ?? 30);
 
     // A non-conflicting slot in the list of possible slots is one that does
     // not lead to a situation where:
@@ -359,13 +359,13 @@ export function suggestSchedule(project, { seed }) {
         possibleRooms.push(...rooms
           .filter(room => !room.vip)
           .filter(room => room.name !== plenaryRoom || session.description.type === 'plenary')
-          .filter(room => room.capacity >= (session.description.capacity ?? 0))
+          .filter(room => (room.capacity ?? 30) >= (session.description.capacity ?? 0))
           .sort(byCapacity));
         if (!meetCapacity) {
           possibleRooms.push(...rooms
             .filter(room => !room.vip)
             .filter(room => room.name !== plenaryRoom || session.description.type === 'plenary')
-            .filter(room => room.capacity < (session.description.capacity ?? +Infinity))
+            .filter(room => (room.capacity ?? 30) < (session.description.capacity ?? +Infinity))
             .sort(byCapacityDesc));
         }
       }
