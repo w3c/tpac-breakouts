@@ -41,6 +41,10 @@ export function fillGridSheet(spreadsheet, project, validationErrors) {
   addSessions(sheet, project, validationErrors);
   console.log('- add borders');
   addBorders(sheet, project);
+  sheet
+    .protect()
+    .setDescription(`${sheet.getName()} - read-only view`)
+    .setWarningOnly(true);
   fillGridValidationSheet(spreadsheet, project, gridVersion, validationErrors);
 }
 
@@ -296,10 +300,26 @@ function addSessions(sheet, project, validationErrors) {
   const startRow = 2;
   const startCol = 3;
 
-  // TODO: consider re-computing meetings data from sessions
-  // TODO: expand view for TPAC group meetings (or use "meetings" sheet)
   const meetings = project.sessions
-    .filter(meeting => meeting.day && meeting.slot && meeting.room);
+    .map(session => {
+      if (session.meetings) {
+        return session.meetings.map(meeting =>
+          Object.assign({ number: session.number }, meeting));
+      }
+      else if (session.room && session.day && session.slot) {
+        return {
+          number: session.number,
+          room: session.room,
+          day: session.day,
+          slot: session.slot
+        };
+      }
+      else {
+        return null;
+      }
+    })
+    .flat()
+    .filter(meeting => meeting && meeting.room && meeting.day && meeting.slot);
 
   // Sort meetings since the editor may have changed the order from the canonical one.
   const sortedMeetings = Array.from(meetings);
@@ -383,17 +403,12 @@ function addSessions(sheet, project, validationErrors) {
       }
       return ranges;
     }, []);
-  
-  const hasBreakouts = !!project.metadata.type.includes('breakouts');
 
-  const meetingsSheetUrl = '#gid=' + project.sheets.meetings.sheet.getSheetId();
+  const sessionsSheetUrl = '#gid=' + project.sheets.sessions.sheet.getSheetId();
   for (const range of ranges) {
-    const session = project.sessions.find(session => session.number === range.number);
-    const firstMeeting = sortedMeetings[range.firstIndex];
-    const firstIndex = meetings.findIndex(m => m === firstMeeting);
-    const meetingRange = hasBreakouts ?
-      `A${firstIndex + 2}` :
-      `A${firstIndex + 2}:D${firstIndex + 1 + range.numRows}`;
+    const idx = project.sessions.findIndex(session => session.number === range.number);
+    const session = project.sessions[idx];
+    const sessionRange = `A${idx + 2}`;
 
     let backgroundColor = null;
     const capacityIssues = range.errors.filter(error =>
@@ -467,7 +482,7 @@ function addSessions(sheet, project, validationErrors) {
         .setLinkUrl(
           session.title.length + 2,
           session.title.length + 2 + `${session.number}`.length,
-          `${meetingsSheetUrl}&range=${meetingRange}`)
+          `${sessionsSheetUrl}&range=${sessionRange}`)
         .build();
     sheet.getRange(range.row, range.column, range.numRows, range.numColumns)
       .mergeVertically()

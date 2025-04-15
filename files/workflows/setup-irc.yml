@@ -40,19 +40,6 @@ jobs:
       - name: Run the setup script
         run: npx setup-irc ${{ inputs.sessionNumber }} full ${{ inputs.dismiss }}
         env:
-          # URL of the annual TPAC XXXX breakout project.
-          # The PROJECT_OWNER and PROJECT_NUMBER variables must be defined on
-          # the repository. PROJECT_OWNER_TYPE needs to be set to "user" if
-          # project belongs to a user. It may be omitted otherwise (or set to
-          # 'org"').
-          PROJECT_OWNER: ${{ vars.PROJECT_OWNER_TYPE || 'organization' }}/${{ vars.PROJECT_OWNER || 'w3c' }}
-          PROJECT_NUMBER: ${{ vars.PROJECT_NUMBER }}
-
           # A valid Personal Access Token (classic version) with project
           # and public_repo scope.
           GRAPHQL_TOKEN: ${{ secrets.GRAPHQL_TOKEN }}
-
-          # Mapping between chair GitHub identities and W3C IDs must be stored
-          # in a variable. Structure is a JSON object with identities as keys.
-          CHAIR_W3CID: ${{ vars.CHAIR_W3CID }}
-
