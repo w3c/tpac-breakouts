@@ -1,29 +1,26 @@
 # Breakout and group meeting management
 
-## About this Repository
+## Tools and documentation for meeting planners
 
-This repository contains:
-1. a set of generic tools used to schedule either group meetings (e.g., during TPAC) or breakout sessions (e.g., during TPAC or Breakouts Day),
-2. documentation about tooling for breakout sessions planners,
-3. good practices for breakout session chairs, and
-4. TPAC breakout session policies.
+This repository contains 
+1. a set of generic tools used to schedule either group meetings (e.g., during TPAC) or breakout sessions (e.g., during TPAC or Breakouts Day). The [TPAC meeting planners wiki page](https://github.com/w3c/tpac-breakouts/wiki/For-TPAC-Meeting-Planners) documents the tools.
+2. [Scheduling considerations](https://github.com/w3c/tpac-breakouts/wiki/Scheduling-considerations) to help reduce conflicts for attendees.
+3. [How to publish recordings of breakout sessions](https://github.com/w3c/tpac-breakouts/wiki/How-to-publish-recordings-of-breakout-sessions)
 
-This repository **does not** contain breakout session proposals. To see breakout session proposals, please check dedicated repositories per TPAC, such as [TPAC 2024 Breakouts](https://github.com/w3c/tpac2024-breakouts/blob/main/README.md).
+This repository **does not** contain breakout session proposals. To see breakout session proposals, please check dedicated repositories, such as [TPAC 2024 Breakouts](https://github.com/w3c/tpac2024-breakouts/blob/main/README.md).
 
-## Documentation
+## Documentation for meeting participants
 
-This repository includes documentation for TPAC participants:
+This repository includes documentation for meeting participants:
 
 * [Good Practices for Session Chairs](https://github.com/w3c/tpac-breakouts/wiki/Policies)
-* [TPAC Breakout Policies](https://github.com/w3c/tpac-breakouts/wiki/Policies)
-
-The documentation for [TPAC meeting planners](https://github.com/w3c/tpac-breakouts/wiki/For-TPAC-Meeting-Planners) includes documentation of the tooling.
+* [Policies](https://github.com/w3c/tpac-breakouts/wiki/Policies)
 
 ## About the Issues List
 
-Please use the issues list of this repo for general questions or suggestions about TPAC breakout management and tools.
+Please use the issues list of this repo for general questions or suggestions about meeting management and tools.
 
-Please **do not** use the issues list of this repo to propose TPAC breakout sessions.
+Please **do not** use the issues list of this repo to propose group meetings or breakout sessions.
 
 ## Historical note
 
