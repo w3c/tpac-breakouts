@@ -42,6 +42,21 @@ If not, ask François or Ian to run the required initialization steps.`);
   console.log('Fetch data from GitHub... done');
 
   console.log('Refresh spreadsheet data...');
+  if (type === 'sessions') {
+    // Make sure that we don't override schedule information that we already
+    // have in the spreadsheet. We only want to update schedule information
+    // of sessions that got added or removed.
+    for (const ghSession of githubProject.sessions) {
+      const session = project.sessions.find(s => s.number === ghSession.number);
+      if (session) {
+        ghSession.room = session.room;
+        ghSession.day = session.day;
+        ghSession.slot = session.slot;
+        ghSession.meeting = session.meeting;
+        ghSession.meetings = session.meetings;
+      }
+    }
+  }
   refreshProject(
     SpreadsheetApp.getActiveSpreadsheet(),
     githubProject,

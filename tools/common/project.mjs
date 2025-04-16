@@ -67,12 +67,13 @@ export async function fetchProjectFromGitHub(reponame, sessionTemplate) {
   const schedule = await importVariableFromGitHub(reponame, 'SCHEDULE') ?? [];
   for (const row of schedule) {
     const meeting = {
+      number: row[0],
       room: row[1],
       day: row[2],
       slot: row[3],
       meeting: row[4]
     };
-    const session = project.sessions.find(s => s.number === meeting.session);
+    const session = project.sessions.find(s => s.number === meeting.number);
     if (session) {
       Object.assign(session, meeting);
     }
@@ -80,21 +81,35 @@ export async function fetchProjectFromGitHub(reponame, sessionTemplate) {
 
   const validation = await importVariableFromGitHub(reponame, 'VALIDATION') ?? {};
   for (const session of project.sessions) {
-    session.validation = validation[session.number] ?? {
-      check: null,
-      warning: null,
-      error: null,
-      note: null
-    };
+    const value = validation.find(v => v.number === session.number);
+    if (value) {
+      delete value.number;
+      session.validation = value;
+    }
+    else {
+      session.validation = {
+        check: null,
+        warning: null,
+        error: null,
+        note: null
+      };
+    }
   }
 
   const registrants = await importVariableFromGitHub(reponame, 'REGISTRANTS') ?? {};
   for (const session of project.sessions) {
-    session.registrants = registrants[session.number] ?? {
-      participants: null,
-      observers: null,
-      url: null
-    };
+    const value = registrants.find(r => r.number === session.number);
+    if (value) {
+      delete value.number;
+      session.registrants = value;
+    }
+    else {
+      session.registrants = {
+        participants: null,
+        observers: null,
+        url: null
+      };
+    }
   }
 
   project.allowMultipleMeetings = project.metadata?.type === 'groups';
@@ -157,9 +172,11 @@ async function exportSchedule(project) {
  * Export validation notes to GitHub
  */
 async function exportValidation(project) {
-  const VALIDATION = {};
+  const VALIDATION = [];
   for (const session of project.sessions) {
-    VALIDATION[session.number] = session.validation;
+    VALIDATION.push(Object.assign({
+      number: session.number
+    }, session.validation));
   }
   await exportVariableToGitHub(project.metadata.reponame, 'VALIDATION', VALIDATION);
 }
@@ -169,9 +186,11 @@ async function exportValidation(project) {
  * Export session registrants to GitHub
  */
 async function exportRegistrants(project) {
-  const REGISTRANTS = {};
+  const REGISTRANTS = [];
   for (const session of project.sessions) {
-    REGISTRANTS[session.number] = session.registrants;
+    REGISTRANTS.push(Object.assign({
+      number: session.number
+    }, session.registrants));
   }
   await exportVariableToGitHub(project.metadata.reponame, 'REGISTRANTS', REGISTRANTS);
 }

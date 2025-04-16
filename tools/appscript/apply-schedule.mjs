@@ -4,6 +4,7 @@ import {
 import reportError from './lib/report-error.mjs';
 import { fetchMapping } from './lib/w3cid-map.mjs';
 import { validateGrid } from '../common/validate.mjs';
+import { parseSessionMeetings } from '../common/meetings.mjs';
 
 export default async function () {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
@@ -39,6 +40,7 @@ export default async function () {
         session.slot = sessionSchedule[3];
         session.meeting = sessionSchedule[4];
         session.labels = sessionSchedule[5];
+        session.meetings = parseSessionMeetings(session, project);
       }
       else {
         console.log(`- no schedule info for session #${session.number}`);
