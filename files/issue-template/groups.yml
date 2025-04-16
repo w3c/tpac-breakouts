@@ -13,18 +13,6 @@ body:
       value: |
         Thank you for proposing a TPAC session. The title should be the name of the group or groups who will be meeting. The name must be the official [group name in the W3C system](https://www.w3.org/groups/), with some abbreviations supported (e.g., WG for Working Group).
 
-  - type: dropdown
-    id: capacity
-    attributes:
-      label: Estimate of in-person participants
-      options:
-        - More than 40
-        - 30 to 39
-        - 20 to 29
-        - Less than 20
-    validations:
-      required: true
-
   - type: markdown
     attributes:
       value: |
