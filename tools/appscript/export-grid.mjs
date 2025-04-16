@@ -33,7 +33,6 @@ export default async function () {
     console.log('Fetch data from GitHub... done');
 
     console.log('Check consistency with GitHub...');
-    const updated = [];
     for (const ghSession of githubProject.sessions) {
       const ssSession = project.sessions.find(s =>
         s.number === ghSession.number);
@@ -103,49 +102,32 @@ export default async function () {
     }
 
     console.log('Report result...');
-    if (updated.length > 0) {
-      const list = updated.map(s =>
-        `${s.title} (<a href="https://github.com/${s.repository}/issues/${s.number}">#${s.number}</a>)`);
-      const calendar = (
-        project.metadata.calendar && project.metadata.calendar !== 'no'
-      ) ? `<p>
+    const calendar = (
+      project.metadata.calendar &&
+      project.metadata.calendar !== 'no'
+    ) ? `
+      <p>
         Please allow a few minutes for the W3C calendar to get updated,
         and up to an hour for the schedule to reach the event's page on
         w3.org (if it exists).
-        </p>` : '';
-      const htmlOutput = HtmlService
-        .createHtmlOutput(`
-          <p>The following session${list.length > 1 ? 's were' : ' was'} updated:</p>
-          <ul>
-            <li>${list.join('</li><li>')}</li>
-          </ul>
-        ` + calendar)
-        .setWidth(400)
-        .setHeight(400);
-      SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Schedule published');
-    }
-    else {
-      const calendar = (
-        project.metadata.calendar && project.metadata.calendar !== 'no'
-      ) ? `<p>
-        I triggered an update of the W3C calendar to propagate possible changes
-        that I may have missed such as updates to session descriptions.
         </p>
+      ` : `
+      <p>
+        The W3C calendar will <b>not</b> be updated. If you would like to
+        propagate the schedule to the W3C calendar, please update the value of
+        the "Sync with W3C calendar" setting in the "Event" sheet to "draft",
+        "tentative", or "confirmed", and run the publication again.
+      </p>`;
+    const htmlOutput = HtmlService
+      .createHtmlOutput(`
         <p>
-        Please allow a few minutes for the W3C calendar to get updated,
-        and up to an hour for the schedule to reach the event's page on
-        w3.org (if it exists).
-        </p>` : '';
-      const htmlOutput = HtmlService
-        .createHtmlOutput(`
-          <p>The schedule itself was already up-to-date,
-          sessions did not need to be updated.</p>` +
-          calendar
-        )
-        .setWidth(400)
-        .setHeight(400);
-      SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Nothing to update');
-    }
+          The adopted schedule has successfully been published to GitHub.
+        </p>` +
+        calendar
+      )
+      .setWidth(400)
+      .setHeight(400);
+    SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Schedule published');
     console.log('Report result... done');
   }
   catch(err) {

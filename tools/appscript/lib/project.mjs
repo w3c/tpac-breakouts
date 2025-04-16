@@ -227,13 +227,14 @@ export function getProject(spreadsheet) {
   if (project.metadata.type === 'groups' &&
       sheets.meetings?.values) {
     const allMeetings = Object.groupBy(sheets.meetings.values, ({ number }) => number);
-    for (const [number, meetings] of Object.entries(allMeetings)) {
+    for (const [numberStr, meetings] of Object.entries(allMeetings)) {
+      const number = parseInt(numberStr, 10);
       const session = project.sessions.find(s => s.number === number);
       if (!session) {
+        console.warn(`The "Meetings" sheet references an unknown session #${number}`);
         continue;
       }
       session.meetings = meetings;
-      // TODO: Get rid of "meeting" column altogether
       const { room, meeting } = serializeSessionMeetings(meetings, project);
       session.room = room;
       session.meeting = meeting;
@@ -415,7 +416,6 @@ export function refreshProject(spreadsheet, project, { what }) {
       idKey = '';
     }
 
-    // TODO: Get rid of "meeting" column altogether
     const sheetValues = sheets[type].values ?? [];
     const projectValues = type === 'meetings' ?
       project.sessions
@@ -435,6 +435,12 @@ export function refreshProject(spreadsheet, project, { what }) {
       // internal representation of a project, but are at the root level
       // in the spreadsheet. Let's copy them to the root level as well.
       obj = Object.assign({}, obj, obj.validation);
+
+      // The "Meeting" column is handled through a dedicated sheet, skip it.
+      if (obj.meeting) {
+        delete obj.meeting;
+      }
+
       const value = type === 'meetings' ?
         sheetValues.find(val =>
           val.number === obj.number &&
@@ -594,7 +600,7 @@ function createSessionsSheet(spreadsheet, sheets, project) {
   // Set the headers row
   const headers = [
     'Number', 'Title', 'Author', 'Author ID', 'Body', 'Labels',
-    'Room', 'Day', 'Slot', 'Meeting',
+    'Room', 'Day', 'Slot',
     'Error', 'Warning', 'Check', 'Note',
     'Registrants'
   ];
