@@ -18,44 +18,70 @@ body:
       value: |
         ## Scheduling preferences
 
+  - type: dropdown
+    id: nbslots
+    attributes:
+      label: Total number of slots you would like to schedule
+      description: We work with fixed time-slots that range from 90 minutes to 2 hours, two slots in the morning, and two slots in the afternoon.
+      options:
+        - 1 slot
+        - 2 slots
+        - 3 slots
+        - 4 slots
+        - 5 slots
+        - 6 slots
+        - 7 slots
+        - 8 slots
+        - 9 slots
+        - 10 slots
+        - 11 slots
+        - 12 slots
+        - 13 slots
+        - 14 slots
+        - 15 slots
+        - 16 slots
+    validations:
+      required: true
+
+
   - type: checkboxes
     id: times
     attributes:
-      label: Select preferred dates and times (23-27 September)
-      description: You may select more than one
+      label: Acceptable slots
+      description: Select acceptable slots. To express flexibility, select more than the total number you entered above. Do not select fewer than the total number you entered above. Use the "Manual instructions for meeting planners" field for detailed requests such as preferred days.
       options:
-        - label: Monday, 09:00 - 10:30
-        - label: Monday, 11:00 - 12:30
-        - label: Monday, 14:00 - 16:00
-        - label: Monday, 16:30 - 18:00
-        - label: Tuesday, 09:00 - 10:30
-        - label: Tuesday, 11:00 - 12:30
-        - label: Tuesday, 14:00 - 16:00
-        - label: Tuesday, 16:30 - 18:00
-        - label: Thursday, 09:00 - 10:30
-        - label: Thursday, 11:00 - 12:30
-        - label: Thursday, 14:00 - 16:00
-        - label: Thursday, 16:30 - 18:00
-        - label: Friday, 09:00 - 10:30
-        - label: Friday, 11:00 - 12:30
-        - label: Friday, 14:00 - 16:00
-        - label: Friday, 16:30 - 18:00
-
-  - type: textarea
-    id: conflicts
-    attributes:
-      label: Other sessions where we should avoid scheduling conflicts (Optional)
-      description: |
-        Identify sessions by their issue number in this GitHub repo (e.g., `#32, #18`). Space- or comma-separated list.
-    validations:
-      required: false
+        - label: Monday morning 1
+        - label: Monday morning 2
+        - label: Monday afternoon 1
+        - label: Monday afternoon 2
+        - label: Tuesday morning 1
+        - label: Tuesday morning 2
+        - label: Tuesday afternoon 1
+        - label: Tuesday afternoon 2
+        - label: Thursday morning 1
+        - label: Thursday morning 2
+        - label: Thursday afternoon 1
+        - label: Thursday afternoon 2
+        - label: Friday morning 1
+        - label: Friday morning 2
+        - label: Friday afternoon 1
+        - label: Friday afternoon 2
 
   - type: textarea
     id: comments
     attributes:
-      label: Other instructions for meeting planners (Optional)
+      label: Manual instructions for meeting planners (Optional)
       description: |
-        Any information for the meeting planners, including timing constraints or groups not yet registered where overlap should be avoided. This information will not be exported to the TPAC site or calendar.
+        Any instruction for meeting planners, including desired joint meetings, groups you do not want to conflict with, and preferred meeting days. This information will not be exported to the TPAC site or calendar.
+    validations:
+      required: false
+
+  - type: textarea
+    id: conflicts
+    attributes:
+      label: Other groups where we should avoid scheduling conflicts (Optional)
+      description: |
+        Identify groups, ideally by their issue number in this GitHub repo (e.g., `#32, #18`), or by their name. Space- or comma-separated list.
     validations:
       required: false
 
@@ -87,7 +113,7 @@ body:
   - type: textarea
     id: agenda
     attributes:
-      label: Agenda for the meeting.
+      label: Agenda for the meeting
       description: |
         This part may be completed closer to the meeting. As the agenda becomes available, you will be able to update your session description in markdown to **detail the agenda or link to an external agenda**. Agenda information will be pushed to the calendar.
 
