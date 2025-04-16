@@ -317,14 +317,15 @@ export async function importVariableFromGitHub(name) {
     ]);
   }
   else if (name === 'VALIDATION') {
-    const validation = {};
+    const validation = [];
     for (const session of testData.sessions) {
-      validation[session.number] = {
+      validation.push({
+        number: session.number,
         error: session.validation?.error,
         warning: session.validation?.warning,
         check: session.validation?.check,
         note: session.validation?.note,
-      }
+      });
     }
     return validation;
   }

@@ -79,7 +79,7 @@ export async function fetchProjectFromGitHub(reponame, sessionTemplate) {
     }
   }
 
-  const validation = await importVariableFromGitHub(reponame, 'VALIDATION') ?? {};
+  const validation = await importVariableFromGitHub(reponame, 'VALIDATION') ?? [];
   for (const session of project.sessions) {
     const value = validation.find(v => v.number === session.number);
     if (value) {
@@ -96,7 +96,7 @@ export async function fetchProjectFromGitHub(reponame, sessionTemplate) {
     }
   }
 
-  const registrants = await importVariableFromGitHub(reponame, 'REGISTRANTS') ?? {};
+  const registrants = await importVariableFromGitHub(reponame, 'REGISTRANTS') ?? [];
   for (const session of project.sessions) {
     const value = registrants.find(r => r.number === session.number);
     if (value) {

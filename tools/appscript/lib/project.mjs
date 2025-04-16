@@ -213,7 +213,8 @@ export function getProject(spreadsheet) {
           error: session.error,
           note: session.note
         },
-        repository: repo.owner + '/' + repo.name
+        repository: repo.owner + '/' + repo.name,
+        registrants: parseRegistrants(session.registrants)
       })
     ),
 
@@ -337,6 +338,9 @@ function setValues(sheet, values) {
     if (header === 'labels' && obj[header]) {
       return obj[header].join(', ');
     }
+    if (header === 'registrants' && obj[header]) {
+      return serializeRegistrants(obj[header]);
+    }
     return obj[header];
   }));
   console.log('  - raw values to set', rawValues);
@@ -435,11 +439,6 @@ export function refreshProject(spreadsheet, project, { what }) {
       // internal representation of a project, but are at the root level
       // in the spreadsheet. Let's copy them to the root level as well.
       obj = Object.assign({}, obj, obj.validation);
-
-      // The "Meeting" column is handled through a dedicated sheet, skip it.
-      if (obj.meeting) {
-        delete obj.meeting;
-      }
 
       const value = type === 'meetings' ?
         sheetValues.find(val =>
@@ -747,4 +746,32 @@ export async function saveSessionValidationInSheet(session, project) {
     session.validation.warning,
     session.validation.check
   ]]);
+}
+
+
+function parseRegistrants(value) {
+  const rows = (value ?? '').trim().split(/\n/);
+  const registrants = {};
+  for (const row of rows) {
+    const tokens = row.trim().match(/^-?\s*(.*?):\s*(.*)$/);
+    if (!tokens) {
+      continue;
+    }
+    registrants[tokens[1].toLowerCase()] = tokens[2].match(/^\d+$/) ?
+      parseInt(tokens[2], 10) :
+      tokens[2];
+  }
+  return registrants;
+}
+
+function serializeRegistrants(value) {
+  if (!value) {
+    return '';
+  }
+  return ['Participants', 'Observers', 'URL']
+    .map(field => value[field.toLowerCase()] ?
+      `${field}: ${value[field.toLowerCase()]}` :
+      null)
+    .filter(field => field)
+    .join('\n');
 }
