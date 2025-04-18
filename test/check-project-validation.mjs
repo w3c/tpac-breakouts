@@ -59,4 +59,31 @@ describe('Project validation', function () {
       'Invalid day name "Monday (08)". Format should be either "YYYY-MM-DD" or "[label] (YYYY-MM-DD)'
     ]);
   });
+
+  it('reports about missing days for group meetings', async function () {
+    setEnvKey('REPOSITORY', 'test/project-validation-groups-days');
+    const project = await loadProject();
+    const errors = await validateProject(project);
+    assert.deepStrictEqual(errors, [
+      'TPAC events should have 4 days of group meetings, 3 days found'
+    ]);
+  });
+
+  it('reports about missing weekdays for group meetings', async function () {
+    setEnvKey('REPOSITORY', 'test/project-validation-groups-weekdays');
+    const project = await loadProject();
+    const errors = await validateProject(project);
+    assert.deepStrictEqual(errors, [
+      'TPAC event days should be a Monday, Tuesday, Thursday and Friday'
+    ]);
+  });
+
+  it('reports about missing slots for group meetings', async function () {
+    setEnvKey('REPOSITORY', 'test/project-validation-groups-slots');
+    const project = await loadProject();
+    const errors = await validateProject(project);
+    assert.deepStrictEqual(errors, [
+      'TPAC events should have 4 slots per day, 1 slot found'
+    ]);
+  });
 })

@@ -260,6 +260,97 @@ export async function initSectionHandlers(project) {
         };
         break;
 
+      case 'nbslots':
+        handler.parse = value => {
+          const option = handler.options.find(o => o.llabel === value.toLowerCase());
+          if (!option) {
+            throw new Error(`Unexpected value "${value}" for number of slots`);
+          }
+          if (option.label === 'none') {
+            return 0;
+          }
+          const match = option.label.match(/^(\d+) slots?$/);
+          return parseInt(match[1], 10);
+        };
+        handler.serialize = value => {
+          let llabel = '';
+          if (value === 0) {
+            llabel = 'None';
+          }
+          else if (value === 1) {
+            llabel = '1 slot';
+          }
+          else {
+            llabel = `${value} slots`;
+          }
+          const option = handler.options.find(o => o.llabel === llabel);
+          if (!option) {
+            throw new Error(`Unexpected value "${value}" for number of slots`);
+          }
+          return option.label;
+        };
+        break;
+
+      case 'slots':
+        // Each entry looks like "[x] Monday morning 1"
+        const reSlot = /^\[( |x)\]\s*(?:(monday|tuesday|thursday|friday)\s+(morning|afternoon)\s+(1|2))$/i;
+        handler.allowEmptyValue = true;
+        handler.parse = value => parseList(value, { linesOnly: true })
+          .map(slotDesc => {
+            const match = slotDesc.match(reSlot);
+            if (!match[1].trim()) {
+              return null;
+            }
+            const day = project.days.find(day => day.label.toLowerCase() === match[2].toLowerCase());
+            const slotIndex =
+              (match[3].toLowerCase() === 'afternoon' ? 2 : 0) +
+              (match[4] === '2') ? 1 : 0;
+            const slot = project.slots[slotIndex];
+            return { day: day.name, slot: slot.name };
+          })
+          .filter(slot => !!slot);
+        handler.validate = value => parseList(value, { linesOnly: true })
+          .every(slotDesc => {
+            const match = slotDesc.match(reSlot);
+            if (!match) {
+              // Not the expected format
+              return false;
+            }
+            if (!match[1].trim()) {
+              // Day not selected, we don't really care whether the line
+              // contains something valid, serialization will fix any possible
+              // hiccup in any case
+              return true;
+            }
+            const slotIndex =
+              (match[3].toLowerCase() === 'afternoon' ? 2 : 0) +
+              (match[4] === '2') ? 1 : 0;
+            const day = project.days.find(day => day.label.toLowerCase() === match[2].toLowerCase());
+            const slot = project.slots[slotIndex];
+            return day && slot;
+          });
+        // Serialization lists all possible slots in order, selecting those
+        // that are in the current slots value.
+        const fullSlots = project.days
+          .map(day => project.slots.map(slot => Object.assign({ day, slot })))
+          .flat();
+        handler.serialize = value => fullSlots
+          .map(ds => {
+            const selected = value?.find(choice =>
+              choice.day === ds.day.name &&
+              choice.slot === ds.slot.name);
+            const slotIndex = project.slots.findIndex(slot => slot.name === ds.slot.name);
+            const slotLabels = [
+              'morning 1',
+              'morning 2',
+              'afternoon 1',
+              'afternoon 2'
+            ];
+            return `- [${selected ? 'X' : ' '}] ${slotLabels[slotIndex]}`;
+          })
+          .join('\n');
+        break;
+
       case 'times':
         // Each entry looks like "[x] Monday, 09:30 - 11:00"
         const reTime = /^\[( |x)\]\s*(?:(monday|tuesday|thursday|friday),\s*(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2}))$/i;

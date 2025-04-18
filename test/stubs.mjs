@@ -74,6 +74,15 @@ async function getTestData(testDataId) {
   }
 
   function toGraphQLDayList(arr) {
+    const days = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday'
+    ];
     return arr
       .map(item => {
         if (typeof item === 'string') {
@@ -82,8 +91,13 @@ async function getTestData(testDataId) {
         return item;
       })
       .map(item => {
+        let date = null;
+        try {
+          date = new Date(item.name);
+        }
+        catch {}
         const match = item.name.match(/(.*) \((\d{4}\-\d{2}\-\d{2})\)$/) ??
-          [item.name, item.name, item.name];
+          [null, date ? days[date.getDay()] : item.name, item.name];
         item.label = item.label ?? match[1];
         item.date = item.date ?? match[2];
         return item;

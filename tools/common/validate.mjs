@@ -10,6 +10,7 @@ const schedulingErrors = [
   'error: chair conflict',
   'error: scheduling',
   'error: irc',
+  'error: times',
   'warning: capacity',
   'warning: conflict',
   'warning: duration',
@@ -361,6 +362,24 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         details: schedulingErrors
       });
     }
+  }
+
+  // Report an error when the list of acceptable slots does not have
+  // enough selected slots
+  if (session.description.nbslots > 0 &&
+      session.description.nbslots > session.description.slots?.length) {
+    const s = session.description.slots?.length > 1 ? 's' : '';
+    errors.push({
+      session: sessionNumber,
+      severity: 'error',
+      type: 'times',
+      messages: [
+        `${session.description.nbslots} slots requested but only ${session.description.slots?.length ?? 0} acceptable slot${s} selected`
+      ],
+      details: [
+        Object.assign({ session })
+      ]
+    });
   }
 
   // Warn when chosen meetings don't match requested times

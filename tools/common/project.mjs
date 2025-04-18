@@ -244,6 +244,24 @@ export function validateProject(project) {
     }
   }
 
+  if (project.metadata?.type === 'groups') {
+    if (project.days.length !== 4) {
+      const s = project.days.length > 1 ? 's' : '';
+      errors.push(`TPAC events should have 4 days of group meetings, ${project.days.length} day${s} found`);
+    }
+    else {
+      const weekdays = project.days.map(day => day.label).sort().join(', ');
+      if (weekdays !== 'Friday, Monday, Thursday, Tuesday') {
+        errors.push(`TPAC event days should be a Monday, Tuesday, Thursday and Friday`);
+      }
+    }
+
+    if (project.slots.length !== 4) {
+      const s = project.slots.length > 1 ? 's' : '';
+      errors.push(`TPAC events should have 4 slots per day, ${project.slots.length} slot${s} found`);
+    }
+  }
+
   return errors;
 }
 

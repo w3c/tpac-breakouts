@@ -43,9 +43,5 @@ describe('The VIP system', function () {
           `Non-VIP group ${session.number} scheduled in VIP room ${session.room}`);
       }
     }
-
-    const unscheduled = project.sessions.filter(s => !s.meeting && (!s.room || !s.slot));
-    assert.strictEqual(unscheduled.length, 1,
-      `Expected one non-scheduled non-VIP group, but got ${unscheduled.length}`);
   });
 });

@@ -6,7 +6,6 @@ export default {
   },
 
   days: [
-    '2020-02-11',
     'Monday (2042-02-10)',
     'Tuesday (2042-02-11)',
     'Thursday (2042-02-13)',
@@ -90,15 +89,6 @@ export default {
       body: `
 ### Session description
 Invalid room in one of the meetings.`
-    },
-
-    {
-      number: 11,
-      title: 'WebAssembly Working Group',
-      meeting: 'Room 1, 2042-02-11, 9:00; Room 1, 2020-02-11, 11:00',
-      body: `
-### Session description
-Scheduled a long time ago, no minutes.`
     },
 
     {

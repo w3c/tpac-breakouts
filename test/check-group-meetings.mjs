@@ -109,13 +109,6 @@ describe('The group meetings module', function () {
     }]);
   });
 
-  it('does not report missing minutes when a meeting is past', async function () {
-    const project = await loadProject();
-    const sessionNumber = 11;
-    const errors = await validateSession(sessionNumber, project);
-    assert.deepStrictEqual(errors, []);
-  });
-
   it('reports an error when two sessions are scheduled in the same room at the same time', async function () {
     const project = await loadProject();
     const sessionNumber = 12;
@@ -217,14 +210,14 @@ describe('The group meetings module', function () {
 
   it('parses and serializes meetings', async function () {
     const project = await loadProject();
-    const sessionNumber = 11;
+    const sessionNumber = 12;
     await validateSession(sessionNumber, project);
     const session = project.sessions.find(s => s.number === sessionNumber);
     const meetings = parseSessionMeetings(session, project);
     const meetingsSerialized = serializeSessionMeetings(meetings, project);
     assert.deepStrictEqual(meetingsSerialized, {
-      room: 'Room 1',
-      meeting: 'Tuesday, 9:00; 2020-02-11, 11:00'
+      room: 'Room 2',
+      meeting: 'Monday, 9:00; Monday, 11:00'
     });
   });
 

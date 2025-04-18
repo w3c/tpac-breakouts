@@ -17,7 +17,7 @@ describe('The meeting field parser', function () {
   it('parses a regular list of meetings', async function () {
     const project = await loadProject();
     const session = {
-      meeting: 'Tuesday, Room 1, 9:00; Room 1, 2020-02-11, 11:00 - 13:00'
+      meeting: 'Tuesday, Room 1, 9:00; Room 1, Thursday, 11:00 - 13:00'
     };
     const meetings = parseSessionMeetings(session, project);
     assert.deepStrictEqual(meetings, [
@@ -27,7 +27,7 @@ describe('The meeting field parser', function () {
         slot: '9:00 - 11:00'
       },
       {
-        day: '2020-02-11',
+        day: 'Thursday (2042-02-13)',
         room: 'Room 1',
         slot: '11:00 - 13:00'
       }
@@ -43,13 +43,13 @@ describe('The meeting field parser', function () {
         slot: '9:00 - 11:00'
       },
       {
-        day: '2020-02-11',
+        day: 'Thursday (2042-02-13)',
         room: 'Room 2',
         slot: '11:00 - 13:00'
       }
     ];
     assert.deepStrictEqual(serializeSessionMeetings(meetings, project), {
-      meeting: 'Tuesday, 9:00, Room 1; 2020-02-11, 11:00, Room 2'
+      meeting: 'Tuesday, 9:00, Room 1; Thursday, 11:00, Room 2'
     });
   });
 

@@ -5,6 +5,20 @@ export default {
     type: 'groups'
   },
 
+  days: [
+    'Monday (2042-02-10)',
+    'Tuesday (2042-02-11)',
+    'Thursday (2042-02-13)',
+    'Friday (2042-02-14)'
+  ],
+
+  slots: [
+    '9:00 - 11:00',
+    '11:00 - 13:00',
+    '14:00 - 16:00',
+    '16:30 - 18:00'
+  ],
+
   sessions: [
     {
       number: 1,
