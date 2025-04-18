@@ -22,7 +22,7 @@ body:
     id: nbslots
     attributes:
       label: Total number of slots you would like to schedule
-      description: We work with fixed time-slots that range from 90 minutes to 2 hours. 4 slots per day. 2 slots in the morning. 2 slots in the afternoon.
+      description: We generally have four fixed time-slots daily that range from 90 minutes to 2 hours (2 slots in the morning, 2 in the afternoon).
       options:
         - 1 slot
         - 2 slots
@@ -47,7 +47,7 @@ body:
     id: slots
     attributes:
       label: Acceptable slots
-      description: Select acceptable slots. To express flexibility, select more than the total number you entered above. Do not select fewer than the total number you entered above. Use the "Manual instructions for meeting planners" field for detailed requests such as preferred days.
+      description: Select **acceptable** slots. To express flexibility, select more than the total number you entered above. Do not select fewer than the total number you entered above. Use the "Manual instructions for meeting planners" field for detailed requests such as preferred days.
       options:
         - label: Monday morning 1
         - label: Monday morning 2
