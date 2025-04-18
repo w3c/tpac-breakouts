@@ -42,15 +42,6 @@ body:
         - label: Friday, 16:30 - 18:00
 
   - type: textarea
-    id: conflicts
-    attributes:
-      label: Other sessions where we should avoid scheduling conflicts (Optional)
-      description: |
-        Identify sessions by their issue number in this GitHub repo (e.g., `#32, #18`). Space- or comma-separated list.
-    validations:
-      required: false
-
-  - type: textarea
     id: comments
     attributes:
       label: Other instructions for meeting planners (Optional)

@@ -7,6 +7,17 @@ export function getSessionSections(template) {
   // purpose of validation and serialization, we need to add them to the list
   // of sections (as custom "auto hide" sections that only get displayed when
   // they are not empty).
+  // Same thing for the "conflicts" section, although only for TPAC group
+  // meetings.
+  if (!sessionSections.find(section => section.id === 'conflicts')) {
+    sessionSections.push({
+      id: 'conflicts',
+      attributes: {
+        label: 'Scheduling conflicts to avoid',
+        autoHide: true
+      }
+    });
+  }
   if (!sessionSections.find(section => section.id === 'calendar')) {
     sessionSections.push({
       id: 'calendar',
