@@ -473,7 +473,7 @@ function addSessions(sheet, project, validationErrors) {
 
     const capacityIssue = capacityIssues
       .find(error => error.issue.session === session.number);
-    if (capacityIssue && !reduce) {
+    if (capacityIssue) {
       label += '\nCapacity: ' + session.description.capacity;
     }
 

@@ -404,7 +404,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         session: sessionNumber,
         severity: 'warning',
         type: 'capacity',
-        messages: capacityWarnings.map(warn => `Capacity of "${warn.room.label}" (${warn.room.capacity ?? '30 (assumed)'}) is lower than requested capacity (${session.description.capacity})`),
+        messages: capacityWarnings.map(warn => `Capacity of "${warn.room.name}" (${warn.room.capacity ?? '30 (assumed)'}), used for ${warn.meeting.day} ${warn.meeting.slot} meeting, is lower than requested capacity (${session.description.capacity})`),
         details: capacityWarnings
       });
     }
@@ -434,7 +434,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         const nextRoom = project.rooms.find(s => s.name === warn.meeting.room);
         const day = project.days.find(d => d.name === warn.meeting.day);
         const slot = project.slots.find(s => s.name === warn.meeting.slot);
-        return `Room switch between "${prevRoom.label}" and "${nextRoom.label}" on ${day.label} at ${slot.start}`;
+        return `Room switch between "${prevRoom.name}" and "${nextRoom.name}" on ${day.label} at ${slot.start}`;
       }),
       details: switchWarnings
     })
