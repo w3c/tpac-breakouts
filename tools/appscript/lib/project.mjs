@@ -598,11 +598,15 @@ function createSessionsSheet(spreadsheet, sheets, project) {
 
   // Set the headers row
   const headers = [
-    'Number', 'Title', 'Author', 'Author ID', 'Body', 'Labels',
-    'Room', 'Day', 'Slot',
+    'Number', 'Title', 'Author', 'Author ID', 'Body', 'Labels'
+  ];
+  if (project.metadata.type !== 'groups') {
+    headers.push('Room', 'Day', 'Slot');
+  }
+  headers.push(
     'Error', 'Warning', 'Check', 'Note',
     'Registrants'
-  ];
+  );
   const headersRow = sheet.getRange(1, 1, 1, headers.length);
   headersRow.setValues([headers]);
   headersRow.setFontWeight('bold');
@@ -616,44 +620,46 @@ function createSessionsSheet(spreadsheet, sheets, project) {
   sheet.setColumnWidths(headers.findIndex(h => h === 'Number') + 1, 1, 60);
   sheet.setColumnWidths(headers.findIndex(h => h === 'Title') + 1, 1, 300);
   sheet.setColumnWidths(headers.findIndex(h => h === 'Body') + 1, 1, 300);
-  sheet.setColumnWidths(headers.findIndex(h => h === 'Room') + 1, 1, 150);
-  sheet.setColumnWidths(headers.findIndex(h => h === 'Day') + 1, 1, 150);
+  if (project.metadata.type !== 'groups') {
+    sheet.setColumnWidths(headers.findIndex(h => h === 'Room') + 1, 1, 150);
+    sheet.setColumnWidths(headers.findIndex(h => h === 'Day') + 1, 1, 150);
 
-  // TODO: this assumes that room name is in column "A".
-  const roomValuesRange = sheets.rooms.sheet.getRange('A2:A');
-  const roomRule = SpreadsheetApp
-    .newDataValidation()
-    .requireValueInRange(roomValuesRange)
-    .setAllowInvalid(false)
-    .build();
-  const roomRange = sheet.getRange(
-    2, headers.findIndex(h => h === 'Room') + 1,
-    sheet.getMaxRows() - 1, 1);
-  roomRange.setDataValidation(roomRule);
+    // TODO: this assumes that room name is in column "A".
+    const roomValuesRange = sheets.rooms.sheet.getRange('A2:A');
+    const roomRule = SpreadsheetApp
+      .newDataValidation()
+      .requireValueInRange(roomValuesRange)
+      .setAllowInvalid(false)
+      .build();
+    const roomRange = sheet.getRange(
+      2, headers.findIndex(h => h === 'Room') + 1,
+      sheet.getMaxRows() - 1, 1);
+    roomRange.setDataValidation(roomRule);
 
-  // TODO: this assumes that day name is in column "A".
-  const dayValuesRange = sheets.days.sheet.getRange('A2:A');
-  const dayRule = SpreadsheetApp
-    .newDataValidation()
-    .requireValueInRange(dayValuesRange)
-    .setAllowInvalid(false)
-    .build();
-  const dayRange = sheet.getRange(
-    2, headers.findIndex(h => h === 'Day') + 1,
-    sheet.getMaxRows() - 1, 1);
-  dayRange.setDataValidation(dayRule);
+    // TODO: this assumes that day name is in column "A".
+    const dayValuesRange = sheets.days.sheet.getRange('A2:A');
+    const dayRule = SpreadsheetApp
+      .newDataValidation()
+      .requireValueInRange(dayValuesRange)
+      .setAllowInvalid(false)
+      .build();
+    const dayRange = sheet.getRange(
+      2, headers.findIndex(h => h === 'Day') + 1,
+      sheet.getMaxRows() - 1, 1);
+    dayRange.setDataValidation(dayRule);
 
-  // TODO: this assumes that slot name is in column "C".
-  const slotValuesRange = sheets.slots.sheet.getRange('C2:C');
-  const slotRule = SpreadsheetApp
-    .newDataValidation()
-    .requireValueInRange(slotValuesRange)
-    .setAllowInvalid(false)
-    .build();
-  const slotRange = sheet.getRange(
-    2, headers.findIndex(h => h === 'Slot') + 1,
-    sheet.getMaxRows() - 1, 1);
-  slotRange.setDataValidation(slotRule);
+    // TODO: this assumes that slot name is in column "C".
+    const slotValuesRange = sheets.slots.sheet.getRange('C2:C');
+    const slotRule = SpreadsheetApp
+      .newDataValidation()
+      .requireValueInRange(slotValuesRange)
+      .setAllowInvalid(false)
+      .build();
+    const slotRange = sheet.getRange(
+      2, headers.findIndex(h => h === 'Slot') + 1,
+      sheet.getMaxRows() - 1, 1);
+    slotRange.setDataValidation(slotRule);
+  }
 
   sheet
     .getRange(2, 1,
