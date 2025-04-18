@@ -404,7 +404,15 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         session: sessionNumber,
         severity: 'warning',
         type: 'capacity',
-        messages: capacityWarnings.map(warn => `Capacity of "${warn.room.name}" (${warn.room.capacity ?? '30 (assumed)'}), used for ${warn.meeting.day} ${warn.meeting.slot} meeting, is lower than requested capacity (${session.description.capacity})`),
+        messages: capacityWarnings.map(warn => {
+          let mstr = '';
+          if (warn.meeting.day && warn.meeting.slot) {
+            const day = project.days.find(d => d.name === warn.meeting.day);
+            const slot = project.slots.find(s => s.name === warn.meeting.slot);
+            mstr = `, used for meeting on ${day.label} at ${slot.start},`;
+          }
+          return `Capacity of "${warn.room.name}" (${warn.room.capacity ?? '30 (assumed)'})${mstr} is lower than requested capacity (${session.description.capacity})`;
+        }),
         details: capacityWarnings
       });
     }

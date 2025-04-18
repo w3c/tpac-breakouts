@@ -135,7 +135,7 @@ describe('Session validation', function () {
       session: sessionNumber,
       severity: 'warning',
       type: 'capacity',
-      messages: ['Capacity of "Main" (25) is lower than requested capacity (50)']
+      messages: ['Capacity of "Main (25)" (25), used for meeting on 2042-04-05 at 15:00, is lower than requested capacity (50)']
     }]);
   });
 
