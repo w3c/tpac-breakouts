@@ -162,8 +162,14 @@ async function copyFiles(project) {
   const fileChanges = Object.entries(bundleFiles)
     .map(([file, contents]) => {
       file = file
-        .replace(/^workflows\//, '.github/workflows/')
-        .replace(/^session-created/, '.github/session-created');
+        .replace(/^workflows\//, '.github/workflows/');
+      if (file.startsWith('issue-created')) {
+        // Depends on event type!
+        if (!file.endsWith(project.metadata.fullType + '.md')) {
+          return null;
+        }
+        file = '.github/session-created.md';
+      }
       if (file.startsWith('issue-template')) {
         // Depends on event type!
         if (!file.endsWith(project.metadata.fullType + '.yml')) {
