@@ -167,8 +167,14 @@ export async function initSectionHandlers(project) {
         break;
 
       case 'shortname':
-        handler.parse = value => value.replace(/^\`(.*)\`$/, '$1');
-        handler.validate = value => value.match(/^(\`#?[A-Za-z0-9\-_]+\`|#?[A-Za-z0-9\-_]+)$/);
+        handler.parse = value => value
+          .replace(/^\[(.+)\]\((.*)\)$/i, '$1')
+          .replace(/^\`(.*)\`$/, '$1');
+        handler.validate = value =>
+          value.match(/^(\`#?[A-Za-z0-9\-_]+\`|#?[A-Za-z0-9\-_]+)$/) ||
+          value.match(/^\[(\`#?[A-Za-z0-9\-_]+\`|#?[A-Za-z0-9\-_]+)\]\((.*)\)$/i);
+        handler.serialize = value =>
+          `[\`#${value.replace(/#/, '')}\`](https://webirc.w3.org/?channels=${value.replace(/#/, '')})`;
         break;
 
       case 'discussion':

@@ -66,7 +66,7 @@ body:
     attributes:
       label: IRC channel (Optional)
       description: |
-        Shortname for the irc.w3.org channel (e.g., `#my-fav-session`). If not provided, shortname will be generated from title.
+        Shortname for the webirc.w3.org channel (e.g., `#my-fav-session`). If not provided, shortname will be generated from title.
     validations:
       required: false
 

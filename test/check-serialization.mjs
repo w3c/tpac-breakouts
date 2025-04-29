@@ -3,7 +3,8 @@ import { setEnvKey } from '../tools/common/envkeys.mjs';
 import { loadProject } from '../tools/node/lib/project.mjs';
 import { initSectionHandlers,
          parseSessionBody,
-         serializeSessionDescription } from '../tools/common/session.mjs';
+         serializeSessionDescription,
+         validateSessionBody } from '../tools/common/session.mjs';
 import * as assert from 'node:assert';
 
 describe('The serialization of session descriptions', function () {
@@ -393,6 +394,52 @@ _No response_
 ### Agenda (link or inline)
 
 _No response_`;
+    const desc = parseSessionBody(initialBody);
+    const serializedBody = serializeSessionDescription(desc);
+    assert.strictEqual(serializedBody, initialBody);
+  });
+
+
+  it('supports URLs in IRC channels', async function () {
+    const project = await loadProject();
+    await initSectionHandlers(project);
+    const initialBody = `### Session description
+
+My session is rich.
+
+### Session goal
+
+Uncover bugs.
+
+### Session type
+
+Breakout (Default)
+
+### Additional session chairs (Optional)
+
+_No response_
+
+### Estimated number of in-person attendees
+
+Fewer than 20 people
+
+### IRC channel (Optional)
+
+[\`#rich-session\`](https://webirc.w3.org/?channels=rich-session)
+
+### Other sessions where we should avoid scheduling conflicts (Optional)
+
+_No response_
+
+### Instructions for meeting planners (Optional)
+
+_No response_
+
+### Agenda (link or inline)
+
+_No response_`;
+    const errors = validateSessionBody(initialBody);
+    assert.deepEqual(errors, []);
     const desc = parseSessionBody(initialBody);
     const serializedBody = serializeSessionDescription(desc);
     assert.strictEqual(serializedBody, initialBody);
