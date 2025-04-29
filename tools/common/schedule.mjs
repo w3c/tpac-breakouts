@@ -32,6 +32,16 @@ import { parseSessionMeetings,
          meetsInRoom,
          meetsAt } from './meetings.mjs';
 
+function getRequestedNbOfSlots(session) {
+  if (session.description.times?.length) {
+    return session.description.times.length;
+  }
+  if (session.description.nbslots) {
+    return session.description.nbslots;
+  }
+  return 0;
+}
+
 /**
  * Suggest a schedule, updated sessions meetings as needed.
  *
@@ -142,10 +152,10 @@ export function suggestSchedule(project, { seed }) {
         // avoid assigning the session to different rooms)
         if (!candidate.session ||
             s.meetings?.find(m => m.slot) ||
-            candidate.nbTimes < s.description.times?.length) {
+            candidate.nbTimes < getRequestedNbOfSlots(s)) {
           return {
             session: s,
-            nbTimes: s.description.times?.length ?? 0,
+            nbTimes: getRequestedNbOfSlots(s),
             meetingTimeImposed: s.meetings?.find(m => m.slot)
           };
         }
@@ -307,17 +317,28 @@ export function suggestSchedule(project, { seed }) {
     // Initialize the list of meetings that we want to schedule.
     // Some may be partially or fully scheduled already.
     let baseMeetings = parseSessionMeetings(session, project);
+    let treatMeetingsAsSuggestions = false;
     if (baseMeetings.length === 0 ||
         (baseMeetings.length === 1 && !session.meeting &&
           !(baseMeetings[0].room && baseMeetings[0].day && baseMeetings[0].slot))) {
-      if (strictTimes && session.description.times?.length > 0) {
+      if (strictTimes && getRequestedNbOfSlots(session) > 0) {
         // Try to schedule the session during the requested slots
         // and in the right room if the room is imposed
-        baseMeetings = session.description.times.map(time => Object.assign({
-          room: session.room,
-          day: time.day,
-          slot: time.slot
-        }));
+        if (session.description.slots?.length > 0) {
+          treatMeetingsAsSuggestions = true;
+          baseMeetings = session.description.slots.map(time => Object.assign({
+            room: session.room,
+            day: time.day,
+            slot: time.slot
+          }));
+        }
+        else {
+          baseMeetings = session.description.times.map(time => Object.assign({
+            room: session.room,
+            day: time.day,
+            slot: time.slot
+          }));
+        }
       }
       else {
         // Prepare a list of meetings that we want to schedule
@@ -378,6 +399,7 @@ export function suggestSchedule(project, { seed }) {
     for (const firstMeetingRoom of getPossibleRooms(baseMeetings[0])) {
       // Work on a copy of the base list of meetings
       const meetings = JSON.parse(JSON.stringify(baseMeetings));
+      let scheduledMeetings = 0;
       for (const meeting of meetings) {
         // List possible rooms:
         // - If we explicitly set a room already, that's the only possibility.
@@ -387,8 +409,8 @@ export function suggestSchedule(project, { seed }) {
         // or all rooms if capacity constraint has been relaxed already.
         const possibleRooms = getPossibleRooms(meeting, firstMeetingRoom);
         if (possibleRooms.length === 0) {
-          // Cannot schedule the meeting, stop here
-          break;
+          // Cannot schedule the meeting
+          continue;
         }
         for (const room of possibleRooms) {
           // List possible slots in the current room:
@@ -459,9 +481,25 @@ export function suggestSchedule(project, { seed }) {
               meeting.slot = dayslot.slot.name;
               resourcesToUpdate.push(dayslot);
             }
+            scheduledMeetings += 1;
             break;
           }
         }
+        if (scheduledMeetings >= numberOfMeetings) {
+          break;
+        }
+      }
+
+      // We may have more meetings than what we actually need
+      while (meetings.length > numberOfMeetings) {
+        const idx = meetings.findIndex(m => !(m.room && m.day && m.slot));
+        if (idx === -1) {
+          break;
+        }
+        meetings.splice(idx, 1);
+      }
+      if (meetings.length !== numberOfMeetings) {
+        throw new Error(`Unexpected number of meetings scheduled ${meetings.length} instead of ${numberOfMeetings}`);
       }
 
       if (meetings.every(m => m.room && m.day && m.slot)) {
@@ -516,8 +554,8 @@ export function suggestSchedule(project, { seed }) {
       // that conflict cannot be relaxed (e.g., same person cannot chair two
       // sessions at the same time).
       let numberOfMeetings = 1;
-      if (session.description.times?.length) {
-        numberOfMeetings = session.description.times.length;
+      if (getRequestedNbOfSlots(session) > 0) {
+        numberOfMeetings = getRequestedNbOfSlots(session);
       }
       const constraints = {
         trackRoom,
@@ -562,7 +600,7 @@ export function suggestSchedule(project, { seed }) {
           console.warn(`- forget all conflicts for #${session.number}`);
           constraints.meetConflicts = [];
         }
-        else if (constraints.strictTimes && (session.description.times?.length > 0)) {
+        else if (constraints.strictTimes && getRequestedNbOfSlots(session) > 0) {
           console.warn(`- relax times constraint for #${session.number}`);
           constraints.strictTimes = false;
         }
