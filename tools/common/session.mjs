@@ -212,7 +212,7 @@ export async function initSectionHandlers(project) {
           const conflictingSessions = parseList(value, { spaceSeparator: true, prefix: '#' });
           return conflictingSessions.every(issue => issue.match(/^#\d+$/));
         };
-        handler.serialize = value => value.map(issue => `#${issue}`).join(', ');
+        handler.serialize = value => value.map(issue => `- #${issue}`).join('\n');
         break;
 
       case 'capacity':

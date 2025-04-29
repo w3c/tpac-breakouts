@@ -304,4 +304,98 @@ _No response_`;
     assert.strictEqual(desc.discussion, 'https://example.org/discuss');
     assert.strictEqual(serializedBody, initialBody);
   });
+
+
+  it('serializes conflicting issues on multiple lines', async function () {
+    const project = await loadProject();
+    await initSectionHandlers(project);
+    const initialBody = `### Session description
+
+My session is rich.
+
+### Session goal
+
+Uncover bugs.
+
+### Session type
+
+Breakout (Default)
+
+### Additional session chairs (Optional)
+
+_No response_
+
+### Estimated number of in-person attendees
+
+Fewer than 20 people
+
+### IRC channel (Optional)
+
+_No response_
+
+### Other sessions where we should avoid scheduling conflicts (Optional)
+
+#30, #12, #42
+
+### Instructions for meeting planners (Optional)
+
+_No response_
+
+### Agenda (link or inline)
+
+_No response_`;
+    const desc = parseSessionBody(initialBody);
+    const serializedBody = serializeSessionDescription(desc);
+    const expectedBody = initialBody.replace(
+      /#30, #12, #42/,
+      '- #30\n- #12\n- #42');
+    assert.strictEqual(serializedBody, expectedBody);
+  });
+
+
+  it('understands conflicting issues on multiple lines', async function () {
+    const project = await loadProject();
+    await initSectionHandlers(project);
+    const initialBody = `### Session description
+
+My session is rich.
+
+### Session goal
+
+Uncover bugs.
+
+### Session type
+
+Breakout (Default)
+
+### Additional session chairs (Optional)
+
+_No response_
+
+### Estimated number of in-person attendees
+
+Fewer than 20 people
+
+### IRC channel (Optional)
+
+_No response_
+
+### Other sessions where we should avoid scheduling conflicts (Optional)
+
+- #30
+- #12
+- #42
+
+### Instructions for meeting planners (Optional)
+
+_No response_
+
+### Agenda (link or inline)
+
+_No response_`;
+    const desc = parseSessionBody(initialBody);
+    const serializedBody = serializeSessionDescription(desc);
+    assert.strictEqual(serializedBody, initialBody);
+  });
+
 });
