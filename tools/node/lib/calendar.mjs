@@ -438,7 +438,7 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
     await fillTextInput('input#event_title', 'Plenary session');
     await fillTextInput('textarea#event_description', formatPlenaryDescription(sessions));
     await fillTextInput('input#event_chat',
-      `https://irc.w3.org/?channels=${encodeURIComponent(`#plenary`)}`);
+      `https://webirc.w3.org/?channels=${encodeURIComponent(`plenary`)}`);
     await fillTextInput('input#event_agendaUrl', '');
     await fillTextInput('textarea#event_agenda', formatPlenaryAgenda(sessions));
   }
@@ -449,7 +449,7 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
     }
     else if (session.description.shortname) {
       await fillTextInput('input#event_chat',
-        `https://irc.w3.org/?channels=${encodeURIComponent(session.description.shortname)}`);
+        `https://webirc.w3.org/?channels=${encodeURIComponent(session.description.shortname.replace(/#/, ''))}`);
     }
 
     // Always update the next few fields for breakout sessions,
