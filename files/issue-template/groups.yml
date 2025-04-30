@@ -71,7 +71,7 @@ body:
     attributes:
       label: Other instructions for meeting planners (Optional)
       description: |
-        Any information for the meeting planners, including preferences that would impact scheduling such as preferred days or slots, groups not to conflict with, and groups to meet jointly with.
+        Any information for the meeting planners, including preferences that would impact scheduling such as preferred days or slots, groups to avoid conflict with, and groups to meet jointly with.
     validations:
       required: false
 
