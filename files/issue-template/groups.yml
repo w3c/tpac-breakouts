@@ -11,7 +11,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for proposing a TPAC session. The title should be the name of the group or groups who will be meeting. The name must be the official [group name in the W3C system](https://www.w3.org/groups/), with some abbreviations supported (e.g., WG for Working Group).
+        Thank you for proposing a TPAC meeting. The title should be the name of the group. The name must be the official [group name in the W3C system](https://www.w3.org/groups/), with some abbreviations supported (e.g., WG for Working Group).
 
   - type: markdown
     attributes:
@@ -22,7 +22,7 @@ body:
     id: nbslots
     attributes:
       label: Total number of slots you would like to schedule
-      description: We generally have four fixed time-slots daily that range from 90 minutes to 2 hours (2 slots in the morning, 2 in the afternoon).
+      description: We generally have four time-slots daily that range from 75 minutes to 2 hours (2 slots in the morning, 2 in the afternoon).
       options:
         - 1 slot
         - 2 slots
@@ -49,29 +49,29 @@ body:
       label: Acceptable slots
       description: Select **acceptable** slots. To express flexibility, select more than the total number you entered above. Do not select fewer than the total number you entered above. Use the "Manual instructions for meeting planners" field for detailed requests such as preferred days.
       options:
-        - label: Monday morning 1
-        - label: Monday morning 2
-        - label: Monday afternoon 1
-        - label: Monday afternoon 2
-        - label: Tuesday morning 1
-        - label: Tuesday morning 2
-        - label: Tuesday afternoon 1
-        - label: Tuesday afternoon 2
-        - label: Thursday morning 1
-        - label: Thursday morning 2
-        - label: Thursday afternoon 1
-        - label: Thursday afternoon 2
-        - label: Friday morning 1
-        - label: Friday morning 2
-        - label: Friday afternoon 1
-        - label: Friday afternoon 2
+        - label: Monday, 9:00 - 10:30
+        - label: Monday, 11:00 - 12:30
+        - label: Monday, 13:30 - 15:00
+        - label: Monday, 15:30 - 16:45
+        - label: Tuesday, 9:45 - 11:00
+        - label: Tuesday, 11:30 - 13:00
+        - label: Tuesday, 14:00 - 16:00
+        - label: Tuesday, 16:30 - 18:00
+        - label: Thursday, 9:00 - 10:30
+        - label: Thursday, 11:00 - 12:30
+        - label: Thursday, 13:30 - 15:00
+        - label: Thursday, 15:30 - 16:45
+        - label: Friday, 9:00 - 10:30
+        - label: Friday, 11:00 - 12:30
+        - label: Friday, 14:00 - 16:00
+        - label: Friday, 16:30 - 18:00
 
   - type: textarea
     id: comments
     attributes:
       label: Other instructions for meeting planners (Optional)
       description: |
-        Any information for the meeting planners, including timing constraints or groups not yet registered where overlap should be avoided. This information will not be exported to the TPAC site or calendar.
+        Any information for the meeting planners, including preferences that would impact scheduling such as preferred days or slots, groups not to conflict with, and groups to meet jointly with.
     validations:
       required: false
 
@@ -103,12 +103,8 @@ body:
   - type: textarea
     id: agenda
     attributes:
-      label: Agenda for the meeting.
+      label: Agenda for the meeting (Optional)
       description: |
         This part may be completed closer to the meeting. As the agenda becomes available, you will be able to update your session description in markdown to **detail the agenda or link to an external agenda**. Agenda information will be pushed to the calendar.
-
-  - type: markdown
-    attributes:
-      value: |
-        > [!Note]
-        After the meeting, the meeting planners will add a section to the session description for meeting materials such as links to minutes, presentations, and any recordings.
+    validations:
+      required: false
