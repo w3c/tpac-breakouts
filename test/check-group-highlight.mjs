@@ -117,13 +117,13 @@ describe('The group meetings highlight code', function () {
         start: '9:00',
         end: '11:00',
         room: 'Room 1',
-        day: 'Monday (2042-02-10)'
+        day: '2042-02-10'
       },
       {
         start: '14:00',
         end: '16:00',
         room: 'Room 1',
-        day: 'Monday (2042-02-10)'
+        day: '2042-02-10'
       }
     ]);
   });

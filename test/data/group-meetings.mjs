@@ -5,19 +5,24 @@ export default {
     type: 'groups'
   },
 
-  days: [
-    'Monday (2042-02-10)',
-    'Tuesday (2042-02-11)',
-    'Thursday (2042-02-13)',
-    'Friday (2042-02-14)'
-  ],
-
   // Various slots to avoid creating artificial conflicts
   slots: [
-    '9:00 - 11:00',
-    '11:00 - 13:00',
-    '14:00 - 16:00',
-    '16:00 - 18:00'
+    '2042-02-10 9:00 - 11:00',
+    '2042-02-10 11:00 - 13:00',
+    '2042-02-10 14:00 - 16:00',
+    '2042-02-10 16:00 - 18:00',
+    '2042-02-11 9:00 - 11:00',
+    '2042-02-11 11:00 - 13:00',
+    '2042-02-11 14:00 - 16:00',
+    '2042-02-11 16:00 - 18:00',
+    '2042-02-13 9:00 - 11:00',
+    '2042-02-13 11:00 - 13:00',
+    '2042-02-13 14:00 - 16:00',
+    '2042-02-13 16:00 - 18:00',
+    '2042-02-14 9:00 - 11:00',
+    '2042-02-14 11:00 - 13:00',
+    '2042-02-14 14:00 - 16:00',
+    '2042-02-14 16:00 - 18:00'
   ],
 
   // A few rooms, including one for plenary sessions
@@ -95,7 +100,7 @@ Invalid room in one of the meetings.`
       number: 12,
       title: 'Publishing BG',
       room: 'Room 2',
-      day: 'Monday (2042-02-10)',
+      day: '2042-02-10',
       meeting: '9:00; 11:00',
       body: `
 ### Session description
@@ -129,8 +134,8 @@ More than 50`,
 ### Session description
 Schedule conflict with next joint meeting.`,
       room: 'Room 3',
-      day: 'Monday (2042-02-10)',
-      slot: '14:00 - 16:00'
+      day: '2042-02-10',
+      slot: '14:00'
     },
 
     {
@@ -179,8 +184,8 @@ Incoherent scheduling.`,
 Same IRC channel as next session.
 ### IRC channel (Optional)
 #debug`,
-      day: 'Thursday (2042-02-13)',
-      slot: '16:00 - 18:00',
+      day: '2042-02-13',
+      slot: '16:00',
       meeting: 'Room 1'
     },
 
@@ -213,8 +218,8 @@ Same time as next group meeting in same track.`,
       body: `
 ### Session description
 Same time as previous group meeting in same track.`,
-      day: 'Monday (2042-02-10)',
-      slot: '14:00 - 16:00',
+      day: '2042-02-10',
+      slot: '14:00',
       meeting: 'Room 6'
     },
 

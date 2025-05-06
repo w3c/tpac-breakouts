@@ -10,8 +10,7 @@ import { fetchProjectFromGitHub } from '../../common/project.mjs';
  *
  * This includes:
  * - the list of rooms and their capacity
- * - the list of days
- * - the list of slots and their duration
+ * - the list of days/slots and their duration
  * - the detailed list of breakout sessions associated with the project
  * - the room and slot that may already have been associated with each session
  *

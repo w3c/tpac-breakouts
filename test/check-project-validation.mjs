@@ -43,8 +43,10 @@ describe('Project validation', function () {
     const project = await loadProject();
     const errors = await validateProject(project);
     assert.deepStrictEqual(errors, [
-      'Invalid slot name "Too early". Format should be "HH:mm - HH:mm"',
-      'Invalid slot name "11 - 12". Format should be "HH:mm - HH:mm"',
+      'Invalid slot start time "Too early". Format should be "HH:mm"',
+      'Invalid slot end time "undefined". Format should be "HH:mm"',
+      'Invalid slot start time "11 - 12". Format should be "HH:mm"',
+      'Invalid slot end time "undefined". Format should be "HH:mm"',
       'Unexpected slot duration 240. Duration should be between 30 and 120 minutes.'
     ]);
   });
@@ -54,9 +56,14 @@ describe('Project validation', function () {
     const project = await loadProject();
     const errors = await validateProject(project);
     assert.deepStrictEqual(errors, [
-      'Invalid day name "Soon". Format should be either "YYYY-MM-DD" or "[label] (YYYY-MM-DD)',
-      'Invalid date in day name "2024-14-35".',
-      'Invalid day name "Monday (08)". Format should be either "YYYY-MM-DD" or "[label] (YYYY-MM-DD)'
+      'Invalid day name "Soon" in slot. Format should be "YYYY-MM-DD"',
+      'Invalid day name "Soon" in slot. Format should be "YYYY-MM-DD"',
+      'Invalid day name "Soon" in slot. Format should be "YYYY-MM-DD"',
+      'Invalid day name "Soon" in slot. Format should be "YYYY-MM-DD"',
+      'Invalid day name "08" in slot. Format should be "YYYY-MM-DD"',
+      'Invalid day name "08" in slot. Format should be "YYYY-MM-DD"',
+      'Invalid day name "08" in slot. Format should be "YYYY-MM-DD"',
+      'Invalid day name "08" in slot. Format should be "YYYY-MM-DD"'
     ]);
   });
 
@@ -65,7 +72,8 @@ describe('Project validation', function () {
     const project = await loadProject();
     const errors = await validateProject(project);
     assert.deepStrictEqual(errors, [
-      'TPAC events should have 4 days of group meetings, 3 days found'
+      'TPAC event days should be a Monday, Tuesday, Thursday and Friday',
+      'TPAC events should have 16 slots in total, 12 slots found'
     ]);
   });
 
@@ -83,7 +91,7 @@ describe('Project validation', function () {
     const project = await loadProject();
     const errors = await validateProject(project);
     assert.deepStrictEqual(errors, [
-      'TPAC events should have 4 slots per day, 1 slot found'
+      'TPAC events should have 16 slots in total, 4 slots found'
     ]);
   });
 })

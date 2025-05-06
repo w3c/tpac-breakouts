@@ -12,8 +12,7 @@ import {
  *
  * This includes:
  * - the list of rooms and their capacity
- * - the list of days
- * - the list of slots and their duration
+ * - the list of days/slots and their duration
  * - the detailed list of breakout sessions associated with the project
  * - the room and slot that may already have been associated with each session
  *
@@ -59,7 +58,6 @@ export async function fetchProjectFromGitHub(reponame, sessionTemplate) {
   const project = {
     metadata: await importVariableFromGitHub(reponame, 'EVENT') ?? {},
     rooms: await importVariableFromGitHub(reponame, 'ROOMS') ?? [],
-    days: await importVariableFromGitHub(reponame, 'DAYS') ?? [],
     slots: await importVariableFromGitHub(reponame, 'SLOTS') ?? [],
     sessions: await fetchSessions(reponame)
   };
@@ -123,7 +121,7 @@ export async function fetchProjectFromGitHub(reponame, sessionTemplate) {
 
 
 /**
- * Synchronize the project's data (event metadata, rooms, days, slots) with
+ * Synchronize the project's data (event metadata, rooms, slots) with
  * GitHub.
  */
 export async function exportProjectToGitHub(project, { what }) {
@@ -132,7 +130,6 @@ export async function exportProjectToGitHub(project, { what }) {
   if (!what || what === 'all' || what === 'metadata') {
     await exportVariableToGitHub(reponame, 'EVENT', project.metadata);
     await exportVariableToGitHub(reponame, 'ROOMS', project.rooms);
-    await exportVariableToGitHub(reponame, 'DAYS', project.days);
     await exportVariableToGitHub(reponame, 'SLOTS', project.slots);
   }
 
@@ -227,38 +224,35 @@ export function validateProject(project) {
   }
 
   for (const slot of project.slots) {
-    if (!slot.name.match(/^(\d+):(\d+)\s*-\s*(\d+):(\d+)$/)) {
-      errors.push(`Invalid slot name "${slot.name}". Format should be "HH:mm - HH:mm"`);
+    if (!slot.date.match(/^\d{4}\-\d{2}\-\d{2}$/)) {
+      errors.push(`Invalid day name "${slot.date}" in slot. Format should be "YYYY-MM-DD"`);
     }
-    if (slot.duration < 30 || slot.duration > 120) {
-      errors.push(`Unexpected slot duration ${slot.duration}. Duration should be between 30 and 120 minutes.`);
-    }
-  }
-
-  for (const day of project.days) {
-    if (!day.date.match(/^\d{4}\-\d{2}\-\d{2}$/)) {
-      errors.push(`Invalid day name "${day.name}". Format should be either "YYYY-MM-DD" or "[label] (YYYY-MM-DD)`);
-    }
-    else if (isNaN((new Date(day.date)).valueOf())) {
-      errors.push(`Invalid date in day name "${day.name}".`);
+    else {
+      if (!slot.start?.match(/^(\d+):(\d+)$/)) {
+        errors.push(`Invalid slot start time "${slot.start}". Format should be "HH:mm"`);
+      }
+      if (!slot.end?.match(/^(\d+):(\d+)$/)) {
+        errors.push(`Invalid slot end time "${slot.end}". Format should be "HH:mm"`);
+      }
+      if (slot.duration < 30 || slot.duration > 120) {
+        errors.push(`Unexpected slot duration ${slot.duration}. Duration should be between 30 and 120 minutes.`);
+      }
     }
   }
 
   if (project.metadata?.type === 'groups') {
-    if (project.days.length !== 4) {
-      const s = project.days.length > 1 ? 's' : '';
-      errors.push(`TPAC events should have 4 days of group meetings, ${project.days.length} day${s} found`);
-    }
-    else {
-      const weekdays = project.days.map(day => day.label).sort().join(', ');
-      if (weekdays !== 'Friday, Monday, Thursday, Tuesday') {
-        errors.push(`TPAC event days should be a Monday, Tuesday, Thursday and Friday`);
-      }
+    // TODO: these checks may prove too restrictive, as we may end up with
+    // meetings on a Wednesday, or days with 3 or 5 slots.
+    const weekdays = [...new Set(project.slots.map(day => day.weekday))]
+      .sort()
+      .join(', ');
+    if (weekdays !== 'Friday, Monday, Thursday, Tuesday') {
+      errors.push(`TPAC event days should be a Monday, Tuesday, Thursday and Friday`);
     }
 
-    if (project.slots.length !== 4) {
+    if (project.slots.length !== 16) {
       const s = project.slots.length > 1 ? 's' : '';
-      errors.push(`TPAC events should have 4 slots per day, ${project.slots.length} slot${s} found`);
+      errors.push(`TPAC events should have 16 slots in total, ${project.slots.length} slot${s} found`);
     }
   }
 
@@ -276,9 +270,17 @@ export function convertProjectToJSON(project) {
     title: project.title,
     metadata: project.metadata
   };
-  for (const list of ['days', 'rooms', 'slots', 'labels']) {
+  for (const list of ['rooms', 'labels']) {
     data[list] = toNameList(project[list]);
   }
+
+  data.slots = project.slots.map(slot => {
+    return {
+      day: slot.day,
+      start: slot.start,
+      end: slot.end
+    };
+  });
 
   data.sessions = project.sessions.map(session => {
     const simplified = {

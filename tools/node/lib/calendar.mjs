@@ -368,8 +368,7 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
   // All events are visible to everyone
   await clickOnElement('input#event_visibility_0');
 
-  const day = project.days.find(day => day.name === entry.day);
-  await page.evaluate(`window.tpac_breakouts_date = "${day.date}";`);
+  await page.evaluate(`window.tpac_breakouts_date = "${entry.day}";`);
   await page.$eval('input#event_start_date', el => el.value = window.tpac_breakouts_date);
   await page.$eval('input#event_start_date', el => el.value = window.tpac_breakouts_date);
 
@@ -718,12 +717,10 @@ export async function synchronizeSessionWithCalendar(
   console.log(`- add calendar entries to session description`);
   const entries = actions.update.concat(actions.create);
   entries.sort((e1, e2) => {
-    const day1 = project.days.find(day => day.name === e1.day);
-    const day2 = project.days.find(day => day.name === e2.day);
-    if (day1.date < day2.date) {
+    if (e1.day < e2.day) {
       return -1;
     }
-    else if (day1.date > day2.date) {
+    else if (e1.day > e2.date) {
       return 1;
     }
     else {
@@ -732,9 +729,9 @@ export async function synchronizeSessionWithCalendar(
   });
   // Same view using day labels instead of full day identifiers
   const entriesDesc = entries.map(entry => {
-    const day = project.days.find(day => day.name === entry.day);
+    const day = project.slots.find(day => day.date === entry.day);
     const desc = {
-      day: day.label ?? day.name,
+      day: day.weekday ?? day.name,
       start: entry.start,
       end: entry.end,
       url: entry.url
