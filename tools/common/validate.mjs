@@ -426,9 +426,8 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         messages: capacityWarnings.map(warn => {
           let mstr = '';
           if (warn.meeting.day && warn.meeting.slot) {
-            const day = project.days.find(d => d.name === warn.meeting.day);
-            const slot = project.slots.find(s => s.name === warn.meeting.slot);
-            mstr = `, used for meeting on ${day.label} at ${slot.start},`;
+            const day = project.slots.find(d => d.date === warn.meeting.day);
+            mstr = `, used for meeting on ${day.weekday} at ${warn.meeting.slot},`;
           }
           return `Capacity of "${warn.room.name}" (${warn.room.capacity ?? '30 (assumed)'})${mstr} is lower than requested capacity (${session.description.capacity})`;
         }),
@@ -441,11 +440,15 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   const scheduledMeetings = meetings.filter(m => m.room && m.day && m.slot);
   const switchWarnings = scheduledMeetings
     .map(meeting => {
-      const slotIndex = project.slots.findIndex(s => s.name === meeting.slot);
+      const slotIndex = project.slots.findIndex(s =>
+        s.date === meeting.day &&
+        s.start === meeting.slot);
       const nextMeetingInDifferentRoom = scheduledMeetings.find(m =>
         m.day === meeting.day &&
         m.room !== meeting.room &&
-        project.slots.findIndex(s => s.name === m.slot) === slotIndex + 1);
+        project.slots.findIndex(s =>
+          s.date === m.day &&
+          s.start === m.slot) === slotIndex + 1);
       return nextMeetingInDifferentRoom ?
         { meeting: nextMeetingInDifferentRoom, previous: meeting } :
         null;
@@ -459,9 +462,8 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
       messages: switchWarnings.map(warn => {
         const prevRoom = project.rooms.find(s => s.name === warn.previous.room);
         const nextRoom = project.rooms.find(s => s.name === warn.meeting.room);
-        const day = project.days.find(d => d.name === warn.meeting.day);
-        const slot = project.slots.find(s => s.name === warn.meeting.slot);
-        return `Room switch between "${prevRoom.name}" and "${nextRoom.name}" on ${day.label} at ${slot.start}`;
+        const day = project.slots.find(d => d.date === warn.meeting.day);
+        return `Room switch between "${prevRoom.name}" and "${nextRoom.name}" on ${day.weekday} at ${warn.meeting.slot}`;
       }),
       details: switchWarnings
     })
@@ -658,8 +660,8 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
     const minutesNeeded = meetings
       .filter(meeting => meeting.room && meeting.day && meeting.slot)
       .find(meeting => {
-        const day = project.days.find(d =>
-          d.name === meeting.day || d.date === meeting.day);
+        const day = project.slots.find(d =>
+          d.date === meeting.day || d.weekday === meeting.day);
         const twoDaysInMs = 48 * 60 * 60 * 1000;
         return (
           (new Date()).getTime() -

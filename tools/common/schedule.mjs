@@ -102,23 +102,16 @@ export function suggestSchedule(project, { seed }) {
   }
 
   // Initalize the list of days and slots and the occupation views
-  const daysAndSlots = [];
-  let pos = 0;
-  for (const day of project.days) {
-    for (const slot of project.slots) {
-      const meeting = {
-        day: day.name,
-        slot: slot.name
-      };
-      daysAndSlots.push({
-        day, slot,
-        pos,
-        sessions: sessions.filter(session =>
-          meetsInParallelWith(session, meeting, project))
-      });
-      pos += 1;
-    }
-  }
+  const daysAndSlots = project.slots.map(slot => {
+    const meeting = {
+      day: slot.date,
+      slot: slot.start
+    };
+    return Object.assign({}, slot, {
+      sessions: sessions.filter(session =>
+        meetsInParallelWith(session, meeting, project))
+    });
+  });
 
   // Same thing for the list of rooms
   const rooms = project.rooms
@@ -256,8 +249,8 @@ export function suggestSchedule(project, { seed }) {
     // person are totally fine)
     function nonConflictingDayAndSlot(dayslot) {
       const meeting = {
-        day: dayslot.day.name,
-        slot: dayslot.slot.name
+        day: dayslot.date,
+        slot: dayslot.start
       };
       const potentialConflicts = sessions.filter(s =>
         s !== session && meetsAt(s, meeting, project));
@@ -305,8 +298,8 @@ export function suggestSchedule(project, { seed }) {
 
       // Meet duration preference unless we don't care
       if (meetDuration && session.description.duration) {
-        if ((strictDuration && dayslot.slot.duration !== session.description.duration) ||
-            (!strictDuration && dayslot.slot.duration < session.description.duration)) {
+        if ((strictDuration && dayslot.duration !== session.description.duration) ||
+            (!strictDuration && dayslot.duration < session.description.duration)) {
           return false;
         }
       }
@@ -427,16 +420,16 @@ export function suggestSchedule(project, { seed }) {
           if (meeting.day && meeting.slot) {
             if (isMeetingAvailableForSession(session, { room: room.name, day: meeting.day, slot: meeting.slot }) &&
                 !meetings.find(m => m !== meeting && m.day === meeting.day && m.slot === meeting.slot)) {
-              const slot = daysAndSlots.find(ds => ds.day.name === meeting.day && ds.slot.name === meeting.slot);
+              const slot = daysAndSlots.find(ds => ds.date === meeting.day && ds.start === meeting.slot);
               possibleDayAndSlots.push(slot);
             }
           }
           else {
             possibleDayAndSlots.push(...daysAndSlots
-              .filter(ds => !meeting.day || ds.day.name === meeting.day)
-              .filter(ds => !meeting.slot || ds.slot.name === meeting.slot)
-              .filter(ds => isMeetingAvailableForSession(session, { room: room.name, day: ds.day.name, slot: ds.slot.name }) &&
-                            !meetings.find(m => m !== meeting && m.day === ds.day.name && m.slot === ds.slot.name))
+              .filter(ds => !meeting.day || ds.date === meeting.day)
+              .filter(ds => !meeting.slot || ds.start === meeting.slot)
+              .filter(ds => isMeetingAvailableForSession(session, { room: room.name, day: ds.date, slot: ds.start }) &&
+                            !meetings.find(m => m !== meeting && m.day === ds.date && m.slot === ds.start))
             );
             if (session.description.type === 'plenary') {
               // For plenary sessions, fill slot fully before moving to another slot
@@ -477,8 +470,8 @@ export function suggestSchedule(project, { seed }) {
               resourcesToUpdate.push(room);
             }
             if (!meeting.day || !meeting.slot) {
-              meeting.day = dayslot.day.name;
-              meeting.slot = dayslot.slot.name;
+              meeting.day = dayslot.date;
+              meeting.slot = dayslot.start;
               resourcesToUpdate.push(dayslot);
             }
             scheduledMeetings += 1;

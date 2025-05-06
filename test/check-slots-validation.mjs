@@ -24,7 +24,7 @@ describe('Slots validation', function () {
     const project = await loadProject();
     const sessionNumber = 1;
     const errors = await validateSession(sessionNumber, project);
-    assert.strictEqual(errors.length, 0);
+    assert.deepEqual(errors, []);
   });
 
   it('reports when not enough acceptable slots got selected', async function () {

@@ -4,13 +4,9 @@ export default {
     timezone: 'Etc/UTC'
   },
 
-  days: [
-    '2042-04-05'
-  ],
-
   slots: [
-    '9:00 - 10:00',
-    '10:00 - 11:00'
+    '2042-04-05 9:00 - 10:00',
+    '2042-04-05 10:00 - 11:00'
   ],
 
   rooms: [
@@ -29,7 +25,7 @@ export default {
       author: 'ianbjacobs',
       title: 'Session with constraint',
       labels: ['session', 'track: ux'],
-      slot: '9:00 - 10:00',
+      slot: '9:00',
       body: `
 ### Session description
 Blah

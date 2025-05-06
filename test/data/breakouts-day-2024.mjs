@@ -6,15 +6,11 @@ export default {
     calendar: 'confirmed'
   },
 
-  days: [
-    '2024-03-12'
-  ],
-
   slots: [
-    '13:00-14:00',
-    '14:00-15:00',
-    '21:00-22:00',
-    '22:00-23:00'
+    '2024-03-12 13:00-14:00',
+    '2024-03-12 14:00-15:00',
+    '2024-03-12 21:00-22:00',
+    '2024-03-12 22:00-23:00'
   ],
 
   rooms: [
@@ -40,7 +36,7 @@ export default {
       "title": "Incubation: the on ramp to new work",
       "day": "2024-03-12",
       "room": "Kora",
-      "slot": "22:00-23:00"
+      "slot": "22:00"
     },
     {
       "author": "tidoust",
@@ -49,7 +45,7 @@ export default {
       "title": "Web features, Baseline status, and standardization signals",
       "day": "2024-03-12",
       "room": "Koto",
-      "slot": "14:00-15:00"
+      "slot": "14:00"
     },
     {
       "author": "rdfguy",
@@ -58,7 +54,7 @@ export default {
       "title": "RDF-Star and RDF 1.2",
       "day": "2024-03-12",
       "room": "Erhu",
-      "slot": "13:00-14:00"
+      "slot": "13:00"
     },
     {
       "author": "bkardell",
@@ -67,7 +63,7 @@ export default {
       "title": "How We Fund the Web Ecosystem",
       "day": "2024-03-12",
       "room": "Koto",
-      "slot": "21:00-22:00"
+      "slot": "21:00"
     },
     {
       "author": "rupakc",
@@ -76,7 +72,7 @@ export default {
       "title": "Ethical Implications of Generative AI",
       "day": "2024-03-12",
       "room": "Lyre",
-      "slot": "21:00-22:00"
+      "slot": "21:00"
     },
     {
       "author": "egekorkan",
@@ -85,7 +81,7 @@ export default {
       "title": "Registries for W3C Specifications",
       "day": "2024-03-12",
       "room": "Kora",
-      "slot": "13:00-14:00"
+      "slot": "13:00"
     },
     {
       "author": "diekus",
@@ -94,7 +90,7 @@ export default {
       "title": "Installing web apps as a new platform feature",
       "day": "2024-03-12",
       "room": "Gamba",
-      "slot": "22:00-23:00"
+      "slot": "22:00"
     },
     {
       "author": "torgo",
@@ -103,7 +99,7 @@ export default {
       "title": "Privacy Principles for the Web",
       "day": "2024-03-12",
       "room": "Gamba",
-      "slot": "14:00-15:00"
+      "slot": "14:00"
     },
     {
       "author": "egekorkan",
@@ -112,7 +108,7 @@ export default {
       "title": "Schemata Discussion - Follow up from TPAC23",
       "day": "2024-03-12",
       "room": "Kora",
-      "slot": "14:00-15:00"
+      "slot": "14:00"
     },
     {
       "author": "wbamberg",
@@ -121,7 +117,7 @@ export default {
       "title": "Web security docs for MDN",
       "day": "2024-03-12",
       "room": "Koto",
-      "slot": "22:00-23:00"
+      "slot": "22:00"
     },
     {
       "author": "wareid",
@@ -130,7 +126,7 @@ export default {
       "title": "Running Better Meetings - How to Facilitate at W3C",
       "day": "2024-03-12",
       "room": "Gamba",
-      "slot": "13:00-14:00"
+      "slot": "13:00"
     },
     {
       "author": "martinthomson",
@@ -140,7 +136,7 @@ export default {
       "title": "Building Consensus on the Role of Real World Identities on the Web",
       "day": "2024-03-12",
       "room": "Ukulele",
-      "slot": "13:00-14:00"
+      "slot": "13:00"
     },
     {
       "author": "matatk",
@@ -149,7 +145,7 @@ export default {
       "title": "Nu Tracker: Helping you manage actions and horizontal review tasks from the command line",
       "day": "2024-03-12",
       "room": "Lyre",
-      "slot": "13:00-14:00"
+      "slot": "13:00"
     },
     {
       "author": "matatk",
@@ -158,7 +154,7 @@ export default {
       "title": "Exploring making site navigation more accessible, with \"well-known destinations\"",
       "day": "2024-03-12",
       "room": "Lyre",
-      "slot": "14:00-15:00"
+      "slot": "14:00"
     },
     {
       "author": "npm1",
@@ -168,7 +164,7 @@ export default {
       "title": "FedCM multiple IDP support",
       "day": "2024-03-12",
       "room": "Ukulele",
-      "slot": "21:00-22:00"
+      "slot": "21:00"
     },
     {
       "author": "domfarolino",
@@ -178,7 +174,7 @@ export default {
       "title": "FedCM request settings & CORS",
       "day": "2024-03-12",
       "room": "Ukulele",
-      "slot": "14:00-15:00"
+      "slot": "14:00"
     },
     {
       "author": "JAlanBird-DO",
@@ -187,7 +183,7 @@ export default {
       "title": "Real Estate Community Group and the Web ",
       "day": "2024-03-12",
       "room": "Erhu",
-      "slot": "21:00-22:00"
+      "slot": "21:00"
     },
     {
       "author": "hlflanagan",
@@ -197,7 +193,7 @@ export default {
       "title": "Promote the PROPOSED Federated Identity Working Group",
       "day": "2024-03-12",
       "room": "Ukulele",
-      "slot": "22:00-23:00"
+      "slot": "22:00"
     },
     {
       "author": "marcoscaceres",
@@ -206,7 +202,7 @@ export default {
       "title": "Low-latency input events in workers",
       "day": "2024-03-12",
       "room": "Gamba",
-      "slot": "21:00-22:00"
+      "slot": "21:00"
     }
   ]
 }

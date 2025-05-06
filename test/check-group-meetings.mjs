@@ -117,7 +117,7 @@ describe('The group meetings module', function () {
       session: sessionNumber,
       severity: 'error',
       type: 'scheduling',
-      messages: ['Session scheduled in same room (Room 2) and same day/slot (Monday (2042-02-10) 9:00 - 11:00) as session "Improving Web Advertising Business Group" (13)']
+      messages: ['Session scheduled in same room (Room 2) and same day/slot (2042-02-10 9:00) as session "Improving Web Advertising Business Group" (13)']
     }]);
   });
 
@@ -168,7 +168,7 @@ describe('The group meetings module', function () {
       session: sessionNumber,
       severity: 'warning',
       type: 'conflict',
-      messages: ['Same day/slot "Monday (2042-02-10) 16:00 - 18:00" as conflicting session "Color on the Web Community Group" (#18)']
+      messages: ['Same day/slot "2042-02-10 16:00" as conflicting session "Color on the Web Community Group" (#18)']
     }]);
   });
 
@@ -180,7 +180,7 @@ describe('The group meetings module', function () {
       session: sessionNumber,
       severity: 'error',
       type: 'meeting duplicate',
-      messages: ['Scheduled more than once in day/slot Monday (2042-02-10) 9:00 - 11:00']
+      messages: ['Scheduled more than once in day/slot 2042-02-10 9:00']
     }]);
   });
 
@@ -204,7 +204,7 @@ describe('The group meetings module', function () {
       session: sessionNumber,
       severity: 'warning',
       type: 'track',
-      messages: ['Same day/slot "Monday (2042-02-10) 14:00 - 16:00" as session in same track "debug": "Generative AI CG" (#23)']
+      messages: ['Same day/slot "2042-02-10 14:00" as session in same track "debug": "Generative AI CG" (#23)']
     }]);
   });
 
@@ -235,7 +235,7 @@ describe('The group meetings module', function () {
         start: '9:00',
         end: '18:00',
         room: 'Room 6',
-        day: 'Tuesday (2042-02-11)'
+        day: '2042-02-11'
       },
       // Two meetings on Thursday
       // (one slot in the morning, two slots in the afternoon)
@@ -243,26 +243,26 @@ describe('The group meetings module', function () {
         start: '9:00',
         end: '11:00',
         room: 'Room 6',
-        day: 'Thursday (2042-02-13)'
+        day: '2042-02-13'
       },
       {
         start: '14:00',
         end: '18:00',
         room: 'Room 6',
-        day: 'Thursday (2042-02-13)'
+        day: '2042-02-13'
       },
       // Two disconnected meetings on Friday
       {
         start: '11:00',
         end: '13:00',
         room: 'Room 6',
-        day: 'Friday (2042-02-14)'
+        day: '2042-02-14'
       },
       {
         start: '16:00',
         end: '18:00',
         room: 'Room 6',
-        day: 'Friday (2042-02-14)'
+        day: '2042-02-14'
       }
     ]);
   });
@@ -279,37 +279,37 @@ describe('The group meetings module', function () {
       create: [],
       update: [
         {
-          day: 'Tuesday (2042-02-11)',
+          day: '2042-02-11',
           start: '9:00',
           end: '18:00',
           url: 'https://example.com/calendar/1',
           meeting: {
             room: 'Room 6',
-            day: 'Tuesday (2042-02-11)',
+            day: '2042-02-11',
             start: '9:00',
             end: '18:00'
           }
         },
         {
-          day: 'Thursday (2042-02-13)',
+          day: '2042-02-13',
           start: '9:00',
           end: '11:00',
           url: 'https://example.com/calendar/2',
           meeting: {
             room: 'Room 6',
-            day: 'Thursday (2042-02-13)',
+            day: '2042-02-13',
             start: '9:00',
             end: '11:00'
           }
         },
         {
-          day: 'Thursday (2042-02-13)',
+          day: '2042-02-13',
           start: '14:00',
           end: '18:00',
           url: 'https://example.com/calendar/3',
           meeting: {
             room: 'Room 6',
-            day: 'Thursday (2042-02-13)',
+            day: '2042-02-13',
             start: '14:00',
             end: '18:00'
           }
@@ -317,24 +317,24 @@ describe('The group meetings module', function () {
         // The last two ones are "new" calendar entries... that reuse existing
         // calendar entries that are no longer needed!
         {
-          day: 'Friday (2042-02-14)',
+          day: '2042-02-14',
           start: '16:00',
           end: '18:00',
           meeting: {
             room: 'Room 6',
-            day: 'Friday (2042-02-14)',
+            day: '2042-02-14',
             start: '16:00',
             end: '18:00'
           },
           url: 'https://example.com/calendar/4'
         },
         {
-          day: 'Friday (2042-02-14)',
+          day: '2042-02-14',
           start: '11:00',
           end: '13:00',
           meeting: {
             room: 'Room 6',
-            day: 'Friday (2042-02-14)',
+            day: '2042-02-14',
             start: '11:00',
             end: '13:00'
           },
@@ -343,7 +343,7 @@ describe('The group meetings module', function () {
       ],
       cancel: [
         {
-          day: 'Monday (2042-02-10)',
+          day: '2042-02-10',
           start: '9:00',
           end: '18:00',
           url: 'https://example.com/calendar/6'

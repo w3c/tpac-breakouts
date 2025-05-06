@@ -22,14 +22,14 @@ describe('The meeting field parser', function () {
     const meetings = parseSessionMeetings(session, project);
     assert.deepStrictEqual(meetings, [
       {
-        day: 'Tuesday (2042-02-11)',
+        day: '2042-02-11',
         room: 'Room 1',
-        slot: '9:00 - 11:00'
+        slot: '9:00'
       },
       {
-        day: 'Thursday (2042-02-13)',
+        day: '2042-02-13',
         room: 'Room 1',
-        slot: '11:00 - 13:00'
+        slot: '11:00'
       }
     ]);
   });
@@ -38,14 +38,14 @@ describe('The meeting field parser', function () {
     const project = await loadProject();
     const meetings = [
       {
-        day: 'Tuesday (2042-02-11)',
+        day: '2042-02-11',
         room: 'Room 1',
-        slot: '9:00 - 11:00'
+        slot: '9:00'
       },
       {
-        day: 'Thursday (2042-02-13)',
+        day: '2042-02-13',
         room: 'Room 2',
-        slot: '11:00 - 13:00'
+        slot: '11:00'
       }
     ];
     assert.deepStrictEqual(serializeSessionMeetings(meetings, project), {
@@ -59,7 +59,7 @@ describe('The meeting field parser', function () {
     const meetings = parseSessionMeetings(session, project);
     assert.deepStrictEqual(meetings, [
       {
-        slot: '9:00 - 11:00',
+        slot: '9:00',
         actualStart: '8:30',
         actualEnd: '10:30'
       }
@@ -70,11 +70,11 @@ describe('The meeting field parser', function () {
     const project = await loadProject();
     const meetings = [
       {
-        slot: '9:00 - 11:00',
+        slot: '9:00',
         actualStart: '8:30'
       },
       {
-        slot: '11:00 - 13:00',
+        slot: '11:00',
         actualEnd: '12:30'
       }
     ];
@@ -162,14 +162,14 @@ describe('The meeting field parser', function () {
     const project = await loadProject();
     const session = {
       room: 'Room 1',
-      day: 'Monday (2042-02-10)',
+      day: '2042-02-10',
       meeting: '9:00<8:30>; 11:00; 14:00 - 16:00<15:30>'
     };
     const merged = groupSessionMeetings(session, project);
     assert.deepStrictEqual(merged, [
       {
         room: 'Room 1',
-        day: 'Monday (2042-02-10)',
+        day: '2042-02-10',
         start: '8:30',
         end: '15:30'
       }

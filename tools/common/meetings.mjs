@@ -16,10 +16,18 @@ function validateActualTimes(meeting, project) {
   const slots = project.slots;
   const actualStart = padTime(meeting.actualStart);
   const actualEnd = padTime(meeting.actualEnd);
-  const slotIndex = slots.findIndex(s => s.name === meeting.slot);
+  const slotIndex = slots.findIndex(s =>
+    (!meeting.day || s.date === meeting.day) &&
+    s.start === meeting.slot);
   const slot = slots[slotIndex];
-  const previous = slotIndex > 0 ? slots[slotIndex - 1] : null;
-  const next = slotIndex < slots.length - 1 ? slots[slotIndex + 1] : null;
+  let previous = slotIndex > 0 ? slots[slotIndex - 1] : null;
+  if (previous && previous.date !== slot.date) {
+    previous = null;
+  }
+  let next = slotIndex < slots.length - 1 ? slots[slotIndex + 1] : null;
+  if (next && next.date !== slot.date) {
+    next = null;
+  }
   if (actualStart) {
     if (actualStart === padTime(slot.start)) {
       // Actual start time is useless since it matches the slot's start time
@@ -80,7 +88,7 @@ export function parseSessionMeetings(session, project) {
               return;
             }
             // For rooms and days, the token is either going to be the option's
-            // full name, or its label, e.g., "Monday" or "Monday (2020-02-10)"
+            // name, or its weekday, e.g., "2020-02-10" or "Monday".
             // For slots, this can be the full name, the start time, or either
             // of them completed with an actual start and/or end time. For
             // example: "9:00", "9:00<8:30>", "9:00-11:00", "9:00-11:00<10:30>"
@@ -90,12 +98,11 @@ export function parseSessionMeetings(session, project) {
             const slotMatch = token.match(
               /^(\d+:\d+)(?:<(\d+:\d+)>)?(?:\s*-\s*(\d+:\d+)(?:<(\d+:\d+)>)?)?$/);
             if (slotMatch) {
-              let option = project.slots.find(option => padTime(option.start) === padTime(slotMatch[1]));
-              if (option && slotMatch[3] && option.end !== slotMatch[3]) {
-                option = null;
-              }
+              const option = project.slots.find(option =>
+                padTime(option.start) === padTime(slotMatch[1]) &&
+                (!slotMatch[3] || padTime(option.end) === padTime(slotMatch[3])));
               if (option) {
-                meeting.slot = option.name;
+                meeting.slot = option.start;
                 if (slotMatch[2]) {
                   meeting.actualStart = slotMatch[2];
                 }
@@ -115,15 +122,19 @@ export function parseSessionMeetings(session, project) {
               }
             }
             else {
-              for (const field of ['day', 'room']) {
-                const option = project[field + 's'].find(option =>
-                  option.name?.toLowerCase() === token ||
-                  option.label?.toLowerCase() === token ||
-                  option.date === token);
-                if (option) {
-                  meeting[field] = option.name;
-                  return;
-                }
+              let option = project.rooms.find(option =>
+                option.name?.toLowerCase() === token ||
+                option.label?.toLowerCase() === token);
+              if (option) {
+                meeting.room = option.name;
+                return;
+              }
+              option = project.slots.find(slot =>
+                slot.date === token ||
+                slot.weekday.toLowerCase() === token); 
+              if (option) {
+                meeting.day = option.date;
+                return;
               }
             }
 
@@ -155,6 +166,9 @@ export function parseSessionMeetings(session, project) {
     }
     if (session.slot) {
       meeting.slot = session.slot;
+    }
+    if (session.day && session.slot) {
+      meeting.name = session.day + ' ' + meeting.slot;
     }
     return [meeting];
   }
@@ -191,11 +205,11 @@ export function serializeSessionMeetings(meetings, project) {
     .map(meeting => {
       const tokens = [];
       if (meeting.day) {
-        const day = project.days.find(day => day.name === meeting.day);
-        tokens.push(day.label ?? day.name);
+        const day = project.slots.find(slot => slot.date === meeting.day);
+        tokens.push(day.weekday ?? day.name);
       }
       if (meeting.slot) {
-        const slot = project.slots.find(slot => slot.name === meeting.slot);
+        const slot = project.slots.find(slot => slot.start === meeting.slot);
         if (meeting.actualEnd) {
           if (meeting.actualStart) {
             tokens.push(`${slot.start}<${meeting.actualStart}> - ${slot.end}<${meeting.actualEnd}>`);
@@ -235,7 +249,7 @@ export function groupSessionMeetings(session, project) {
   for (const meeting of meetings) {
     if (meeting.room && meeting.day && meeting.slot) {
       const key = meeting.room + ', ' + meeting.day;
-      const slotIndex = project.slots.findIndex(s => s.name === meeting.slot);
+      const slotIndex = project.slots.findIndex(s => s.start === meeting.slot);
       if (!groups[key]) {
         groups[key] = [];
       }
@@ -246,8 +260,8 @@ export function groupSessionMeetings(session, project) {
   // Then sort slots within each group
   for (const group of Object.values(groups)) {
     group.sort((m1, m2) => {
-      const slot1 = project.slots.findIndex(s => s.name === m1.slot);
-      const slot2 = project.slots.findIndex(s => s.name === m2.slot);
+      const slot1 = project.slots.findIndex(s => s.start === m1.slot);
+      const slot2 = project.slots.findIndex(s => s.start === m2.slot);
       return slot1 - slot2;
     });
   }
@@ -255,8 +269,8 @@ export function groupSessionMeetings(session, project) {
   // And now merge contiguous slots
   const list = Object.values(groups)
     .map(group => group.reduce((merged, meeting) => {
-      const slot = project.slots.find(s => s.name === meeting.slot);
-      const slotIndex = project.slots.findIndex(s => s.name === meeting.slot);
+      const slot = project.slots.find(s => s.start === meeting.slot);
+      const slotIndex = project.slots.findIndex(s => s.start === meeting.slot);
       if (merged.length === 0) {
         merged.push({
           start: meeting.actualStart ?? slot.start,
@@ -315,11 +329,10 @@ export function computeSessionCalendarUpdates(session, project) {
   // session from the session description
   const entries = (session.description.calendar ?? [])
     .map(entry => {
-      const day = project.days.find(day =>
-        day.name?.toLowerCase() === entry.day.toLowerCase() ||
-        day.label?.toLowerCase() === entry.day.toLowerCase() ||
-        day.date === entry.day);
-      entry.day = day.name;
+      const day = project.slots.find(slot =>
+        slot.date === entry.day ||
+        slot.weekday.toLowerCase() === entry.day.toLowerCase());
+      entry.day = day.date;
       return entry;
     });
 

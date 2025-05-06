@@ -11,7 +11,6 @@ export default async function () {
         <p>Spreadsheet updated with metadata info from GitHub:</p>
         <ul>
           <li><b>${githubProject.rooms.length}</b> rooms</li>
-          <li><b>${githubProject.days.length}</b> days</li>
           <li><b>${githubProject.slots.length}</b> slots</li>
         </ul>
       `)

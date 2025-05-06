@@ -66,30 +66,42 @@ export async function convertProjectToHTML(project, cliParams) {
   // but it's somewhat hard to create a proper HTML table if there are
   // scheduling conflicts, so that is not done yet. A cell cannot span multiple
   // columns.
-  const tables = project.days.map(day => {
+  const perDate = {};
+  for (const slot of project.slots) {
+    if (!perDate[slot.date]) {
+      perDate[slot.date] = {
+        date: slot.date,
+        weekday: slot.weekday,
+        slots: []
+      };
+    }
+    perDate[slot.date].slots.push(slot);
+  }
+
+  const tables = Object.values(perDate).map(day => {
     const table = {
       day,
       rooms: project.rooms.map(room => Object.assign({ errors: [] }, room)),
-      slots: project.slots.map(slot => Object.assign({ errors: [] }, slot)),
+      slots: day.slots.map(slot => Object.assign({ errors: [] }, slot)),
       sessions: sessions.filter(session =>
-        session.atomicMeetings.find(m => m.day === day.name && m.room && m.slot))
+        session.atomicMeetings.find(m => m.day === day.date && m.room && m.slot))
     };
     for (const room of table.rooms) {
       room.sessions = table.sessions.filter(session =>
-        session.atomicMeetings.find(m => m.day === day.name && m.room === room.name));
+        session.atomicMeetings.find(m => m.day === day.date && m.room === room.name));
     }
     for (const slot of table.slots) {
       slot.sessions = table.sessions.filter(session =>
-        session.atomicMeetings.find(m => m.day === day.name && m.slot === slot.name));
+        session.atomicMeetings.find(m => m.day === day.date && m.slot === slot.start));
       slot.cells = table.rooms.map(room => Object.assign({
         slot, room,
         errors: [],
         atomic: slot.sessions.filter(session =>
           session.atomicMeetings.find(m =>
-            m.day === day.name && m.room === room.name && m.slot === slot.name)),
+            m.day === day.date && m.room === room.name && m.slot === slot.start)),
         grouped: slot.sessions.filter(session =>
           session.groupedMeetings.find(m =>
-            m.day === day.name && m.room === room.name && m.start === slot.start))
+            m.day === day.date && m.room === room.name && m.start === slot.start))
       }));
     }
     return table;
@@ -102,11 +114,11 @@ export async function convertProjectToHTML(project, cliParams) {
     }
     for (const detail of issue.details) {
       const meeting = detail.meeting ?? detail;
-      const table = tables.find(t => t.day.name === meeting.day);
+      const table = tables.find(t => t.day.date === meeting.day);
       if (!table) {
         continue;
       }
-      const slot = table.slots.find(s => s.name === meeting.slot);
+      const slot = table.slots.find(s => s.start === meeting.slot);
       if (!slot) {
         continue;
       }
@@ -244,7 +256,7 @@ export async function convertProjectToHTML(project, cliParams) {
   for (const table of tables) {
     // Columns represent the rooms
     writeLine(3, `<section id="d${table.day.date}">
-        <h3>${table.day.label ? table.day.label + ' (' + table.day.date + ')' : table.day.name}</h3>
+        <h3>${table.day.weekday ? table.day.weekday + ' (' + table.day.date + ')' : table.day.date}</h3>
         <table>
           <thead>
             <tr>
@@ -260,7 +272,7 @@ export async function convertProjectToHTML(project, cliParams) {
       // Format the row header (the time slot)
       writeLine(6, `<tr>
               <th>
-                ${slot.name}`);
+                ${slot.start}-${slot.end}`);
       writeLine(8, `<p class="nbrooms">${slot.sessions.length} meetings</p>`);
 
       const groupConflicts = [... new Set(slot.errors
@@ -407,12 +419,10 @@ export async function convertProjectToHTML(project, cliParams) {
         <h3>${group.name}</h3>`);
       if (meetings.length > 0) {
         meetings.sort((m1, m2) => {
-          const day1 = project.days.find(day => day.name === m1.meeting.day);
-          const day2 = project.days.find(day => day.name === m2.meeting.day);
-          if (day1.date < day2.date) {
+          if (m1.meeting.day < m2.meeting.day) {
             return -1;
           }
-          else if (day1.date > day2.date) {
+          else if (m1.meeting.day > m2.meeting.day) {
             return 1;
           }
           else if (m1.meeting.start < m2.meeting.start) {
@@ -428,7 +438,7 @@ export async function convertProjectToHTML(project, cliParams) {
         writeLine(4, `<ul>`);
         for (const groupMeeting of meetings) {
           const meeting = groupMeeting.meeting;
-          const day = project.days.find(day => day.name === meeting.day);
+          const day = project.slots.find(day => day.date === meeting.day);
           const room = project.rooms.find(room => room.name === meeting.room);
           const session = groupMeeting.session;
           let jointStr = '';
@@ -440,7 +450,7 @@ export async function convertProjectToHTML(project, cliParams) {
           if (session.highlight) {
             highlightStr = `, topic: ${session.highlight}`;
           }
-          writeLine(5, `<li>${day.label}, ${meeting.start} - ${meeting.end}${reduce ? '' : ' (' + room.label + ')'}${jointStr}${highlightStr} (#${session.number})</li>`);
+          writeLine(5, `<li>${day.weekday}, ${meeting.start} - ${meeting.end}${reduce ? '' : ' (' + room.label + ')'}${jointStr}${highlightStr} (#${session.number})</li>`);
         }
         writeLine(4, `</ul>`);
       }

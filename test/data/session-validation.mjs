@@ -6,21 +6,24 @@ export default {
   },
 
   // Event scheduled in the past... and in the future
-  days: [
-    '2020-02-11',
-    '2042-04-05'
-  ],
-
   // Various slots to avoid creating artificial conflicts
   slots: [
-    '9:00 - 10:00',
-    '10:00 - 11:00',
-    '11:00 - 12:00',
-    '12:00 - 13:00',
-    '13:00 - 14:00',
-    '14:00 - 15:00',
-    '15:00 - 16:00',
-    '22:00 - 23:00',
+    '2020-02-11 9:00 - 10:00',
+    '2020-02-11 10:00 - 11:00',
+    '2020-02-11 11:00 - 12:00',
+    '2020-02-11 12:00 - 13:00',
+    '2020-02-11 13:00 - 14:00',
+    '2020-02-11 14:00 - 15:00',
+    '2020-02-11 15:00 - 16:00',
+    '2020-02-11 22:00 - 23:00',
+    '2042-04-05 9:00 - 10:00',
+    '2042-04-05 10:00 - 11:00',
+    '2042-04-05 11:00 - 12:00',
+    '2042-04-05 12:00 - 13:00',
+    '2042-04-05 13:00 - 14:00',
+    '2042-04-05 14:00 - 15:00',
+    '2042-04-05 15:00 - 16:00',
+    '2042-04-05 22:00 - 23:00'
   ],
 
   // A few rooms, including one for plenary sessions
@@ -62,7 +65,7 @@ Breakout (Default)
 fewer than 20 people`,
       room: 'Main (25)',
       day: '2042-04-05',
-      slot: '22:00 - 23:00'
+      slot: '22:00'
     },
 
     {
@@ -150,7 +153,7 @@ Uncover bugs.
 Breakout (Default)`,
       room: 'Main (25)',
       day: '2042-04-05',
-      slot: '9:00 - 10:00'
+      slot: '9:00'
     },
 
     {
@@ -165,7 +168,7 @@ Uncover bugs.
 Breakout (Default)`,
       room: 'Main (25)',
       day: '2042-04-05',
-      slot: '9:00 - 10:00'
+      slot: '9:00'
     },
 
     {
@@ -180,7 +183,7 @@ Uncover bugs.
 Plenary`,
       room: 'Plenary',
       day: '2042-04-05',
-      slot: '10:00 - 11:00'
+      slot: '10:00'
     },
 
     {
@@ -195,7 +198,7 @@ Uncover bugs.
 Plenary`,
       room: 'Plenary',
       day: '2042-04-05',
-      slot: '10:00 - 11:00'
+      slot: '10:00'
     },
 
     {
@@ -210,7 +213,7 @@ Uncover bugs.
 Plenary`,
       room: 'Plenary',
       day: '2042-04-05',
-      slot: '10:00 - 11:00'
+      slot: '10:00'
     },
 
     {
@@ -225,7 +228,7 @@ Uncover bugs.
 Plenary`,
       room: 'Plenary',
       day: '2042-04-05',
-      slot: '10:00 - 11:00'
+      slot: '10:00'
     },
 
     {
@@ -242,7 +245,7 @@ Breakout (Default)
 More than 45 people`,
       room: 'Main (25)',
       day: '2042-04-05',
-      slot: '15:00 - 16:00'
+      slot: '15:00'
     },
 
     {
@@ -259,7 +262,7 @@ Breakout (Default)
 @tidoust`,
       room: 'Main (25)',
       day: '2042-04-05',
-      slot: '11:00 - 12:00'
+      slot: '11:00'
     },
 
     {
@@ -275,7 +278,7 @@ Uncover bugs.
 Breakout (Default)`,
       room: 'Secondary',
       day: '2042-04-05',
-      slot: '11:00 - 12:00'
+      slot: '11:00'
     },
 
     {
@@ -291,7 +294,7 @@ Breakout (Default)
 ### Other sessions where we should avoid scheduling conflicts (Optional)
 #17`,
       day: '2042-04-05',
-      slot: '12:00 - 13:00'
+      slot: '12:00'
     },
 
     {
@@ -306,7 +309,7 @@ Uncover bugs.
 ### Session type
 Breakout (Default)`,
       day: '2042-04-05',
-      slot: '12:00 - 13:00'
+      slot: '12:00'
     },
 
     {
@@ -322,7 +325,7 @@ Uncover bugs.
 Breakout (Default)`,
       room: 'Main (25)',
       day: '2042-04-05',
-      slot: '13:00 - 14:00'
+      slot: '13:00'
     },
 
     {
@@ -339,7 +342,7 @@ Uncover bugs.
 Breakout (Default)`,
       room: 'Secondary',
       day: '2042-04-05',
-      slot: '13:00 - 14:00'
+      slot: '13:00'
     },
 
     {
@@ -354,7 +357,7 @@ Uncover bugs.
 Breakout (Default)`,
       room: 'Main (25)',
       day: '2042-04-05',
-      slot: '14:00 - 15:00'
+      slot: '14:00'
     },
 
     {
@@ -370,7 +373,7 @@ Uncover bugs.
 Plenary`,
       room: 'Plenary',
       day: '2042-04-05',
-      slot: '14:00 - 15:00'
+      slot: '14:00'
     },
 
     {
@@ -387,7 +390,7 @@ Breakout (Default)
 ### IRC channel (Optional)
 #debug`,
       day: '2042-04-05',
-      slot: '15:00 - 16:00'
+      slot: '15:00'
     },
 
     {
@@ -404,7 +407,7 @@ Breakout (Default)
 ### IRC channel (Optional)
 #debug`,
       day: '2042-04-05',
-      slot: '15:00 - 16:00'
+      slot: '15:00'
     },
 
     {
@@ -447,7 +450,7 @@ Uncover bugs.
 Breakout (Default)`,
       room: 'Main (25)',
       day: '2020-02-11',
-      slot: '9:00 - 10:00'
+      slot: '9:00'
     },
 
     {

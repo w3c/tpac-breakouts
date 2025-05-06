@@ -73,53 +73,67 @@ async function getTestData(testDataId) {
       });
   }
 
-  function toGraphQLDayList(arr) {
-    const days = [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday'
-    ];
-    return arr
-      .map(item => {
-        if (typeof item === 'string') {
-          return { name: item };
-        }
-        return item;
-      })
-      .map(item => {
-        let date = null;
-        try {
-          date = new Date(item.name);
-        }
-        catch {}
-        const match = item.name.match(/(.*) \((\d{4}\-\d{2}\-\d{2})\)$/) ??
-          [null, date ? days[date.getDay()] : item.name, item.name];
-        item.label = item.label ?? match[1];
-        item.date = item.date ?? match[2];
-        return item;
-      });
+  function getWeekday(date) {
+    try {
+      return [
+        'Sunday', 'Monday', 'Tuesday', 'Wednesday',
+        'Thursday', 'Friday', 'Saturday'
+      ][(new Date(date)).getDay()];
+    }
+    catch {
+      return 'Sunday';
+    }
   }
 
   function toGraphQLSlotList(arr) {
     return arr
       .map(item => {
         if (typeof item === 'string') {
-          return { name: item };
+          const reSlot = /^(\d{4}-\d{2}-\d{2}) (\d+:\d+)\s*-\s*(\d+:\d+)$/;
+          const match = item.match(reSlot);
+          if (!match) {
+            const reDateFallback = /^(.*?) (\d+:\d+)\s*-\s*(\d+:\d+)$/;
+            const dateFallback = item.match(reDateFallback);
+            if (dateFallback) {
+              return {
+                date: dateFallback[1],
+                start: dateFallback[2],
+                end: dateFallback[3]
+              };
+            }
+            else {
+              const reSlotFallback = /^(\d{4}-\d{2}-\d{2}) (.*)$/;
+              const slotFallback = item.match(reSlotFallback);
+              if (slotFallback) {
+                return {
+                  date: slotFallback[1],
+                  start: slotFallback[2]
+                };
+              }
+              else {
+                return { date: item };
+              }
+            }
+          }
+          const slot = {
+            date: match[1],
+            start: match[2],
+            end: match[3]
+          };
+          return slot;
         }
         return item;
       })
       .map(item => {
-        const times = item.name.match(/^(\d+):(\d+)\s*-\s*(\d+):(\d+)$/) ??
-          [null, '00', '00', '01', '00'];
-        item.start = item.start ?? `${times[1]}:${times[2]}`;
-        item.end = item.end ?? `${times[3]}:${times[4]}`;
-        item.duration =
-          (parseInt(times[3], 10) * 60 + parseInt(times[4], 10)) -
-          (parseInt(times[1], 10) * 60 + parseInt(times[2], 10));
+        const reTimes = /^(\d+):(\d+)$/;
+        const startMatch = item.start?.match(reTimes);
+        const endMatch = item.end?.match(reTimes);
+        if (startMatch && endMatch) {
+          item.duration =
+            (parseInt(endMatch[1], 10) * 60 + parseInt(endMatch[2], 10)) -
+            (parseInt(startMatch[1], 10) * 60 + parseInt(startMatch[2], 10));
+        }
+        item.weekday = getWeekday(item.date);
         return item;
       });
   }
@@ -172,8 +186,7 @@ async function getTestData(testDataId) {
       reponame: 'test/' + testDataId
     },
     rooms: toGraphQLRoomList(custom.rooms ?? ['Panic room (25)']),
-    days: toGraphQLDayList(custom.days ?? ['Monday (2042-04-07)']),
-    slots: toGraphQLSlotList(custom.slots ?? ['9:00 - 10:00']),
+    slots: toGraphQLSlotList(custom.slots ?? ['2042-04-07 9:00-10:00']),
     labels: toGraphQLNameList(custom.labels ?? ['session']),
     sessions: toGraphQLSessions(custom.sessions ?? [
       { number: 1, title: 'A test session' }
