@@ -67,7 +67,7 @@ export async function getEnvKey(key, defaultValue, json) {
         if (key === 'REPOSITORY') {
           if (!repoName) {
             const repoStr = execSync(`gh repo view --json nameWithOwner`);
-            repoName = JSON.parse(repoVariablesStr).nameWithOwner;
+            repoName = JSON.parse(repoStr).nameWithOwner;
           }
           return repoName;
         }
