@@ -111,7 +111,7 @@ describe('Session validation', function () {
       session: sessionNumber,
       severity: 'error',
       type: 'scheduling',
-      messages: ['Session scheduled in same room (Main (25)) and same day/slot (2042-04-05 9:00 - 10:00) as session "Scheduled in same room as previous one" (8)']
+      messages: ['Session scheduled in same room (Main (25)) and same day/slot (2042-04-05 9:00) as session "Scheduled in same room as previous one" (8)']
     }]);
   });
 
@@ -171,7 +171,7 @@ describe('Session validation', function () {
       session: sessionNumber,
       severity: 'warning',
       type: 'conflict',
-      messages: ['Same day/slot "2042-04-05 12:00 - 13:00" as conflicting session "Conflicts with previous session scheduled at same time" (#17)']
+      messages: ['Same day/slot "2042-04-05 12:00" as conflicting session "Conflicts with previous session scheduled at same time" (#17)']
     }]);
   });
 
@@ -183,7 +183,7 @@ describe('Session validation', function () {
       session: sessionNumber,
       severity: 'warning',
       type: 'track',
-      messages: ['Same day/slot "2042-04-05 13:00 - 14:00" as session in same track "debug": "Same time as previous session in same track" (#19)']
+      messages: ['Same day/slot "2042-04-05 13:00" as session in same track "debug": "Same time as previous session in same track" (#19)']
     }]);
   });
 

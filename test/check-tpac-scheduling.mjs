@@ -21,9 +21,10 @@ function checkMeetingsAgainstTimes(project) {
     .map(session => session.description.times
       .map(time => Object.assign({ session }, time))
       .filter(time => {
-        const day = project.days.find(day => day.name === time.day);
-        const slot = project.slots.find(slot => slot.name === time.slot);
-        return !session.meeting?.includes(`${day.label}, ${slot.start}`);
+        const slot = project.slots.find(slot =>
+          slot.date === time.day &&
+          slot.start === time.slot);
+        return !session.meeting?.includes(`${slot.weekday}, ${slot.start}`);
       }))
     .flat()
     .map(time => `Session #${time.session.number} not scheduled on ${time.day} at ${time.slot}`);
@@ -161,7 +162,7 @@ _No response_`;
       severity: 'warning',
       type: 'times',
       messages: [
-        'Session not scheduled on Thursday (2023-09-14) at 17:00 - 18:30 as requested'
+        'Session not scheduled on 2023-09-14 at 17:00 as requested'
       ]
     }]);
   });

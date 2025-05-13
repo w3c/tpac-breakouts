@@ -4,12 +4,8 @@ export default {
     timezone: 'Etc/UTC'
   },
 
-  days: [
-    '2042-04-05'
-  ],
-
   slots: [
-    '9:00 - 10:00'
+    '2042-04-05 9:00 - 10:00'
   ],
 
   rooms: [

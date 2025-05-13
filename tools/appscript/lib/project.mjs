@@ -15,7 +15,6 @@ export function getProjectSheets(spreadsheet) {
     sessions: { titleMatch: /(list|breakouts)/i },
     meetings: { titleMatch: /meetings/i },
     rooms: { titleMatch: /rooms/i },
-    days: { titleMatch: /days/i },
     slots: { titleMatch: /slots/i }
   };
 
@@ -36,15 +35,11 @@ export function getProjectSheets(spreadsheet) {
     return;
   }
   if (!sheets.rooms.sheet) {
-    reportError('No "Rooms" sheet found, please import data from GitHub first.');
-    return;
-  }
-  if (!sheets.days.sheet) {
-    reportError('No "Days" sheet found, please import data from GitHub first.');
+    reportError('No "Rooms" sheet found, please add one and start again.');
     return;
   }
   if (!sheets.slots.sheet) {
-    reportError('No "Slots" sheet found, please import data from GitHub first.');
+    reportError('No "Slots" sheet found, please add one and start again.');
     return;
   }
 
@@ -79,7 +74,7 @@ export function getProjectSheets(spreadsheet) {
  *   ],
  *   "slotsFieldId": "xxxxxxx",
  *   "slots": [
- *     { "id": "xxxxxxx", "name": "9:30 - 10:30", "start": "9:30", "end": "10:30", "duration": 60 },
+ *     { "date": "2042-02-11", "weekday": "Monday", start": "9:30", "end": "10:30", "duration": 60 },
  *     ...
  *   ],
  *   "severityFieldIds": {
@@ -100,7 +95,7 @@ export function getProjectSheets(spreadsheet) {
  *         "login": "tidoust"
  *       },
  *       "room": "Salon Ecija (30)",
- *       "slot": "9:30 - 10:30"
+ *       "slot": "2042-02-11 9:30"
  *     },
  *     ...
  *   ]
@@ -166,29 +161,19 @@ export function getProject(spreadsheet) {
         return v;
       }),
 
-    days: sheets.days.values
-      .filter(v => !!v.date)
-      .map(v => {
-        return {
-          id: v.id,
-          name: v.date,
-          label: !!v.weekday ? v.weekday : v.date,
-          date: v.date
-        };
-      }),
-
     slots: sheets.slots.values
-      .filter(v => !!v['start time'] && !!v['end time'])
+      .filter(v => v.date && v['start time'] && v['end time'])
       .map(v => {
-        const name = v['start time'] + '-' + v['end time'];
+        const slotName = v['start time'] + '-' + v['end time'];
         const times =
-          name.match(/^(\d+):(\d+)\s*-\s*(\d+):(\d+)$/) ??
+          slotName.match(/^(\d+):(\d+)\s*-\s*(\d+):(\d+)$/) ??
           [null, '00', '00', '01', '00'];
         return {
-          id: v.id,
+          date: v.date,
           start: v['start time'],
           end: v['end time'],
-          name,
+          name: v.date + ' ' + v['start time'],
+          weekday: getWeekday(v.date),
           duration:
             (parseInt(times[3], 10) * 60 + parseInt(times[4], 10)) -
             (parseInt(times[1], 10) * 60 + parseInt(times[2], 10))
@@ -235,6 +220,7 @@ export function getProject(spreadsheet) {
         console.warn(`The "Meetings" sheet references an unknown session #${number}`);
         continue;
       }
+      // TODO: decide on whether to use start time only... or something else.
       session.meetings = meetings;
       const { room, meeting } = serializeSessionMeetings(meetings, project);
       session.room = room;
@@ -405,14 +391,13 @@ export function refreshProject(spreadsheet, project, { what }) {
     if (type === 'rooms') {
       idKey = 'name';
     }
-    else if (type === 'days') {
-      idKey = 'date';
-    }
-    else if (type === 'slots') {
-      idKey = 'start';
-    }
     else if (type === 'sessions') {
       idKey = 'number';
+    }
+    else if (type === 'slots') {
+      // Note: The ID for the "slots" sheet is the union of the day
+      // and slot name.
+      idKey = '';
     }
     else if (type === 'meetings') {
       // Note: The "meetings" sheet is a view of sessions meetings
@@ -440,13 +425,22 @@ export function refreshProject(spreadsheet, project, { what }) {
       // in the spreadsheet. Let's copy them to the root level as well.
       obj = Object.assign({}, obj, obj.validation);
 
-      const value = type === 'meetings' ?
-        sheetValues.find(val =>
+      let value = null;
+      if (type === 'meetings') {
+        value = sheetValues.find(val =>
           val.number === obj.number &&
           val.room === obj.room &&
           val.day === obj.day &&
-          val.slot === obj.slot) :
-        sheetValues.find(val => val[idKey] === obj[idKey]);
+          val.slot === obj.slot);
+      }
+      else if (type === 'slots') {
+        value = sheetValues.find(val =>
+          val.date === obj.date &&
+          val.start === obj.start);
+      }
+      else {
+        value = sheetValues.find(val => val[idKey] === obj[idKey]);
+      }
       if (value) {
         // Existing item, refresh the data, except if the user is only
         // willing to refresh the list of sessions itself.
@@ -473,26 +467,6 @@ export function refreshProject(spreadsheet, project, { what }) {
     console.log(`- import ${toset.length} ${type}...`);
     setValues(sheets[type].sheet, toset);
     console.log(`- import ${toset.length} ${type}... done`);
-
-    // Set formula to auto-fill the weekday in the days sheet
-    // and the slot name in the slots sheet
-    // TODO: this assumes a position for the columns
-    if (type === 'days') {
-      console.log(`- add formula for weekday column again...`);
-      const range = sheets[type].sheet.getRange('B2:B');
-      range.setFormulaR1C1(
-        '=IF(INDIRECT("R[0]C[-1]", false) <> "", CHOOSE(WEEKDAY(INDIRECT("R[0]C[-1]", false)), "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ), "")'
-      );
-      console.log(`- add formula for weekday column again... done`);
-    }
-    if (type === 'slots') {
-      console.log(`- add formula for slot name column again...`);
-      const range = sheets[type].sheet.getRange('C2:C');
-      range.setFormulaR1C1(
-        '=IF(INDIRECT("R[0]C[-2]", false) <> "", CONCAT(CONCAT(INDIRECT("R[0]C[-2]", false), "-"), INDIRECT("R[0]C[-1]", false)), "")'
-      );
-      console.log(`- add formula for slot name column again... done`);
-    }
 
     // To make team's life easier, we'll convert session numbers in the first
     // column to a link to the session on GitHub
@@ -565,8 +539,8 @@ export function refreshProject(spreadsheet, project, { what }) {
     }
     SpreadsheetApp.flush();
 
-    // Refresh rooms, days, slots
-    for (const type of ['rooms', 'days', 'slots']) {
+    // Refresh rooms and slots
+    for (const type of ['rooms', 'slots']) {
       refreshData(type);
     }
   }
@@ -594,7 +568,7 @@ export function refreshProject(spreadsheet, project, { what }) {
 function createSessionsSheet(spreadsheet, sheets, project) {
   // Create the new sheet
   const title = project.metadata.type === 'groups' ? 'List' : 'Breakouts';
-  const sheet = spreadsheet.insertSheet(title);
+  const sheet = spreadsheet.insertSheet(title, spreadsheet.getNumSheets());
 
   // Set the headers row
   const headers = [
@@ -636,8 +610,9 @@ function createSessionsSheet(spreadsheet, sheets, project) {
       sheet.getMaxRows() - 1, 1);
     roomRange.setDataValidation(roomRule);
 
-    // TODO: this assumes that day name is in column "A".
-    const dayValuesRange = sheets.days.sheet.getRange('A2:A');
+    // TODO: this assumes that day name is in column "A"
+    // and start time in column "B"
+    const dayValuesRange = sheets.slots.sheet.getRange('A2:A');
     const dayRule = SpreadsheetApp
       .newDataValidation()
       .requireValueInRange(dayValuesRange)
@@ -648,8 +623,7 @@ function createSessionsSheet(spreadsheet, sheets, project) {
       sheet.getMaxRows() - 1, 1);
     dayRange.setDataValidation(dayRule);
 
-    // TODO: this assumes that slot name is in column "C".
-    const slotValuesRange = sheets.slots.sheet.getRange('C2:C');
+    const slotValuesRange = sheets.slots.sheet.getRange('B2:B');
     const slotRule = SpreadsheetApp
       .newDataValidation()
       .requireValueInRange(slotValuesRange)
@@ -678,7 +652,7 @@ function createSessionsSheet(spreadsheet, sheets, project) {
 function createMeetingsSheet(spreadsheet, sheets, project) {
   // Create the new sheet
   const title = 'Meetings';
-  const sheet = spreadsheet.insertSheet(title);
+  const sheet = spreadsheet.insertSheet(title, spreadsheet.getNumSheets());
 
   // Set the headers row
   const headers = [
@@ -694,9 +668,8 @@ function createMeetingsSheet(spreadsheet, sheets, project) {
     .setWarningOnly(true);
 
   sheet.setColumnWidths(headers.findIndex(h => h === 'Number') + 1, 1, 60);
-  sheet.setColumnWidths(headers.findIndex(h => h === 'Room') + 1, 1, 150);
+  sheet.setColumnWidths(headers.findIndex(h => h === 'Room') + 1, 1, 200);
   sheet.setColumnWidths(headers.findIndex(h => h === 'Day') + 1, 1, 150);
-  sheet.setColumnWidths(headers.findIndex(h => h === 'Slot') + 1, 1, 150);
 
   // TODO: this assumes that room name is in column "A".
   const roomValuesRange = sheets.rooms.sheet.getRange('A2:A');
@@ -710,8 +683,9 @@ function createMeetingsSheet(spreadsheet, sheets, project) {
     sheet.getMaxRows() - 1, 1);
   roomRange.setDataValidation(roomRule);
 
-  // TODO: this assumes that day name is in column "A".
-  const dayValuesRange = sheets.days.sheet.getRange('A2:A');
+  // TODO: this assumes that day name is in column "A"
+  // and start time in column "B"
+  const dayValuesRange = sheets.slots.sheet.getRange('A2:A');
   const dayRule = SpreadsheetApp
     .newDataValidation()
     .requireValueInRange(dayValuesRange)
@@ -722,8 +696,7 @@ function createMeetingsSheet(spreadsheet, sheets, project) {
     sheet.getMaxRows() - 1, 1);
   dayRange.setDataValidation(dayRule);
 
-  // TODO: this assumes that slot name is in column "C".
-  const slotValuesRange = sheets.slots.sheet.getRange('C2:C');
+  const slotValuesRange = sheets.slots.sheet.getRange('B2:B');
   const slotRule = SpreadsheetApp
     .newDataValidation()
     .requireValueInRange(slotValuesRange)
@@ -732,7 +705,9 @@ function createMeetingsSheet(spreadsheet, sheets, project) {
   const slotRange = sheet.getRange(
     2, headers.findIndex(h => h === 'Slot') + 1,
     sheet.getMaxRows() - 1, 1);
-  slotRange.setDataValidation(slotRule);
+  slotRange
+    .setNumberFormat('@')
+    .setDataValidation(slotRule);
 
   return sheet;
 }
@@ -780,4 +755,11 @@ function serializeRegistrants(value) {
       null)
     .filter(field => field)
     .join('\n');
+}
+
+function getWeekday(date) {
+  return [
+    'Sunday', 'Monday', 'Tuesday', 'Wednesday',
+    'Thursday', 'Friday', 'Saturday'
+  ][(new Date(date)).getDay()];
 }

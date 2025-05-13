@@ -298,23 +298,24 @@ export async function initSectionHandlers(project) {
         break;
 
       case 'slots':
-        // Each entry looks like "[x] Monday morning 1"
-        const reSlot = /^\[( |x)\]\s*(?:(monday|tuesday|thursday|friday)\s+(morning|afternoon)\s+(1|2))$/i;
+        // Each entry looks like "[x] Monday, 09:30 - 11:00"
+        const reSlot = /^\[( |x)\]\s*(monday|tuesday|thursday|friday),\s*(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})$/i;
         handler.allowEmptyValue = true;
         handler.parse = value => parseList(value, { linesOnly: true })
-          .map(slotDesc => {
-            const match = slotDesc.match(reSlot);
-            if (!match[1].trim()) {
-              return null;
-            }
-            const day = project.days.find(day => day.label.toLowerCase() === match[2].toLowerCase());
-            const slotIndex =
-              (match[3].toLowerCase() === 'afternoon' ? 2 : 0) +
-              (match[4] === '2') ? 1 : 0;
-            const slot = project.slots[slotIndex];
-            return { day: day.name, slot: slot.name };
-          })
-          .filter(slot => !!slot);
+            .map(slotDesc => {
+              const match = slotDesc.match(reSlot);
+              if (!match[1].trim()) {
+                return null;
+              }
+              const slot = project.slots.find(slot =>
+                slot.weekday.toLowerCase() === match[2].toLowerCase() &&
+                (slot.start === match[3] || slot.start === `0${match[3]}`));
+              return {
+                day: slot.date,
+                slot: slot.start
+              };
+            })
+            .filter(slot => !!slot);
         handler.validate = value => parseList(value, { linesOnly: true })
           .every(slotDesc => {
             const match = slotDesc.match(reSlot);
@@ -328,38 +329,25 @@ export async function initSectionHandlers(project) {
               // hiccup in any case
               return true;
             }
-            const slotIndex =
-              (match[3].toLowerCase() === 'afternoon' ? 2 : 0) +
-              (match[4] === '2') ? 1 : 0;
-            const day = project.days.find(day => day.label.toLowerCase() === match[2].toLowerCase());
-            const slot = project.slots[slotIndex];
-            return day && slot;
+            const slot = project.slots.find(slot =>
+              slot.weekday.toLowerCase() === match[2].toLowerCase() &&
+              (slot.start === match[3] || slot.start === `0${match[3]}`));
+            // TODO: consider more flexible mapping when times change slightly
+            return !!slot;
           });
-        // Serialization lists all possible slots in order, selecting those
-        // that are in the current slots value.
-        const fullSlots = project.days
-          .map(day => project.slots.map(slot => Object.assign({ day, slot })))
-          .flat();
-        handler.serialize = value => fullSlots
+        handler.serialize = value => project.slots
           .map(ds => {
             const selected = value?.find(choice =>
-              choice.day === ds.day.name &&
-              choice.slot === ds.slot.name);
-            const slotIndex = project.slots.findIndex(slot => slot.name === ds.slot.name);
-            const slotLabels = [
-              'morning 1',
-              'morning 2',
-              'afternoon 1',
-              'afternoon 2'
-            ];
-            return `- [${selected ? 'X' : ' '}] ${slotLabels[slotIndex]}`;
+              choice.day === ds.date &&
+              choice.slot === ds.start);
+            return `- [${selected ? 'X' : ' '}] ${slot.weekday}, ${slot.start} - ${slot.end}`;
           })
           .join('\n');
         break;
 
       case 'times':
         // Each entry looks like "[x] Monday, 09:30 - 11:00"
-        const reTime = /^\[( |x)\]\s*(?:(monday|tuesday|thursday|friday),\s*(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2}))$/i;
+        const reTime = /^\[( |x)\]\s*(monday|tuesday|thursday|friday),\s*(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})$/i;
         handler.allowEmptyValue = true;
         handler.parse = value => parseList(value, { linesOnly: true })
             .map(time => {
@@ -367,9 +355,13 @@ export async function initSectionHandlers(project) {
               if (!match[1].trim()) {
                 return null;
               }
-              const day = project.days.find(day => day.label.toLowerCase() === match[2].toLowerCase());
-              const slot = project.slots.find(slot => slot.start === match[3] && slot.end === match[4]);
-              return { day: day.name, slot: slot.name };
+              const slot = project.slots.find(slot =>
+                slot.weekday.toLowerCase() === match[2].toLowerCase() &&
+                (slot.start === match[3] || slot.start === `0${match[3]}`));
+              return {
+                day: slot.date,
+                slot: slot.start
+              };
             })
             .filter(time => !!time);
         handler.validate = value => parseList(value, { linesOnly: true })
@@ -385,21 +377,17 @@ export async function initSectionHandlers(project) {
               // hiccup in any case
               return true;
             }
-            const day = project.days.find(day => day.label.toLowerCase() === match[2].toLowerCase());
-            const slot = project.slots.find(slot => slot.start === match[3] && slot.end === match[4]);
-            return day && slot;
+            const slot = project.slots.find(slot =>
+              slot.weekday.toLowerCase() === match[2].toLowerCase() &&
+              (slot.start === match[3] || slot.start === `0${match[3]}`));
+            return !!slot;
           });
-        // Serialization lists all possible times in order, selecting those
-        // that are in the current times value.
-        const daysAndSlots = project.days
-          .map(day => project.slots.map(slot => Object.assign({ day, slot })))
-          .flat();
-        handler.serialize = value => daysAndSlots
-          .map(ds => {
-            const time = value?.find(time =>
-              time.day === ds.day.name &&
-              time.slot === ds.slot.name);
-            return `- [${time ? 'X' : ' '}] ${ds.day.label}, ${ds.slot.name}`;
+        handler.serialize = value => project.slots
+          .map(slot => {
+            const selected = value?.find(choice =>
+              choice.day === slot.date &&
+              choice.slot === slot.start);
+            return `- [${selected ? 'X' : ' '}] ${slot.weekday}, ${slot.start} - ${slot.end}`;
           })
           .join('\n');
         break;
