@@ -21,6 +21,7 @@
     "url": "https://github.com/w3c/tpac-breakouts/issues"
   },
   "files": [
+    "files/",
     "tools/"
   ],
   "bin": {
