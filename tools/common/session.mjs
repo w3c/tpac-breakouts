@@ -180,16 +180,19 @@ export async function initSectionHandlers(project) {
       case 'discussion':
         handler.parse = value => {
           const match = value.match(/^\[(.+)\]\((.*)\)$/i);
-          if (match) {
-            return match[2];
+          let url = match ? match[2] : value;
+          if (url.startsWith('#')) {
+            url = `https://webirc.w3.org/?channels=${url.replace(/#/, '')}`;
           }
-          else {
-            return value;
-          }
+          return url;
         };
         handler.validate = value => {
           const match = value.match(/^\[(.+)\]\((.*)\)$/i);
-          return isUrlValid(match ? match[2] : value);
+          let url = match ? match[2] : value;
+          if (url.startsWith('#')) {
+            url = `https://webirc.w3.org/?channels=${url.replace(/#/, '')}`;
+          }
+          return isUrlValid(url);
         };
         break;
 
