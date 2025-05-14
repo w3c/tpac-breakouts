@@ -212,7 +212,10 @@ export function getProject(spreadsheet) {
   // TODO: convert "number - title" to "number" and "title" once we switch to that
   if (project.metadata.type === 'groups' &&
       sheets.meetings?.values) {
-    const allMeetings = Object.groupBy(sheets.meetings.values, ({ number }) => number);
+    const allMeetings = Object.groupBy(
+      sheets.meetings.values,
+      ({ number }) => number
+    );
     for (const [numberStr, meetings] of Object.entries(allMeetings)) {
       const number = parseInt(numberStr, 10);
       const session = project.sessions.find(s => s.number === number);
@@ -220,8 +223,13 @@ export function getProject(spreadsheet) {
         console.warn(`The "Meetings" sheet references an unknown session #${number}`);
         continue;
       }
-      // TODO: decide on whether to use start time only... or something else.
-      session.meetings = meetings;
+      session.meetings = meetings.map(meeting => Object.assign({
+        room: meeting.room,
+        day: meeting.day,
+        slot: meeting.slot,
+        actualStart: meeting['actual start time'],
+        actualEnd: meeting['actual end time']
+      }));
       const { room, meeting } = serializeSessionMeetings(meetings, project);
       session.room = room;
       session.meeting = meeting;
@@ -656,7 +664,7 @@ function createMeetingsSheet(spreadsheet, sheets, project) {
 
   // Set the headers row
   const headers = [
-    'Number', 'Room', 'Day', 'Slot'
+    'Number', 'Room', 'Day', 'Slot', 'Actual start time', 'Actual end time'
   ];
   const headersRow = sheet.getRange(1, 1, 1, headers.length);
   headersRow.setValues([headers]);
@@ -670,6 +678,7 @@ function createMeetingsSheet(spreadsheet, sheets, project) {
   sheet.setColumnWidths(headers.findIndex(h => h === 'Number') + 1, 1, 60);
   sheet.setColumnWidths(headers.findIndex(h => h === 'Room') + 1, 1, 200);
   sheet.setColumnWidths(headers.findIndex(h => h === 'Day') + 1, 1, 150);
+  sheet.setColumnWidths(headers.findIndex(h => h === 'Slot') + 1, 3, 120);
 
   // TODO: this assumes that room name is in column "A".
   const roomValuesRange = sheets.rooms.sheet.getRange('A2:A');
@@ -708,6 +717,12 @@ function createMeetingsSheet(spreadsheet, sheets, project) {
   slotRange
     .setNumberFormat('@')
     .setDataValidation(slotRule);
+
+  const actualTimesRange = sheet.getRange(
+    2, headers.findIndex(h => h === 'Actual start time') + 1,
+    sheet.getMaxRows() - 1, 2);
+  actualTimesRange
+    .setNumberFormat('@');
 
   return sheet;
 }
