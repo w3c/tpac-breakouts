@@ -223,13 +223,23 @@ export function getProject(spreadsheet) {
         console.warn(`The "Meetings" sheet references an unknown session #${number}`);
         continue;
       }
-      session.meetings = meetings.map(meeting => Object.assign({
-        room: meeting.room,
-        day: meeting.day,
-        slot: meeting.slot,
-        actualStart: meeting['actual start time'],
-        actualEnd: meeting['actual end time']
-      }));
+      session.meetings = meetings
+        .map(meeting => {
+          const slot = project.slots.find(slot =>
+            slot.date + ' ' + slot.start === meeting.slot);
+          if (!slot) {
+            console.warn(`The "Meetings" sheet references an unknown slot ${meeting.slot}`);
+            return null;
+          }
+          return {
+            room: meeting.room,
+            day: slot.date,
+            slot: slot.start,
+            actualStart: meeting['actual start time'],
+            actualEnd: meeting['actual end time']
+          };
+        })
+        .filter(meeting => meeting);
       const { room, meeting } = serializeSessionMeetings(meetings, project);
       session.room = room;
       session.meeting = meeting;
@@ -424,7 +434,11 @@ export function refreshProject(spreadsheet, project, { what }) {
               group: `${session.number} - ${session.title}`
             }, meeting))
         )
-        .flat() :
+        .flat()
+        .map(meeting => {
+          meeting.slot = meeting.day + ' ' + meeting.slot;
+          return meeting;
+        }) :
       project[type];
     const seen = [];
     for (let obj of projectValues) {
@@ -438,7 +452,6 @@ export function refreshProject(spreadsheet, project, { what }) {
         value = sheetValues.find(val =>
           val.number === obj.number &&
           val.room === obj.room &&
-          val.day === obj.day &&
           val.slot === obj.slot);
       }
       else if (type === 'slots') {
@@ -664,7 +677,7 @@ function createMeetingsSheet(spreadsheet, sheets, project) {
 
   // Set the headers row
   const headers = [
-    'Number', 'Room', 'Day', 'Slot', 'Actual start time', 'Actual end time'
+    'Number', 'Room', 'Slot', 'Actual start time', 'Actual end time'
   ];
   const headersRow = sheet.getRange(1, 1, 1, headers.length);
   headersRow.setValues([headers]);
@@ -677,8 +690,7 @@ function createMeetingsSheet(spreadsheet, sheets, project) {
 
   sheet.setColumnWidths(headers.findIndex(h => h === 'Number') + 1, 1, 60);
   sheet.setColumnWidths(headers.findIndex(h => h === 'Room') + 1, 1, 200);
-  sheet.setColumnWidths(headers.findIndex(h => h === 'Day') + 1, 1, 150);
-  sheet.setColumnWidths(headers.findIndex(h => h === 'Slot') + 1, 3, 120);
+  sheet.setColumnWidths(headers.findIndex(h => h === 'Slot') + 1, 3, 150);
 
   // TODO: this assumes that room name is in column "A".
   const roomValuesRange = sheets.rooms.sheet.getRange('A2:A');
@@ -705,10 +717,11 @@ function createMeetingsSheet(spreadsheet, sheets, project) {
     sheet.getMaxRows() - 1, 1);
   dayRange.setDataValidation(dayRule);
 
-  const slotValuesRange = sheets.slots.sheet.getRange('B2:B');
+  const slotValues = project.slots.map(slot =>
+    slot.date + ' ' + slot.start);
   const slotRule = SpreadsheetApp
     .newDataValidation()
-    .requireValueInRange(slotValuesRange)
+    .requireValueInList(slotValues)
     .setAllowInvalid(false)
     .build();
   const slotRange = sheet.getRange(
