@@ -192,7 +192,7 @@ export function parseSessionMeetings(session, project) {
  */
 export function serializeSessionMeetings(meetings, project) {
   if (!meetings || meetings.length === 0) {
-    return null;
+    return {};
   }
   const room = meetings.reduce((room, meeting) => {
     return (meeting.room && meeting.room === room) ? room : null;
