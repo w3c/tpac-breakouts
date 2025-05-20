@@ -505,7 +505,7 @@ export function refreshProject(spreadsheet, project, { what }) {
         // willing to refresh the list of sessions itself.
         for (const [key, val] of Object.entries(obj)) {
           if (what !== 'sessions' ||
-              !['room', 'day', 'slot', 'meeting'].includes(key)) {
+              !['room', 'day', 'slot', 'meeting', 'tracks'].includes(key)) {
             value[key] = val;
             if (key === 'day' && val && val.match(/ \((.+)\)$/)) {
               value[key] = val.match(/ \((.*)\)$/)[1];
