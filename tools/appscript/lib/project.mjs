@@ -720,7 +720,9 @@ function createMeetingsSheet(spreadsheet, sheets, project) {
   const roomRange = sheet.getRange(
     2, headers.findIndex(h => h === 'Room') + 1,
     sheet.getMaxRows() - 1, 1);
-  roomRange.setDataValidation(roomRule);
+  roomRange
+    .setNumberFormat('@')
+    .setDataValidation(roomRule);
 
   const slotValues = project.slots.map(slot =>
     slot.date + ' ' + slot.start);
