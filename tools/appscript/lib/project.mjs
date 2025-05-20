@@ -89,7 +89,7 @@ export function getProjectSheets(spreadsheet) {
  *       "number": xx,
  *       "title": "Session title",
  *       "body": "Session body, markdown",
- *       "labels": [ "session", ... ],
+ *       "tracks": [ "media", ... ],
  *       "author": {
  *         "databaseId": 1122927,
  *         "login": "tidoust"
@@ -147,6 +147,7 @@ export function getProject(spreadsheet) {
       timezone: getSetting('Timezone', 'Etc/UTC'),
       calendar: getSetting('Sync with W3C calendar', 'no'),
       rooms: getSetting('Show rooms in calendar') === 'no' ? 'hide' : 'show',
+      tracks: getSetting('Show tracks in calendar') === 'no' ? 'hide' : 'show',
       meeting: getSetting('Meeting name in calendar', ''),
       reponame: getSetting('GitHub repository name')
     },
@@ -191,7 +192,7 @@ export function getProject(spreadsheet) {
           databaseId: session['author id'],
           login: session.author
         },
-        labels: (session.labels ?? '').split(', '),
+        tracks: (session.tracks ?? '').split(',').map(t => t.trim()),
         validation: {
           check: session.check,
           warning: session.warning,
@@ -368,8 +369,13 @@ function setValues(sheet, values) {
     if (obj[header] === null || obj[header] === undefined) {
       return '';
     }
-    if (header === 'labels' && obj[header]) {
-      return obj[header].join(', ');
+    if (header === 'tracks' && obj[header]) {
+      if (Array.isArray(obj[header])) {
+        return obj[header].join(', ');
+      }
+      else {
+        return obj[header];
+      }
     }
     if (header === 'registrants' && obj[header]) {
       return serializeRegistrants(obj[header]);
@@ -570,7 +576,10 @@ export function refreshProject(spreadsheet, project, { what }) {
         setSetting('Type', actualValue);
       }
       else if (name === 'rooms') {
-        setSetting('Show rooms in calendar', !!value ? 'yes' : 'no');
+        setSetting('Show rooms in calendar', value === 'hide' ? 'no' : 'yes');
+      }
+      else if (name === 'tracks') {
+        setSetting('Show tracks in calendar', value === 'hide' ? 'no' : 'yes');
       }
       else if (name === 'calendar') {
         setSetting('Sync with W3C calendar', value);
@@ -623,7 +632,7 @@ function createSessionsSheet(spreadsheet, sheets, project) {
 
   // Set the headers row
   const headers = [
-    'Number', 'Title', 'Author', 'Author ID', 'Body', 'Labels'
+    'Number', 'Title', 'Author', 'Author ID', 'Body', 'Tracks'
   ];
   if (project.metadata.type !== 'groups') {
     headers.push('Room', 'Slot');
@@ -677,7 +686,7 @@ function createSessionsSheet(spreadsheet, sheets, project) {
   sheet
     .getRange(2, 1,
       sheet.getMaxRows() - 1,
-      headers.findIndex(h => h === 'Labels') + 1)
+      headers.findIndex(h => h === 'Body') + 1)
     .protect()
     .setDescription(`${title} - content from GitHub`)
     .setWarningOnly(true);

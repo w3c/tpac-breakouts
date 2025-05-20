@@ -86,13 +86,10 @@ export function suggestSchedule(project, { seed }) {
     tracks.add('_plenary');
   }
   for (const session of sessions) {
-    session.tracks = session.labels
-      .filter(label => label.startsWith('track: '))
-      .map(label => label.substring('track: '.length))
-      .map(track => {
-        tracks.add(track);
-        return track;
-      });
+    session.tracks = session.tracks ?? [];
+    for (const track of session.tracks) {
+      tracks.add(track);
+    }
   }
   tracks.add('');
 

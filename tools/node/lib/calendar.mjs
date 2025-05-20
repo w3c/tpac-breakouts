@@ -80,7 +80,7 @@ function convertToCalendarMarkdown(text) {
 /**
  * Helper function to format calendar entry description from the session's info
  */
-function formatAgenda(session) {
+function formatAgenda(session, options) {
   const issueUrl = `https://github.com/${session.repository}/issues/${session.number}`;
   const materials = Object.entries(session.description.materials || [])
     .filter(([key, value]) => (key !== 'agenda') && (key !== 'calendar'))
@@ -88,14 +88,16 @@ function formatAgenda(session) {
     .map(([key, value]) => `- [${key}](${value})`);
   materials.push(`- [Session proposal on GitHub](${issueUrl})`);
 
-  const tracks = session.labels
-    .filter(label => label.startsWith('track: '))
-    .map(label => '- ' + label.substring('track: '.length));
-  tracks.sort();
-  const tracksStr = tracks.length > 0 ? `
+  let tracksStr = '';
+  if (options?.tracks === 'show') {
+    const tracks = session.tracks ?? [];
+    tracks.sort();
+    if (tracks.length > 0) {
+      tracksStr = `
 **Track(s):**
-${tracks.join('\n')}` :
-    '';
+${tracks.join('\n')}`;
+    }
+  }
 
   const attendanceStr = session.description.attendance === 'restricted' ? `
 **Attendance:**
@@ -460,7 +462,7 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
       await fillTextInput('input#event_agendaUrl', getAgendaUrl(session));
     }
     if (project.metadata.type !== 'groups') {
-      await fillTextInput('textarea#event_agenda', formatAgenda(session));
+      await fillTextInput('textarea#event_agenda', formatAgenda(session, { tracks: project.metadata.tracks }));
     }
     if (project.metadata.type !== 'groups' || convertToCalendarMarkdown(session.description.description)) {
       await fillTextInput('textarea#event_description', convertToCalendarMarkdown(session.description.description));

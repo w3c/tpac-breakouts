@@ -556,14 +556,14 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   // Check absence of conflict with sessions in the same track(s)
   // Note: It's fine to have two plenary sessions in the same track(s)
   // scheduled in the same room and at the same time.
-  const tracks = session.labels.filter(label => label.startsWith('track: '));
+  const tracks = session.tracks ?? [];
   const tracksWarnings = meetings
     .filter(meeting => meeting.day && meeting.slot)
     .map(meeting => tracks
       .map(track => project.sessions
-        .filter(s => s !== session && s.labels.includes(track))
+        .filter(s => s !== session && (s.tracks ?? []).includes(track))
         .filter(s => meetsInParallelWith(s, meeting, project))
-        .map(s => Object.assign({ meeting, track: track.replace(/^track: /, ''), session, conflictsWith: s }))
+        .map(s => Object.assign({ meeting, track: track, session, conflictsWith: s }))
       )
     )
     .flat(2)

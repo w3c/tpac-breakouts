@@ -104,9 +104,7 @@ export default async function (project, options) {
   for (const session of validSessions) {
     if (session.meetings.length === 0 ||
         session.meetings.find(m => !(m.room && m.day && m.slot))) {
-      const tracks = session.labels
-        .filter(label => label.startsWith('track: '))
-        .map(label => label.substring('track: '.length));
+      const tracks = session.tracks ?? [];
       const tracksStr = tracks.length ? ' - ' + tracks.join(', ') : '';
       console.warn(`- [WARNING] #${session.number} could not be fully scheduled${tracksStr}`);
     }

@@ -42,9 +42,6 @@ export default {
     "2023-09-15 14:30 - 16:30",
     "2023-09-15 17:00 - 18:30"
   ],
-  "labels": [
-    "session"
-  ],
   "sessions": [
     {
       "number": 1,

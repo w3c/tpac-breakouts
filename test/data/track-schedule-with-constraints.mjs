@@ -14,17 +14,12 @@ export default {
     'Room 2'
   ],
 
-  labels: [
-    'session',
-    'track: ux'
-  ],
-
   sessions: [
     {
       number: 1,
       author: 'ianbjacobs',
       title: 'Session with constraint',
-      labels: ['session', 'track: ux'],
+      tracks: ['ux'],
       slot: '9:00',
       body: `
 ### Session description
@@ -56,7 +51,7 @@ _No response_
       number: 2,
       author: 'tidoust',
       title: 'Session without constraint',
-      labels: ['session', 'track: ux'],
+      tracks: ['ux'],
       body: `
 ### Session description
 Blah

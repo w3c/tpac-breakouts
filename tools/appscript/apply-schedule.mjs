@@ -39,7 +39,7 @@ export default async function () {
         session.day = sessionSchedule[2];
         session.slot = sessionSchedule[3];
         session.meeting = sessionSchedule[4];
-        session.labels = sessionSchedule[5];
+        session.tracks = sessionSchedule[5];
         session.meetings = parseSessionMeetings(session, project);
       }
       else {
