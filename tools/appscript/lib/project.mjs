@@ -614,13 +614,23 @@ export function refreshProject(spreadsheet, project, { what }) {
     refreshData('sessions');
 
     if (project.metadata.type === 'groups') {
-      if (!sheets.meetings.sheet ||
-          sheets.meetings.sheet === sheets.sessions.sheet) {
-        sheets.meetings.sheet = createMeetingsSheet(spreadsheet, sheets, project);
-        sheets.meetings.headers = getHeaders(sheets.meetings.sheet);
-        sheets.meetings.values = null;
+      if (sheets.meetings.sheet &&
+          sheets.meetings.sheet !== sheets.sessions.sheet) {
+        refreshData('meetings');
       }
-      refreshData('meetings');
+      else {
+        const nbMeetings = project.sessions
+          .map(session => session.meetings ?? parseSessionMeetings(session, project))
+          .flat()
+          .filter(meeting => meeting.day || meeting.slot || meeting.room)
+          .length;
+        if (nbMeetings > 0) {
+          sheets.meetings.sheet = createMeetingsSheet(spreadsheet, sheets, project);
+          sheets.meetings.headers = getHeaders(sheets.meetings.sheet);
+          sheets.meetings.values = null;
+          refreshData('meetings');
+        }
+      }
     }
   }
 }
