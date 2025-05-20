@@ -42,7 +42,7 @@ import {
  *       "number": xx,
  *       "title": "Session title",
  *       "body": "Session body, markdown",
- *       "labels": [ "session", ... ],
+ *       "tracks": [ "media", ... ],
  *       "author": {
  *         "databaseId": 1122927,
  *         "login": "tidoust"
@@ -69,7 +69,8 @@ export async function fetchProjectFromGitHub(reponame, sessionTemplate) {
       room: row[1],
       day: row[2],
       slot: row[3],
-      meeting: row[4]
+      meeting: row[4],
+      tracks: row[5]
     };
     const session = project.sessions.find(s => s.number === meeting.number);
     if (session) {
@@ -159,7 +160,8 @@ async function exportSchedule(project) {
     session.room,
     session.day,
     session.slot,
-    session.meeting
+    session.meeting,
+    session.tracks
   ]);
   await exportVariableToGitHub(project.metadata.reponame, 'SCHEDULE', schedule);
 }
@@ -270,9 +272,8 @@ export function convertProjectToJSON(project) {
     title: project.title,
     metadata: project.metadata
   };
-  for (const list of ['rooms', 'labels']) {
-    data[list] = toNameList(project[list]);
-  }
+
+  data.rooms = toNameList(project.rooms);
 
   data.slots = project.slots.map(slot => {
     return {
@@ -289,8 +290,8 @@ export function convertProjectToJSON(project) {
       author: session.author.login,
       body: session.body,
     };
-    if (session.labels.length !== 1 || session.labels[0] !== 'session') {
-      simplified.labels = session.labels;
+    if (session.tracks?.length > 0) {
+      simplified.tracks = session.tracks;
     }
     for (const field of ['day', 'room', 'slot', 'meeting', 'registrants']) {
       if (session[field]) {

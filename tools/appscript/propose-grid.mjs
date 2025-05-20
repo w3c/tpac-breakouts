@@ -95,9 +95,7 @@ async function proposeGrid(spreadsheet) {
       if (!session.meetings ||
           session.meetings.length === 0 ||
           session.meetings.find(m => !(m.room && m.day && m.slot))) {
-        const tracks = session.labels
-          .filter(label => label.startsWith('track: '))
-          .map(label => label.substring('track: '.length));
+        const tracks = session.tracks ?? [];
         const tracksStr = tracks.length ? ' - ' + tracks.join(', ') : '';
         noschedule.push(`${session.title} (#${session.number}${tracksStr})`);
         console.warn(`- ${noschedule[noschedule.length - 1]} could not be fully scheduled`);

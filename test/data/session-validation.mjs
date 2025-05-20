@@ -33,12 +33,6 @@ export default {
     'Plenary'
   ],
 
-  // Add a track
-  labels: [
-    'session',
-    'track: debug'
-  ],
-
   // Specify associations with W3C accounts
   w3cAccounts: {
     testbot: 4242,
@@ -315,7 +309,7 @@ Breakout (Default)`,
     {
       number: 18,
       title: 'Same time as next session in same track',
-      labels: ['session', 'track: debug'],
+      tracks: ['debug'],
       body: `
 ### Session description
 My session is rich.
@@ -331,7 +325,7 @@ Breakout (Default)`,
     {
       number: 19,
       title: 'Same time as previous session in same track',
-      labels: ['session', 'track: debug'],
+      tracks: ['debug'],
       author: 'tidoust',
       body: `
 ### Session description

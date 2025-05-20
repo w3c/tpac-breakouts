@@ -30,7 +30,7 @@ export function fillGridSheet(spreadsheet, project, validationErrors) {
     session.day,
     session.slot,
     session.meeting,
-    session.labels
+    session.tracks
   ]);
   sheet.addDeveloperMetadata('SCHEDULE', JSON.stringify(metadata));
   console.log('- create headers row');
@@ -448,11 +448,8 @@ function addSessions(sheet, project, validationErrors) {
     }
 
     // Add tracks if needed
-    const tracks = session.labels.filter(label => label.startsWith('track: '));
-    if (tracks.length > 0) {
-      for (const track of tracks) {
-        label += `\n${track}`;
-      }
+    for (const track of session.tracks ?? []) {
+      label += `\n${track}`;
     }
 
     const sessionIssues = range.errors.filter(error =>

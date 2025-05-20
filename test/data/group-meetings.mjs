@@ -203,7 +203,7 @@ Same IRC channel as previous session.
     {
       number: 22,
       title: 'Games CG',
-      labels: ['session', 'track: debug'],
+      tracks: ['debug'],
       body: `
 ### Session description
 Same time as next group meeting in same track.`,
@@ -214,7 +214,7 @@ Same time as next group meeting in same track.`,
     {
       number: 23,
       title: 'Generative AI CG',
-      labels: ['session', 'track: debug'],
+      tracks: ['debug'],
       body: `
 ### Session description
 Same time as previous group meeting in same track.`,

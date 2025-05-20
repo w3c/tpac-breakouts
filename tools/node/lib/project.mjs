@@ -41,20 +41,13 @@ import { fetchProjectFromGitHub } from '../../common/project.mjs';
  *       "number": xx,
  *       "title": "Session title",
  *       "body": "Session body, markdown",
- *       "labels": [ "session", ... ],
+ *       "tracks": [ "media", ... ],
  *       "author": {
  *         "databaseId": 1122927,
  *         "login": "tidoust"
  *       },
  *       "room": "Salon Ecija (30)",
  *       "slot": "9:30 - 10:30"
- *     },
- *     ...
- *   ],
- *   "labels": [
- *     {
- *       "id": "xxxxxxx",
- *       "name": "error: format"
  *     },
  *     ...
  *   ]

@@ -342,11 +342,8 @@ export async function convertProjectToHTML(project, cliParams) {
             }
 
             // Add tracks if needed
-            const tracks = session.labels.filter(label => label.startsWith('track: '));
-            if (tracks.length > 0) {
-              for (const track of tracks) {
-                writeLine(8, `<br/><span class="track">${track}</span>`);
-              }
+            for (const track of session.tracks ?? []) {
+              writeLine(8, `<br/><span class="track">${track}</span>`);
             }
 
             const sessionIssues = cell.errors.filter(error =>

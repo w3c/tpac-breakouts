@@ -169,6 +169,7 @@ async function getTestData(testDataId) {
       labels: {
         nodes: toGraphQLNameList(session.labels ?? ['session'])
       },
+      tracks: session.tracks,
       author: toGraphQLAuthor(session.author ?? 'testbot'),
       room: session.room,
       day: session.day,
@@ -187,7 +188,6 @@ async function getTestData(testDataId) {
     },
     rooms: toGraphQLRoomList(custom.rooms ?? ['Panic room (25)']),
     slots: toGraphQLSlotList(custom.slots ?? ['2042-04-07 9:00-10:00']),
-    labels: toGraphQLNameList(custom.labels ?? ['session']),
     sessions: toGraphQLSessions(custom.sessions ?? [
       { number: 1, title: 'A test session' }
     ]),
@@ -340,7 +340,8 @@ export async function importVariableFromGitHub(name) {
       session.room,
       session.day,
       session.slot,
-      session.meeting
+      session.meeting,
+      session.tracks
     ]);
   }
   else if (name === 'VALIDATION') {
