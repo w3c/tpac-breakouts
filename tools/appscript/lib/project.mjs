@@ -192,7 +192,9 @@ export function getProject(spreadsheet) {
           databaseId: session['author id'],
           login: session.author
         },
-        tracks: (session.tracks ?? '').split(',').map(t => t.trim()),
+        tracks: session.tracks?.trim() ?
+          session.tracks.split(',').map(t => t.trim()) :
+          [],
         validation: {
           check: session.check,
           warning: session.warning,
