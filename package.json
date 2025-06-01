@@ -45,7 +45,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "commander": "^13.1.0",
+    "commander": "^14.0.0",
     "googleapis": "^148.0.0",
     "irc": "^0.5.2",
     "puppeteer": "^24.6.1",
