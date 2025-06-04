@@ -138,8 +138,12 @@ function getDescription(errors) {
 function getMeetingsDescription(session, project) {
   return groupSessionMeetings(session, project)
     .sort((m1, m2) => {
-      const slot1 = project.slots.find(slot => slot.name === m1.meeting.name);
-      const slot2 = project.slots.find(slot => slot.name === m2.meeting.name);
+      const slot1 = project.slots.find(slot =>
+        slot.date === m1.meeting.day &&
+        slot.start === m1.meeting.start);
+      const slot2 = project.slots.find(slot =>
+        slot.date === m2.meeting.day &&
+        slot.start === m2.meeting.start);
       if (slot1.date < slot2.date) {
         return -1;
       }
@@ -157,7 +161,9 @@ function getMeetingsDescription(session, project) {
       }
     })
     .map(meeting => {
-      const slot = project.slots.find(slot => slot.name === meeting.name);
+      const slot = project.slots.find(slot =>
+        slot.date === meeting.date &&
+        slot.start === meeting.start);
       const room = project.rooms.find(room => room.name === meeting.room);
       return `${slot.weekday}, ${meeting.start}-${meeting.end}` +
         (room ? ` in ${room.name}` : '');
@@ -232,7 +238,7 @@ function createDaySlotColumns(sheet, slots, validationErrors) {
         }
         for (const detail of issue.details) {
           const meeting = detail.meeting ?? detail;
-          if (slot.name !== meeting.name) {
+          if (slot.date !== meeting.date || slot.start !== meeting.start) {
             continue;
           }
           slot.errors.push({ issue, detail });
@@ -296,9 +302,9 @@ function createDaySlotColumns(sheet, slots, validationErrors) {
 /**
  * Return true if first slot is right after the second one in the list of slots
  */
-function isRightAfter(slotAfter, slotBefore, slots) {
-  const afterIndex = slots.findIndex(s => s.name === slotAfter);
-  const beforeIndex = slots.findIndex(s => s.name === slotBefore);
+function isRightAfter(date, slotAfter, slotBefore, slots) {
+  const afterIndex = slots.findIndex(s => s.date === date && s.start === slotAfter);
+  const beforeIndex = slots.findIndex(s => s.date === date && s.start === slotBefore);
   return (afterIndex - beforeIndex) === 1;
 }
 
@@ -333,8 +339,10 @@ function addSessions(sheet, project, validationErrors) {
   // Sort meetings since the editor may have changed the order from the canonical one.
   const sortedMeetings = Array.from(meetings);
   sortedMeetings.sort((m1, m2) => {
-    const slot1 = project.slots.findIndex(s => s.name === m1.name);
-    const slot2 = project.slots.findIndex(s => s.name === m2.name);
+    const slot1 = project.slots.findIndex(s =>
+      s.date === m1.date && s.start === m1.start);
+    const slot2 = project.slots.findIndex(s =>
+      s.date === m2.date && s.start === m2.start);
     const key1 = `${m1.number}-${m1.room}-${slot1.date}-${slot1.start}`;
     const key2 = `${m2.number}-${m2.room}-${slot2.date}-${slot2.start}`;
     if (key1 < key2) {
@@ -373,7 +381,7 @@ function addSessions(sheet, project, validationErrors) {
           meeting.number === last.number &&
           meeting.day === last.day &&
           meeting.room === last.room &&
-          isRightAfter(meeting.slot, last.slot, project.slots)) {
+          isRightAfter(meeting.day, meeting.slot, last.slot, project.slots)) {
         last.numRows += 1;
         last.slot = meeting.slot;
         if (errors.length > 0) {
