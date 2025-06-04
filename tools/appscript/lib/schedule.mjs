@@ -452,13 +452,20 @@ function addSessions(sheet, project, validationErrors) {
       label += `\n${track}`;
     }
 
+    if (session.description.conflicts?.length) {
+      label += '\nAvoid conflicts with: ' +
+        session.description.conflicts
+          .map(number => '#' + number)
+          .join(', ');
+    }
+
     const sessionIssues = range.errors.filter(error =>
       error.issue.session === session.number);
     const roomSwitchIssue = sessionIssues.find(error =>
       error.issue.severity === 'warning' && error.issue.type === 'switch');
     if (roomSwitchIssue) {
       const room = project.rooms.find(room => room.name === roomSwitchIssue.detail.previous.room);
-      label += `\nPrevious slot in: ${room.label}`;
+      label += `\n[warn] Previous slot in: ${room.label}`;
     }
 
     const conflictIssues = sessionIssues
@@ -467,7 +474,7 @@ function addSessions(sheet, project, validationErrors) {
         error.issue.type === 'conflict')
       .map(error => error);
     if (conflictIssues.length > 0) {
-      label += '\nConflicts with: ' +
+      label += '\n[warn] Conflicts with: ' +
         conflictIssues
           .map(error => '#' + error.detail.conflictsWith.number)
           .join(', ');
@@ -476,7 +483,7 @@ function addSessions(sheet, project, validationErrors) {
     const capacityIssue = capacityIssues
       .find(error => error.issue.session === session.number);
     if (capacityIssue) {
-      label += '\nCapacity: ' + session.description.capacity;
+      label += '\n[warn] Capacity: ' + session.description.capacity;
     }
 
     const richValue = SpreadsheetApp.newRichTextValue()
