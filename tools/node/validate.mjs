@@ -136,7 +136,6 @@ export default async function (project, number, options) {
       console.warn();
       console.warn(`Add '#' prefix to IRC channel...`);
       session.description.shortname = '#' + session.description.shortname;
-      await updateSessionDescription(session);
       console.warn(`Add '#' prefix to IRC channel... done`);
     }
 
@@ -148,7 +147,6 @@ export default async function (project, number, options) {
       console.warn();
       console.warn(`Associate session with plenary IRC channel...`);
       session.description.shortname = plenaryShortname;
-      await updateSessionDescription(session);
       console.warn(`Associate session with plenary IRC channel... done`);
     }
     // Or generate IRC channel if it was not provided
@@ -158,8 +156,11 @@ export default async function (project, number, options) {
       console.warn();
       console.warn(`Generate IRC channel...`);
       session.description.shortname = generateShortname(session);
-      await updateSessionDescription(session);
       console.warn(`Generate IRC channel... done`);
     }
+
+    console.warn(`Update session description if needed...`);
+    await updateSessionDescription(session);
+    console.warn(`Update session description if needed... done`);
   }
 }

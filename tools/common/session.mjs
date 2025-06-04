@@ -101,8 +101,11 @@ export async function initSectionHandlers(project) {
     .map(section => {
       const handler = {
         id: section.id,
-        title: section.attributes.label.replace(/ \(Optional\)$/, ''),
+        title: section.attributes.label
+          .replace(/ \(Optional\)$/i, '')
+          .replace(/ \(For meeting planners only\)$/i, ''),
         autoHide: !!section.attributes.autoHide,
+        adminOnly: !!section.attributes.adminOnly,
         required: !!section.validations?.required,
         includeOptional: !!section.attributes.label.endsWith('(Optional)'),
         validate: value => true,
@@ -488,7 +491,9 @@ function splitIntoSections(body) {
         value = null;
       }
       return {
-        title: section[0].replace(/ \(Optional\)$/, ''),
+        title: section[0]
+          .replace(/ \(Optional\)$/i, '')
+          .replace(/ \(For meeting planners only\)$/i, ''),
         value
       };
     });
@@ -571,19 +576,31 @@ export function serializeSessionDescription(description) {
       !handler.autoHide ||
       description[handler.id] ||
       description[handler.id] === 0)
-    .map(handler => `### ${handler.title}${handler.includeOptional ? ' (Optional)' : ''}
+    .map(handler => {
+      let suffix = '';
+      if (handler.includeOptional) {
+        suffix = ' (Optional)';
+      }
+      if (handler.adminOnly) {
+        suffix = ' (For meeting planners only)';
+      }
+      return `### ${handler.title}${suffix}
 
 ${(description[handler.id] || description[handler.id] === 0 || handler.allowEmptyValue) ?
-    handler.serialize(description[handler.id]) : '_No response_' }`)
+    handler.serialize(description[handler.id]) : '_No response_' }`;
+    })
     .join('\n\n');
 }
 
 
 /**
- * Update session description
+ * Update session description if needed
  */
 export async function updateSessionDescription(session) {
   const body = serializeSessionDescription(session.description);
+  if (body === session.body) {
+    return;
+  }
   const query = `mutation {
     updateIssue(input: {
       id: "${session.id}",

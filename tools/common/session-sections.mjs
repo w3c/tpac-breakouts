@@ -8,13 +8,13 @@ export function getSessionSections(template) {
   // of sections (as custom "auto hide" sections that only get displayed when
   // they are not empty).
   // Same thing for the "conflicts" section, although only for TPAC group
-  // meetings.
+  // meetings and we actually want to add the section even when it's empty.
   if (!sessionSections.find(section => section.id === 'conflicts')) {
     sessionSections.push({
       id: 'conflicts',
       attributes: {
         label: 'Scheduling conflicts to avoid',
-        autoHide: true
+        adminOnly: true
       }
     });
   }
