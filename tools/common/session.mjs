@@ -342,10 +342,10 @@ export async function initSectionHandlers(project) {
             return !!slot;
           });
         handler.serialize = value => project.slots
-          .map(ds => {
+          .map(slot => {
             const selected = value?.find(choice =>
-              choice.day === ds.date &&
-              choice.slot === ds.start);
+              choice.day === slot.date &&
+              choice.slot === slot.start);
             return `- [${selected ? 'X' : ' '}] ${slot.weekday}, ${slot.start} - ${slot.end}`;
           })
           .join('\n');
