@@ -226,7 +226,6 @@ export function getProject(spreadsheet) {
           console.warn(`The "Meetings" sheet references an unknown session #${number}`);
           continue;
         }
-        session.day = null;
         session.slot = null;
         session.meetings = meetings
           .map(meeting => {
@@ -255,26 +254,27 @@ export function getProject(spreadsheet) {
       }
     }
   }
-  else if (session.slot) {
-    const slot = project.slots.find(slot =>
-      slot.date + ' ' + slot.start === session.slot);
-    if (slot) {
-      session.day = slot.date;
-      session.slot = slot.start;
-      session.meeting = null;
-      session.meetings = [
-        {
-          room: session.room,
-          day: session.day,
-          slot: session.slot
+  else {
+    for (const session of project.sessions) {
+      if (session.slot) {
+        const slot = project.slots.find(slot =>
+          slot.date + ' ' + slot.start === session.slot);
+        if (slot) {
+          session.meeting = null;
+          session.meetings = [
+            {
+              room: session.room,
+              day: slot.date,
+              slot: slot.start
+            }
+          ];
         }
-      ];
-    }
-    else {
-      session.day = null;
-      session.slot = null;
-      session.meetings = [];
-      session.meeting = null;
+        else {
+          session.slot = null;
+          session.meetings = [];
+          session.meeting = null;
+        }
+      }
     }
   }
 
