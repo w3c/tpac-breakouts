@@ -139,11 +139,11 @@ function getMeetingsDescription(session, project) {
   return groupSessionMeetings(session, project)
     .sort((m1, m2) => {
       const slot1 = project.slots.find(slot =>
-        slot.date === m1.meeting.day &&
-        slot.start === m1.meeting.start);
+        slot.date === m1.day &&
+        slot.start === m1.start);
       const slot2 = project.slots.find(slot =>
-        slot.date === m2.meeting.day &&
-        slot.start === m2.meeting.start);
+        slot.date === m2.day &&
+        slot.start === m2.start);
       if (slot1.date < slot2.date) {
         return -1;
       }
@@ -162,7 +162,7 @@ function getMeetingsDescription(session, project) {
     })
     .map(meeting => {
       const slot = project.slots.find(slot =>
-        slot.date === meeting.date &&
+        slot.date === meeting.day &&
         slot.start === meeting.start);
       const room = project.rooms.find(room => room.name === meeting.room);
       return `${slot.weekday}, ${meeting.start}-${meeting.end}` +
@@ -238,7 +238,7 @@ function createDaySlotColumns(sheet, slots, validationErrors) {
         }
         for (const detail of issue.details) {
           const meeting = detail.meeting ?? detail;
-          if (slot.date !== meeting.date || slot.start !== meeting.start) {
+          if (slot.date !== meeting.day || slot.start !== meeting.start) {
             continue;
           }
           slot.errors.push({ issue, detail });
@@ -393,7 +393,7 @@ function addSessions(sheet, project, validationErrors) {
           v.date === meeting.day && v.start === meeting.slot);
         const roomIndex = project.rooms.findIndex(v => v.name === meeting.room);
         if (slotIndex === -1) {
-          console.error(`- could not find slot "${meeting.date} ${meeting.slot}" for ${meeting.title} (#${meeting.number})`);
+          console.error(`- could not find slot "${meeting.day} ${meeting.slot}" for ${meeting.title} (#${meeting.number})`);
           return ranges;
         }
         if (roomIndex === -1) {
