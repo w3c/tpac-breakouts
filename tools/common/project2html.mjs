@@ -353,7 +353,7 @@ export async function convertProjectToHTML(project, cliParams) {
             if (roomSwitchIssue) {
               const room = project.rooms.find(room => room.name === roomSwitchIssue.detail.previous.room);
               writeLine(8, '<br/><b>Previous slot in</b>: ' +
-                '<span class="scheduling-warning">' + room.label + '</span>');
+                '<span class="scheduling-warning">' + room.name + '</span>');
             }
 
             const conflictIssues = sessionIssues
@@ -447,7 +447,7 @@ export async function convertProjectToHTML(project, cliParams) {
           if (session.highlight) {
             highlightStr = `, topic: ${session.highlight}`;
           }
-          writeLine(5, `<li>${day.weekday}, ${meeting.start} - ${meeting.end}${reduce ? '' : ' (' + room.label + ')'}${jointStr}${highlightStr} (#${session.number})</li>`);
+          writeLine(5, `<li>${day.weekday}, ${meeting.start} - ${meeting.end}${reduce ? '' : ' (' + room.name + ')'}${jointStr}${highlightStr} (#${session.number})</li>`);
         }
         writeLine(4, `</ul>`);
       }

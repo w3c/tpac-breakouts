@@ -364,7 +364,7 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
   const room = (project.metadata.rooms === 'hide') ?
     null :
     project.rooms.find(room => room.name === entry.meeting.room);
-  const roomLocation = (room?.location ? room.location + ' - ' : '') + (room?.label ?? '');
+  const roomLocation = (room?.location ? room.location + ' - ' : '') + (room?.name ?? '');
   await fillTextInput('input#event_location', roomLocation ?? '');
 
   // All events are visible to everyone

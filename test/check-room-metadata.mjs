@@ -26,7 +26,6 @@ describe('The room definition', function () {
     const project = await loadProject();
     const name = 'Just a room';
     assertRoom(project, name, {
-      label: name,
       location: '',
       capacity: 30,
       vip: false
@@ -35,9 +34,8 @@ describe('The room definition', function () {
 
   it('may inline room information in the name', async function () {
     const project = await loadProject();
-    const name = 'Inline (75 - basement) (VIP)';
+    const name = 'Inline';
     assertRoom(project, name, {
-      label: 'Inline',
       capacity: 75,
       location: 'basement',
       vip: true
@@ -48,7 +46,6 @@ describe('The room definition', function () {
     const project = await loadProject();
     const name = 'VIP room';
     assertRoom(project, name, {
-      label: name,
       location: '',
       capacity: 25,
       vip: true
@@ -59,7 +56,6 @@ describe('The room definition', function () {
     const project = await loadProject();
     const name = 'In the back';
     assertRoom(project, name, {
-      label: name,
       location: '2nd floor',
       capacity: 40,
       vip: false,
@@ -71,7 +67,6 @@ describe('The room definition', function () {
     const project = await loadProject();
     const name = 'Weird';
     assertRoom(project, name, {
-      label: name,
       location: 'somewhere',
       capacity: 30,
       vip: false,
@@ -81,9 +76,8 @@ describe('The room definition', function () {
 
   it('may define metadata inline and in the description', async function () {
     const project = await loadProject();
-    const name = 'Hybrid (42)';
+    const name = 'Hybrid';
     assertRoom(project, name, {
-      label: 'Hybrid',
       location: 'on ze web',
       capacity: 35,
       vip: false

@@ -65,7 +65,7 @@ async function getTestData(testDataId) {
       })
       .map(item => {
         const match = item.name.match(/^(.*?)(?:\s*\((\d+)\s*(?:\-\s*([^\)]+))?\))?(?:\s*\((vip)\))?$/i);
-        item.label = item.label ?? match[1];
+        item.name = match[1];
         item.location = item.location ?? match[3] ?? '';
         item.capacity = item.capacity ?? parseInt(match[2] ?? '30', 10);
         item.vip = !!item.vip || !!match[4];

@@ -111,7 +111,7 @@ describe('Session validation', function () {
       session: sessionNumber,
       severity: 'error',
       type: 'scheduling',
-      messages: ['Session scheduled in same room (Main (25)) and same day/slot (2042-04-05 9:00) as session "Scheduled in same room as previous one" (8)']
+      messages: ['Session scheduled in same room (Main) and same day/slot (2042-04-05 9:00) as session "Scheduled in same room as previous one" (8)']
     }]);
   });
 
@@ -135,7 +135,7 @@ describe('Session validation', function () {
       session: sessionNumber,
       severity: 'warning',
       type: 'capacity',
-      messages: ['Capacity of "Main (25)" (25), used for meeting on Saturday at 15:00, is lower than requested capacity (50)']
+      messages: ['Capacity of "Main" (25), used for meeting on Saturday at 15:00, is lower than requested capacity (50)']
     }]);
   });
 

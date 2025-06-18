@@ -473,7 +473,7 @@ function addSessions(sheet, project, validationErrors) {
       error.issue.severity === 'warning' && error.issue.type === 'switch');
     if (roomSwitchIssue) {
       const room = project.rooms.find(room => room.name === roomSwitchIssue.detail.previous.room);
-      label += `\n[warn] Previous slot in: ${room.label}`;
+      label += `\n[warn] Previous slot in: ${room.name}`;
     }
 
     const conflictIssues = sessionIssues

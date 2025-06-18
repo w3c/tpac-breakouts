@@ -33,7 +33,7 @@ export default {
     {
       number: 1,
       title: 'Advisory Committee',
-      room: 'Business (25) (VIP)'
+      room: 'Business'
     },
 
     {

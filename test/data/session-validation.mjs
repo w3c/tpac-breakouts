@@ -57,7 +57,7 @@ Uncover bugs.
 Breakout (Default)
 ### Estimated number of in-person attendees
 fewer than 20 people`,
-      room: 'Main (25)',
+      room: 'Main',
       day: '2042-04-05',
       slot: '22:00'
     },
@@ -119,7 +119,7 @@ My session is rich.
 Uncover bugs.
 ### Session type
 Plenary`,
-      room: 'Main (25)'
+      room: 'Main'
     },
 
     {
@@ -145,7 +145,7 @@ My session is rich.
 Uncover bugs.
 ### Session type
 Breakout (Default)`,
-      room: 'Main (25)',
+      room: 'Main',
       day: '2042-04-05',
       slot: '9:00'
     },
@@ -160,7 +160,7 @@ My session is rich.
 Uncover bugs.
 ### Session type
 Breakout (Default)`,
-      room: 'Main (25)',
+      room: 'Main',
       day: '2042-04-05',
       slot: '9:00'
     },
@@ -237,7 +237,7 @@ Uncover bugs.
 Breakout (Default)
 ### Estimated number of in-person attendees
 More than 45 people`,
-      room: 'Main (25)',
+      room: 'Main',
       day: '2042-04-05',
       slot: '15:00'
     },
@@ -254,7 +254,7 @@ Uncover bugs.
 Breakout (Default)
 ### Additional session chairs
 @tidoust`,
-      room: 'Main (25)',
+      room: 'Main',
       day: '2042-04-05',
       slot: '11:00'
     },
@@ -317,7 +317,7 @@ My session is rich.
 Uncover bugs.
 ### Session type
 Breakout (Default)`,
-      room: 'Main (25)',
+      room: 'Main',
       day: '2042-04-05',
       slot: '13:00'
     },
@@ -349,7 +349,7 @@ My session is rich.
 Uncover bugs.
 ### Session type
 Breakout (Default)`,
-      room: 'Main (25)',
+      room: 'Main',
       day: '2042-04-05',
       slot: '14:00'
     },
@@ -442,7 +442,7 @@ My session is rich.
 Uncover bugs.
 ### Session type
 Breakout (Default)`,
-      room: 'Main (25)',
+      room: 'Main',
       day: '2020-02-11',
       slot: '9:00'
     },

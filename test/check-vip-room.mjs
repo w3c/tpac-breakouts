@@ -35,11 +35,11 @@ describe('The VIP system', function () {
 
     for (const session of project.sessions) {
       if (session.number === 1) {
-        assert.strictEqual(session.room, 'Business (25) (VIP)',
+        assert.strictEqual(session.room, 'Business',
           `VIP group ${session.number} scheduled in non-VIP room ${session.room}`);
       }
       else if (session.slot && session.room) {
-        assert.strictEqual(session.room, 'Economy (25)',
+        assert.strictEqual(session.room, 'Economy',
           `Non-VIP group ${session.number} scheduled in VIP room ${session.room}`);
       }
     }

@@ -123,8 +123,7 @@ export function parseSessionMeetings(session, project) {
             }
             else {
               let option = project.rooms.find(option =>
-                option.name?.toLowerCase() === token ||
-                option.label?.toLowerCase() === token);
+                option.name?.toLowerCase() === token);
               if (option) {
                 meeting.room = option.name;
                 return;
@@ -227,7 +226,7 @@ export function serializeSessionMeetings(meetings, project) {
       }
       if (meeting.room && !room) {
         const roomObj = project.rooms.find(room => room.name === meeting.room);
-        tokens.push(roomObj.label ?? roomObj.name);
+        tokens.push(roomObj.name);
       }
       return tokens.join(', ');
     })
