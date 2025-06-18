@@ -57,7 +57,7 @@ async function proposeGrid(spreadsheet) {
     const preserveAll = options.preserve?.includes('all');
     if (preserveAll) {
       options.preserve = project.sessions
-        .filter(s => s.meeting || s.day || s.slot || s.room)
+        .filter(s => s.meeting || s.slot || s.room)
         .map(s => s.number);
     }
     if (options.except) {

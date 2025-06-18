@@ -100,8 +100,7 @@ Invalid room in one of the meetings.`
       number: 12,
       title: 'Publishing BG',
       room: 'Room 2',
-      day: '2042-02-10',
-      meeting: '9:00; 11:00',
+      meeting: '2042-02-10, 9:00; 2042-02-10, 11:00',
       body: `
 ### Session description
 Scheduled in same room and at the same time as next session.`
@@ -134,8 +133,7 @@ More than 50`,
 ### Session description
 Schedule conflict with next joint meeting.`,
       room: 'Room 3',
-      day: '2042-02-10',
-      slot: '14:00'
+      slot: '2042-02-10 14:00'
     },
 
     {
@@ -184,8 +182,7 @@ Incoherent scheduling.`,
 Same IRC channel as next session.
 ### IRC channel (Optional)
 #debug`,
-      day: '2042-02-13',
-      slot: '16:00',
+      slot: '2042-02-13 16:00',
       meeting: 'Room 1'
     },
 
@@ -218,8 +215,7 @@ Same time as next group meeting in same track.`,
       body: `
 ### Session description
 Same time as previous group meeting in same track.`,
-      day: '2042-02-10',
-      slot: '14:00',
+      slot: '2042-02-10 14:00',
       meeting: 'Room 6'
     },
 

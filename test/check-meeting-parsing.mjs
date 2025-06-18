@@ -162,8 +162,7 @@ describe('The meeting field parser', function () {
     const project = await loadProject();
     const session = {
       room: 'Room 1',
-      day: '2042-02-10',
-      meeting: '9:00<8:30>; 11:00; 14:00 - 16:00<15:30>'
+      meeting: '2042-02-10, 9:00<8:30>; 2042-02-10, 11:00; 2042-02-10, 14:00 - 16:00<15:30>'
     };
     const merged = groupSessionMeetings(session, project);
     assert.deepStrictEqual(merged, [

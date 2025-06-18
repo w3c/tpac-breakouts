@@ -158,7 +158,8 @@ async function exportSchedule(project) {
   const schedule = project.sessions.map(session => [
     session.number,
     session.room,
-    session.day,
+    // Note: day used to be recorded separately from slot
+    '',
     session.slot,
     session.meeting,
     session.tracks
@@ -346,4 +347,10 @@ async function fetchSessions(reponame) {
       repository: session.repository.nameWithOwner,
       labels: session.labels.nodes.map(label => label.name)
     }));
+}
+
+
+export function getProjectSlot(project, dayAndTime) {
+  return project.slots.find(slot =>
+    (slot.date + ' ' + slot.start) === dayAndTime);
 }

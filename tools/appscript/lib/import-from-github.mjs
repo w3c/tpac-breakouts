@@ -50,7 +50,6 @@ If not, ask François or Ian to run the required initialization steps.`);
       const session = project.sessions.find(s => s.number === ghSession.number);
       if (session) {
         ghSession.room = session.room;
-        ghSession.day = session.day;
         ghSession.slot = session.slot;
         ghSession.meeting = session.meeting;
         ghSession.meetings = session.meetings;

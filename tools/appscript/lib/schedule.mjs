@@ -1,5 +1,6 @@
 import { groupSessionMeetings } from '../../common/meetings.mjs';
 import { Srand } from '../../common/jsrand.mjs';
+import { getProjectSlot } from '../../common/project.mjs';
 
 /**
  * Fill the grid in the provided spreadsheet
@@ -27,7 +28,8 @@ export function fillGridSheet(spreadsheet, project, validationErrors) {
   const metadata = project.sessions.map(session => [
     session.number,
     session.room,
-    session.day,
+    // Note: day used to be recorded separately from slot
+    '',
     session.slot,
     session.meeting,
     session.tracks
@@ -321,12 +323,13 @@ function addSessions(sheet, project, validationErrors) {
         return session.meetings.map(meeting =>
           Object.assign({ number: session.number }, meeting));
       }
-      else if (session.room && session.day && session.slot) {
+      else if (session.room && session.slot) {
+        const slot = getProjectSlot(project, session.slot);
         return {
           number: session.number,
           room: session.room,
-          day: session.day,
-          slot: session.slot
+          day: slot?.date,
+          slot: slot?.slot
         };
       }
       else {

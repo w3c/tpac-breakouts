@@ -36,7 +36,7 @@ export default async function () {
       const sessionSchedule = schedule.find(row => row[0] === session.number);
       if (sessionSchedule) {
         session.room = sessionSchedule[1];
-        session.day = sessionSchedule[2];
+        // Note: day used to be recorded separately from slot (hence missing "2")
         session.slot = sessionSchedule[3];
         session.meeting = sessionSchedule[4];
         session.tracks = sessionSchedule[5];

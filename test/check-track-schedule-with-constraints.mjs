@@ -20,7 +20,7 @@ describe('When given track sessions with constraints, the scheduler', function (
     // The seed actually shuffles the two sessions in the order we need:
     // 1 first, then 2.
     suggestSchedule(project, { seed: 12345 });
-    assert.deepStrictEqual(sessionWithoutConflicts.slot, '10:00');
+    assert.deepStrictEqual(sessionWithoutConflicts.slot, '2042-04-05 10:00');
   });
 
   it('priorities the session with time slot constraints even when initial order suggests the opposite', async function () {
@@ -31,6 +31,6 @@ describe('When given track sessions with constraints, the scheduler', function (
     // The seed actually shuffles the two sessions in the order we need:
     // 2 first, then 1.
     suggestSchedule(project, { seed: 1234 });
-    assert.deepStrictEqual(sessionWithoutConflicts.slot, '10:00');
+    assert.deepStrictEqual(sessionWithoutConflicts.slot, '2042-04-05 10:00');
   });
 });

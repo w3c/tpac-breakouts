@@ -3,6 +3,7 @@ import { parseRepositoryName } from '../../common/repository.mjs';
 import {
   parseSessionMeetings,
   serializeSessionMeetings } from '../../common/meetings.mjs';
+import { getProjectSlot } from '../../common/project.mjs';
 
 /**
  * Retrieve an indexed object that contains the list of sheets associated with
@@ -232,8 +233,7 @@ export function getProject(spreadsheet) {
             if (!meeting.slot) {
               return null;
             }
-            const slot = project.slots.find(slot =>
-              slot.date + ' ' + slot.start === meeting.slot);
+            const slot = getProjectSlot(project, meeting.slot);
             if (!slot) {
               console.warn(`The "Meetings" sheet references an unknown slot ${meeting.slot}`);
               return null;
@@ -257,8 +257,7 @@ export function getProject(spreadsheet) {
   else {
     for (const session of project.sessions) {
       if (session.slot) {
-        const slot = project.slots.find(slot =>
-          slot.date + ' ' + slot.start === session.slot);
+        const slot = getProjectSlot(project, session.slot);
         if (slot) {
           session.meeting = null;
           session.meetings = [
