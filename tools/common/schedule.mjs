@@ -31,6 +31,7 @@ import { parseSessionMeetings,
          meetsInParallelWith,
          meetsInRoom,
          meetsAt } from './meetings.mjs';
+import { getProjectSlot } from './project.mjs';
 
 function getRequestedNbOfSlots(session) {
   if (session.description.times?.length) {
@@ -333,11 +334,12 @@ export function suggestSchedule(project, { seed }) {
       else {
         // Prepare a list of meetings that we want to schedule
         baseMeetings = [];
+        const sessionSlot = getProjectSlot(project, session.slot);
         for (let i = 0; i < numberOfMeetings; i++) {
           baseMeetings.push({
-            day: session.day,
             room: session.room,
-            slot: session.slot
+            day: sessionSlot?.date,
+            slot: sessionSlot?.slot
           });
         }
       }
@@ -503,8 +505,7 @@ export function suggestSchedule(project, { seed }) {
           }
           else {
             session.room = meetings[0].room;
-            session.day = meetings[0].day;
-            session.slot = meetings[0].slot;
+            session.slot = meetings[0].day + ' ' + meetings[0].slot;
           }
           session.meetings = meetings;
           session.updated = true;

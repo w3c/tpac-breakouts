@@ -1,3 +1,5 @@
+import { getProjectSlot } from './project.mjs';
+
 /**
  * Normalize times for comparison purpose, making sure that hours always have
  * two digits: from 9:00 to 09:00
@@ -72,14 +74,15 @@ function validateActualTimes(meeting, project) {
  * `meeting` field.
  */
 export function parseSessionMeetings(session, project) {
+  const sessionSlot = getProjectSlot(project, session.slot);
   if (session.meeting) {
     return session.meeting.split(/;|\|/)
       .map(str => str.trim())
       .map(str => {
         const meeting = {
           room: session.room,
-          day: session.day,
-          slot: session.slot
+          day: sessionSlot?.date,
+          slot: sessionSlot?.start
         };
         str.split(',')
           .map(token => token.trim().toLowerCase())
@@ -154,20 +157,15 @@ export function parseSessionMeetings(session, project) {
       });
   }
   
-  if (session.room || session.day || session.slot) {
+  if (session.room || sessionSlot) {
     // One meeting at least partially scheduled
     const meeting = {};
     if (session.room) {
       meeting.room = session.room;
     }
-    if (session.day) {
-      meeting.day = session.day;
-    }
-    if (session.slot) {
-      meeting.slot = session.slot;
-    }
-    if (session.day && session.slot) {
-      meeting.name = session.day + ' ' + meeting.slot;
+    if (sessionSlot) {
+      meeting.day = sessionSlot.date;
+      meeting.slot = sessionSlot.start;
     }
     return [meeting];
   }

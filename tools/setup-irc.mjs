@@ -64,7 +64,7 @@ async function waitForIRCMessage(what) {
  */
 async function main({ number, onlyCommands, dismissBots } = {}) {
   const project = await loadProject();
-  let sessions = project.sessions.filter(s => s.day && s.slot &&
+  let sessions = project.sessions.filter(s => s.slot &&
     (!number || s.number === number));
   sessions.sort((s1, s2) => s1.number - s2.number);
   if (number) {

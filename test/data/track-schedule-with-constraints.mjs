@@ -20,7 +20,7 @@ export default {
       author: 'ianbjacobs',
       title: 'Session with constraint',
       tracks: ['ux'],
-      slot: '9:00',
+      slot: '2042-04-05 9:00',
       body: `
 ### Session description
 Blah

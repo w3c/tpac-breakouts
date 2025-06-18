@@ -14,12 +14,13 @@ import { getEnvKey } from './common/envkeys.mjs';
 import { loadProject } from './node/lib/project.mjs'
 import { validateSession } from './common/validate.mjs';
 import { updateSessionDescription } from './common/session.mjs';
+import { getProjectSlot } from './common/project.mjs';
 import todoStrings from './common/todostrings.mjs';
 
 
 async function main(number) {
   const project = await loadProject();
-  let sessions = project.sessions.filter(s => s.day && s.slot && s.room &&
+  let sessions = project.sessions.filter(s => s.slot && s.room &&
     (!number || s.number === number));
   sessions.sort((s1, s2) => s1.number - s2.number);
   if (number) {
@@ -68,10 +69,10 @@ async function main(number) {
     // TODO: date is in the timezone of the TPAC event but actual dated URL
     // is on Boston time. No big deal for TPAC meetings in US / Europe, but
     // problematic when TPAC is in Asia.
-    const day = project.days.find(day => day.name === session.day);
-    const year = day.date.substring(0, 4);
-    const month = day.date.substring(5, 7);
-    const mday = day.date.substring(8, 10);
+    const slot = getProject(project, session.slot);
+    const year = slot.date.substring(0, 4);
+    const month = slot.date.substring(5, 7);
+    const mday = slot.date.substring(8, 10);
     const url = `https://www.w3.org/${year}/${month}/${mday}-${session.description.shortname.substring(1)}-minutes.html`;
     const response = await fetch(url);
     if ((response.status !== 200) && (response.status !== 401)) {

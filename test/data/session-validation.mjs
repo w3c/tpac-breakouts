@@ -58,8 +58,7 @@ Breakout (Default)
 ### Estimated number of in-person attendees
 fewer than 20 people`,
       room: 'Main',
-      day: '2042-04-05',
-      slot: '22:00'
+      slot: '2042-04-05 22:00'
     },
 
     {
@@ -146,8 +145,7 @@ Uncover bugs.
 ### Session type
 Breakout (Default)`,
       room: 'Main',
-      day: '2042-04-05',
-      slot: '9:00'
+      slot: '2042-04-05 9:00'
     },
 
     {
@@ -161,8 +159,7 @@ Uncover bugs.
 ### Session type
 Breakout (Default)`,
       room: 'Main',
-      day: '2042-04-05',
-      slot: '9:00'
+      slot: '2042-04-05 9:00'
     },
 
     {
@@ -176,8 +173,7 @@ Uncover bugs.
 ### Session type
 Plenary`,
       room: 'Plenary',
-      day: '2042-04-05',
-      slot: '10:00'
+      slot: '2042-04-05 10:00'
     },
 
     {
@@ -191,8 +187,7 @@ Uncover bugs.
 ### Session type
 Plenary`,
       room: 'Plenary',
-      day: '2042-04-05',
-      slot: '10:00'
+      slot: '2042-04-05 10:00'
     },
 
     {
@@ -206,8 +201,7 @@ Uncover bugs.
 ### Session type
 Plenary`,
       room: 'Plenary',
-      day: '2042-04-05',
-      slot: '10:00'
+      slot: '2042-04-05 10:00'
     },
 
     {
@@ -221,8 +215,7 @@ Uncover bugs.
 ### Session type
 Plenary`,
       room: 'Plenary',
-      day: '2042-04-05',
-      slot: '10:00'
+      slot: '2042-04-05 10:00'
     },
 
     {
@@ -238,8 +231,7 @@ Breakout (Default)
 ### Estimated number of in-person attendees
 More than 45 people`,
       room: 'Main',
-      day: '2042-04-05',
-      slot: '15:00'
+      slot: '2042-04-05 15:00'
     },
 
     {
@@ -255,8 +247,7 @@ Breakout (Default)
 ### Additional session chairs
 @tidoust`,
       room: 'Main',
-      day: '2042-04-05',
-      slot: '11:00'
+      slot: '2042-04-05 11:00'
     },
 
     {
@@ -271,8 +262,7 @@ Uncover bugs.
 ### Session type
 Breakout (Default)`,
       room: 'Secondary',
-      day: '2042-04-05',
-      slot: '11:00'
+      slot: '2042-04-05 11:00'
     },
 
     {
@@ -287,8 +277,7 @@ Uncover bugs.
 Breakout (Default)
 ### Other sessions where we should avoid scheduling conflicts (Optional)
 #17`,
-      day: '2042-04-05',
-      slot: '12:00'
+      slot: '2042-04-05 12:00'
     },
 
     {
@@ -302,8 +291,7 @@ My session is rich.
 Uncover bugs.
 ### Session type
 Breakout (Default)`,
-      day: '2042-04-05',
-      slot: '12:00'
+      slot: '2042-04-05 12:00'
     },
 
     {
@@ -318,8 +306,7 @@ Uncover bugs.
 ### Session type
 Breakout (Default)`,
       room: 'Main',
-      day: '2042-04-05',
-      slot: '13:00'
+      slot: '2042-04-05 13:00'
     },
 
     {
@@ -335,8 +322,7 @@ Uncover bugs.
 ### Session type
 Breakout (Default)`,
       room: 'Secondary',
-      day: '2042-04-05',
-      slot: '13:00'
+      slot: '2042-04-05 13:00'
     },
 
     {
@@ -350,8 +336,7 @@ Uncover bugs.
 ### Session type
 Breakout (Default)`,
       room: 'Main',
-      day: '2042-04-05',
-      slot: '14:00'
+      slot: '2042-04-05 14:00'
     },
 
     {
@@ -366,8 +351,7 @@ Uncover bugs.
 ### Session type
 Plenary`,
       room: 'Plenary',
-      day: '2042-04-05',
-      slot: '14:00'
+      slot: '2042-04-05 14:00'
     },
 
     {
@@ -383,8 +367,7 @@ Uncover bugs.
 Breakout (Default)
 ### IRC channel (Optional)
 #debug`,
-      day: '2042-04-05',
-      slot: '15:00'
+      slot: '2042-04-05 15:00'
     },
 
     {
@@ -400,8 +383,7 @@ Uncover bugs.
 Breakout (Default)
 ### IRC channel (Optional)
 #debug`,
-      day: '2042-04-05',
-      slot: '15:00'
+      slot: '2042-04-05 15:00'
     },
 
     {
@@ -443,8 +425,7 @@ Uncover bugs.
 ### Session type
 Breakout (Default)`,
       room: 'Main',
-      day: '2020-02-11',
-      slot: '9:00'
+      slot: '2020-02-11 9:00'
     },
 
     {
