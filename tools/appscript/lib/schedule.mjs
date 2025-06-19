@@ -420,11 +420,18 @@ function addSessions(sheet, project, validationErrors) {
       return ranges;
     }, []);
 
+  function findSessionRange(project, number) {
+    const idx = project.sessions.findIndex(session =>
+      session.number === number);
+    const session = project.sessions[idx];
+    return `A${idx + 2}`;
+  }
+
   const sessionsSheetUrl = '#gid=' + project.sheets.sessions.sheet.getSheetId();
   for (const range of ranges) {
     const idx = project.sessions.findIndex(session => session.number === range.number);
     const session = project.sessions[idx];
-    const sessionRange = `A${idx + 2}`;
+    const sessionRange = findSessionRange(project, range.number);
 
     let backgroundColor = null;
     const capacityIssues = range.errors.filter(error =>
@@ -453,21 +460,39 @@ function addSessions(sheet, project, validationErrors) {
       backgroundColor = '#fcebbd';
     }
 
-    let label = `${session.title} (${session.number})`;
+    const tokens = [];
+    tokens.push({ label: session.title });
+    tokens.push({ label: ' (' });
+    tokens.push({
+      label: '' + session.number,
+      href: `${sessionsSheetUrl}&range=${sessionRange}`
+    });
+    tokens.push({ label: ')' });
+
     if (project.metadata.type !== 'groups' && session.chairs) {
-      label += '\n\nChair(s): ' + session.chairs.map(x => x.name).join(', ');
+      tokens.push({
+        label: '\n\nChair(s): ' + session.chairs.map(x => x.name).join(', ')
+      });
     }
 
     // Add tracks if needed
     for (const track of session.tracks ?? []) {
-      label += `\n${track}`;
+      tokens.push({ label: `\n${track}` });
     }
 
     if (session.description.conflicts?.length) {
-      label += '\nAvoid conflicts with: ' +
-        session.description.conflicts
-          .map(number => '#' + number)
-          .join(', ');
+      tokens.push({ label: '\nAvoid conflicts with: ' });
+      let first = true;
+      for (const number of session.description.conflicts) {
+        if (!first) {
+          tokens.push({ label: ', ' });
+        }
+        first = false;
+        tokens.push({
+          label: '#' + number,
+          href: `${sessionsSheetUrl}&range=${findSessionRange(project, number)}`
+        });
+      }
     }
 
     const sessionIssues = range.errors.filter(error =>
@@ -476,7 +501,7 @@ function addSessions(sheet, project, validationErrors) {
       error.issue.severity === 'warning' && error.issue.type === 'switch');
     if (roomSwitchIssue) {
       const room = project.rooms.find(room => room.name === roomSwitchIssue.detail.previous.room);
-      label += `\n[warn] Previous slot in: ${room.name}`;
+      tokens.push({ label: `\n[warn] Previous slot in: ${room.name}` });
     }
 
     const conflictIssues = sessionIssues
@@ -485,30 +510,45 @@ function addSessions(sheet, project, validationErrors) {
         error.issue.type === 'conflict')
       .map(error => error);
     if (conflictIssues.length > 0) {
-      label += '\n[warn] Conflicts with: ' +
-        conflictIssues
-          .map(error => '#' + error.detail.conflictsWith.number)
-          .join(', ');
+      tokens.push({ label: '\n[warn] Conflicts with: ' });
+      let first = true;
+      for (const error of conflictIssues) {
+        const number = error.detail.conflictsWith.number;
+        if (!first) {
+          tokens.push({ label: ', ' });
+        }
+        tokens.push({
+          label: '#' + number,
+          href: `${sessionsSheetUrl}&range=${findSessionRange(project, number)}`
+        });
+      }
     }
 
     const capacityIssue = capacityIssues
       .find(error => error.issue.session === session.number);
     if (capacityIssue) {
-      label += '\n[warn] Capacity: ' + session.description.capacity;
+      tokens.push({
+        label: '\n[warn] Capacity: ' + session.description.capacity
+      });
     }
 
-    const richValue = SpreadsheetApp.newRichTextValue()
-        .setText(label)
-        .setLinkUrl(
-          session.title.length + 2,
-          session.title.length + 2 + `${session.number}`.length,
-          `${sessionsSheetUrl}&range=${sessionRange}`)
-        .build();
+    const richValueBuilder = SpreadsheetApp.newRichTextValue();
+    richValueBuilder.setText(tokens.map(token => token.label).join(''));
+    let pos = 0;
+    for (const token of tokens) {
+      if (token.href) {
+        richValueBuilder.setLinkUrl(
+          pos, pos + token.label.length,
+          token.href);
+      }
+      pos += token.label.length;
+    }
+    const richValue = richValueBuilder.build();
     sheet.getRange(range.row, range.column, range.numRows, range.numColumns)
+      .setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP)
       .mergeVertically()
       .setVerticalAlignment('middle')
       .setHorizontalAlignment('center')
-      .setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP)
       .setRichTextValue(richValue)
       .setBackground(backgroundColor);
   }
