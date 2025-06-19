@@ -480,6 +480,14 @@ function addSessions(sheet, project, validationErrors) {
       tokens.push({ label: `\n${track}` });
     }
 
+    // In the conflict list, highlight actual conflicts with conflictHighlight
+    const conflictHighlight = SpreadsheetApp.newTextStyle().setForegroundColor('#eb344f').build();
+    const conflictIssues = sessionIssues
+      .filter(error =>
+        error.issue.severity === 'warning' &&
+        error.issue.type === 'conflict')
+      .map(error => error);
+
     if (session.description.conflicts?.length) {
       tokens.push({ label: '\nAvoid conflicts with: ' });
       let first = true;
@@ -489,8 +497,8 @@ function addSessions(sheet, project, validationErrors) {
         }
         first = false;
         tokens.push({
-          label: '#' + number,
-          href: `${sessionsSheetUrl}&range=${findSessionRange(project, number)}`
+	  ...(true) && {label: '#' + number, href: `${sessionsSheetUrl}&range=${findSessionRange(project, number)}`},
+	  ...conflictIssues.includes(number) && {style: conflictHighlight}
         });
       }
     }
@@ -504,25 +512,6 @@ function addSessions(sheet, project, validationErrors) {
       tokens.push({ label: `\n[warn] Previous slot in: ${room.name}` });
     }
 
-    const conflictIssues = sessionIssues
-      .filter(error =>
-        error.issue.severity === 'warning' &&
-        error.issue.type === 'conflict')
-      .map(error => error);
-    if (conflictIssues.length > 0) {
-      tokens.push({ label: '\n[warn] Conflicts with: ' });
-      let first = true;
-      for (const error of conflictIssues) {
-        const number = error.detail.conflictsWith.number;
-        if (!first) {
-          tokens.push({ label: ', ' });
-        }
-        tokens.push({
-          label: '#' + number,
-          href: `${sessionsSheetUrl}&range=${findSessionRange(project, number)}`
-        });
-      }
-    }
 
     const capacityIssue = capacityIssues
       .find(error => error.issue.session === session.number);
@@ -540,6 +529,11 @@ function addSessions(sheet, project, validationErrors) {
         richValueBuilder.setLinkUrl(
           pos, pos + token.label.length,
           token.href);
+      }
+      if (token.style) {
+        richValueBuilder.setTextStyle(
+          pos, pos + token.label.length,
+          token.style);
       }
       pos += token.label.length;
     }
