@@ -500,7 +500,6 @@ function addSessions(sheet, project, validationErrors) {
           tokens.push({ label: ', ' });
         }
         first = false;
-        let style = null;
         const hasConflict = conflictIssues.some(error =>
           error.detail.conflictsWith.number === number);
         const token = {
