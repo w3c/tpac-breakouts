@@ -485,8 +485,7 @@ function addSessions(sheet, project, validationErrors) {
     const conflictIssues = sessionIssues
       .filter(error =>
         error.issue.severity === 'warning' &&
-        error.issue.type === 'conflict')
-      .map(error => error);
+        error.issue.type === 'conflict');
 
     if (session.description.conflicts?.length) {
       tokens.push({ label: '\nAvoid conflicts with: ' });
@@ -496,10 +495,10 @@ function addSessions(sheet, project, validationErrors) {
           tokens.push({ label: ', ' });
         }
         first = false;
-        tokens.push({
-	  ...(true) && {label: '#' + number, href: `${sessionsSheetUrl}&range=${findSessionRange(project, number)}`},
-	  ...conflictIssues.includes(number) && {style: conflictHighlight}
-        });
+        tokens.push(Object.assign(
+	    {label: '#' + number, href: `${sessionsSheetUrl}&range=${findSessionRange(project, number)}`}, 
+            conflictIssues.find(error => error.issue.session === number) && { style: conflictHighlight }
+	));
       }
     }
 
