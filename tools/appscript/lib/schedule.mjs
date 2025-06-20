@@ -168,7 +168,7 @@ function getMeetingsDescription(session, project) {
         slot.start === meeting.start);
       const room = project.rooms.find(room => room.name === meeting.room);
       return `${slot.weekday}, ${meeting.start}-${meeting.end}` +
-        (room ? ` in ${room.name}` : '');
+        (room ? ` in room ${room.name}` : '');
     })
     .join('\n');
 }
@@ -480,6 +480,18 @@ function addSessions(sheet, project, validationErrors) {
       tokens.push({ label: `\n${track}` });
     }
 
+    // In the conflict list, highlight actual conflicts with conflictHighlight
+    const conflictHighlight = SpreadsheetApp
+      .newTextStyle()
+      .setForegroundColor('#eb344f')
+      .build();
+    const sessionIssues = range.errors.filter(error =>
+      error.issue.session === session.number);
+    const conflictIssues = sessionIssues
+      .filter(error =>
+        error.issue.severity === 'warning' &&
+        error.issue.type === 'conflict');
+
     if (session.description.conflicts?.length) {
       tokens.push({ label: '\nAvoid conflicts with: ' });
       let first = true;
@@ -488,40 +500,28 @@ function addSessions(sheet, project, validationErrors) {
           tokens.push({ label: ', ' });
         }
         first = false;
-        tokens.push({
-          label: '#' + number,
+        const hasConflict = conflictIssues.some(error =>
+          error.detail.conflictsWith.number === number);
+        const token = {
+          label: '' + number,
           href: `${sessionsSheetUrl}&range=${findSessionRange(project, number)}`
-        });
+        };
+        tokens.push(token);
+        if (hasConflict) {
+          token.style = conflictHighlight;
+          tokens.push({
+            label: '!',
+            style: conflictHighlight
+          });
+        }
       }
     }
 
-    const sessionIssues = range.errors.filter(error =>
-      error.issue.session === session.number);
     const roomSwitchIssue = sessionIssues.find(error =>
       error.issue.severity === 'warning' && error.issue.type === 'switch');
     if (roomSwitchIssue) {
       const room = project.rooms.find(room => room.name === roomSwitchIssue.detail.previous.room);
-      tokens.push({ label: `\n[warn] Previous slot in: ${room.name}` });
-    }
-
-    const conflictIssues = sessionIssues
-      .filter(error =>
-        error.issue.severity === 'warning' &&
-        error.issue.type === 'conflict')
-      .map(error => error);
-    if (conflictIssues.length > 0) {
-      tokens.push({ label: '\n[warn] Conflicts with: ' });
-      let first = true;
-      for (const error of conflictIssues) {
-        const number = error.detail.conflictsWith.number;
-        if (!first) {
-          tokens.push({ label: ', ' });
-        }
-        tokens.push({
-          label: '#' + number,
-          href: `${sessionsSheetUrl}&range=${findSessionRange(project, number)}`
-        });
-      }
+      tokens.push({ label: `\n[warn] Previous slot in room ${room.name}` });
     }
 
     const capacityIssue = capacityIssues
@@ -540,6 +540,11 @@ function addSessions(sheet, project, validationErrors) {
         richValueBuilder.setLinkUrl(
           pos, pos + token.label.length,
           token.href);
+      }
+      if (token.style) {
+        richValueBuilder.setTextStyle(
+          pos, pos + token.label.length,
+          token.style);
       }
       pos += token.label.length;
     }
