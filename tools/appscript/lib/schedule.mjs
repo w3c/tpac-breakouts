@@ -168,7 +168,7 @@ function getMeetingsDescription(session, project) {
         slot.start === meeting.start);
       const room = project.rooms.find(room => room.name === meeting.room);
       return `${slot.weekday}, ${meeting.start}-${meeting.end}` +
-        (room ? ` in ${room.name}` : '');
+        (room ? ` in room ${room.name}` : '');
     })
     .join('\n');
 }
@@ -481,7 +481,12 @@ function addSessions(sheet, project, validationErrors) {
     }
 
     // In the conflict list, highlight actual conflicts with conflictHighlight
-    const conflictHighlight = SpreadsheetApp.newTextStyle().setForegroundColor('#eb344f').build();
+    const conflictHighlight = SpreadsheetApp
+      .newTextStyle()
+      .setForegroundColor('#eb344f')
+      .build();
+    const sessionIssues = range.errors.filter(error =>
+      error.issue.session === session.number);
     const conflictIssues = sessionIssues
       .filter(error =>
         error.issue.severity === 'warning' &&
@@ -495,22 +500,30 @@ function addSessions(sheet, project, validationErrors) {
           tokens.push({ label: ', ' });
         }
         first = false;
-        tokens.push(Object.assign(
-	    {label: '#' + number, href: `${sessionsSheetUrl}&range=${findSessionRange(project, number)}`}, 
-            conflictIssues.find(error => error.issue.session === number) && { style: conflictHighlight }
-	));
+        let style = null;
+        const hasConflict = conflictIssues.some(error =>
+          error.detail.conflictsWith.number === number);
+        const token = {
+          label: '' + number,
+          href: `${sessionsSheetUrl}&range=${findSessionRange(project, number)}`
+        };
+        tokens.push(token);
+        if (hasConflict) {
+          token.style = conflictHighlight;
+          tokens.push({
+            label: '!',
+            style: conflictHighlight
+          });
+        }
       }
     }
 
-    const sessionIssues = range.errors.filter(error =>
-      error.issue.session === session.number);
     const roomSwitchIssue = sessionIssues.find(error =>
       error.issue.severity === 'warning' && error.issue.type === 'switch');
     if (roomSwitchIssue) {
       const room = project.rooms.find(room => room.name === roomSwitchIssue.detail.previous.room);
-      tokens.push({ label: `\n[warn] Previous slot in: ${room.name}` });
+      tokens.push({ label: `\n[warn] Previous slot in room ${room.name}` });
     }
-
 
     const capacityIssue = capacityIssues
       .find(error => error.issue.session === session.number);
