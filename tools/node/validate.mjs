@@ -159,8 +159,12 @@ export default async function (project, number, options) {
       console.warn(`Generate IRC channel... done`);
     }
 
-    console.warn(`Update session description if needed...`);
-    await updateSessionDescription(session);
-    console.warn(`Update session description if needed... done`);
+    // Note: no way to re-generate the session's description if there's a
+    // format error.
+    if (!report.find(err => err.severity === 'error' && err.type === 'format')) {
+      console.warn(`Update session description if needed...`);
+      await updateSessionDescription(session);
+      console.warn(`Update session description if needed... done`);
+    }
   }
 }
