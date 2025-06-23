@@ -493,9 +493,36 @@ function addSessions(sheet, project, validationErrors) {
         error.issue.type === 'conflict');
 
     if (session.description.conflicts?.length) {
-      tokens.push({ label: '\nAvoid conflicts with: ' });
+      tokens.push({ label: '\nAvoid conflicts with ' });
       let first = true;
       for (const number of session.description.conflicts) {
+        if (!first) {
+          tokens.push({ label: ', ' });
+        }
+        first = false;
+        const hasConflict = conflictIssues.some(error =>
+          error.detail.conflictsWith.number === number);
+        const token = {
+          label: '' + number,
+          href: `${sessionsSheetUrl}&range=${findSessionRange(project, number)}`
+        };
+        tokens.push(token);
+        if (hasConflict) {
+          token.style = conflictHighlight;
+          tokens.push({
+            label: '!',
+            style: conflictHighlight
+          });
+        }
+      }
+    }
+
+    // And note there may be indirect conflicts
+    if (session.indirectConflicts?.length) {
+      const plural = session.indirectConflicts.length > 1 ? 's' : '';
+      tokens.push({ label: ` and joint meeting${plural} ` });
+      let first = true;
+      for (const number of session.indirectConflicts) {
         if (!first) {
           tokens.push({ label: ', ' });
         }
