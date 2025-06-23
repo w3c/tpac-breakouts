@@ -288,7 +288,9 @@ export function suggestSchedule(project, { seed }) {
       if (meetConflicts.includes('session')) {
         const sessionConflict = potentialConflicts.find(s =>
           session.description.conflicts?.includes(s.number) ||
-          s.description.conflicts?.includes(session.number));
+          session.indirectConflicts?.includes(s.number) ||
+          s.description.conflicts?.includes(session.number) ||
+          s.indirectConflicts?.includes(session.number));
         if (sessionConflict) {
           return false;
         }

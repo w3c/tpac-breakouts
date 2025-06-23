@@ -202,6 +202,44 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         });
       }
     }
+
+    // For groups meetings, we consider that the list of direct conflicts
+    // signals groups that the current session should not conflict with.
+    // These groups may, in turn, have joint meetings. These joint meetings
+    // may not be listed in the list of direct conflicts, but conflicts with
+    // them should still be avoided. Let's compute the list of indirect
+    // conflicts (ignoring potential errors, they are caught elsewhere)
+    if (session.description.conflicts) {
+      const indirectConflicts = new Set(session.description.conflicts
+        .map(number => {
+          if (number === session.number) {
+            return null;
+          }
+          const conflictingSession = project.sessions.find(s =>
+            s.number === number);
+          if (!conflictingSession) {
+            return null;
+          }
+          if (conflictingSession.groups.length > 1) {
+            // Joint meeting explicitly flagged as conflicting,
+            // no need to go beyond that
+            return null;
+          }
+          const conflictingGroup = conflictingSession.groups[0];
+          return project.sessions
+            .filter(s =>
+              s.number !== number &&
+              !session.description.conflicts.includes(s.number) &&
+              s.groups.find(group =>
+                group.type === conflictingGroup.type &&
+                group.abbrName === conflictingGroup.abbrName))
+            .map(s => s.number);
+        })
+        .filter(value => !!value)
+        .flat()
+      );
+      session.indirectConflicts = [...indirectConflicts];
+    }
   }
   else {
     // Retrieve information about chairs, unless that was already done
@@ -527,9 +565,12 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   // Check assigned slot is different from conflicting sessions
   // (skipped if the list of conflicting sessions is invalid)
   if (!hasConflictErrors && session.description.conflicts) {
+    // Note: for group meetings, we also need to check indirect meetings
+    const potentialConflicts = session.description.conflicts
+      .concat(session.indirectConflicts ?? []);
     const conflictWarnings = meetings
       .filter(meeting => meeting.day && meeting.slot)
-      .map(meeting => session.description.conflicts
+      .map(meeting => potentialConflicts
         .map(number => {
           const conflictingSession = project.sessions.find(s => s.number === number);
           if (meetsInParallelWith(conflictingSession, meeting, project)) {
