@@ -173,6 +173,13 @@ async function copyFiles(project) {
       if (file.startsWith('issue-template')) {
         // Depends on event type!
         if (!file.endsWith(project.metadata.fullType + '.yml')) {
+          if (file.endsWith('.yml') &&
+              file.indexOf(project.metadata.fullType + '-') !== -1) {
+            // Additional issue template specific to the event type
+            file = '.github/ISSUE_TEMPLATE/' +
+              file.substring(
+                `issue-template/${project.metadata.fullType}-`.length);
+          }
           return null;
         }
         file = '.github/ISSUE_TEMPLATE/session.yml';
