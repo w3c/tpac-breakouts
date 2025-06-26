@@ -388,7 +388,7 @@ function addSessions(sheet, project, validationErrors) {
         last.numRows += 1;
         last.slot = meeting.slot;
         if (errors.length > 0) {
-          last.errors.concat(errors);
+          last.errors = last.errors.concat(errors);
         }
       }
       else {
@@ -519,8 +519,12 @@ function addSessions(sheet, project, validationErrors) {
 
     // And note there may be indirect conflicts
     if (session.indirectConflicts?.length) {
-      const plural = session.indirectConflicts.length > 1 ? 's' : '';
-      tokens.push({ label: ` and joint meeting${plural} ` });
+      if (session.description.conflicts?.length) {
+        tokens.push({ label: ` and indirectly with ` });
+      }
+      else {
+        tokens.push({ label: '\nAvoid indirect conflicts with ' });
+      }
       let first = true;
       for (const number of session.indirectConflicts) {
         if (!first) {

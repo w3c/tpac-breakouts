@@ -26,7 +26,8 @@ export default {
 
   rooms: [
     'Room 1',
-    'Room 2'
+    'Room 2',
+    'Room 3'
   ],
 
   sessions: [
@@ -62,6 +63,17 @@ No conflict with Media WG, and by extension with Media WG joint meetings
         `,
       slot: '2042-02-10 11:00',
       room: 'Room 2'
+    },
+
+    {
+      number: 5,
+      title: 'Timed Text WG & Second Screen WG joint meeting',
+      body: `
+### Session description
+Joint meeting that involves Timed Text WG, should not conflict with Media WG
+        `,
+      slot: '2042-02-10 9:00',
+      room: 'Room 3'
     }
   ]
 }
