@@ -21,7 +21,10 @@ async function exportEventToFiles(spreadsheet) {
     console.log('Read data from spreadsheet... done');
 
     console.log('Convert to HTML...');
-    const html = await convertProjectToHTML(project); 
+    const options = {
+      reduce: project.metadata.rooms === 'hide'
+    };
+    const html = await convertProjectToHTML(project, options);
     console.log('Convert to HTML... done');
 
     console.log('Create data URL for the HTML export...');

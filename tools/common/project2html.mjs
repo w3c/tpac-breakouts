@@ -20,10 +20,11 @@ export async function convertProjectToHTML(project, cliParams) {
   // If --reduce show less info
   const reduce = ((typeof cliParams !== 'undefined') && cliParams.reduce)? true : false;
 
-  // Wrap label in a link, unless --reduce flag is set
+  // Wrap label in a link
+  // (no more reducing, repos are now always public)
   const linkSession = (session, reduce) => {
     const url = `https://github.com/${session.repository}/issues/${session.number}`;
-    return reduce ? `#${session.number}` : `<a href="${url}">#${session.number}</a>`;
+    return `<a href="${url}">#${session.number}</a>`;
   };
 
   // Validate project sessions. Note this will also expand the sessions with
@@ -352,8 +353,10 @@ export async function convertProjectToHTML(project, cliParams) {
               error.issue.severity === 'warning' && error.issue.type === 'switch');
             if (roomSwitchIssue) {
               const room = project.rooms.find(room => room.name === roomSwitchIssue.detail.previous.room);
-              writeLine(8, '<br/><b>Previous slot in</b>: ' +
-                '<span class="scheduling-warning">' + room.name + '</span>');
+              writeLine(8, '<br/><b>Previous slot in</b> ' +
+                '<span class="scheduling-warning">' +
+                (reduce ? 'different room' : room.name) +
+                '</span>');
             }
 
             const conflictIssues = sessionIssues
@@ -362,7 +365,7 @@ export async function convertProjectToHTML(project, cliParams) {
                 error.issue.type === 'conflict')
               .map(error => error);
             if (conflictIssues.length > 0) {
-              writeLine(8, '<br/><b>Conflicts with</b>: ' +
+              writeLine(8, '<br/><b>Conflicts with</b> ' +
                 conflictIssues
                   .map(error => '<span class="conflict-error">#' + error.detail.conflictsWith.number + '</span>')
                   .join(', '));
