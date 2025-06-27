@@ -367,7 +367,7 @@ export async function convertProjectToHTML(project, cliParams) {
             if (conflictIssues.length > 0) {
               writeLine(8, '<br/><b>Conflicts with</b> ' +
                 conflictIssues
-                  .map(error => '<span class="conflict-error">#' + error.detail.conflictsWith.number + '</span>')
+                  .map(error => `<span class="conflict-error">${linkSession(error.detail.conflictsWith, reduce)}</span>`)
                   .join(', '));
             }
 
@@ -450,7 +450,7 @@ export async function convertProjectToHTML(project, cliParams) {
           if (session.highlight) {
             highlightStr = `, topic: ${session.highlight}`;
           }
-          writeLine(5, `<li>${day.weekday}, ${meeting.start} - ${meeting.end}${reduce ? '' : ' (' + room.name + ')'}${jointStr}${highlightStr} (#${session.number})</li>`);
+          writeLine(5, `<li>${day.weekday}, ${meeting.start} - ${meeting.end}${reduce ? '' : ' (' + room.name + ')'}${jointStr}${highlightStr} (${linkSession(session, reduce)})</li>`);
         }
         writeLine(4, `</ul>`);
       }
