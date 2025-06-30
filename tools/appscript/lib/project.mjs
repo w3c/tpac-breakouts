@@ -150,6 +150,7 @@ export function getProject(spreadsheet) {
       rooms: getSetting('Show rooms in calendar') === 'no' ? 'hide' : 'show',
       tracks: getSetting('Show tracks in calendar') === 'no' ? 'hide' : 'show',
       meeting: getSetting('Meeting name in calendar', ''),
+      slug: getSetting('Meeting slug', ''),
       reponame: getSetting('GitHub repository name')
     },
 
@@ -590,6 +591,9 @@ export function refreshProject(spreadsheet, project, { what }) {
       }
       else if (name === 'meeting') {
         setSetting('Meeting name in calendar', value);
+      }
+      else if (name === 'slug') {
+        setSetting('Meeting slug', value);
       }
       else if (name === 'reponame') {
         setSetting('GitHub repository name', value);

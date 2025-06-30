@@ -47,6 +47,15 @@ export async function getEnvKey(key, defaultValue, json) {
 
   // Retrieve the variable from sheet environment properties if the code
   // runs within the context of an AppScript.
+  if (typeof SpreadsheetApp !== 'undefined') {
+    const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    const value = spreadsheet.getDeveloperMetadata()
+      .find(d => d.getKey() === key)
+      ?.getValue();
+    if (value) {
+      return value;
+    }
+  }
   if (typeof PropertiesService !== 'undefined') {
     const scriptProperties = PropertiesService.getScriptProperties();
     const value = scriptProperties.getProperty(key);
