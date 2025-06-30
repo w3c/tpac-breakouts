@@ -16,7 +16,8 @@ export function getProjectSheets(spreadsheet) {
     sessions: { titleMatch: /(list|breakouts)/i },
     meetings: { titleMatch: /meetings/i },
     rooms: { titleMatch: /rooms/i },
-    slots: { titleMatch: /slots/i }
+    slots: { titleMatch: /slots/i },
+    people: { titleMatch: /people/i }
   };
 
   // Retrieve the sheets from the spreadsheet
@@ -150,6 +151,7 @@ export function getProject(spreadsheet) {
       rooms: getSetting('Show rooms in calendar') === 'no' ? 'hide' : 'show',
       tracks: getSetting('Show tracks in calendar') === 'no' ? 'hide' : 'show',
       meeting: getSetting('Meeting name in calendar', ''),
+      slug: getSetting('Meeting slug', ''),
       reponame: getSetting('GitHub repository name')
     },
 
@@ -202,8 +204,7 @@ export function getProject(spreadsheet) {
           error: session.error,
           note: session.note
         },
-        repository: repo.owner + '/' + repo.name,
-        registrants: parseRegistrants(session.registrants)
+        repository: repo.owner + '/' + repo.name
       })
     ),
 
@@ -243,7 +244,9 @@ export function getProject(spreadsheet) {
               day: slot.date,
               slot: slot.start,
               actualStart: meeting['actual start time'],
-              actualEnd: meeting['actual end time']
+              actualEnd: meeting['actual end time'],
+              participants: meeting.participants,
+              observers: meeting.observers
             };
           })
           .filter(meeting => meeting);
@@ -251,6 +254,28 @@ export function getProject(spreadsheet) {
           session.meetings, project);
         session.room = room;
         session.meeting = meeting;
+      }
+    }
+
+    if (sheets.people?.values) {
+      const allPeople = Object.groupBy(
+        sheets.people.values,
+        ({ number }) => number
+      );
+      for (const [numberStr, people] of Object.entries(allPeople)) {
+        const number = parseInt(numberStr, 10);
+        const session = project.sessions.find(s => s.number === number);
+        if (!session) {
+          console.warn(`The "People" sheet references an unknown session #${number}`);
+          continue;
+        }
+        session.people = people.map(person => {
+          return {
+            type: person.type,
+            name: person.name,
+            email: person.email
+          };
+        });
       }
     }
   }
@@ -378,9 +403,6 @@ function setValues(sheet, values) {
         return obj[header];
       }
     }
-    if (header === 'registrants' && obj[header]) {
-      return serializeRegistrants(obj[header]);
-    }
     return obj[header];
   }));
   console.log('  - raw values to set', rawValues);
@@ -460,9 +482,10 @@ export function refreshProject(spreadsheet, project, { what }) {
     }
 
     const sheetValues = sheets[type].values ?? [];
-    const projectValues = type === 'meetings' ?
-      project.sessions
-        .map(session =>
+    let projectValues;
+    if (type === 'meetings') {
+      projectValues = project.sessions
+        .flatMap(session =>
           (session.meetings ?? parseSessionMeetings(session, project))
             .map(meeting => Object.assign({
               number: session.number,
@@ -470,13 +493,23 @@ export function refreshProject(spreadsheet, project, { what }) {
               group: `${session.number} - ${session.title}`
             }, meeting))
         )
-        .flat()
         .map(meeting => {
           // Day and slot are combined in the sheets
           meeting.slot = meeting.day + ' ' + meeting.slot;
           return meeting;
-        }) :
-      project[type];
+        });
+    }
+    else if (type === 'people') {
+      projectValues = project.sessions.flatMap(session =>
+        (session.people ?? []).map(person => Object.assign({
+          number: session.number,
+          title: session.title
+        }, person))
+      );
+    }
+    else {
+      projectValues = project[type];
+    }
     const seen = [];
     for (let obj of projectValues) {
       // Validation notes are nested under a "validation" key in the
@@ -591,6 +624,9 @@ export function refreshProject(spreadsheet, project, { what }) {
       else if (name === 'meeting') {
         setSetting('Meeting name in calendar', value);
       }
+      else if (name === 'slug') {
+        setSetting('Meeting slug', value);
+      }
       else if (name === 'reponame') {
         setSetting('GitHub repository name', value);
       }
@@ -607,7 +643,7 @@ export function refreshProject(spreadsheet, project, { what }) {
   }
 
   // Refresh sessions
-  if (['all', 'sessions', 'schedule'].includes(what)) {
+  if (['all', 'sessions', 'schedule', 'registrants'].includes(what)) {
     if (!sheets.sessions.sheet) {
       sheets.sessions.sheet = createSessionsSheet(spreadsheet, sheets, project);
       sheets.sessions.headers = getHeaders(sheets.sessions.sheet);
@@ -634,6 +670,16 @@ export function refreshProject(spreadsheet, project, { what }) {
       }
     }
   }
+
+  if (['all', 'registrants', 'schedule'].includes(what) &&
+      (project.metadata.type === 'groups') &&
+      (project.sessions.find(s => s.people?.length > 0))) {
+    if (!sheets.people.sheet) {
+      sheets.people.sheet = createPeopleSheet(spreadsheet, sheets, project);
+      sheets.people.headers = getHeaders(sheets.people.sheet);
+    }
+    refreshData('people');
+  }
 }
 
 function createSessionsSheet(spreadsheet, sheets, project) {
@@ -650,7 +696,7 @@ function createSessionsSheet(spreadsheet, sheets, project) {
   }
   headers.push(
     'Error', 'Warning', 'Check', 'Note',
-    'Registrants'
+    'Participants', 'Observers'
   );
   const headersRow = sheet.getRange(1, 1, 1, headers.length);
   headersRow.setValues([headers]);
@@ -715,7 +761,9 @@ function createMeetingsSheet(spreadsheet, sheets, project) {
 
   // Set the headers row
   const headers = [
-    'Number', 'Title', 'Room', 'Slot', 'Actual start time', 'Actual end time'
+    'Number', 'Title', 'Room', 'Slot',
+    'Actual start time', 'Actual end time',
+    'Participants', 'Observers'
   ];
   const headersRow = sheet.getRange(1, 1, 1, headers.length);
   headersRow.setValues([headers]);
@@ -769,6 +817,33 @@ function createMeetingsSheet(spreadsheet, sheets, project) {
 }
 
 
+function createPeopleSheet(spreadsheet, sheets, project) {
+  // Create the new sheet
+  const title = 'People';
+  const sheet = spreadsheet.insertSheet(title, spreadsheet.getNumSheets());
+
+  // Set the headers row
+  const headers = [
+    'Number', 'Title', 'Type', 'Name', 'Email'
+  ];
+  const headersRow = sheet.getRange(1, 1, 1, headers.length);
+  headersRow.setValues([headers]);
+  headersRow.setFontWeight('bold');
+  sheet.setFrozenRows(1);
+  headersRow
+    .protect()
+    .setDescription(`${title} - headers`)
+    .setWarningOnly(true);
+
+  sheet.setColumnWidths(headers.findIndex(h => h === 'Number') + 1, 1, 60);
+  sheet.setColumnWidths(headers.findIndex(h => h === 'Title') + 1, 1, 300);
+  sheet.setColumnWidths(headers.findIndex(h => h === 'Name') + 1, 1, 200);
+  sheet.setColumnWidths(headers.findIndex(h => h === 'Email') + 1, 3, 200);
+
+  return sheet;
+}
+
+
 /**
  * Save the session validation result in the sheet
  */
@@ -783,34 +858,6 @@ export async function saveSessionValidationInSheet(session, project) {
     session.validation.warning,
     session.validation.check
   ]]);
-}
-
-
-function parseRegistrants(value) {
-  const rows = (value ?? '').trim().split(/\n/);
-  const registrants = {};
-  for (const row of rows) {
-    const tokens = row.trim().match(/^-?\s*(.*?):\s*(.*)$/);
-    if (!tokens) {
-      continue;
-    }
-    registrants[tokens[1].toLowerCase()] = tokens[2].match(/^\d+$/) ?
-      parseInt(tokens[2], 10) :
-      tokens[2];
-  }
-  return registrants;
-}
-
-function serializeRegistrants(value) {
-  if (!value) {
-    return '';
-  }
-  return ['Participants', 'Observers', 'URL']
-    .map(field => value[field.toLowerCase()] ?
-      `${field}: ${value[field.toLowerCase()]}` :
-      null)
-    .filter(field => field)
-    .join('\n');
 }
 
 function getWeekday(date) {

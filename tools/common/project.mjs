@@ -99,15 +99,23 @@ export async function fetchProjectFromGitHub(reponame, sessionTemplate) {
   for (const session of project.sessions) {
     const value = registrants.find(r => r.number === session.number);
     if (value) {
-      delete value.number;
-      session.registrants = value;
+      session.participants = value.participants;
+      session.observers = value.observers;
     }
     else {
-      session.registrants = {
-        participants: null,
-        observers: null,
-        url: null
-      };
+      session.participants = 0;
+      session.observers = 0;
+    }
+  }
+
+  const people = await importVariableFromGitHub(reponame, 'PEOPLE') ?? [];
+  for (const session of project.sessions) {
+    const value = people.find(p => p.number === session.number);
+    if (value) {
+      session.people = value.people;
+    }
+    else {
+      session.people = [];
     }
   }
 
@@ -144,6 +152,7 @@ export async function exportProjectToGitHub(project, { what }) {
 
   if (!what || what === 'all' || what === 'registrants') {
     await exportRegistrants(project);
+    await exportPeople(project);
   }
 }
 
@@ -188,13 +197,29 @@ async function exportValidation(project) {
 async function exportRegistrants(project) {
   const REGISTRANTS = [];
   for (const session of project.sessions) {
-    REGISTRANTS.push(Object.assign({
-      number: session.number
-    }, session.registrants));
+    REGISTRANTS.push({
+      number: session.number,
+      participants: session.participants,
+      observers: session.observers
+    });
   }
   await exportVariableToGitHub(project.metadata.reponame, 'REGISTRANTS', REGISTRANTS);
 }
 
+
+/**
+ * Export session people to GitHub
+ */
+async function exportPeople(project) {
+  const PEOPLE = [];
+  for (const session of project.sessions) {
+    PEOPLE.push({
+      number: session.number,
+      people: session.people ?? []
+    });
+  }
+  await exportVariableToGitHub(project.metadata.reponame, 'PEOPLE', PEOPLE);
+}
 
 
 
