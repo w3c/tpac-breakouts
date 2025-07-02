@@ -715,7 +715,7 @@ function createMeetingsSheet(spreadsheet, sheets, project) {
 
   // Set the headers row
   const headers = [
-    'Number', 'Room', 'Slot', 'Actual start time', 'Actual end time'
+    'Number', 'Title', 'Room', 'Slot', 'Actual start time', 'Actual end time'
   ];
   const headersRow = sheet.getRange(1, 1, 1, headers.length);
   headersRow.setValues([headers]);
@@ -727,6 +727,7 @@ function createMeetingsSheet(spreadsheet, sheets, project) {
     .setWarningOnly(true);
 
   sheet.setColumnWidths(headers.findIndex(h => h === 'Number') + 1, 1, 60);
+  sheet.setColumnWidths(headers.findIndex(h => h === 'Title') + 1, 1, 300);
   sheet.setColumnWidths(headers.findIndex(h => h === 'Room') + 1, 1, 200);
   sheet.setColumnWidths(headers.findIndex(h => h === 'Slot') + 1, 3, 150);
 
