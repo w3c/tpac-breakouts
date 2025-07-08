@@ -559,22 +559,24 @@ export async function convertProjectToRegistrationHTML(project) {
   // useful info (groups, meetings)
   await validateGrid(project);
 
-  const rows = project.sessions.map(session => {
-    const days = (session.meetings ?? [])
-      .map(meeting => meeting.day)
-      .filter(day => !!day)
-      .filter((day, idx, arr) => arr.indexOf(day) === idx)
-      .sort();
-    const groups = (session.groups ?? [])
-      .map(group => group.name)
-      .sort();
-    return `<tr>
-          <td>${session.title}</td>
-          <td>${project.metadata.meeting ?? project.metadata.slug}</td>
-          <td>${days.join(', ')}</td>
-          <td>${groups.join(', ')}</td>
-        </tr>`;
-  });
+  const rows = project.sessions
+    .map(session => {
+      const days = (session.meetings ?? [])
+        .map(meeting => meeting.day)
+        .filter(day => !!day)
+        .filter((day, idx, arr) => arr.indexOf(day) === idx)
+        .sort();
+      const groups = (session.groups ?? [])
+        .map(group => group.name)
+        .sort();
+      return `<tr>
+            <td>${session.title}</td>
+            <td>${project.metadata.meeting ?? project.metadata.slug}</td>
+            <td>${days.join(', ')}</td>
+            <td>${groups.join(', ')}</td>
+          </tr>`;
+    })
+    .sort();
   return `<html>
   <head>
     <meta charset="utf-8">
