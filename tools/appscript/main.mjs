@@ -26,6 +26,9 @@ import _exportMetadata from './export-metadata.mjs';
 import _exportEventToFiles from './export-event-to-files.mjs';
 import _applySchedule from './apply-schedule.mjs';
 import _createRepository from './create-repository.mjs';
+import _setAuthorizationToken from './set-authorization-token.mjs';
+import _fetchRegistrants from './fetch-registrants.mjs';
+import _exportEmails from './export-emails.mjs';
 
 function main() { _createOnOpenTrigger(); }
 function addTPACMenu() { _addTPACMenu(); }
@@ -39,3 +42,6 @@ function exportMetadata() { _exportMetadata(); }
 function exportEventToFiles() { _exportEventToFiles(); }
 function applySchedule() { _applySchedule(); }
 function createRepository() { _createRepository(); }
+function setAuthorizationToken() { _setAuthorizationToken(); }
+function fetchRegistrants() { _fetchRegistrants(); }
+function exportEmails() { _exportEmails(); }

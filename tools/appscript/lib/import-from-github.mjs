@@ -2,6 +2,7 @@ import { getProject } from './project.mjs';
 import reportError from './report-error.mjs';
 import { parseRepositoryName } from '../../common/repository.mjs';
 import { fetchProjectFromGitHub } from '../../common/project.mjs';
+import { fetchRegistrants } from '../../common/registrants.mjs';
 import { validateGrid } from '../../common/validate.mjs';
 import { refreshProject } from './project.mjs';
 import { fetchMapping } from './w3cid-map.mjs';
@@ -59,10 +60,16 @@ If not, ask François or Ian to run the required initialization steps.`);
       }
     }
   }
+  project.sessions = githubProject.sessions;
   console.log('Fetch data from GitHub... done');
 
+  if (project.metadata.type === 'groups') {
+    console.log('Fetch registrants...');
+    await fetchRegistrants(project);
+    console.log('Fetch registrants... done');
+  }
+
   console.log('Validate the grid...');
-  project.sessions = githubProject.sessions;
   const res = await validateGrid(project, { what: 'everything' });
   for (const change of res.changes) {
     console.warn(`- save changes for session ${change.number}`);

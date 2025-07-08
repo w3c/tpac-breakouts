@@ -497,6 +497,40 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
     }
   }
 
+  // Check assigned room's capacity works for number of registrants
+  if (session.participants) {
+    const capacityWarnings = meetings
+      .filter(meeting => meeting.room)
+      .map(meeting => {
+        const room = project.rooms.find(s => s.name === meeting.room);
+        let nbParticipants = meeting.participants;
+        if (!nbParticipants) {
+          nbParticipants = session.participants;
+        }
+        if ((room.capacity ?? 30) < nbParticipants) {
+          return { meeting, session, room };
+        }
+        return null;
+      })
+      .filter(warning => !!warning);
+    if (capacityWarnings.length > 0) {
+      errors.push({
+        session: sessionNumber,
+        severity: 'warning',
+        type: 'capacity',
+        messages: capacityWarnings.map(warn => {
+          let mstr = '';
+          if (warn.meeting.day && warn.meeting.slot) {
+            const day = project.slots.find(d => d.date === warn.meeting.day);
+            mstr = `, used for meeting on ${day.weekday} at ${warn.meeting.slot},`;
+          }
+          return `Capacity of "${warn.room.name}" (${warn.room.capacity ?? '30 (assumed)'})${mstr} is lower than number of participants (${meeting.participants || session.participants})`;
+        }),
+        details: capacityWarnings
+      });
+    }
+  }
+
   // Check whether the session needs to switch rooms from one slot to the next
   const scheduledMeetings = meetings.filter(m => m.room && m.day && m.slot);
   const switchWarnings = scheduledMeetings

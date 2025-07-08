@@ -24,6 +24,13 @@ export default function () {
         .addItem('Fetch event info, rooms, days, slots (from GitHub)', 'importMetadata')
         .addItem('Export event info, rooms, days, slots (to GitHub)', 'exportMetadata')
         .addItem('Export event to files (HTML, JSON)', 'exportEventToFiles')
+        .addSubMenu(
+          SpreadsheetApp.getUi()
+            .createMenu('For TPAC group meetings only')
+            .addItem('Set authorization token', 'setAuthorizationToken')
+            .addItem('Refresh list of registrants per group', 'fetchRegistrants')
+            .addItem('Export emails of group chairs/team contacts', 'exportEmails')
+        )
     )
     .addToUi();
 }
