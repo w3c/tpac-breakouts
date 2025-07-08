@@ -571,7 +571,6 @@ export async function convertProjectToRegistrationHTML(project) {
         .sort();
       return `<tr>
             <td>${session.title}</td>
-            <td>${project.metadata.meeting ?? project.metadata.slug}</td>
             <td>${days.join(', ')}</td>
             <td>${groups.join(', ')}</td>
           </tr>`;
@@ -637,12 +636,11 @@ export async function convertProjectToRegistrationHTML(project) {
     <link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/base.css" type="text/css"/>
   </head>
   <body>
-    <h1>${project.metadata.meeting}</h1>
+    <h1>${project.metadata.meeting ?? project.metadata.slug}</h1>
     <table>
       <thead>
         <tr>
           <th>Name</th>
-          <th>Event</th>
           <th>Days</th>
           <th>Groups</th>
         </tr>
