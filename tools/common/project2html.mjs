@@ -544,3 +544,111 @@ export async function convertProjectToHTML(project, cliParams) {
   writeLine(0, `</html>`);
   return html;
 }
+
+
+/**
+ * Converts a TPAC group meetings project to an HTML page that lists the
+ * meetings in a form that aligns with the admin view at:
+ * https://www.w3.org/admin/tpac-meetings/list
+ *
+ * This HTML page is aimed at simplifying the process of creating the
+ * registration form (pending complete automation?)
+ */
+export async function convertProjectToRegistrationHTML(project) {
+  // Validate project sessions. Note this is done to expand sessions with
+  // useful info (groups, meetings)
+  await validateGrid(project);
+
+  const rows = project.sessions.map(session => {
+    const days = (session.meetings ?? [])
+      .map(meeting => meeting.day)
+      .filter(day => !!day)
+      .filter((day, idx, arr) => arr.indexOf(day) === idx)
+      .sort();
+    const groups = (session.groups ?? [])
+      .map(group => group.name)
+      .sort();
+    return `<tr>
+          <td>${session.title}</td>
+          <td>${project.metadata.meeting ?? project.metadata.slug}</td>
+          <td>${days.join(', ')}</td>
+          <td>${groups.join(', ')}</td>
+        </tr>`;
+  });
+  return `<html>
+  <head>
+    <meta charset="utf-8">
+    <title>${project.metadata.meeting} - Group meetings</title>
+    <style>
+      /* Table styles and colors adapted from Pure CSS:
+       * https://github.com/pure-css/pure
+       * ... under a BSD License:
+       * https://github.com/pure-css/pure/blob/master/LICENSE
+       */
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        empty-cells: show;
+        border: 1px solid #cbcbcb;
+      }
+      table caption {
+        color: #000;
+        font: italic 85%/1 arial, sans-serif;
+        padding: 1em 0;
+        text-align: center;
+      }
+      table td,
+      table th {
+        border-left: 1px solid #cbcbcb;
+        border-bottom: 1px solid #cbcbcb;
+        border-width: 0 0 1px 1px;
+        font-size: inherit;
+        margin: 0;
+        overflow: visible;
+        padding: 0.5em 1em;
+      }
+      table thead {
+        background-color: #e0e0e0;
+        color: #000;
+        text-align: left;
+        vertical-align: bottom;
+      }
+      .conflict-error { background-color: #ddaeff; color: #8156a7; }
+      .capacity-error { background-color: #fcebbd; color: #af9540; }
+      .track-error { background-color: #e1f2fa; color: #5992aa; }
+      .scheduling-error { background-color: #f5ab9e; color: #8c3a2b; }
+      .scheduling-warning { background-color: #fcebbd; color: #8c3a2b; }
+      .track {
+        display: inline-block;
+        background-color: #0E8A16;
+        color: white;
+        border: 1px transparent;
+        border-radius: 1em;
+        margin-top: 0.2em;
+        margin-bottom: 0.2em;
+        padding: 3px 10px;
+        font-size: smaller;
+        white-space: nowrap;
+      }
+      .nbrooms { font-weight: normal; }
+    </style>
+    <link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/base.css" type="text/css"/>
+  </head>
+  <body>
+    <h1>${project.metadata.meeting}</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Event</th>
+          <th>Days</th>
+          <th>Groups</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.join('\n        ')}
+      </tbody>
+    </table>
+  </body>
+</html>`;
+}
