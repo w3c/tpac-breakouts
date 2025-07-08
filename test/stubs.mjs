@@ -363,6 +363,9 @@ export async function importVariableFromGitHub(name) {
   else if (name === 'REGISTRANTS') {
     return null;
   }
+  else if (name === 'PEOPLE') {
+    return null;
+  }
   else {
     throw new Error(`No test data for ${name}`);
   }
