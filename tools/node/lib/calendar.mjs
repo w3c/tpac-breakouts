@@ -361,10 +361,15 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
   status = status ?? 'draft';
   await page.$eval(`input[name="event[status]"][value=${status}]`, el => el.click());
 
-  const room = (project.metadata.rooms === 'hide') ?
-    null :
-    project.rooms.find(room => room.name === entry.meeting.room);
-  const roomLocation = (room?.location ? room.location + ' - ' : '') + (room?.name ?? '');
+  let roomLocation = '';
+  if (project.metadata.rooms === 'hide') {
+    const roomIdx = project.rooms.findIndex(room => room.name === entry.meeting.room);
+    roomLocation = 'R' + (roomIdx + 1);
+  }
+  else {
+    const room = project.rooms.find(room => room.name === entry.meeting.room);
+    roomLocation = (room?.location ? room.location + ' - ' : '') + (room?.name ?? '');
+  }
   await fillTextInput('input#event_location', roomLocation ?? '');
 
   // All events are visible to everyone
