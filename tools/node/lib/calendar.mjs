@@ -364,7 +364,7 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
   let roomLocation = '';
   if (project.metadata.rooms === 'hide') {
     const roomIdx = project.rooms.findIndex(room => room.name === entry.meeting.room);
-    roomLocation = 'R' + (roomIdx + 1);
+    roomLocation = 'R' + (roomIdx < 9 ? '0' : '') + (roomIdx + 1);
   }
   else {
     const room = project.rooms.find(room => room.name === entry.meeting.room);
