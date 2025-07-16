@@ -444,7 +444,21 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
     await fillTextInput('textarea#event_agenda', formatPlenaryAgenda(sessions));
   }
   else {
-    await fillTextInput('input#event_title', session.title);
+    function normalizeTitle(title) {
+      if (project.metadata.type === 'groups') {
+        return title
+          .replace(/ (BG|Business Group)($|,| and| &|:|>)/gi, ' BG$2')
+          .replace(/ (CG|Community Group)($|,| and| &|:|>)/gi, ' CG$2')
+          .replace(/ (IG|Interest Group)($|,| and| &|:|>)/gi, ' IG$2')
+          .replace(/ (WG|Working Group)($|,| and| &|:|>)/gi, ' WG$2')
+          .replace(/ (TF|Task Force)($|,| and| &|:|>)/gi, ' TF$2')
+          .trim();
+      }
+      else {
+        return title;
+      }
+    }
+    await fillTextInput('input#event_title', normalizeTitle(session.title));
     if (session.description.discussion) {
       await fillTextInput('input#event_chat', session.description.discussion);
     }
