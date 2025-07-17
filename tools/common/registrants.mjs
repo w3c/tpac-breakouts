@@ -40,6 +40,12 @@ export async function fetchRegistrants(project) {
       for (const group of meeting.groups) {
         group.name = normalizeTitle(group.name);
       }
+      // Pretend that groups that don't exist yet actually exist
+      if (meeting.groups.length === 0) {
+        meeting.groups.push({
+          name: normalizeTitle(meeting.name)
+        });
+      }
     }
     mapRegistrantsToProject(project, json);
     return;
@@ -56,12 +62,14 @@ export async function fetchRegistrants(project) {
 function mapRegistrantsToProject(project, registrants) {
   project.registrants = registrants.meetings;
   for (const session of project.sessions) {
-    const sessionRegistrants = registrants.meetings?.find(meeting =>
-      session.groups.length === meeting.groups.length &&
-      session.groups.every(group =>
-        meeting.groups.find(g => g.name === group.name)
-      )
-    );
+    const sessionRegistrants =
+      registrants.meetings?.find(meeting =>
+        session.groups.length === meeting.groups.length &&
+        session.groups.every(group =>
+          meeting.groups.find(g => g.name === group.name)
+        )) ||
+      registrants.meetings?.find(meeting =>
+        normalizeTitle(session.title) === normalizeTitle(meeting.name));
     if (sessionRegistrants) {
       session.people = sessionRegistrants.chairs
         .map(person => Object.assign({
