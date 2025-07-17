@@ -412,7 +412,7 @@ export async function convertProjectToHTML(project, cliParams) {
       }
     }
     const groupNames = Object.keys(groupsView);
-    groupNames.sort();
+    groupNames.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
     for (const name of groupNames) {
       const { group, meetings, sessions } = groupsView[name];
       writeLine(3, `<section id="g${group.w3cId}">
@@ -559,6 +559,16 @@ export async function convertProjectToRegistrationHTML(project) {
   // useful info (groups, meetings)
   await validateGrid(project);
 
+  function expandTitle(title) {
+    return title
+      .replace(/ (BG|Business Group)($|,| and| &|:|>)/gi, ' Business Group$2')
+      .replace(/ (CG|Community Group)($|,| and| &|:|>)/gi, ' Community Group$2')
+      .replace(/ (IG|Interest Group)($|,| and| &|:|>)/gi, ' Interest Group$2')
+      .replace(/ (WG|Working Group)($|,| and| &|:|>)/gi, ' Working Group$2')
+      .replace(/ (TF|Task Force)($|,| and| &|:|>)/gi, ' Task Force$2')
+      .trim();
+  }
+
   const rows = project.sessions
     .map(session => {
       const days = (session.meetings ?? [])
@@ -568,14 +578,14 @@ export async function convertProjectToRegistrationHTML(project) {
         .sort();
       const groups = (session.groups ?? [])
         .map(group => group.name)
-        .sort();
+        .sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
       return `<tr>
-            <td>${session.title}</td>
+            <td>${expandTitle(session.title)}</td>
             <td>${days.join(', ')}</td>
             <td>${groups.join(', ')}</td>
           </tr>`;
     })
-    .sort();
+    .sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
   return `<html>
   <head>
     <meta charset="utf-8">
