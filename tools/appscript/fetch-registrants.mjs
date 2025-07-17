@@ -2,6 +2,7 @@ import reportError from './lib/report-error.mjs';
 import { getProject, refreshProject } from './lib/project.mjs';
 import { getEnvKey } from '../common/envkeys.mjs';
 import { fetchRegistrants } from '../common/registrants.mjs';
+import { validateGrid } from '../common/validate.mjs';
 
 export default async function () {
   try {
@@ -31,6 +32,10 @@ export default async function () {
   Use the "Set authorization token" menu in "Event > Advanced > For TPAC group meetings only".`);
       return;
     }
+
+    console.log(`Expand sessions...`);
+    await validateGrid(project);
+    console.log(`Expand sessions... done`);
 
     console.log('Fetch the list of registrants...');
     await fetchRegistrants(project);

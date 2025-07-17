@@ -1,6 +1,16 @@
 import { getEnvKey } from './envkeys.mjs';
 import wrappedFetch from './wrappedfetch.mjs';
 
+function normalizeTitle(title) {
+  return title
+    .replace(/ (BG|Business Group)($|,| and| &|:|>)/gi, ' BG$2')
+    .replace(/ (CG|Community Group)($|,| and| &|:|>)/gi, ' CG$2')
+    .replace(/ (IG|Interest Group)($|,| and| &|:|>)/gi, ' IG$2')
+    .replace(/ (WG|Working Group)($|,| and| &|:|>)/gi, ' WG$2')
+    .replace(/ (TF|Task Force)($|,| and| &|:|>)/gi, ' TF$2')
+    .trim();
+}
+
 /**
  * Collect information about group meetings from the registration system.
  *
@@ -26,6 +36,11 @@ export async function fetchRegistrants(project) {
   );
   if (res.status === 200) {
     const json = await res.json();
+    for (const meeting of json?.meetings ?? []) {
+      for (const group of meeting.groups) {
+        group.name = normalizeTitle(group.name);
+      }
+    }
     mapRegistrantsToProject(project, json);
     return;
   }
@@ -63,6 +78,9 @@ function mapRegistrantsToProject(project, registrants) {
             })));
     }
     else {
+      console.warn(session.number, session.title,
+        session.groups.map(g => g.name).join(', '),
+        'not found in registrants stats');
       session.people = [];
     }
     for (const meeting of session.meetings ?? []) {

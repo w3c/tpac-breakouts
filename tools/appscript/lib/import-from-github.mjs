@@ -65,6 +65,7 @@ If not, ask François or Ian to run the required initialization steps.`);
 
   if (project.metadata.type === 'groups') {
     console.log('Fetch registrants...');
+    await validateGrid(project);
     await fetchRegistrants(project);
     console.log('Fetch registrants... done');
   }

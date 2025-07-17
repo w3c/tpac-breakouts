@@ -480,6 +480,11 @@ export function refreshProject(spreadsheet, project, { what }) {
       // and there is no ID key
       idKey = '';
     }
+    else if (type === 'people') {
+      // Note: The "people" sheet is a view of people for each session
+      // and there is no ID key
+      idKey = '';
+    }
 
     const sheetValues = sheets[type].values ?? [];
     let projectValues;
@@ -528,6 +533,12 @@ export function refreshProject(spreadsheet, project, { what }) {
         value = sheetValues.find(val =>
           val.date === obj.date &&
           val.start === obj.start);
+      }
+      else if (type === 'people') {
+        value = sheetValues.find(val =>
+          val.number === obj.number &&
+          val.type === obj.type &&
+          val.name === obj.name);
       }
       else {
         value = sheetValues.find(val => val[idKey] === obj[idKey]);

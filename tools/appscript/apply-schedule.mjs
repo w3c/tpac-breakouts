@@ -51,6 +51,7 @@ export default async function () {
 
     if (project.metadata.type === 'groups') {
       console.log('Fetch registrants...');
+      await validateGrid(project);
       await fetchRegistrants(project);
       console.log('Fetch registrants... done');
     }
