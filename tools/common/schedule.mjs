@@ -550,54 +550,95 @@ export function suggestSchedule(project, { seed }) {
       if (getRequestedNbOfSlots(session) > 0) {
         numberOfMeetings = getRequestedNbOfSlots(session);
       }
-      const constraints = {
-        trackRoom,
-        numberOfMeetings,
-        sameRoom: true,
-        strictTimes: true,
-        strictDuration: true,
-        meetDuration: true,
-        meetCapacity: true,
-        meetConflicts: ['session', 'track']
-      };
+      const constraints = {};
+      let constraintsRelaxMode = 'one-by-one';
+      let relaxed = [];
+      function resetConstraintsIfNeeded() {
+        if (constraintsRelaxMode === 'one-by-one') {
+          constraints.trackRoom = trackRoom;
+          constraints.numberOfMeetings = numberOfMeetings;
+          constraints.sameRoom = true;
+          constraints.strictTimes = true;
+          constraints.strictDuration = true;
+          constraints.meetDuration = true;
+          constraints.meetCapacity = true;
+          constraints.meetConflicts = ['session', 'track'];
+        }
+      }
+      resetConstraintsIfNeeded();
       while (!chooseSessionMeetings(session, constraints)) {
-        if (constraints.sameRoom && constraints.numberOfMeetings > 1) {
+        if (!relaxed.includes('sameRoom') &&
+            constraints.sameRoom &&
+            constraints.numberOfMeetings > 1) {
           console.warn(`- relax "same room" constraint for #${session.number}`);
+          resetConstraintsIfNeeded();
           constraints.sameRoom = false;
+          relaxed.push('sameRoom');
         }
-        else if (constraints.strictDuration && session.description.duration) {
+        else if (!relaxed.includes('strictDuration') &&
+            constraints.strictDuration &&
+            session.description.duration) {
           console.warn(`- relax duration comparison for #${session.number}`);
+          resetConstraintsIfNeeded();
           constraints.strictDuration = false;
+          relaxed.push('strictDuration');
         }
-        else if (constraints.trackRoom) {
+        else if (!relaxed.includes('trackRoom') &&
+            constraints.trackRoom) {
           console.warn(`- relax track constraint for #${session.number}`);
+          resetConstraintsIfNeeded();
           constraints.trackRoom = null;
+          relaxed.push('trackRoom');
         }
-        else if (constraints.meetDuration && session.description.duration) {
+        else if (!relaxed.includes('meetDuration') &&
+            constraints.meetDuration &&
+            session.description.duration) {
           console.warn(`- forget duration constraint for #${session.number}`);
+          resetConstraintsIfNeeded();
           constraints.meetDuration = false;
+          relaxed.push('meetDuration');
         }
-        else if (constraints.meetCapacity) {
+        else if (!relaxed.includes('meetCapacity') &&
+            constraints.meetCapacity) {
           console.warn(`- forget capacity constraint for #${session.number}`);
+          resetConstraintsIfNeeded();
           constraints.meetCapacity = false;
+          relaxed.push('meetCapacity');
         }
-        else if (constraints.meetConflicts.length === 2) {
+        else if (!relaxed.includes('session-conflicts') &&
+            constraints.meetConflicts.length === 2) {
           console.warn(`- forget session conflicts for #${session.number}`);
+          resetConstraintsIfNeeded();
           constraints.meetConflicts = ['track'];
+          relaxed.push('session-conflicts');
         }
-        else if (constraints.meetConflicts[0] === 'track') {
+        else if (!relaxed.includes('track-conflicts') &&
+            constraints.meetConflicts[0] === 'track') {
           console.warn(`- forget track conflicts for #${session.number}`);
+          resetConstraintsIfNeeded();
           constraints.meetConflicts = ['session'];
+          relaxed.push('track-conflicts');
         }
-        else if (constraints.meetConflicts.length > 0) {
+        else if (!relaxed.includes('all-conflicts') &&
+            constraints.meetConflicts.length > 0) {
           console.warn(`- forget all conflicts for #${session.number}`);
+          resetConstraintsIfNeeded();
           constraints.meetConflicts = [];
+          relaxed.push('all-conflicts');
         }
-        else if (constraints.strictTimes && getRequestedNbOfSlots(session) > 0) {
+        else if (constraintsRelaxMode === 'one-by-one') {
+          console.warn(`- switch to "multi" constraints relax mode #${session.number}`);
+          resetConstraintsIfNeeded();
+          constraintsRelaxMode = 'multi';
+          relaxed = [];
+        }
+        else if (constraintsRelaxMode === 'multi' &&
+            constraints.strictTimes && getRequestedNbOfSlots(session) > 0) {
           console.warn(`- relax times constraint for #${session.number}`);
           constraints.strictTimes = false;
         }
-        else if (constraints.numberOfMeetings > 1) {
+        else if (constraintsRelaxMode === 'multi' &&
+            constraints.numberOfMeetings > 1) {
           console.warn(`- decrement number of meetings for #${session.number}`);
           constraints.numberOfMeetings -= 1;
         }
