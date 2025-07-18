@@ -3,7 +3,6 @@ import {
 } from './lib/project.mjs';
 import reportError from './lib/report-error.mjs';
 import { fetchMapping } from './lib/w3cid-map.mjs';
-import { fetchRegistrants } from '../common/registrants.mjs';
 import { validateGrid } from '../common/validate.mjs';
 import { parseSessionMeetings } from '../common/meetings.mjs';
 
@@ -48,13 +47,6 @@ export default async function () {
       }
     }
     console.log('Apply the schedule... done');
-
-    if (project.metadata.type === 'groups') {
-      console.log('Fetch registrants...');
-      await validateGrid(project);
-      await fetchRegistrants(project);
-      console.log('Fetch registrants... done');
-    }
 
     console.log(`Validate new schedule...`);
     const { errors: newErrors, changes: newChanges } = await validateGrid(project, { what: 'scheduling' })

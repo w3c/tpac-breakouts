@@ -2,6 +2,7 @@ import reportError from './lib/report-error.mjs';
 import { getProject } from './lib/project.mjs';
 import { fillGridSheet } from './lib/schedule.mjs';
 import { fetchMapping } from './lib/w3cid-map.mjs';
+import { fetchRegistrants } from '../common/registrants.mjs';
 import { suggestSchedule } from '../common/schedule.mjs';
 import { validateGrid } from '../common/validate.mjs';
 import { Srand } from '../common/jsrand.mjs';
@@ -29,6 +30,24 @@ async function proposeGrid(spreadsheet) {
       preserve: ['all']
     };
     console.log('Prompt user... done');
+
+    // Note: we only really need to fetch the list of registrants to
+    // get "raw" data if the data is not already stored somewhere, in other
+    // words if no schedule has been generated yet. But let's always try to
+    // fetch the list. An error usually means that registration has not opened
+    // yet.
+    if (project.metadata.type === 'groups') {
+      console.log('Fetch the list of registrants...');
+      await validateGrid(project);
+      try {
+        await fetchRegistrants(project);
+      }
+      catch (err) {
+        console.warn('could not fetch the list of registrants, ignoring error');
+        console.warn(err);
+      }
+      console.log('Fetch the list of registrants... done');
+    }
 
     console.log(`Validate sessions...`);
     let { errors, changes } = await validateGrid(project);

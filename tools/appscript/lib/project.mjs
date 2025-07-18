@@ -250,6 +250,14 @@ export function getProject(spreadsheet) {
             };
           })
           .filter(meeting => meeting);
+        if (session.meetings.length > 0) {
+          session.participants = Math.max(...session.meetings.map(m => m.participants));
+          session.observers = Math.max(...session.meetings.map(m => m.observers));
+        }
+        else {
+          session.participants = 0;
+          session.observers = 0;
+        }
         const { room, meeting } = serializeSessionMeetings(
           session.meetings, project);
         session.room = room;

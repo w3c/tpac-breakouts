@@ -41,6 +41,7 @@ export async function fetchRegistrants(project) {
         group.name = normalizeTitle(group.name);
       }
       // Pretend that groups that don't exist yet actually exist
+      // TODO: find a way to handle non existing groups in joint meetings
       if (meeting.groups.length === 0) {
         meeting.groups.push({
           name: normalizeTitle(meeting.name)
@@ -60,7 +61,7 @@ export async function fetchRegistrants(project) {
 
 
 function mapRegistrantsToProject(project, registrants) {
-  project.registrants = registrants.meetings;
+  project.registrants = [];
   for (const session of project.sessions) {
     const sessionRegistrants =
       registrants.meetings?.find(meeting =>
@@ -111,6 +112,19 @@ function mapRegistrantsToProject(project, registrants) {
     else {
       session.participants = 0;
       session.observers = 0;
+    }
+
+    // Save raw numbers as well to allow scheduler to run from scratch
+    if (sessionRegistrants) {
+      project.registrants.push({
+        number: session.number,
+        participants: (sessionRegistrants.sessions?.length > 0) ?
+          Math.max(...sessionRegistrants.sessions.map(m => m['physical-participants'])) :
+          0,
+        observers: (sessionRegistrants.sessions?.length > 0) ?
+          Math.max(...sessionRegistrants.sessions.map(m => m['physical-observers'])) :
+          0
+      });
     }
   }
 }

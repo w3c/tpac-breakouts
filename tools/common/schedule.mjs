@@ -99,6 +99,25 @@ export function suggestSchedule(project, { seed }) {
     session.meetings = parseSessionMeetings(session, project);
   }
 
+  // Initialize the required room capacity for each session.
+  // That capacity is either:
+  // 1. A requested capacity
+  // 2. The number of registered participants for the session
+  // 3. The number 0, which stands for "unknown"
+  // For 2., the scheduler does not look at numbers per day, it just takes the
+  // maximum number of registered participants for the session across meeting
+  // days. The schedule also does not look at the number of observers for now.
+  // If both 1. and 2. are set, the scheduler selects the largest number as the
+  // targeted room capacity.
+  const capacity = {};
+  for (const session of sessions) {
+    capacity[session.number] = Math.max(
+      project.registrants?.find(e => e.number === session.number)?.participants ?? 0,
+      session.participants ?? 0,
+      session.description?.capacity ?? 0,
+      0);
+  }
+
   // Initalize the list of days and slots and the occupation views
   const daysAndSlots = project.slots.map(slot => {
     const meeting = {
@@ -181,7 +200,7 @@ export function suggestSchedule(project, { seed }) {
 
     // Find the session in the track that requires the largest room
     const largestSession = trackSessions.reduce(
-      (smax, scurr) => (scurr.description.capacity > smax.description.capacity) ? scurr : smax,
+      (smax, scurr) => (capacity[scurr.number] > capacity[smax.number]) ? scurr : smax,
       trackSessions[0]
     );
 
@@ -189,7 +208,7 @@ export function suggestSchedule(project, { seed }) {
       (total, curr) => curr.track === track ? total : total + 1,
       0);
     const byAvailability = (r1, r2) => slotsTaken(r1) - slotsTaken(r2);
-    const meetCapacity = room => (room.capacity ?? 30) >= largestSession.description.capacity;
+    const meetCapacity = room => (room.capacity ?? 30) >= capacity[largestSession.number];
     const meetSameRoom = room => slotsTaken(room) + trackSessions.length <= daysAndSlots.length;
     const meetAll = room => meetCapacity(room) && meetSameRoom(room);
 
@@ -374,13 +393,13 @@ export function suggestSchedule(project, { seed }) {
         possibleRooms.push(...rooms
           .filter(room => !room.vip)
           .filter(room => room.name !== plenaryRoom || session.description.type === 'plenary')
-          .filter(room => (room.capacity ?? 30) >= (session.description.capacity ?? 0))
+          .filter(room => (room.capacity ?? 30) >= capacity[session.number])
           .sort(byCapacity));
         if (!meetCapacity) {
           possibleRooms.push(...rooms
             .filter(room => !room.vip)
             .filter(room => room.name !== plenaryRoom || session.description.type === 'plenary')
-            .filter(room => (room.capacity ?? 30) < (session.description.capacity ?? +Infinity))
+            .filter(room => (room.capacity ?? 30) < (capacity[session.number] || +Infinity))
             .sort(byCapacityDesc));
         }
       }
