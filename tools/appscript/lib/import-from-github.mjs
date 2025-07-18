@@ -66,7 +66,13 @@ If not, ask François or Ian to run the required initialization steps.`);
   if (project.metadata.type === 'groups') {
     console.log('Fetch registrants...');
     await validateGrid(project);
-    await fetchRegistrants(project);
+    try {
+      await fetchRegistrants(project);
+    }
+    catch (err) {
+      console.warn('could not fetch the list of registrants, ignoring error');
+      console.warn(err);
+    }
     console.log('Fetch registrants... done');
   }
 
