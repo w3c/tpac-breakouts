@@ -19,7 +19,6 @@ export default function () {
       SpreadsheetApp.getUi()
         .createMenu('Advanced')
         .addItem('Revalidate metadata / adopted schedule (after manual edits)', 'validateGrid')
-        .addItem('Refresh list of registrants (Groups only)', 'fetchRegistrants')
         .addSubMenu(
           SpreadsheetApp.getUi()
             .createMenu('Export') 	
@@ -29,7 +28,7 @@ export default function () {
         )
         .addSubMenu(
           SpreadsheetApp.getUi()
-            .createMenu('Set up GitHub')
+            .createMenu('Set things up')
             .addItem('Create GitHub repository', 'createRepository')
             .addItem('Set authorization token (Groups only)', 'setAuthorizationToken')
         )	    
