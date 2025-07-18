@@ -49,8 +49,9 @@ export async function getEnvKey(key, defaultValue, json) {
   // runs within the context of an AppScript.
   if (typeof SpreadsheetApp !== 'undefined') {
     const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-    const value = spreadsheet.getDeveloperMetadata()
-      .find(d => d.getKey() === key)
+    const value = spreadsheet
+      ?.getDeveloperMetadata()
+      ?.find(d => d.getKey() === key)
       ?.getValue();
     if (value) {
       return value;
