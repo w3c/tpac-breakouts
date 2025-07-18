@@ -12,13 +12,13 @@ export default function () {
         .createMenu('Schedule sessions/groups')
         .addItem('Propose schedule (to new sheet)', 'proposeGrid')
         .addItem('Adopt schedule (on current sheet)', 'applySchedule')
+        .addItem('Revalidate metadata / adopted schedule (after manual edits)', 'validateGrid')
     )
     .addItem('Publish adopted schedule and calendar', 'exportGrid')
     .addSeparator()
     .addSubMenu(
       SpreadsheetApp.getUi()
         .createMenu('Advanced')
-        .addItem('Revalidate metadata / adopted schedule (after manual edits)', 'validateGrid')
         .addSubMenu(
           SpreadsheetApp.getUi()
             .createMenu('Export') 	
