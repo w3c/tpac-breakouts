@@ -21,10 +21,10 @@ export default async function () {
           p.type === person.type) === idx);
     const chairs = people
       .filter(p => p.type === 'Chair')
-      .map(p => `${p.name} <${p.email}>`);
+      .map(p => `${p.name} &lt;${p.email}&gt;`);
     const teamContacts = people
       .filter(p => p.type !== 'Chair')
-      .map(p => `${p.name} <${p.email}>`);
+      .map(p => `${p.name} &lt;${p.email}&gt;`);
 
     console.log('Report result...');
     const htmlOutput = HtmlService
