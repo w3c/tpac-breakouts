@@ -437,7 +437,7 @@ function addSessions(sheet, project, validationErrors) {
     const capacityIssues = range.errors.filter(error =>
       error.issue.severity === 'warning' && error.issue.type === 'capacity');
     if (capacityIssues.length > 0) {
-      backgroundColor = '#fcebbdc';
+      backgroundColor = '#fcebbd';
     }
     const trackIssues = range.errors.filter(error =>
       error.issue.severity === 'warning' && error.issue.type === 'track');
@@ -559,7 +559,10 @@ function addSessions(sheet, project, validationErrors) {
       .find(error => error.issue.session === session.number);
     if (capacityIssue) {
       tokens.push({
-        label: '\n[warn] Capacity: ' + session.description.capacity
+        label: '\n[warn] Capacity: ' +
+          (session.description.capacity ??
+            session.participants ??
+            error.meeting.participants)
       });
     }
 

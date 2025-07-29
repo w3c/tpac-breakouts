@@ -524,7 +524,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
             const day = project.slots.find(d => d.date === warn.meeting.day);
             mstr = `, used for meeting on ${day.weekday} at ${warn.meeting.slot},`;
           }
-          return `Capacity of "${warn.room.name}" (${warn.room.capacity ?? '30 (assumed)'})${mstr} is lower than number of participants (${meeting.participants || session.participants})`;
+          return `Capacity of "${warn.room.name}" (${warn.room.capacity ?? '30 (assumed)'})${mstr} is lower than number of participants (${warn.meeting.participants || session.participants})`;
         }),
         details: capacityWarnings
       });
