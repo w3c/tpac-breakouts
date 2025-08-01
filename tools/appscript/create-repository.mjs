@@ -71,8 +71,7 @@ export default async function () {
             comments left on issues (look for the dropdown menu named "Watch"
             or "Unwatch" on the <a target="_blank" href="${repoUrl}">repo page</a>).</li>
             <li>Ask François (fd@w3.org) to set the <code>GRAPHQL_TOKEN</code>
-            and <code>W3C_PASSWORD</code>
-            <a target="_blank" href="${repoUrl}/settings/secrets/actions">repository secrets</a>.
+            <a target="_blank" href="${repoUrl}/settings/secrets/actions">repository secret</a>.
             </li>
           </ul>
 

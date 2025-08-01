@@ -3,7 +3,8 @@ export default {
     meeting: 'W3C Breakouts Day 2024',
     date: '2024-03-12',
     timezone: 'Etc/UTC',
-    calendar: 'confirmed'
+    calendar: 'confirmed',
+    slug: 'tpac2024'
   },
 
   slots: [

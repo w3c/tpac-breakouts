@@ -1,6 +1,5 @@
-import puppeteer from 'puppeteer';
 import { getEnvKey } from '../common/envkeys.mjs';
-import { synchronizeSessionWithCalendar } from './lib/calendar.mjs';
+import { synchronizeSessionWithCalendar } from '../common/calendar.mjs';
 import { validateSession, validateGrid } from '../common/validate.mjs';
 
 function sleep(ms) {
@@ -26,10 +25,13 @@ export default async function (project, number, options) {
   console.warn(`Retrieve environment variables...`);
   const CALENDAR_SERVER = await getEnvKey('CALENDAR_SERVER', 'www.w3.org');
   console.warn(`- CALENDAR_SERVER: ${CALENDAR_SERVER}`);
-  const W3C_LOGIN = await getEnvKey('W3C_LOGIN');
-  console.warn(`- W3C_LOGIN: ${W3C_LOGIN}`);
-  const W3C_PASSWORD = await getEnvKey('W3C_PASSWORD');
-  console.warn(`- W3C_PASSWORD: ***`);
+  // Events need to be authored by "someone". That someone does not appear in
+  // the event itself, but has rights over it. 41989 is François's ID:
+  // https://www.w3.org/users/41989/
+  const W3C_AUTHOR = await getEnvKey('W3C_AUTHOR', 41989);
+  console.warn(`- W3C_AUTHOR: ${W3C_AUTHOR}`);
+  const W3C_TOKEN = await getEnvKey('W3C_TOKEN');
+  console.warn(`- W3C_TOKEN: ***`);
   console.warn(`Retrieve environment variables... done`);
 
   if (sessionToSynchronize === 'all') {
@@ -43,34 +45,21 @@ export default async function (project, number, options) {
     console.warn(`- found ${sessions.length} valid sessions among them: ${sessions.map(s => s.number).join(', ')}`);
     console.warn(`Validate grid... done`);
 
-    console.warn();
-    console.warn('Launch Puppeteer...');
-    const browser = await puppeteer.launch({ headless: true });
-    console.warn('Launch Puppeteer... done');
-
-    try {
-      for (const session of sessions) {
-        console.warn();
-        console.warn(`Convert session ${session.number} to calendar entries...`);
-        const room = project.rooms.find(r => r.name === session.room);
-        await synchronizeSessionWithCalendar({
-          browser, session, project,
-          calendarServer: CALENDAR_SERVER,
-          login: W3C_LOGIN,
-          password: W3C_PASSWORD,
-          status: options.status ?? project.metadata.calendar
-        });
-        console.warn(`Convert session ${session.number} to calendar entries... done`);
-        console.warn('Wait 2s to ease load on calendar server...');
-        await sleep(2000);
-        console.warn('Wait 2s to ease load on calendar server... done');
-      }
-    }
-    finally {
+    for (const session of sessions) {
       console.warn();
-      console.warn('Close Puppeteer...');
-      await browser.close();
-      console.warn('Close Puppeteer... done');
+      console.warn(`Convert session ${session.number} to calendar entries...`);
+      const room = project.rooms.find(r => r.name === session.room);
+      await synchronizeSessionWithCalendar({
+        session, project,
+        calendarServer: CALENDAR_SERVER,
+        token: W3C_TOKEN,
+        author: W3C_AUTHOR,
+        status: options.status ?? project.metadata.calendar
+      });
+      console.warn(`Convert session ${session.number} to calendar entries... done`);
+      console.warn('Wait 2s to ease load on calendar server...');
+      await sleep(2000);
+      console.warn('Wait 2s to ease load on calendar server... done');
     }
   }
   else {
@@ -94,28 +83,15 @@ export default async function (project, number, options) {
     }
 
     console.warn();
-    console.warn('Launch Puppeteer...');
-    const browser = await puppeteer.launch({ headless: true });
-    console.warn('Launch Puppeteer... done');
-
-    try {
-      console.warn();
-      console.warn(`Convert session ${session.number} to calendar entries...`);
-      const room = project.rooms.find(r => r.name === session.room);
-      await synchronizeSessionWithCalendar({
-        browser, session, project,
-        calendarServer: CALENDAR_SERVER,
-        login: W3C_LOGIN,
-        password: W3C_PASSWORD,
-        status: options.status ?? project.metadata.calendar
-      });
-      console.warn(`Convert session ${session.number} to calendar entries... done`);
-    }
-    finally {
-      console.warn();
-      console.warn('Close Puppeteer...');
-      await browser.close();
-      console.warn('Close Puppeteer... done');
-    }
+    console.warn(`Convert session ${session.number} to calendar entries...`);
+    const room = project.rooms.find(r => r.name === session.room);
+    await synchronizeSessionWithCalendar({
+      session, project,
+      calendarServer: CALENDAR_SERVER,
+      token: W3C_TOKEN,
+      author: W3C_AUTHOR,
+      status: options.status ?? project.metadata.calendar
+    });
+    console.warn(`Convert session ${session.number} to calendar entries... done`);
   }
 }

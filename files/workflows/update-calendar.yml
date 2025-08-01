@@ -53,8 +53,6 @@ jobs:
           GRAPHQL_TOKEN: ${{ secrets.GRAPHQL_TOKEN }}
           GH_TOKEN: ${{ secrets.GRAPHQL_TOKEN }}
 
-          # Information about the team user on behalf of which the updates to
-          # the calendar will be made. The password must obviously be stored
-          # as a secret!
-          W3C_LOGIN: ${{ vars.W3C_LOGIN }}
-          W3C_PASSWORD: ${{ secrets.W3C_PASSWORD }}
+          # Information about the authentication token for the calendar
+          # endpoint. The token must obviously be stored as a secret!
+          W3C_TOKEN: ${{ secrets.W3C_PASSWORD }}

@@ -53,7 +53,7 @@ Pre-requisites:
   - Except for the "create" command, this command line interface (CLI) must be run from the root folder of a clone of a TPAC group meetings or breakouts event repository.
   - The \`gh\` CLI must be available and directly usable. Run \`gh auth login\` if you are not logged in yet.
   - Local environment must define a \`GRAPHQL_TOKEN\` variable set to a valid GitHub Personal Access Token (classic version) with \`repo\` and \`project\` scopes. Alternatively, that variable can be defined in a \`config.json\` file.
-  - Calendar synchronization also requires local environment to define \`W3C_LOGIN\` and \`W3C_PASSWORD\` variables. These variables are also needed to validate chairs of breakout sessions.
+  - Calendar synchronization also requires local environment to define a \`W3C_TOKEN\` variable.
 `);
 
 
@@ -188,7 +188,7 @@ program
   .addHelpText('after', `
 Notes:
   - The command follows the project's "calendar" setting by default. If that setting is absent or set to "no" and the \`status\` option is not set either, the command will not do anything.
-  - Local environment must define \`W3C_LOGIN\` and \`W3C_PASSWORD\` variables, used to impersonate a W3C account when updating the W3C calendar.
+  - Local environment must define a \`W3C_TOKEN\` variable, used to authenticate when updating the W3C calendar.
 
 Examples:
   $ npx tpac-breakouts sync-calendar all --status tentative
