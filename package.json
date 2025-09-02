@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "commander": "^14.0.0",
-    "googleapis": "^150.0.1",
+    "googleapis": "^159.0.0",
     "irc": "^0.5.2",
     "puppeteer": "^24.10.1",
     "webvtt-parser": "^2.2.0",
