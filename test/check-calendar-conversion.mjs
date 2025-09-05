@@ -55,6 +55,7 @@ describe('Conversion to calendar entries', function () {
         },
         "joining": {
           "chat": "https://webirc.w3.org/?channels=web-features",
+          "big-meeting-restricted": false,
           "visibility": "registered"
         },
         "agenda": {
