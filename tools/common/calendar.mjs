@@ -427,11 +427,11 @@ export function convertEntryToJSON({
   // Show information to everyone with a W3C account otherwise.
   if ((project.metadata.type === 'groups') ||
       (session.description.attendance === 'restricted')) {
-    // TODO: Need a way to check the "big meeting restricted" flag
+    res.joining['big-meeting-restricted'] = true;
     res.joining.visibility = 'member';
   }
   else {
-    // TODO: Need a way to uncheck the "big meeting restricted" flag
+    res.joining['big-meeting-restricted'] = false;
     res.joining.visibility = 'registered';
   }
 
