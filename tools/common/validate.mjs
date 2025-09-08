@@ -443,6 +443,19 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
     });
   }
 
+  // Report a warning when there aren't as many meetings as the number
+  // of slots requested
+  if (session.description.nbslots > 0 && meetings.length > 0) {
+    if (session.description.nbslots !== meetings.length) {
+      errors.push({
+        session: sessionNumber,
+        severity: 'warning',
+        type: 'times',
+        messages: [`Session scheduled ${meetings.length} times instead of ${session.description.nbslots.length}`]
+      });
+    }
+  }
+
   // Warn when chosen meetings don't match requested times
   if (session.description.times?.length > 0 && meetings.length > 0) {
     const schedulingWarnings = session.description.times
