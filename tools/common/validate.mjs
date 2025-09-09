@@ -444,8 +444,21 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   }
 
   // Report a warning when there aren't as many meetings as the number
-  // of slots requested
-  if (session.description.nbslots > 0 && meetings.length > 0) {
+  // of slots requested, or when meetings were scheduled during a non
+  // acceptable slot
+  if (meetings.length && session.description.nbslots) {
+    const schedulingWarnings = meetings
+      .filter(m => !session.description.slots?.find(time => time.day === m.day && time.slot === m.slot))
+      .map(m => Object.assign({ meeting: m, session }));
+    if (schedulingWarnings.length > 0) {
+      errors.push({
+        session: sessionNumber,
+        severity: 'warning',
+        type: 'times',
+        messages: schedulingWarnings.map(w => `Session scheduled at a non acceptable slot on ${w.meeting.day} at ${w.meeting.slot}`),
+        details: schedulingWarnings
+      });
+    }
     if (session.description.nbslots !== meetings.length) {
       errors.push({
         session: sessionNumber,
