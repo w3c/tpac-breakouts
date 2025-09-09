@@ -509,9 +509,6 @@ export function suggestSchedule(project, { seed }) {
         }
         meetings.splice(idx, 1);
       }
-      if (meetings.length !== numberOfMeetings) {
-        throw new Error(`Unexpected number of meetings scheduled ${meetings.length} instead of ${numberOfMeetings}`);
-      }
 
       if (meetings.every(m => m.room && m.day && m.slot)) {
         if (resourcesToUpdate.length > 0) {
