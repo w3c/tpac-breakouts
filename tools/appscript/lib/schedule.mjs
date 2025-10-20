@@ -179,7 +179,7 @@ function getMeetingsDescription(session, project) {
  */
 function createHeaderRow(sheet, rooms) {
   const labels = rooms.map(room =>
-    `${room.name}${room.location ? '\n' + room.location : ''}`);
+    `${room.name}${room.location ? '\n' + room.location : ''}${room.capacity ? '\n(capacity: ' + room.capacity + ')' : ''}`);
   const values = [['Days', 'Slots'].concat(labels)];
   sheet.getRange(1, 1, values.length, values[0].length)
     .setFontWeight('bold')
