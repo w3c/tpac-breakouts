@@ -464,7 +464,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         session: sessionNumber,
         severity: 'warning',
         type: 'times',
-        messages: [`Session scheduled ${meetings.length} times instead of ${session.description.nbslots.length}`]
+        messages: [`Session scheduled ${meetings.length} times instead of ${session.description.nbslots}`]
       });
     }
   }
