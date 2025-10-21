@@ -358,7 +358,7 @@ export function suggestSchedule(project, { seed }) {
           baseMeetings.push({
             room: session.room,
             day: sessionSlot?.date,
-            slot: sessionSlot?.slot
+            slot: sessionSlot?.start
           });
         }
       }
