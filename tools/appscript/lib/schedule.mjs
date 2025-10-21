@@ -241,16 +241,18 @@ function createDaySlotColumns(sheet, slots, validationErrors, startRow) {
     perDate[slot.date].slots.push(slot);
   }
 
+  let accumulatedSlots = 0;
   for (let i = 0; i < Object.keys(perDate).length; i++) {
     const day = Object.keys(perDate)[i];
     const daySlots = perDate[day].slots;
-    sheet.getRange(startRow + (i * daySlots.length), startCol, daySlots.length)
+    sheet.getRange(startRow + accumulatedSlots, startCol, daySlots.length)
       .mergeVertically()
       .setVerticalAlignment('middle')
       .setHorizontalAlignment('center')
       .setFontWeight('bold')
       .setBackground('#fce5cd')
       .setValue(perDate[day].weekday);
+    accumulatedSlots += daySlots.length;
   }
 
   // Note: slots should already be sorted per day
