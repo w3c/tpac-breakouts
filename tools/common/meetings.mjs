@@ -246,7 +246,6 @@ export function groupSessionMeetings(session, project) {
   for (const meeting of meetings) {
     if (meeting.room && meeting.day && meeting.slot) {
       const key = meeting.room + ', ' + meeting.day;
-      const slotIndex = project.slots.findIndex(s => s.start === meeting.slot);
       if (!groups[key]) {
         groups[key] = [];
       }
@@ -257,8 +256,8 @@ export function groupSessionMeetings(session, project) {
   // Then sort slots within each group
   for (const group of Object.values(groups)) {
     group.sort((m1, m2) => {
-      const slot1 = project.slots.findIndex(s => s.start === m1.slot);
-      const slot2 = project.slots.findIndex(s => s.start === m2.slot);
+      const slot1 = project.slots.findIndex(s => s.date === m1.day && s.start === m1.slot);
+      const slot2 = project.slots.findIndex(s => s.date === m2.day && s.start === m2.slot);
       return slot1 - slot2;
     });
   }
@@ -266,8 +265,8 @@ export function groupSessionMeetings(session, project) {
   // And now merge contiguous slots
   const list = Object.values(groups)
     .map(group => group.reduce((merged, meeting) => {
-      const slot = project.slots.find(s => s.start === meeting.slot);
-      const slotIndex = project.slots.findIndex(s => s.start === meeting.slot);
+      const slot = project.slots.find(s => s.date === meeting.day && s.start === meeting.slot);
+      const slotIndex = project.slots.findIndex(s => s.date === meeting.day && s.start === meeting.slot);
       if (merged.length === 0) {
         merged.push({
           start: meeting.actualStart ?? slot.start,
