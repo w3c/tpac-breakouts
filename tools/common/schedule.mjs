@@ -444,6 +444,7 @@ export function suggestSchedule(project, { seed }) {
           }
           else {
             possibleDayAndSlots.push(...daysAndSlots
+              .filter(ds => !ds.vip)
               .filter(ds => !meeting.day || ds.date === meeting.day)
               .filter(ds => !meeting.slot || ds.start === meeting.slot)
               .filter(ds => isMeetingAvailableForSession(session, { room: room.name, day: ds.date, slot: ds.start }) &&
