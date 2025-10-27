@@ -495,18 +495,16 @@ async function fillCalendarEntry({ page, entry, session, project, status, zoom }
     project.metadata.type === 'groups' ? 'group-meetings' : 'breakout-sessions');
 
   // For group meetings and restricted breakout sessions, tick the restrict
-  // attendance box and show joining information to people invited to the event
-  // and holders of a W3C account with Member access.
-  // Show information to everyone with a W3C account otherwise.
+  // attendance box.
+  // Show information to everyone with a W3C account in all cases.
   if ((project.metadata.type === 'groups') ||
       (session.description.attendance === 'restricted')) {
     await toggleBox('input#event_bigMeetingRestricted', 'checked');
-    await clickOnElement('input#event_joinVisibility_2');
   }
   else {
     await toggleBox('input#event_bigMeetingRestricted', 'unchecked');
-    await clickOnElement('input#event_joinVisibility_1');
   }
+  await clickOnElement('input#event_joinVisibility_1');
 
   // Click on "Create/Update but don't send notifications" button
   // and return URL of the calendar entry
