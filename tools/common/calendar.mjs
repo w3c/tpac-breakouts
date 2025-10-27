@@ -422,18 +422,16 @@ export function convertEntryToJSON({
   }
 
   // For group meetings and restricted breakout sessions, tick the restrict
-  // attendance box and show joining information to people invited to the event
-  // and holders of a W3C account with Member access.
-  // Show information to everyone with a W3C account otherwise.
+  // attendance box.
+  // Always show the joining information to everyone with a W3C account.
   if ((project.metadata.type === 'groups') ||
       (session.description.attendance === 'restricted')) {
     res.joining['big-meeting-restricted'] = true;
-    res.joining.visibility = 'member';
   }
   else {
     res.joining['big-meeting-restricted'] = false;
-    res.joining.visibility = 'registered';
   }
+  res.joining.visibility = 'registered';
 
   // Add UUID for an existing entry
   if (entry.url) {
