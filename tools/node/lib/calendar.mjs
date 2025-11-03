@@ -220,8 +220,8 @@ function getZoomInstructions(zoomInfo) {
     return '';
   }
   const link = getZoomLink(zoomInfo);
-  const id = zoomInfo['zoom id'] ?? zoomInfo.id;
-  const passcode = zoomInfo['zoom passcode'] ?? zoomInfo.passcode;
+  const id = '' + (zoomInfo['zoom id'] ?? zoomInfo.id);
+  const passcode = '' + (zoomInfo['zoom passcode'] ?? zoomInfo.passcode);
   if (!id) {
     return '';
   }
