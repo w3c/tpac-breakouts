@@ -3,8 +3,8 @@ name: "[M] Setup IRC channels"
 on:
   workflow_dispatch:
     inputs:
-      sessionNumber:
-        description: 'Session issue number or "all" to initialize IRC channels for all valid sessions in the slot.'
+      sessionFilter:
+        description: 'Session filter: "all" for all valid sessions, a number for a single session, YYYY-MM-DD or YYYY-MM-DD hh:mm for sessions of a given slot'
         required: true
         default: 'all'
         type: string
@@ -38,7 +38,7 @@ jobs:
         run: npm install
 
       - name: Run the setup script
-        run: npx setup-irc ${{ inputs.sessionNumber }} full ${{ inputs.dismiss }}
+        run: npx setup-irc ${{ inputs.sessionFilter }} full ${{ inputs.dismiss }}
         env:
           # A valid Personal Access Token (classic version) with project
           # and public_repo scope.

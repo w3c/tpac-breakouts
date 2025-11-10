@@ -62,10 +62,16 @@ async function waitForIRCMessage(what) {
 /**
  * Main function
  */
-async function main({ number, onlyCommands, dismissBots } = {}) {
+async function main({ sessionFilter, onlyCommands, dismissBots } = {}) {
   const project = await loadProject();
-  let sessions = project.sessions.filter(s => s.slot &&
-    (!number || s.number === number));
+  let number = null;;
+  if (sessionFilter?.match(/^\d+$/)) {
+    number = parseInt(sessionFilter, 10);
+    sessionFilter = null;
+  }
+  let sessions = project.sessions
+    .filter(s => s.slot && (!number || s.number === number))
+    .filter(s => !sessionFilter || s.slot.startsWith(sessionFilter));
   sessions.sort((s1, s2) => s1.number - s2.number);
   if (number) {
     if (sessions.length === 0) {
@@ -108,14 +114,9 @@ async function main({ number, onlyCommands, dismissBots } = {}) {
     }
     channels[channel].push(session);
     channels[channel].sort((s1, s2) => {
-      const day1 = project.days.findIndex(day => day.name === s1.day);
-      const day2 = project.days.findIndex(day => day.name === s2.day);
-      if (day1 !== day2) {
-        return day1 - day2;
-      }
-      else {
-        const slot1 = project.slots.findIndex(slot => slot.name === s1.slot);
-        const slot2 = project.slots.findIndex(slot => slot.name === s2.slot);
+      const slot1 = project.slots.findIndex(slot => slot.name === s1.slot);
+      const slot2 = project.slots.findIndex(slot => slot.name === s2.slot);
+      if (slot1 !== slot2) {
         return slot1 - slot2;
       }
     });
@@ -434,18 +435,11 @@ async function main({ number, onlyCommands, dismissBots } = {}) {
   }
 }
 
-// Read session number from command-line
-if (!process.argv[2] || !process.argv[2].match(/^(\d+|all)$/)) {
-  console.log('Command needs to receive a session number (e.g., 15) or "all" as first parameter');
-  process.exit(1);
-}
-const number = process.argv[2] === 'all' ? undefined : parseInt(process.argv[2], 10);
-
-// Command only?
+const sessionFilter = process.argv[2] === 'all' ? undefined : process.argv[2];
 const onlyCommands = process.argv[3] === 'commands';
 const dismissBots = process.argv[4] === 'dismiss';
 
-main({ number, onlyCommands, dismissBots })
+main({ sessionFilter, onlyCommands, dismissBots })
   .then(_ => process.exit(0))
   .catch(err => {
     console.error(`Something went wrong:\n${err.message}`);
