@@ -264,7 +264,7 @@ async function main({ sessionFilter, onlyCommands, dismissBots } = {}) {
   function setTopic(session) {
     const channel = getChannel(session);
     const room = project.rooms.find(r => r.name === session.room);
-    const roomLabel = room ? `- ${room.label} ` : '';
+    const roomLabel = room ? `- ${room.name} ` : '';
     const topic = `Breakout: ${session.title} ${roomLabel}- ${session.slot}`;
     console.log(`/topic ${channel} ${topic}`);
     if (!onlyCommands) {
