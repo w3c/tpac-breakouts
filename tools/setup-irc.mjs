@@ -242,6 +242,9 @@ async function main({ sessionFilter, onlyCommands, dismissBots } = {}) {
       bot.join(channel);
       return waitForIRCMessage({ command: 'names', channel, nick: botName });
     }
+    else if (dismissBots) {
+      return ['RRSAgent', 'Zakim'];
+    }
   }
 
   function inviteBot(session, name) {
