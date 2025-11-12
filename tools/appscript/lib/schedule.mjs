@@ -169,7 +169,7 @@ function getMeetingsDescription(session, project) {
         slot.date === meeting.day &&
         slot.start === meeting.start);
       const room = project.rooms.find(room => room.name === meeting.room);
-      return `${slot.weekday}, ${meeting.start}-${meeting.end}` +
+      return `${slot?.weekday ?? meeting.day}, ${meeting.start}-${meeting.end}` +
         (room ? ` in room ${room.name}` : '');
     })
     .join('\n');
