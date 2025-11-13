@@ -77,7 +77,7 @@ async function main({ sessionFilter, onlyCommands, dismissBots } = {}) {
     if (sessions.length === 0) {
       throw new Error(`Session ${number} not found`);
     }
-    else if (!sessions[0].day || !sessions[0].slot) {
+    else if (!sessions[0].slot) {
       throw new Error(`Session ${number} not assigned to a slot`);
     }
   }
