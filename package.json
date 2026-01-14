@@ -48,7 +48,7 @@
     "commander": "^14.0.0",
     "googleapis": "^161.0.0",
     "irc": "^0.5.2",
-    "puppeteer": "^24.10.1",
+    "puppeteer": "^24.23.0",
     "webvtt-parser": "^2.2.0",
     "yaml": "^2.8.1"
   },
