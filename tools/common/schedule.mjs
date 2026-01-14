@@ -329,7 +329,6 @@ export function suggestSchedule(project, { seed }) {
     // Initialize the list of meetings that we want to schedule.
     // Some may be partially or fully scheduled already.
     let baseMeetings = parseSessionMeetings(session, project);
-    let treatMeetingsAsSuggestions = false;
     if (baseMeetings.length === 0 ||
         (baseMeetings.length === 1 && !session.meeting &&
           !(baseMeetings[0].room && baseMeetings[0].day && baseMeetings[0].slot))) {
@@ -337,7 +336,6 @@ export function suggestSchedule(project, { seed }) {
         // Try to schedule the session during the requested slots
         // and in the right room if the room is imposed
         if (session.description.slots?.length > 0) {
-          treatMeetingsAsSuggestions = true;
           baseMeetings = session.description.slots.map(time => Object.assign({
             room: session.room,
             day: time.day,
@@ -360,7 +358,7 @@ export function suggestSchedule(project, { seed }) {
           baseMeetings.push({
             room: session.room,
             day: sessionSlot?.date,
-            slot: sessionSlot?.slot
+            slot: sessionSlot?.start
           });
         }
       }
@@ -446,6 +444,7 @@ export function suggestSchedule(project, { seed }) {
           }
           else {
             possibleDayAndSlots.push(...daysAndSlots
+              .filter(ds => !ds.vip)
               .filter(ds => !meeting.day || ds.date === meeting.day)
               .filter(ds => !meeting.slot || ds.start === meeting.slot)
               .filter(ds => isMeetingAvailableForSession(session, { room: room.name, day: ds.date, slot: ds.start }) &&
@@ -510,9 +509,6 @@ export function suggestSchedule(project, { seed }) {
           break;
         }
         meetings.splice(idx, 1);
-      }
-      if (meetings.length !== numberOfMeetings) {
-        throw new Error(`Unexpected number of meetings scheduled ${meetings.length} instead of ${numberOfMeetings}`);
       }
 
       if (meetings.every(m => m.room && m.day && m.slot)) {

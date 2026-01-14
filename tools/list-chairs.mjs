@@ -25,6 +25,8 @@ async function main(format) {
   const W3C_PASSWORD = await getEnvKey('W3C_PASSWORD');
   const project = await loadProject();
 
+  const res = await validateGrid(project, { what: 'everything' });
+
   const sessions = project.sessions.filter(session => session.chairs);
   sessions.sort((s1, s2) => s1.number - s2.number);
 

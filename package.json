@@ -46,15 +46,15 @@
   },
   "dependencies": {
     "commander": "^14.0.0",
-    "googleapis": "^150.0.1",
+    "googleapis": "^161.0.0",
     "irc": "^0.5.2",
-    "puppeteer": "^24.10.1",
+    "puppeteer": "^24.23.0",
     "webvtt-parser": "^2.2.0",
-    "yaml": "^2.7.1"
+    "yaml": "^2.8.1"
   },
   "devDependencies": {
     "@google/clasp": "^2.5.0",
     "mocha": "^11.7.0",
-    "rollup": "^4.43.0"
+    "rollup": "^4.52.3"
   }
 }

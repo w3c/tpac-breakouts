@@ -15,6 +15,7 @@ import { loadProject } from './node/lib/project.mjs'
 import { validateSession } from './common/validate.mjs';
 import { updateSessionDescription } from './common/session.mjs';
 import { getProjectSlot } from './common/project.mjs';
+import { sleep } from './common/sleep.mjs';
 import todoStrings from './common/todostrings.mjs';
 
 
@@ -66,15 +67,30 @@ async function main(number) {
   console.log();
   console.log('Link to minutes...');
   for (const session of sessions) {
-    // TODO: date is in the timezone of the TPAC event but actual dated URL
-    // is on Boston time. No big deal for TPAC meetings in US / Europe, but
-    // problematic when TPAC is in Asia.
-    const slot = getProject(project, session.slot);
+    // Date is in the timezone of the TPAC event but actual dated URL is on UTC
+    // which is no big deal for TPAC meetings in US or Europe, but may shift
+    // things by one when TPAC is in Asia. We'll look into previous day
+    // accordingly.
+    // TODO: Compute previous day properly.
+    const slot = getProjectSlot(project, session.slot);
     const year = slot.date.substring(0, 4);
     const month = slot.date.substring(5, 7);
-    const mday = slot.date.substring(8, 10);
-    const url = `https://www.w3.org/${year}/${month}/${mday}-${session.description.shortname.substring(1)}-minutes.html`;
-    const response = await fetch(url);
+    let mday = slot.date.substring(8, 10);
+    let url = `https://www.w3.org/${year}/${month}/${mday}-${session.description.shortname.substring(1)}-minutes.html`;
+    let response = await fetch(url);
+    if ((response.status !== 200) && (response.status !== 401)) {
+      const prevDay = parseInt(mday, 10) - 1;
+      if (prevDay > 0) {
+        if (prevDay < 10) {
+          mday = '0' + prevDay;
+        }
+        else {
+          mday = '' + prevDay;
+        }
+        url = `https://www.w3.org/${year}/${month}/${mday}-${session.description.shortname.substring(1)}-minutes.html`;
+        response = await fetch(url);
+      }
+    }
     if ((response.status !== 200) && (response.status !== 401)) {
       console.log(`- no minutes found for session ${session.number}: ${url} yields a ${response.status}`);
     }
@@ -86,6 +102,7 @@ async function main(number) {
       session.description.materials.minutes = url;
       await updateSessionDescription(session);
     }
+    await sleep(1000);
   }
   console.log('Link to minutes... done');
 }

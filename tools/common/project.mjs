@@ -302,11 +302,15 @@ export function convertProjectToJSON(project) {
   data.rooms = toNameList(project.rooms);
 
   data.slots = project.slots.map(slot => {
-    return {
+    const mapped = {
       day: slot.day,
       start: slot.start,
       end: slot.end
     };
+    if (slot.vip) {
+      mapped.vip = true;
+    }
+    return mapped;
   });
 
   data.sessions = project.sessions.map(session => {

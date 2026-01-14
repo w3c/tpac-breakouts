@@ -172,7 +172,7 @@ export function getProject(spreadsheet) {
         const times =
           slotName.match(/^(\d+):(\d+)\s*-\s*(\d+):(\d+)$/) ??
           [null, '00', '00', '01', '00'];
-        return {
+        const mapped = {
           date: v.date,
           start: v['start time'],
           end: v['end time'],
@@ -182,6 +182,10 @@ export function getProject(spreadsheet) {
             (parseInt(times[3], 10) * 60 + parseInt(times[4], 10)) -
             (parseInt(times[1], 10) * 60 + parseInt(times[2], 10))
         };
+        if (v['vip slot']) {
+          mapped.vip = v['vip slot'] === 'yes' ? true : false;
+        }
+        return mapped;
       }),
 
     allowMultipleMeetings: projectType === 'groups',
@@ -744,7 +748,9 @@ function createSessionsSheet(spreadsheet, sheets, project) {
     const roomRange = sheet.getRange(
       2, headers.findIndex(h => h === 'Room') + 1,
       sheet.getMaxRows() - 1, 1);
-    roomRange.setDataValidation(roomRule);
+    roomRange
+      .setNumberFormat('@')
+      .setDataValidation(roomRule);
 
     const slotValues = project.slots.map(slot =>
       slot.date + ' ' + slot.start);
@@ -756,7 +762,9 @@ function createSessionsSheet(spreadsheet, sheets, project) {
     const slotRange = sheet.getRange(
       2, headers.findIndex(h => h === 'Slot') + 1,
       sheet.getMaxRows() - 1, 1);
-    slotRange.setDataValidation(slotRule);
+    slotRange
+      .setNumberFormat('@')
+      .setDataValidation(slotRule);
   }
 
   sheet

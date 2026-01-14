@@ -37,12 +37,14 @@ export function fillGridSheet(spreadsheet, project, validationErrors) {
   sheet.addDeveloperMetadata('SCHEDULE', JSON.stringify(metadata));
   console.log('- create headers row');
   createHeaderRow(sheet, project.rooms);
+  console.log('- create additional notes rows');
+  const scheduleStartRow = createAdditionalRows(sheet, project.sheets.rooms.headers, project.rooms);
   console.log('- create days/slots headers');
-  createDaySlotColumns(sheet, project.slots, validationErrors);
+  createDaySlotColumns(sheet, project.slots, validationErrors, scheduleStartRow);
   console.log('- add sessions to the grid');
-  addSessions(sheet, project, validationErrors);
+  addSessions(sheet, project, validationErrors, scheduleStartRow);
   console.log('- add borders');
-  addBorders(sheet, project);
+  addBorders(sheet, project, scheduleStartRow);
   sheet
     .protect()
     .setDescription(`${sheet.getName()} - read-only view`)
@@ -167,7 +169,7 @@ function getMeetingsDescription(session, project) {
         slot.date === meeting.day &&
         slot.start === meeting.start);
       const room = project.rooms.find(room => room.name === meeting.room);
-      return `${slot.weekday}, ${meeting.start}-${meeting.end}` +
+      return `${slot?.weekday ?? meeting.day}, ${meeting.start}-${meeting.end}` +
         (room ? ` in room ${room.name}` : '');
     })
     .join('\n');
@@ -179,7 +181,7 @@ function getMeetingsDescription(session, project) {
  */
 function createHeaderRow(sheet, rooms) {
   const labels = rooms.map(room =>
-    `${room.name}${room.location ? '\n' + room.location : ''}`);
+    `${room.name}${room.location ? '\n' + room.location : ''}${room.capacity ? '\n(capacity: ' + room.capacity + ')' : ''}`);
   const values = [['Days', 'Slots'].concat(labels)];
   sheet.getRange(1, 1, values.length, values[0].length)
     .setFontWeight('bold')
@@ -187,18 +189,44 @@ function createHeaderRow(sheet, rooms) {
     .setHorizontalAlignment('center')
     .setBackground('#c27ba0')
     .setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP)
-    .setValues(values)
+    .setValues(values);
   sheet
     .setColumnWidths(3, rooms.length, 150)
     .setFrozenRows(1);
 }
 
 
+function createAdditionalRows(sheet, headers, rooms) {
+  let startRow = 2;
+  // TODO: Names are lower case, get back to actual header names somehow
+  const additionalInfo = headers.filter(name => ![
+    'id', 'name',
+    'location', 'capacity', 'vip',
+    'zoom id', 'zoom passcode', 'zoom link', 'zoom host code'
+  ].includes(name));
+  for (const info of additionalInfo) {
+    const labels = rooms.map(room => room[info] ?? '');
+    const values = [labels];
+    sheet.getRange(startRow, 1, 1, 2)
+      .mergeAcross()
+      .setVerticalAlignment('middle')
+      .setHorizontalAlignment('center')
+      .setFontWeight('bold')
+      .setBackground('#fce5cd')
+      .setValue(info.charAt(0).toUpperCase() + info.slice(1));
+    sheet.getRange(startRow, 3, values.length, values[0].length)
+      .setBackground('#f3f3f3')
+      .setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP)
+      .setValues(values);
+    startRow += 1;
+  }
+  return startRow;
+}
+
 /**
  * Create the day/slot columns of the grid view
  */
-function createDaySlotColumns(sheet, slots, validationErrors) {
-  const startRow = 2; // Start after the header row
+function createDaySlotColumns(sheet, slots, validationErrors, startRow) {
   const startCol = 1; // Start in first column
 
   const perDate = {};
@@ -213,16 +241,18 @@ function createDaySlotColumns(sheet, slots, validationErrors) {
     perDate[slot.date].slots.push(slot);
   }
 
+  let accumulatedSlots = 0;
   for (let i = 0; i < Object.keys(perDate).length; i++) {
     const day = Object.keys(perDate)[i];
     const daySlots = perDate[day].slots;
-    sheet.getRange(startRow + (i * daySlots.length), startCol, daySlots.length)
+    sheet.getRange(startRow + accumulatedSlots, startCol, daySlots.length)
       .mergeVertically()
       .setVerticalAlignment('middle')
       .setHorizontalAlignment('center')
       .setFontWeight('bold')
       .setBackground('#fce5cd')
       .setValue(perDate[day].weekday);
+    accumulatedSlots += daySlots.length;
   }
 
   // Note: slots should already be sorted per day
@@ -313,8 +343,7 @@ function isRightAfter(date, slotAfter, slotBefore, slots) {
 /**
  * Add the list of meetings
  */
-function addSessions(sheet, project, validationErrors) {
-  const startRow = 2;
+function addSessions(sheet, project, validationErrors, startRow) {
   const startCol = 3;
 
   const meetings = project.sessions
@@ -555,14 +584,17 @@ function addSessions(sheet, project, validationErrors) {
       tokens.push({ label: `\n[warn] Previous slot in room ${room.name}` });
     }
 
+    if (session.description.capacity || session.participants) {
+      tokens.push({
+        label: '\n(' + (session.description.capacity ?? session.participants) +
+          ' participants)'
+      });
+    }
     const capacityIssue = capacityIssues
       .find(error => error.issue.session === session.number);
     if (capacityIssue) {
       tokens.push({
-        label: '\n[warn] Capacity: ' +
-          (session.description.capacity ??
-            session.participants ??
-            error.meeting.participants)
+        label: '\n[warn] Over capacity'
       });
     }
 
@@ -597,7 +629,7 @@ function addSessions(sheet, project, validationErrors) {
 /**
  * Add borders per day to the grid
  */
-function addBorders(sheet, project) {
+function addBorders(sheet, project, startRow) {
   const perDate = {};
   for (const slot of project.slots) {
     if (!perDate[slot.date]) {
@@ -611,8 +643,9 @@ function addBorders(sheet, project) {
   }
   for (const [date, desc] of Object.entries(perDate)) {
     const slotPos = project.slots.findIndex(slot =>
+      slot.date === date &&
       slot.start === desc.slots[0].start);
-    sheet.getRange(slotPos + 2, 1, 1, project.rooms.length + 2)
+    sheet.getRange(startRow + slotPos, 1, 1, project.rooms.length + 2)
       .setBorder(true, null, null, null, null, null);
   }
   sheet.getRange(1, 1, sheet.getLastRow(), project.rooms.length + 2)
