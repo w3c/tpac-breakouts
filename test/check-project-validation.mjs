@@ -1,3 +1,4 @@
+import { describe, it, beforeEach } from 'node:test';
 import { initTestEnv } from './init-test-env.mjs';
 import { setEnvKey } from '../tools/common/envkeys.mjs';
 import { loadProject } from '../tools/node/lib/project.mjs';

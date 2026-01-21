@@ -1,3 +1,4 @@
+import { describe, it, before } from 'node:test';
 import * as assert from 'node:assert';
 import { readFile, writeFile } from 'node:fs/promises';
 import { initTestEnv } from './init-test-env.mjs';
@@ -55,8 +56,6 @@ const nonW3CGroupMeetings = {
 };
 
 describe('Scheduling of TPAC meetings', function () {
-  this.timeout(10000);
-
   before(function () {
     initTestEnv();
     setEnvKey('REPOSITORY', 'test/tpac2023');
@@ -177,4 +176,4 @@ _No response_`;
     const html = await convertProjectToHTML(project);
     await assertSameAsRef(html);
   });
-});
+}, { timeout: 10000 });
