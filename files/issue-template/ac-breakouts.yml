@@ -11,7 +11,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for proposing to chair a TPAC breakout session. Please ensure that the session is [in scope for a breakout](https://github.com/w3c/tpac-breakouts/wiki/Policies#session-scope) and review the [good practices for session chairs](https://github.com/w3c/tpac-breakouts/wiki/Good-Practices-for-Session-Chairs), which includes information about [how you can later update your session](https://github.com/w3c/tpac-breakouts/wiki/Good-Practices-for-Session-Chairs#how-to-update-a-session).
+        Thank you for proposing to chair an AC Meeting breakout session. Please review the [good practices for session chairs](https://github.com/w3c/tpac-breakouts/wiki/Good-Practices-for-Session-Chairs), which includes information about [how you can later update your session](https://github.com/w3c/tpac-breakouts/wiki/Good-Practices-for-Session-Chairs#how-to-update-a-session).
 
   - type: textarea
     id: description
@@ -38,24 +38,12 @@ body:
     validations:
       required: false
 
-  - type: dropdown
-    id: attendance
-    attributes:
-      label: Who can attend
-      description: |
-        TPAC breakouts sessions are usually open to the public (including remote attendees). Please only select “Restricted” if there is a compelling reason why the session should only be open to TPAC registrants.
-      options:
-        - Anyone may attend (Default)
-        - Restricted to TPAC registrants
-    validations:
-      required: true
-
   - type: textarea
     id: comments
     attributes:
       label: Instructions for meeting planners (Optional)
       description: |
-        Any information for the meeting planners, including preferences that would impact scheduling such as preferred days or slots.
+        Any information for the meeting planners, including preferences that would impact scheduling.
     validations:
       required: false
 
