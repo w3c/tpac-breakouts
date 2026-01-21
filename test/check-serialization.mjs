@@ -307,6 +307,42 @@ https://example.org/discuss`;
     assert.strictEqual(serializedBody, initialBody);
   });
 
+  it('supports raw URLs in conflicting issues', async function () {
+    const project = await loadProject();
+    project.sessionSections = project.sessionSections
+      .filter(section => section.id === 'conflicts');
+    await initSectionHandlers(project);
+    const initialBody = `### Other sessions where we should avoid scheduling conflicts (Optional)
+
+- https://github.com/w3c/tpac-breakouts-2024/#30
+- https://github.com/w3c/tpac-breakouts-2024/#12
+- https://github.com/w3c/tpac-breakouts-2024/#42`;
+    const desc = parseSessionBody(initialBody);
+    const serializedBody = serializeSessionDescription(desc);
+    const expectedBody = initialBody.replace(
+      /https:\/\/github\.com\/w3c\/tpac-breakouts-2024\//g,
+      '');
+    assert.strictEqual(serializedBody, expectedBody);
+  });
+
+  it('supports links in conflicting issues', async function () {
+    const project = await loadProject();
+    project.sessionSections = project.sessionSections
+      .filter(section => section.id === 'conflicts');
+    await initSectionHandlers(project);
+    const initialBody = `### Other sessions where we should avoid scheduling conflicts (Optional)
+
+- [https://github.com/w3c/tpac-breakouts-2024/#30](#30)
+- [https://github.com/w3c/tpac-breakouts-2024/#12](#12)
+- [https://github.com/w3c/tpac-breakouts-2024/#42](#42)`;
+    const desc = parseSessionBody(initialBody);
+    const serializedBody = serializeSessionDescription(desc);
+    const expectedBody = initialBody.replace(
+      /\[https:\/\/github\.com\/w3c\/tpac-breakouts-2024\/#\d+\]\(([^\)]+)\)/g,
+      '$1');
+    assert.strictEqual(serializedBody, expectedBody);
+  });
+
   it('supports URLs in IRC channels', async function () {
     const project = await loadProject();
     project.sessionSections = project.sessionSections
@@ -320,5 +356,21 @@ https://example.org/discuss`;
     const desc = parseSessionBody(initialBody);
     const serializedBody = serializeSessionDescription(desc);
     assert.strictEqual(serializedBody, initialBody);
+  });
+
+  it('supports URLs in list of additional chairs', async function () {
+    const project = await loadProject();
+    project.sessionSections = project.sessionSections
+      .filter(section => section.id === 'chairs');
+    await initSectionHandlers(project);
+    const initialBody = `### Additional session chairs (Optional)
+
+@ianbjacobs, [https://github.com/tidoust](tidoust)`;
+    const desc = parseSessionBody(initialBody);
+    const serializedBody = serializeSessionDescription(desc);
+    const expectedBody = initialBody.replace(
+      /\[https:\/\/github\.com\/tidoust\]\(([^\)]+)\)/g,
+      '$1');
+    assert.strictEqual(serializedBody, expectedBody);
   });
 });
