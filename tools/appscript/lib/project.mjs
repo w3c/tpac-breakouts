@@ -133,6 +133,10 @@ export function getProject(spreadsheet) {
     projectType = 'breakouts';
     fullType = 'tpac-breakouts';
   }
+  else if (eventType === 'AC breakouts') {
+    projectType = 'breakouts';
+    fullType = 'ac-breakouts';
+  }
   else {
     projectType = 'breakouts';
     fullType = 'breakouts-day';
@@ -626,6 +630,9 @@ export function refreshProject(spreadsheet, project, { what }) {
         }
         else if (value === 'tpac-breakouts') {
           actualValue = 'TPAC breakouts';
+        }
+        else if (value === 'ac-breakouts') {
+          actualValue = 'AC breakouts';
         }
         else {
           actualValue = 'Breakouts day';
