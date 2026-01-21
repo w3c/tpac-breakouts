@@ -2,6 +2,12 @@ import { sendGraphQLRequest } from './graphql.mjs';
 import todoStrings from './todostrings.mjs';
 
 /**
+ * Simple regular expression to match Markdown links
+ */
+const reLink = /^\[\s*(.+)\s*\]\((.*)\)$/;
+
+
+/**
  * Returns true if the given URL is valid, false otherwise.
  *
  * Unfortunately, the Appscript runtime does not support the URL object,
@@ -151,10 +157,25 @@ export async function initSectionHandlers(project) {
         // List of GitHub identities... or of actual names
         // Space-separated values are possible when there are only GitHub
         // identities. Otherwise, CSV, line-separated or markdown lists.
+        const reNickname = /^@[A-Za-z0-9][A-Za-z0-9\-]+$/;
+        const reName = /^[^@]+$/;
+        const reNickUrl = /^https:\/\/github\.com\/([^\/]+)\/?$/;
         handler.parse = value => parseList(value, { spaceSeparator: true, prefix: '@' })
           .map(nick => {
-            if (nick.startsWith('@')) {
+            if (nick.match(reNickname)) {
               return { login: nick.substring(1) };
+            }
+            else if (nick.match(reLink)) {
+              const name = nick.match(reLink)[2];
+              if (name.match(reNickname)) {
+                return { login: nick.substring(1) };
+              }
+              else {
+                return { name };
+              }
+            }
+            else if (nick.match(reNickUrl)) {
+              return { login: nick.match(reNickUrl)[1] }
             }
             else {
               return { name: nick };
@@ -162,7 +183,12 @@ export async function initSectionHandlers(project) {
           });
         handler.validate = value => {
           const chairs = parseList(value, { spaceSeparator: true, prefix: '@' });
-          return chairs.every(nick => nick.match(/^(@[A-Za-z0-9][A-Za-z0-9\-]+|[^@]+)$/));
+          return chairs.every(nick =>
+            nick.match(reNickname) ||
+            (nick.match(reLink) && nick.match(reLink)[2].match(reNickname)) ||
+            (nick.match(reLink) && nick.match(reLink)[2].match(reName)) ||
+            nick.match(reNickUrl) ||
+            nick.match(reName));
         }
         handler.serialize = value => value
           .map(nick => nick.login ? `@${nick.login}` : nick.name)
@@ -171,7 +197,7 @@ export async function initSectionHandlers(project) {
 
       case 'shortname':
         handler.parse = value => value
-          .replace(/^\[(.+)\]\((.*)\)$/i, '$1')
+          .replace(reLink, '$1')
           .replace(/^\`(.*)\`$/, '$1');
         handler.validate = value =>
           value.match(/^(\`#?[A-Za-z0-9\-_]+\`|#?[A-Za-z0-9\-_]+)$/) ||
@@ -182,7 +208,7 @@ export async function initSectionHandlers(project) {
 
       case 'discussion':
         handler.parse = value => {
-          const match = value.match(/^\[(.+)\]\((.*)\)$/i);
+          const match = value.match(reLink);
           let url = match ? match[2] : value;
           if (url.startsWith('#')) {
             url = `https://webirc.w3.org/?channels=${url.replace(/#/, '')}`;
@@ -190,7 +216,7 @@ export async function initSectionHandlers(project) {
           return url;
         };
         handler.validate = value => {
-          const match = value.match(/^\[(.+)\]\((.*)\)$/i);
+          const match = value.match(reLink);
           let url = match ? match[2] : value;
           if (url.startsWith('#')) {
             url = `https://webirc.w3.org/?channels=${url.replace(/#/, '')}`;
@@ -218,11 +244,28 @@ export async function initSectionHandlers(project) {
 
       case 'conflicts':
         // List of GitHub issues
+        const reIssueNumber = /^#\d+$/;
+        const reEndsWithIssueNumber = /#\d+$/;
         handler.parse = value => parseList(value, { spaceSeparator: true, prefix: '#' })
-          .map(issue => parseInt(issue.substring(1), 10));
+          .map(issue => {
+            let issueNb = '';
+            if (issue.match(reIssueNumber)) {
+              issueNb = issue;
+            }
+            else if (issue.match(reLink)) {
+              issueNb = issue.match(reLink)[2];
+            }
+            else {
+              issueNb = issue.match(reEndsWithIssueNumber)[0];
+            }
+            return parseInt(issueNb.substring(1), 10);
+          });
         handler.validate = value => {
           const conflictingSessions = parseList(value, { spaceSeparator: true, prefix: '#' });
-          return conflictingSessions.every(issue => issue.match(/^#\d+$/));
+          return conflictingSessions.every(issue =>
+            issue.match(reIssueNumber) ||
+            (issue.match(reLink) && issue.match(reLink)[2].match(reIssueNumber)) ||
+            (isUrlValid(issue) && issue.match(reEndsWithIssueNumber)));
         };
         handler.serialize = value => value.map(issue => `- #${issue}`).join('\n');
         break;
@@ -402,7 +445,6 @@ export async function initSectionHandlers(project) {
         // There can be one link... or multiple ones.
         // The label of each link should provide some useful info about the
         // calendar entry (day, start, end, and plenary flag)
-        const reLink = /^\[\s*(.+)\s*\]\((.*)\)$/i;
         const reCalendarInfo = /^(.+),\s*(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})(?:,\s*(plenary))?$/i;
         handler.parse = value => {
           const matches = parseList(value, { linesOnly: true })
@@ -441,20 +483,17 @@ export async function initSectionHandlers(project) {
 
       case 'materials':
         const capitalize = str => str.slice(0, 1).toUpperCase() + str.slice(1);
+        const reLabelThenUrl = /^([^:]+):\s*(.*)$/;
         handler.parse = value => {
           const materials = {};
           parseList(value, { spaceSeparator: false })
-            .map(line =>
-              line.match(/^\[(.+)\]\((.*)\)$/i) ??
-              line.match(/^([^:]+):\s*(.*)$/i))
+            .map(line => line.match(reLink) ?? line.match(reLabelThenUrl))
             .forEach(match => materials[match[1].toLowerCase()] = match[2]);
           return materials;
         };
         handler.validate = value => {
           const matches = parseList(value, { spaceSeparator: false })
-            .map(line =>
-              line.match(/^\[(.+)\]\((.*)\)$/i) ||
-              line.match(/^([^:]+):\s*(.*)$/i));
+            .map(line => line.match(reLink) || line.match(reLabelThenUrl));
           return matches.every(match => {
             if (!match) {
               return false;
