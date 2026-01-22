@@ -38,6 +38,11 @@ body:
     validations:
       required: false
 
+  - type: markdown
+    attributes:
+      value: |
+        ## Preferences
+
   - type: textarea
     id: comments
     attributes:
