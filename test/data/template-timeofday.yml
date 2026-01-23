@@ -1,0 +1,17 @@
+name: Session proposal
+description: Propose to chair a breakout session at W3C Breakouts Day
+labels: ["session"]
+body:
+  - type: dropdown
+    id: timeofday
+    attributes:
+      label: Preferred slots
+      description: |
+        Please indicate whether you have a preference that your session take place in an afternoon slot or an evening slot (UTC). The default is "No preference."
+      options:
+        - No preference (Default)
+        - Morning slot
+        - Afternoon slot
+        - Evening slot (on Wednesday)
+    validations:
+      required: true

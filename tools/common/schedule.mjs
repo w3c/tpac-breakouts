@@ -32,6 +32,7 @@ import { parseSessionMeetings,
          meetsInRoom,
          meetsAt } from './meetings.mjs';
 import { getProjectSlot } from './project.mjs';
+import { isSlotAcceptable } from './timeofday.mjs';
 
 function getRequestedNbOfSlots(session) {
   if (session.description.times?.length) {
@@ -248,7 +249,7 @@ export function suggestSchedule(project, { seed }) {
 
   function chooseSessionMeetings(session, {
     trackRoom, numberOfMeetings, sameRoom, strictDuration, strictTimes,
-    meetDuration, meetCapacity, meetConflicts
+    meetDuration, meetCapacity, meetTimeofday, meetConflicts
   }) {
     const byCapacity = (r1, r2) => (r1.capacity ?? 30) - (r2.capacity ?? 30);
     const byCapacityDesc = (r1, r2) => (r2.capacity ?? 30) - (r1.capacity ?? 30);
@@ -260,6 +261,8 @@ export function suggestSchedule(project, { seed }) {
     // - Conflicting sessions are scheduled at the same time.
     // - Session is scheduled in a slot that does not meet the duration
     // requirement.
+    // - Session is scheduled in a slot that does not belong to the requested
+    // time of day (morning, afternoon, evening)
     // ... Unless these constraints have been relaxed!
     // ... Also note plenary sessions adjust these rules slightly (two
     // sessions in the same plenary in the same track or chaired by the same
@@ -319,6 +322,13 @@ export function suggestSchedule(project, { seed }) {
       if (meetDuration && session.description.duration) {
         if ((strictDuration && dayslot.duration !== session.description.duration) ||
             (!strictDuration && dayslot.duration < session.description.duration)) {
+          return false;
+        }
+      }
+
+      // Meet time of day unless we don't care
+      if (meetTimeofday && session.description.timeofday) {
+        if (!isSlotAcceptable(dayslot.start, session.description.timeofday)) {
           return false;
         }
       }
@@ -577,6 +587,7 @@ export function suggestSchedule(project, { seed }) {
           constraints.strictDuration = true;
           constraints.meetDuration = true;
           constraints.meetCapacity = true;
+          constraints.meetTimeofday = true;
           constraints.meetConflicts = ['session', 'track'];
         }
       }
@@ -619,6 +630,15 @@ export function suggestSchedule(project, { seed }) {
           resetConstraintsIfNeeded();
           constraints.meetCapacity = false;
           relaxed.push('meetCapacity');
+        }
+        else if (!relaxed.includes('meetTimeofday') &&
+            constraints.meetTimeofday &&
+            session.description.timeofday &&
+            (session.description.timeofday !== 'any')) {
+          console.warn(`- forget timeofday constraint for #${session.number}`);
+          resetConstraintsIfNeeded();
+          constraints.meetTimeofday = false;
+          relaxed.push('meetTimeofday');
         }
         else if (!relaxed.includes('session-conflicts') &&
             constraints.meetConflicts.length === 2) {

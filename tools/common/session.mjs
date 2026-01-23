@@ -394,6 +394,32 @@ export async function initSectionHandlers(project) {
           .join('\n');
         break;
 
+      case 'timeofday':
+        handler.parse = value => {
+          const lvalue = value.toLowerCase();
+          if (lvalue.startsWith('morning')) {
+            return 'morning';
+          }
+          else if (lvalue.startsWith('afternoon')) {
+            return 'afternoon';
+          }
+          else if (lvalue.startsWith('evening')) {
+            return 'evening';
+          }
+          else {
+            return 'any';
+          }
+        }
+        handler.validate = value => !!handler.options
+          .find(o => o.llabel.startsWith(value.toLowerCase()));
+        handler.serialize = value => {
+          const option =
+            handler.options.find(o => o.llabel.startsWith(value)) ??
+            handler.options.find(o => o.llabel.startsWith('no pref'));
+          return option.label;
+        }
+        break;
+
       case 'times':
         // Each entry looks like "[x] Monday, 09:30 - 11:00"
         const reTime = /^\[( |x)\]\s*(monday|tuesday|thursday|friday),\s*(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})$/i;
