@@ -373,4 +373,33 @@ https://example.org/discuss`;
       '$1');
     assert.strictEqual(serializedBody, expectedBody);
   });
+
+  it('understands times of day', async function () {
+    const project = await loadProject();
+    project.sessionSections = [
+      {
+        type: 'dropdown',
+        id: 'timeofday',
+        attributes: {
+          label: 'Preferred slots',
+          description: 'Please indicate whether you have a preference that your session take place in an afternoon slot or an evening slot (UTC). The default is "No preference."',
+          options: [
+            'No preference (Default)',
+            'Afternoon slot (25 March)',
+            'Evening slot (26 March)'
+          ]
+        },
+        validations: {
+          required: true
+        }
+      }
+    ];
+    await initSectionHandlers(project);
+    const initialBody = `### Preferred slots
+
+Afternoon slot (25 March)`;
+    const desc = parseSessionBody(initialBody);
+    const serializedBody = serializeSessionDescription(desc);
+    assert.strictEqual(serializedBody, initialBody);
+  });
 });

@@ -38,12 +38,30 @@ body:
     validations:
       required: false
 
+  - type: markdown
+    attributes:
+      value: |
+        ## Preferences
+
+  - type: dropdown
+    id: timeofday
+    attributes:
+      label: Preferred slots
+      description: |
+        Please indicate whether you have a preference that your session take place in an afternoon slot or an evening slot (UTC). The default is "No preference."
+      options:
+        - No preference (Default)
+        - Afternoon slot
+        - Evening slot
+    validations:
+      required: true
+
   - type: textarea
     id: comments
     attributes:
       label: Instructions for meeting planners (Optional)
       description: |
-        Any information for the meeting planners, including preferences that would impact scheduling such as preferred days or slots, groups to avoid conflict with, and groups to meet jointly with.
+        Any information for the meeting planners, including preferences that would impact scheduling such as preferred days or slots or sessions to avoid conflict with.
     validations:
       required: false
 
@@ -66,11 +84,6 @@ body:
         Shortname for the irc.w3.org channel (e.g., `#my-fav-session`). If not provided, shortname will be generated from title.
     validations:
       required: false
-
-  - type: markdown
-    attributes:
-      value: |
-        ## Preferences
 
   - type: markdown
     attributes:

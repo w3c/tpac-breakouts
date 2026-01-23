@@ -50,6 +50,19 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: timeofday
+    attributes:
+      label: Preferred slots
+      description: |
+        Please indicate whether you have a preference that your session take place in a morning slot or an afternoon slot (local time at the TPAC venue). The default is "No preference."
+      options:
+        - No preference (Default)
+        - Morning slot
+        - Afternoon slot
+    validations:
+      required: true
+
   - type: textarea
     id: comments
     attributes:

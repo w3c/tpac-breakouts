@@ -3,6 +3,7 @@ import { fetchSessionGroups, validateSessionGroups } from './groups.mjs';
 import { validateProject } from './project.mjs';
 import { initSectionHandlers, validateSessionBody, parseSessionBody } from './session.mjs';
 import { parseSessionMeetings, meetsAt, meetsInParallelWith } from './meetings.mjs';
+import { isSlotAcceptable } from './timeofday.mjs';
 import todoStrings from './todostrings.mjs';
 
 // List of errors and warnings that are scheduling issues.
@@ -490,6 +491,23 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         type: 'times',
         messages: [`Session scheduled ${meetings.length} times instead of ${session.description.times.length}`]
       });
+    }
+  }
+
+  // Warn when chosen meetings don't match requested time of day
+  // (morning, afternoon, evening)
+  if (session.description.timeofday && meetings.length > 0) {
+    const schedulingWarnings = meetings
+      .filter(m => !isSlotAcceptable(m.slot, session.description.timeofday))
+      .map(m => Object.assign({ meeting: m, session }));
+    if (schedulingWarnings.length > 0) {
+      errors.push({
+        session: sessionNumber,
+        severity: 'warning',
+        type: 'times',
+        messages: schedulingWarnings.map(w => `Session scheduled at ${w.meeting.slot} but ${session.description.timeofday} slot requested`),
+        details: schedulingWarnings
+      })
     }
   }
 
