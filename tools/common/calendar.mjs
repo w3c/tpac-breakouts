@@ -397,12 +397,15 @@ export function convertEntryToJSON({
     res.minutes = { url: minutesUrl };
   }
 
-  // Add groups/chairs as individual attendees
+  // Add groups/chairs as event organizers
+  // (they used to be added as individual attendees because we didn't want them
+  // to update calendar entries afterwards, but the system now prevents that
+  // for calendar entries tied to a big meeting)
   // Note: the select field is hidden so attendees will only appear once
   // calendar entry has been submitted.
   // Note: we preserve the former list of individual attendees because people
   // may subscribe to an event at any time, but don't preserve the former list
-  // of group attendees
+  // of group attendees (groups cannot subscribe to an event).
   if (project.metadata.type === 'groups') {
     const groups = session.groups.filter(group =>
       group.w3cId && group.w3cId !== -1 &&
@@ -411,14 +414,11 @@ export function convertEntryToJSON({
       res.participants.groups = groups.map(group => group.w3cId);
     }
   }
-  else if (status === 'draft' || !entry.url) {
-    // Note: we're only going to change the list of individuals when the entry
-    // gets created or when it's still a draft, because external people may
-    // subscribe to the entry otherwise.
+  else {
     const chairs = session.chairs.filter(chair =>
       chair.w3cId && chair.w3cId !== -1 &&
       typeof chair.w3cId === 'number');
-    res.participants.individuals = chairs.map(chair => chair.w3cId);
+    res.participants.organizers = chairs.map(chair => chair.w3cId);
   }
 
   // For group meetings and restricted breakout sessions, tick the restrict
