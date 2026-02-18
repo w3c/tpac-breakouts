@@ -48,7 +48,7 @@ describe('Conversion to calendar entries', function () {
           "timezone": "Etc/UTC"
         },
         "participants": {
-          "individuals": [
+          "organizers": [
             5,
             55,
             56
