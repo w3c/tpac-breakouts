@@ -55,16 +55,10 @@ function convertToCalendarMarkdown(text) {
 
 
 /**
- * Helper function to format calendar entry description from the session's info
+ * Helper function to format the calendar entry description from the session's
+ * info.
  */
-function formatAgenda(session, options) {
-  const issueUrl = `https://github.com/${session.repository}/issues/${session.number}`;
-  const materials = Object.entries(session.description.materials || [])
-    .filter(([key, value]) => (key !== 'agenda') && (key !== 'calendar'))
-    .filter(([key, value]) => !todoStrings.includes(value))
-    .map(([key, value]) => `- [${key}](${value})`);
-  materials.push(`- [Session proposal on GitHub](${issueUrl})`);
-
+function formatDescription(session, options) {
   let tracksStr = '';
   if (options?.tracks === 'show') {
     const tracks = session.tracks ?? [];
@@ -76,18 +70,6 @@ ${tracks.join('\n')}`;
     }
   }
 
-  const attendanceStr = session.description.attendance === 'restricted' ? `
-**Attendance:**
-This session is restricted to TPAC registrants.` :
-    '';
-
-  const agendaUrl = getAgendaUrl(session);
-  const detailedAgenda = agendaUrl ? null : session.description.agenda;
-  const detailedAgendaStr = detailedAgenda ? `
-**Agenda:**
-${detailedAgenda}` :
-    '';
-
   return `**Chairs:**
 ${session.chairs.map(chair => chair.name ?? '@' + chair.login).join(', ')}
 
@@ -96,12 +78,35 @@ ${convertToCalendarMarkdown(session.description.description)}
 
 **Goal(s):**
 ${convertToCalendarMarkdown(session.description.goal)}
-${attendanceStr}
-${detailedAgendaStr}
+${tracksStr}`;
+}
+
+
+/**
+ * Helper function to format calendar entry agenda from the session's info
+ */
+function formatAgenda(session) {
+  const issueUrl = `https://github.com/${session.repository}/issues/${session.number}`;
+  const materials = Object.entries(session.description.materials || [])
+    .filter(([key, value]) => (key !== 'agenda') && (key !== 'calendar'))
+    .filter(([key, value]) => !todoStrings.includes(value))
+    .map(([key, value]) => `- [${key}](${value})`);
+  materials.push(`- [Session proposal on GitHub](${issueUrl})`);
+
+  const attendanceStr = session.description.attendance === 'restricted' ? `
+**Attendance:**
+This session is restricted to TPAC registrants.` :
+    '';
+
+  const agendaUrl = getAgendaUrl(session);
+  const detailedAgenda = agendaUrl ? null : session.description.agenda;
+  const detailedAgendaStr = detailedAgenda ? detailedAgenda : '';
+
+  return `${detailedAgendaStr}
 
 **Materials:**
 ${materials.join('\n')}
-${tracksStr}`;
+${attendanceStr}`;
 }
 
 
@@ -371,9 +376,12 @@ export function convertEntryToJSON({
       if (!res.agenda) {
         res.agenda = {};
       }
-      res.agenda.agenda = formatAgenda(session, { tracks: project.metadata.tracks });
+      res.agenda.agenda = formatAgenda(session);
     }
-    if (project.metadata.type !== 'groups' || convertToCalendarMarkdown(session.description.description)) {
+    if (project.metadata.type !== 'groups') {
+      res.general.description = formatDescription(session, { tracks: project.metadata.tracks });
+    }
+    else if (convertToCalendarMarkdown(session.description.description)) {
       res.general.description = convertToCalendarMarkdown(session.description.description);
     }
   }
