@@ -1,9 +1,36 @@
 import puppeteer from 'puppeteer';
 import { validateSession } from '../common/validate.mjs';
-import { authenticate } from './lib/calendar.mjs';
 import { getEnvKey } from '../common/envkeys.mjs';
 import { exportProjectToGitHub } from '../common/project.mjs';
 import { parseSessionMeetings } from '../common/meetings.mjs';
+
+
+/**
+ * Login to W3C server.
+ *
+ * The function throws if login fails.
+ */
+export async function authenticate(page, login, password, redirectUrl) {
+  const url = await page.evaluate(() => window.location.href);
+  if (!url.endsWith('/login')) {
+    return;
+  }
+
+  const usernameInput = await page.waitForSelector('input#username');
+  await usernameInput.type(login);
+
+  const passwordInput = await page.waitForSelector('input#password');
+  await passwordInput.type(password);
+
+  const submitButton = await page.waitForSelector('button[type=submit]');
+  await submitButton.click();
+
+  await page.waitForNavigation();
+  const newUrl = await page.evaluate(() => window.location.href);
+  if (newUrl !== redirectUrl) {
+    throw new Error('Could not login. Invalid credentials?');
+  }
+}
 
 export default async function (project, number, options) {
   const meeting = project.metadata.meeting.toLowerCase().replace(/\s+/g, '');
