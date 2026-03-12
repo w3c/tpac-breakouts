@@ -10,12 +10,38 @@
 import { getEnvKey } from './common/envkeys.mjs';
 import { loadProject } from './node/lib/project.mjs'
 import { validateGrid } from './common/validate.mjs';
-import { authenticate } from './node/lib/calendar.mjs';
 import checkRegistrants from './node/lib/check-registrants.mjs';
 import puppeteer from 'puppeteer';
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms, 'slept'));
+}
+
+/**
+ * Login to W3C server.
+ *
+ * The function throws if login fails.
+ */
+export async function authenticate(page, login, password, redirectUrl) {
+  const url = await page.evaluate(() => window.location.href);
+  if (!url.endsWith('/login')) {
+    return;
+  }
+
+  const usernameInput = await page.waitForSelector('input#username');
+  await usernameInput.type(login);
+
+  const passwordInput = await page.waitForSelector('input#password');
+  await passwordInput.type(password);
+
+  const submitButton = await page.waitForSelector('button[type=submit]');
+  await submitButton.click();
+
+  await page.waitForNavigation();
+  const newUrl = await page.evaluate(() => window.location.href);
+  if (newUrl !== redirectUrl) {
+    throw new Error('Could not login. Invalid credentials?');
+  }
 }
 
 async function main(format) {
