@@ -228,7 +228,7 @@ async function importEvent(event, calendarServer, token) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+      'Authorization': `token ${token}`,
       'Accept': 'application/json'
     },
     body: JSON.stringify(event)
