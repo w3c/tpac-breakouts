@@ -55,4 +55,4 @@ jobs:
 
           # Information about the authentication token for the calendar
           # endpoint. The token must obviously be stored as a secret!
-          W3C_TOKEN: ${{ secrets.W3C_PASSWORD }}
+          W3C_TOKEN: ${{ secrets.W3C_TOKEN }}
