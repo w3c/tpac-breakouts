@@ -70,11 +70,7 @@ ${tracks.join('\n')}`;
     }
   }
 
-  return `**Chairs:**
-${session.chairs.map(chair => chair.name ?? '@' + chair.login).join(', ')}
-
-**Description:**
-${convertToCalendarMarkdown(session.description.description)}
+  return `${convertToCalendarMarkdown(session.description.description)}
 
 **Goal(s):**
 ${convertToCalendarMarkdown(session.description.goal)}
