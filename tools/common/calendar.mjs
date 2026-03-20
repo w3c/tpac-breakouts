@@ -297,8 +297,12 @@ export function convertEntryToJSON({
   // Compute room location label
   let roomLocation = '';
   if (project.metadata.rooms === 'hide') {
-    const roomIdx = project.rooms.findIndex(room => room.name === entry.meeting.room);
-    roomLocation = 'R' + (roomIdx < 9 ? '0' : '') + (roomIdx + 1);
+    if (project.metadata.fullType === 'breakouts-day') {
+      roomLocation = 'Online';
+    }
+    else {
+      roomLocation = 'No assigned room yet';
+    }
   }
   else {
     const room = project.rooms.find(room => room.name === entry.meeting.room);
@@ -539,7 +543,8 @@ export async function synchronizeSessionWithCalendar(
   for (const entry of actions.update) {
     console.log(`- refresh calendar entry ${entry.url}, meeting in ${entry.meeting.room} on ${entry.day} ${entry.start} - ${entry.end}`);
     const room = project.rooms.find(room => room.name === entry.meeting.room);
-    const zoom = project.metadata.rooms === 'hide' ? null : room;
+    const zoom = project.zoom?.find(z => z.room === room.name && z.slot.startsWith(`${entry.day} ${entry.start}`)) ??
+      (project.metadata.rooms === 'hide' ? null : room);
     entry.url = await updateCalendarEntry({
       calendarServer,
       entry, session, project,
@@ -550,7 +555,8 @@ export async function synchronizeSessionWithCalendar(
   for (const entry of actions.create) {
     console.log(`- create new calendar entry, meeting in ${entry.meeting.room} on ${entry.day} ${entry.start} - ${entry.end}`);
     const room = project.rooms.find(room => room.name === entry.meeting.room);
-    const zoom = project.metadata.rooms === 'hide' ? null : room;
+    const zoom = project.zoom?.find(z => z.room === room.name && z.slot.startsWith(`${entry.day} ${entry.start}`)) ??
+      (project.metadata.rooms === 'hide' ? null : room);
     entry.url = await updateCalendarEntry({
       calendarServer,
       entry, session, project,
@@ -564,7 +570,7 @@ export async function synchronizeSessionWithCalendar(
     if (e1.day < e2.day) {
       return -1;
     }
-    else if (e1.day > e2.date) {
+    else if (e1.day > e2.day) {
       return 1;
     }
     else {

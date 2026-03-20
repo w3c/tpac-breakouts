@@ -188,6 +188,7 @@ async function getTestData(testDataId) {
     },
     rooms: toGraphQLRoomList(custom.rooms ?? ['Panic room (25)']),
     slots: toGraphQLSlotList(custom.slots ?? ['2042-04-07 9:00-10:00']),
+    zoom: [],
     sessions: toGraphQLSessions(custom.sessions ?? [
       { number: 1, title: 'A test session' }
     ]),

@@ -59,6 +59,7 @@ export async function fetchProjectFromGitHub(reponame, sessionTemplate) {
     metadata: await importVariableFromGitHub(reponame, 'EVENT') ?? {},
     rooms: await importVariableFromGitHub(reponame, 'ROOMS') ?? [],
     slots: await importVariableFromGitHub(reponame, 'SLOTS') ?? [],
+    zoom: await importVariableFromGitHub(reponame, 'ZOOM') ?? [],
     sessions: await fetchSessions(reponame)
   };
 
@@ -139,6 +140,7 @@ export async function exportProjectToGitHub(project, { what }) {
   if (!what || what === 'all' || what === 'metadata') {
     await exportVariableToGitHub(reponame, 'EVENT', project.metadata);
     await exportVariableToGitHub(reponame, 'ROOMS', project.rooms);
+    await exportVariableToGitHub(reponame, 'ZOOM', project.zoom);
     await exportVariableToGitHub(reponame, 'SLOTS', project.slots);
   }
 

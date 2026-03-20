@@ -17,7 +17,8 @@ export function getProjectSheets(spreadsheet) {
     meetings: { titleMatch: /meetings/i },
     rooms: { titleMatch: /rooms/i },
     slots: { titleMatch: /slots/i },
-    people: { titleMatch: /people/i }
+    people: { titleMatch: /people/i },
+    zoom: { titleMatch: /zoom/i }
   };
 
   // Retrieve the sheets from the spreadsheet
@@ -215,6 +216,9 @@ export function getProject(spreadsheet) {
         repository: repo.owner + '/' + repo.name
       })
     ),
+
+    zoom: (sheets.zoom?.values ?? [])
+      .filter(v => !!v.name),
 
     sheets: sheets
   };
