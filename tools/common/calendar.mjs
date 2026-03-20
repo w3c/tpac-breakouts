@@ -178,7 +178,9 @@ function getZoomLink(zoomInfo) {
   if (!zoomInfo) {
     return '';
   }
-  const link = typeof zoomInfo === 'string' ? zoomInfo : zoomInfo.link;
+  const link = typeof zoomInfo === 'string' ?
+    zoomInfo :
+    (zoomInfo['zoom link'] ?? zoomInfo.link);
   if (!link || todoStrings.includes(link)) {
     return '';
   }
@@ -196,8 +198,8 @@ function getZoomInstructions(zoomInfo) {
     return '';
   }
   const link = getZoomLink(zoomInfo);
-  const id = zoomInfo.id;
-  const passcode = zoomInfo.passcode;
+  const id = '' + (zoomInfo['zoom id'] ?? zoomInfo.id);
+  const passcode = '' + (zoomInfo['zoom passcode'] ?? zoomInfo.passcode);
   if (!id) {
     return '';
   }
