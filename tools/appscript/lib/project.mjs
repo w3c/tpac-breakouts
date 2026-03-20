@@ -218,7 +218,7 @@ export function getProject(spreadsheet) {
     ),
 
     zoom: (sheets.zoom?.values ?? [])
-      .filter(v => !!v.name),
+      .filter(v => !!v.room),
 
     sheets: sheets
   };
