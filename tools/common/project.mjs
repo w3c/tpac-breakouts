@@ -280,9 +280,9 @@ export function validateProject(project) {
       errors.push(`TPAC event days should be a Monday, Tuesday, Thursday and Friday`);
     }
 
-    if (project.slots.length !== 16) {
+    if (project.slots.length < 12) {
       const s = project.slots.length > 1 ? 's' : '';
-      errors.push(`TPAC events should have 16 slots in total, ${project.slots.length} slot${s} found`);
+      errors.push(`TPAC events should have at least 12 slots, ${project.slots.length} slot${s} found`);
     }
   }
 

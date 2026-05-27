@@ -74,7 +74,7 @@ describe('Project validation', function () {
     const errors = await validateProject(project);
     assert.deepStrictEqual(errors, [
       'TPAC event days should be a Monday, Tuesday, Thursday and Friday',
-      'TPAC events should have 16 slots in total, 12 slots found'
+      'TPAC events should have at least 12 slots, 11 slots found'
     ]);
   });
 
@@ -92,7 +92,7 @@ describe('Project validation', function () {
     const project = await loadProject();
     const errors = await validateProject(project);
     assert.deepStrictEqual(errors, [
-      'TPAC events should have 16 slots in total, 4 slots found'
+      'TPAC events should have at least 12 slots, 4 slots found'
     ]);
   });
 })
