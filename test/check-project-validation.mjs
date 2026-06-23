@@ -95,4 +95,21 @@ describe('Project validation', function () {
       'TPAC events should have at least 12 slots, 4 slots found'
     ]);
   });
+
+  it('validates allowed in parallel values', async function () {
+    setEnvKey('REPOSITORY', 'test/project-validation-allowed-in-parallel');
+    const project = await loadProject();
+    const errors = await validateProject(project);
+    assert.deepStrictEqual(errors, []);
+  });
+
+  it('reports about invalid allowed in parallel values', async function () {
+    setEnvKey('REPOSITORY', 'test/project-validation-allowed-in-parallel');
+    const project = await loadProject();
+    project.metadata.allowedInParallel = `foo,bar`;
+    const errors = await validateProject(project);
+    assert.deepStrictEqual(errors, [
+      'The "allowed in parallel" info must contain line-separated lists of a comma-separated list of session numbers.'
+    ]);
+  });
 })

@@ -157,7 +157,8 @@ export function getProject(spreadsheet) {
       tracks: getSetting('Show tracks in calendar') === 'no' ? 'hide' : 'show',
       meeting: getSetting('Meeting name in calendar', ''),
       slug: getSetting('Meeting slug', ''),
-      reponame: getSetting('GitHub repository name')
+      reponame: getSetting('GitHub repository name'),
+      allowedInParallel: getSetting('Allowed in parallel', '')
     },
 
     rooms: sheets.rooms.values
@@ -663,6 +664,9 @@ export function refreshProject(spreadsheet, project, { what }) {
       }
       else if (name === 'reponame') {
         setSetting('GitHub repository name', value);
+      }
+      else if (name === 'allowedInParallel') {
+        setSetting('Allowed in parallel', value);
       }
       else {
         setSetting(name, value);

@@ -1,7 +1,11 @@
 import { fetchSessionChairs, validateSessionChairs } from './chairs.mjs';
 import { fetchSessionGroups, validateSessionGroups } from './groups.mjs';
 import { validateProject } from './project.mjs';
-import { initSectionHandlers, validateSessionBody, parseSessionBody } from './session.mjs';
+import {
+  initSectionHandlers,
+  validateSessionBody,
+  parseSessionBody,
+  explicitlyAllowedInParallel } from './session.mjs';
 import { parseSessionMeetings, meetsAt, meetsInParallelWith } from './meetings.mjs';
 import { isSlotAcceptable } from './timeofday.mjs';
 import todoStrings from './todostrings.mjs';
@@ -616,7 +620,10 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   const chairConflictErrors = meetings
     .filter(meeting => meeting.day && meeting.slot)
     .map(meeting => project.sessions
-      .filter(s => s !== session && meetsInParallelWith(s, meeting, project))
+      .filter(s => s !== session &&
+        !explicitlyAllowedInParallel(session, s, project) &&
+        meetsInParallelWith(s, meeting, project)
+      )
       .map(s => {
         let inboth = [];
         try {

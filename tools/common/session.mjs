@@ -682,3 +682,23 @@ export async function updateSessionDescription(session) {
     throw new Error(`GraphQL error, could not update issue body`);
   }
 }
+
+/**
+ * Returns true if the supposedly conflicting sessions are explicitly
+ * allowed to meet in parallel
+ */
+export function explicitlyAllowedInParallel(session1, session2, project) {
+  const allowedInParallel = (project.metadata.allowedInParallel ?? '')
+    .trim()
+    .split('\n')
+    .map(line => line
+      .trim()
+      .split(',')
+      .map(nb => nb.trim())
+      .map(nb => parseInt(nb, 10))
+    );
+  return allowedInParallel.find(list =>
+    list.includes(session1.number) &&
+    list.includes(session2.number)
+  )
+}
