@@ -1,0 +1,1 @@
+check-allowed-in-parallel.mjs

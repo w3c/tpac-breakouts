@@ -31,6 +31,7 @@ import { parseSessionMeetings,
          meetsInParallelWith,
          meetsInRoom,
          meetsAt } from './meetings.mjs';
+import { explicitlyAllowedInParallel } from './session.mjs';
 import { getProjectSlot } from './project.mjs';
 import { isSlotAcceptable } from './timeofday.mjs';
 
@@ -284,8 +285,10 @@ export function suggestSchedule(project, { seed }) {
 
       // There must be no session chaired by the same chair at that time
       // or there must be no session for the same group at that time
+      // (unless this parallelism is explicitly allowed)
       if (project.metadata.type === 'groups') {
         const groupConflict = potentialConflicts.find(s =>
+          !explicitlyAllowedInParallel(session, s, project) &&
           s.groups.find(c1 => session.groups.find(c2 =>
             c1.name && c1.name === c2.name)) &&
           (s.description.type !== 'plenary' || session.description.type !== 'plenary')

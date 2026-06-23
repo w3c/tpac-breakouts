@@ -251,6 +251,13 @@ export function validateProject(project) {
         !['no', 'draft', 'tentative', 'confirmed'].includes(project.metadata.calendar)) {
       errors.push('The "calendar" info must be one of "no", "draft", "tentative" or "confirmed"');
     }
+    if (project.metadata.allowedInParallel?.trim() &&
+        !project.metadata.allowedInParallel
+          .trim()
+          .split('\n')
+          .every(line => line.trim().match(/^\d+(,\d+)+$/))) {
+      errors.push('The "allowed in parallel" info must contain line-separated lists of a comma-separated list of session numbers.');
+    }
   }
 
   for (const slot of project.slots) {
