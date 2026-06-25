@@ -54,6 +54,6 @@
   },
   "devDependencies": {
     "@google/clasp": "^2.5.0",
-    "rollup": "^4.52.3"
+    "rollup": "^4.59.0"
   }
 }
