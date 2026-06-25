@@ -12,6 +12,7 @@ import todoStrings from './todostrings.mjs';
 
 // List of errors and warnings that are scheduling issues.
 const schedulingErrors = [
+  'error: group conflict',
   'error: chair conflict',
   'error: scheduling',
   'error: irc',
