@@ -50,7 +50,7 @@
     "irc": "^0.5.2",
     "puppeteer": "^25.2.1",
     "webvtt-parser": "^2.2.0",
-    "yaml": "^2.8.3"
+    "yaml": "^2.9.0"
   },
   "devDependencies": {
     "@google/clasp": "^3.3.0",
