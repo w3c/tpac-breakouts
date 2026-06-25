@@ -45,6 +45,18 @@ function getRequestedNbOfSlots(session) {
   return 0;
 }
 
+const MAX_FLEXIBILITY = 100000;
+function getFlexibility(session) {
+  if (session.description.times?.length) {
+    // Outdated way of requesting slots explicitly, no flexibility
+    return 0;
+  }
+  if (session.description.nbslots) {
+    return session.description.slots.length - session.description.nbslots;
+  }
+  return MAX_FLEXIBILITY;
+}
+
 /**
  * Suggest a schedule, updated sessions meetings as needed.
  *
@@ -148,7 +160,7 @@ export function suggestSchedule(project, { seed }) {
         return candidate;
       }
       // A good candidate is a session that has not been processed already,
-      // and that either belongs to the track we're interested in (noting that
+      // and that belongs to the track we're interested in (noting that
       // "plenary" is handled as a kind of track). When we're not interested in
       // a specific track, all non processed sessions are good candidates.
       if (!s.processed &&
@@ -159,15 +171,20 @@ export function suggestSchedule(project, { seed }) {
         // 1. we don't yet have a candidate session
         // 2. the session has been assigned a given time (we want to process it
         // earlier to avoid introducing conflicts afterwards)
-        // TODO: we may want to include day in the future for group meetings
-        // 3. the session requires more slots (we want to process it earlier to
-        // avoid assigning the session to different rooms)
+        // 3. the session is less "flexible" (the number of requested slots is
+        // close to the number of acceptable slots)
+        // 4. the session is as flexible as the candidate session but requires
+        // more slots (we want to process it earlier to avoid assigning the
+        // session to different rooms)
         if (!candidate.session ||
             s.meetings?.find(m => m.slot) ||
-            candidate.nbTimes < getRequestedNbOfSlots(s)) {
+            candidate.flexibility > getFlexibility(s) ||
+            (candidate.flexibility === getFlexibility(s) &&
+              candidate.nbTimes < getRequestedNbOfSlots(s))) {
           return {
             session: s,
             nbTimes: getRequestedNbOfSlots(s),
+            flexibility: getFlexibility(s),
             meetingTimeImposed: s.meetings?.find(m => m.slot)
           };
         }
@@ -179,6 +196,7 @@ export function suggestSchedule(project, { seed }) {
     }, {
       session: null,
       nbTimes: 0,
+      flexibility: MAX_FLEXIBILITY,
       meetingTimeImposed: false
     });
     if (session) {
