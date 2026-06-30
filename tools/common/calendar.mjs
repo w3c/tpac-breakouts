@@ -233,7 +233,15 @@ async function importEvent(event, calendarServer, token) {
   });
   const json = await response.json();
   if (!json.event?.url) {
-    throw new Error(`Unexpected response from W3C server on event import request:\n${JSON.stringify(json, null, 2)}`);
+    throw new Error(`Unexpected response from W3C server on event import request:
+  ${JSON.stringify(json, null, 2)}
+
+The request was:
+  ${JSON.stringify(event, null, 2)}
+
+X-Request-Id:
+  ${response.headers.get("X-Request-Id")}
+`);
   }
   return json.event.url;
 }
