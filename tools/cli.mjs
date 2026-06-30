@@ -17,7 +17,7 @@ import schedule from './node/schedule.mjs';
 import synchronizeCalendar from './node/sync-calendar.mjs';
 import validate from './node/validate.mjs';
 import viewEvent from './node/view-event.mjs';
-import viewRegisrants from './node/view-registrants.mjs';
+import viewRegistrants from './node/view-registrants.mjs';
 
 function myParseInt(value) {
   // parseInt takes a string and a radix
@@ -208,7 +208,7 @@ program
   .option('-s, --save', 'save registrants information to the project. The --fetch option must be set.')
   .option('-u, --url <url>', 'URL of the page that lists the registrants per session. The code uses `https://www.w3.org/register/[meeting name]/registrants` when not given. The --fetch option must be set.')
   .option('-w, --warnings-only', 'Only return information about sessions that meet in rooms that are too small.')
-  .action(getProjectCommandRunner(viewRegisrants))
+  .action(getProjectCommandRunner(viewRegistrants))
   .addHelpText('after', `
 Examples:
   $ npx tpac-breakouts view-registrants all
