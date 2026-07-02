@@ -18,6 +18,7 @@ import synchronizeCalendar from './node/sync-calendar.mjs';
 import validate from './node/validate.mjs';
 import viewEvent from './node/view-event.mjs';
 import viewRegistrants from './node/view-registrants.mjs';
+import fillRegistrationGroups from './node/fill-registration-groups.mjs';
 
 function myParseInt(value) {
   // parseInt takes a string and a radix
@@ -216,5 +217,22 @@ Examples:
   $ npx tpac-breakouts view-registrants all --fetch --save
   $ npx tpac-breakouts view-registrants all --fetch --url https://example.org/registrants
 `);
+
+
+/******************************************************************************
+ * The "fill-registration-groups" command
+ *****************************************************************************/
+program
+  .command('fill-registration-groups')
+  .summary('Fill the list of groups in the TPAC registration form (admin only)')
+  .description('Populate the list of groups in the TPAC registration form using the admin interface at https://www.w3.org/admin/tpac-meetings/list.')
+  .option('-v, --view', 'view the list of groups (but do not populate the list)')
+  .action(getProjectCommandRunner(fillRegistrationGroups))
+  .addHelpText('after', `
+Examples:
+  $ npx tpac-breakouts fill-registration-groups
+  $ npx tpac-breakouts fill-registration-groups --view
+`);
+
 
 program.parseAsync(process.argv);

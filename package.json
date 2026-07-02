@@ -48,12 +48,15 @@
     "commander": "^15.0.0",
     "googleapis": "^171.4.0",
     "irc": "^0.5.2",
-    "puppeteer": "^25.2.1",
+    "puppeteer": "^25.3.0",
     "webvtt-parser": "^2.2.0",
     "yaml": "^2.9.0"
   },
   "devDependencies": {
     "@google/clasp": "^3.3.0",
     "rollup": "^4.62.2"
+  },
+  "allowScripts": {
+    "puppeteer@25.3.0": true
   }
 }
