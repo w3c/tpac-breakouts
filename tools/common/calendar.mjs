@@ -263,8 +263,9 @@ async function removeFromCalendarEntry(
  * Delete or cancel the calendar entry
  */
 async function cancelCalendarEntry({
-    calendarUrl, calendarServer, project,
+    entry, calendarServer, project,
     author, token }) {
+  const calendarUrl = entry.url;
   const calendarPath = calendarUrl.split('/');
   calendarPath.pop();
   const uuid = calendarPath.pop();
@@ -285,6 +286,11 @@ async function cancelCalendarEntry({
         'breakout-sessions',
       status: 'canceled',
       author
+    },
+    dates: {
+      start: `${entry.day} ${entry.start}:00`,
+      end: `${entry.day} ${entry.end}:00`,
+      timezone: project.metadata.timezone
     }
   };
   await importEvent(json, calendarServer, token);
@@ -541,7 +547,7 @@ export async function synchronizeSessionWithCalendar(
     else {
       console.log(`- delete/cancel calendar entry ${entry.url}`);
       await cancelCalendarEntry({
-        calendarUrl: entry.url,
+        entry,
         calendarServer,
         project, author, token
       });
