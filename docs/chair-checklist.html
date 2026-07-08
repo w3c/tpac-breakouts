@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang='en'>
+ <head>
+  <title>Chair checklist for organizing a breakout session</title>
+  <meta charset='utf-8'>
+  <style>
+    h1, h2 { color: #005a9c; font-family: sans-serif; }
+    h1 { font-size: 60px; margin-bottom: 0; }
+    h2 { font-size: 40px; margin-top: 10px; font-weight: 100;}
+    h3 { font-size: 24px; font-weight: 150; margin-top: 0;}
+    body { margin: 2em;}
+    #logo { float: right;
+	    margin-top: -10px; 
+	    width: 120px;
+    	    height: 120px;
+            background-image: url('https://www.w3.org/assets/logos/w3c-2025/svg/w3c.svg');
+	    background-size: cover;
+	  }
+    .box {
+        margin-top: 3em;
+        position: relative; /* Establishes a reference boundary */    
+	padding: 1em;
+	font-family: sans-serif; 
+	color: white;
+        background-color: #005a9c;
+        border-radius: 15px;     
+    }
+    @counter-style hollow-box {
+	system: cyclic;
+	symbols: "\2610";
+	suffix: " ";
+    }
+    .box ul {
+        list-style-type: hollow-box;
+        padding-left: 2em;
+        }
+    .box ul li {
+        line-height: 1.2; 
+        margin-bottom: 6px;
+        font-size: 16px;
+    }
+    .black-bar {
+    position: absolute;
+    top: -7px;
+    left: 1em;
+    width: 150px;
+    height: 14px;
+    background-color: #002a56;
+    }
+
+    @page {
+    size: letter;
+    /* size: A4; */
+    margin: 0;
+    }    
+
+    /* Turn these on for inverted mode */
+
+    /*
+    body, h1, h2 {
+	background-color: #005a9c;
+	color: white;
+    }
+    .box {
+	background-color: white;
+	color: #005a9c;
+    }
+    #logo {
+        filter: brightness(0) invert(1);
+    }   
+    */
+  </style>
+ </head>
+ <body>
+   <p id="logo"></p>
+   <h1>Chair Checklist</h1>
+   <h2>during a breakout session</h2>
+   <div class="box">
+     <div class="black-bar"></div>
+     <h3>Key Reminders for the Chair</h3>
+     <ul>
+       <li>Find someone to take notes and watch the speaker queue. The scribe should (but is not required to) take minutes in the IRC channel named in your session description; see below.</li>
+       <li>Check audio to be sure remote participants can hear the room.</li>
+       <li>Ask participants to mute when not speaking.</li>
+       <li>Remind people that they are participating under the Code of Ethics and Professional Conduct and Antitrust and Competition Guidance.</li>
+     </ul>
+   </div>
+
+   <div class="box">
+     <div class="black-bar"></div>
+     <h3>Recording sessions</h3>
+     <ul>
+       <li>If recording, <b>only record presentations</b>, not discussion.</li>
+       <li>Ask participants about objections to recording a given presentation.</li>
+       <li>If <b>anyone</b> (in-person or remote) objects, do not record.</li>
+       <li>Only record a presenter with their permission.</li>
+       <li>Use the recording facilities provided by Zoom, including automatic generation of captions.</li>
+     </ul>
+   </div>
+
+    <div class="box">
+     <div class="black-bar"></div>
+     <h3>If using IRC bots to manage the speaker queue and minutes</h3>
+     <ul>
+       <li>The W3C breakout planners intend to have scribe bots up and running at the start of your session.</li>
+       <li>Record names of participants (e.g., by having them "sign in" on IRC: present+ name_surname)</li>
+       <li>Save the minutes ("rrsagent, make minutes"). If your session is public, the minutes will be public. If your session is not public, the minutes will be W3C Member-only.</li>
+       <li>If using Zakim on IRC, end the meeting with "Zakim, end meeting".</li>
+     </ul>
+    </div>
+</body>
+</html>
