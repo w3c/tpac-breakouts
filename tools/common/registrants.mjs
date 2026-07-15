@@ -72,14 +72,23 @@ function mapRegistrantsToProject(project, registrants) {
       registrants.meetings?.find(meeting =>
         normalizeTitle(session.title) === normalizeTitle(meeting.name));
     if (sessionRegistrants) {
-      session.people = sessionRegistrants.chairs
+      // TODO: Once in a while, the registration endpoint returns objects
+      // indexed by numbers instead of arrays. To be fixed in the endpoint
+      // logic. In the meantime, let's get back to arrays ourselves.
+      const chairs = Array.isArray(sessionRegistrants.chairs) ?
+        sessionRegistrants.chairs :
+        Object.values(sessionRegistrants.chairs);
+      const teamContacts = Array.isArray(sessionRegistrants['team-contacts']) ?
+        sessionRegistrants['team-contacts'] :
+        Object.values(sessionRegistrants['team-contacts']);
+      session.people = chairs
         .map(person => Object.assign({
             name: person.name,
             email: person.email,
             type: 'Chair'
           }))
         .concat(
-          sessionRegistrants['team-contacts']
+          teamContacts
             .map(person => Object.assign({
               name: person.name,
               email: person.email,
