@@ -191,6 +191,13 @@ export function getProject(spreadsheet) {
         if (v['vip slot']) {
           mapped.vip = v['vip slot'] === 'yes' ? true : false;
         }
+        if (v['excluded sessions']) {
+          mapped.exclude = v['excluded sessions']
+            .split(',')
+            .map(n => n.trim())
+            .filter(n => n.match(/^\d+$/))
+            .map(n => parseInt(n, 10));
+        }
         return mapped;
       }),
 
