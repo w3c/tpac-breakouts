@@ -459,7 +459,9 @@ export function suggestSchedule(project, { seed }) {
           // - If we explicitly set a slot already, that's the only possibility,
           // provided the slot is available in that room!
           // - Otherwise, all the slots that are still available in the room are
-          // possible.
+          // possible, except those that explicitly flag the session as
+          // incompatible with them (this mechanism allows to prevent scheduling
+          // sessions at certain slots).
           // If we're dealing with a real track, we'll consider possible slots in
           // order. If we're dealing with plenary sessions, we'll fill possible
           // slots in order before moving to the next one. If we're dealing with a
@@ -478,6 +480,7 @@ export function suggestSchedule(project, { seed }) {
               .filter(ds => !ds.vip)
               .filter(ds => !meeting.day || ds.date === meeting.day)
               .filter(ds => !meeting.slot || ds.start === meeting.slot)
+              .filter(ds => !ds.exclude?.find(number => session.number === number))
               .filter(ds => isMeetingAvailableForSession(session, { room: room.name, day: ds.date, slot: ds.start }) &&
                             !meetings.find(m => m !== meeting && m.day === ds.date && m.slot === ds.start))
             );
