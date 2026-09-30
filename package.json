@@ -57,6 +57,6 @@
     "rollup": "^4.62.3"
   },
   "allowScripts": {
-    "puppeteer@25.3.0": true
+    "puppeteer": true
   }
 }
