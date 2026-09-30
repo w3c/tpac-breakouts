@@ -192,7 +192,7 @@ export function getProject(spreadsheet) {
           mapped.vip = v['vip slot'] === 'yes' ? true : false;
         }
         if (v['excluded sessions']) {
-          mapped.exclude = v['excluded sessions']
+          mapped.exclude = String(v['excluded sessions'])
             .split(',')
             .map(n => n.trim())
             .filter(n => n.match(/^\d+$/))
