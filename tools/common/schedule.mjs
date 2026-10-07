@@ -156,9 +156,6 @@ export function suggestSchedule(project, { seed }) {
   // Note we schedule sessions that require a bigger number of slots first.
   function selectNextSession(track) {
     const { session } = sessions.reduce((candidate, s) => {
-      if (candidate.meetingTimeImposed) {
-        return candidate;
-      }
       // A good candidate is a session that has not been processed already,
       // and that belongs to the track we're interested in (noting that
       // "plenary" is handled as a kind of track). When we're not interested in
@@ -169,20 +166,28 @@ export function suggestSchedule(project, { seed }) {
           track === '')) {
         // Keep the new candidate if:
         // 1. we don't yet have a candidate session
-        // 2. the session has been assigned a given time (we want to process it
-        // earlier to avoid introducing conflicts afterwards)
-        // 3. the session is less "flexible" (the number of requested slots is
-        // close to the number of acceptable slots)
-        // 4. the session is as flexible as the candidate session but requires
-        // more slots (we want to process it earlier to avoid assigning the
-        // session to different rooms)
+        // 2. the session has been assigned a given time while the candidate
+        // session has not (we want to process it earlier to avoid introducing
+        // conflicts afterwards)
+        // 3. the capacity needs of the session are greater than that of the
+        // candidate session
+        // 4. the capacity needs are similar (or unknown) and the session is
+        // less "flexible" (i.e., the number of requested slots is close to the
+        // number of acceptable slots)
+        // 5. the capacity needs are similar (or unknown) and the session is as
+        // flexible as the candidate session but requires more slots (we want
+        // to process it earlier to avoid assigning the session to different
+        // rooms)
         if (!candidate.session ||
-            s.meetings?.find(m => m.slot) ||
-            candidate.flexibility > getFlexibility(s) ||
-            (candidate.flexibility === getFlexibility(s) &&
-              candidate.nbTimes < getRequestedNbOfSlots(s))) {
+            (!candidate.meetingTimeImposed && s.meetings?.find(m => m.slot)) ||
+            (capacity[s.number] > candidate.capacity) ||
+            ((capacity[s.number] === candidate.capacity) &&
+                (candidate.flexibility > getFlexibility(s) ||
+                (candidate.flexibility === getFlexibility(s) &&
+                  candidate.nbTimes < getRequestedNbOfSlots(s))))) {
           return {
             session: s,
+            capacity: capacity[s.number],
             nbTimes: getRequestedNbOfSlots(s),
             flexibility: getFlexibility(s),
             meetingTimeImposed: s.meetings?.find(m => m.slot)
@@ -195,6 +200,7 @@ export function suggestSchedule(project, { seed }) {
       return candidate;
     }, {
       session: null,
+      capacity: 0,
       nbTimes: 0,
       flexibility: MAX_FLEXIBILITY,
       meetingTimeImposed: false
@@ -228,7 +234,7 @@ export function suggestSchedule(project, { seed }) {
       (total, curr) => curr.track === track ? total : total + 1,
       0);
     const byAvailability = (r1, r2) => slotsTaken(r1) - slotsTaken(r2);
-    const meetCapacity = room => (room.capacity ?? 30) >= capacity[largestSession.number];
+    const meetCapacity = room => ((room.capacity ?? 30) * 1.2) >= capacity[largestSession.number];
     const meetSameRoom = room => slotsTaken(room) + trackSessions.length <= daysAndSlots.length;
     const meetAll = room => meetCapacity(room) && meetSameRoom(room);
 
@@ -419,16 +425,18 @@ export function suggestSchedule(project, { seed }) {
       }
       else {
         // All rooms that have enough capacity are candidate rooms
+        // Note: we allow meetings to go slightly over room capacity because of
+        // natural fluctuations in attendance.
         possibleRooms.push(...rooms
           .filter(room => !room.vip)
           .filter(room => room.name !== plenaryRoom || session.description.type === 'plenary')
-          .filter(room => (room.capacity ?? 30) >= capacity[session.number])
+          .filter(room => ((room.capacity ?? 30) * 1.2) >= capacity[session.number])
           .sort(byCapacity));
         if (!meetCapacity) {
           possibleRooms.push(...rooms
             .filter(room => !room.vip)
             .filter(room => room.name !== plenaryRoom || session.description.type === 'plenary')
-            .filter(room => (room.capacity ?? 30) < (capacity[session.number] || +Infinity))
+            .filter(room => ((room.capacity ?? 30) * 1.2) < (capacity[session.number] || +Infinity))
             .sort(byCapacityDesc));
         }
       }

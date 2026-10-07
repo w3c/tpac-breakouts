@@ -517,12 +517,14 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   }
 
   // Check assigned room matches requested capacity
+  // Note: we allow meetings to go slightly over room capacity because of
+  // natural fluctuations in attendance.
   if (session.description.capacity) {
     const capacityWarnings = meetings
       .filter(meeting => meeting.room)
       .map(meeting => {
         const room = project.rooms.find(s => s.name === meeting.room);
-        if ((room.capacity ?? 30) < session.description.capacity) {
+        if (((room.capacity ?? 30) * 1.2) < session.description.capacity) {
           return { meeting, session, room };
         }
         return null;
@@ -547,6 +549,8 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
   }
 
   // Check assigned room's capacity works for number of registrants
+  // Note: we allow meetings to go slightly over room capacity because of
+  // natural fluctuations in attendance.
   if (session.participants) {
     const capacityWarnings = meetings
       .filter(meeting => meeting.room)
@@ -556,7 +560,7 @@ ${projectErrors.map(error => '- ' + error).join('\n')}`);
         if (!nbParticipants) {
           nbParticipants = session.participants;
         }
-        if ((room.capacity ?? 30) < nbParticipants) {
+        if (((room.capacity ?? 30) * 1.2) < nbParticipants) {
           return { meeting, session, room };
         }
         return null;
