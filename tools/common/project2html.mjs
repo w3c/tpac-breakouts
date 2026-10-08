@@ -263,7 +263,7 @@ export async function convertProjectToHTML(project, cliParams) {
             <tr>
               <th></th>`);
     table.rooms.forEach((room, index) => {
-      writeLine(7, `<th>${reduce ? 'Room ' + (index + 1) : room.name}</th>`);
+      writeLine(7, `<th>${reduce ? room.name : 'Room ' + (index + 1)}</th>`);
     });
     writeLine(6, `</tr>`);
     writeLine(5, `</thead>`);
