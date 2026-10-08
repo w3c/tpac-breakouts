@@ -555,9 +555,9 @@ export async function synchronizeSessionWithCalendar(
   }
 
   for (const entry of actions.update) {
-    console.log(`- refresh calendar entry ${entry.url}, meeting in ${entry.meeting.room} on ${entry.day} ${entry.start} - ${entry.end}`);
+    console.log(`- refresh calendar entry ${entry.url}, meeting in ${entry.meeting.room ?? '(unassigned)'} on ${entry.day} ${entry.start} - ${entry.end}`);
     const room = project.rooms.find(room => room.name === entry.meeting.room);
-    const zoom = project.zoom?.find(z => z.room === room.name && z.slot.startsWith(`${entry.day} ${entry.start}`)) ??
+    const zoom = project.zoom?.find(z => z.room === room?.name && z.slot.startsWith(`${entry.day} ${entry.start}`)) ??
       (project.metadata.rooms === 'hide' ? null : room);
     entry.url = await updateCalendarEntry({
       calendarServer,
@@ -567,9 +567,9 @@ export async function synchronizeSessionWithCalendar(
   }
 
   for (const entry of actions.create) {
-    console.log(`- create new calendar entry, meeting in ${entry.meeting.room} on ${entry.day} ${entry.start} - ${entry.end}`);
+    console.log(`- create new calendar entry, meeting in ${entry.meeting.room ?? '(unassigned)'} on ${entry.day} ${entry.start} - ${entry.end}`);
     const room = project.rooms.find(room => room.name === entry.meeting.room);
-    const zoom = project.zoom?.find(z => z.room === room.name && z.slot.startsWith(`${entry.day} ${entry.start}`)) ??
+    const zoom = project.zoom?.find(z => z.room === room?.name && z.slot.startsWith(`${entry.day} ${entry.start}`)) ??
       (project.metadata.rooms === 'hide' ? null : room);
     entry.url = await updateCalendarEntry({
       calendarServer,

@@ -236,16 +236,23 @@ export function serializeSessionMeetings(meetings, project) {
 /**
  * Group meetings by contiguous slots to create a minimum number of calendar
  * entries for group meetings.
+ *
+ * Note: The function only considers meetings that have been fully scheduled by
+ * default (in other words, assigned to a day, time, and room). The last
+ * parameter may be set to tell the function to also consider meetings that
+ * don't yet have a room. This is useful when an initial schedule and calendar
+ * entries have already been created to avoid cancelling calendar entries and
+ * while room assignments are being revisited based on registrations.
  */
-export function groupSessionMeetings(session, project) {
+export function groupSessionMeetings(session, project, ignoreRoom) {
   const slots = project.slots;
   const meetings = parseSessionMeetings(session, project);
 
   // First, group the meetings by room and day
   const groups = {};
   for (const meeting of meetings) {
-    if (meeting.room && meeting.day && meeting.slot) {
-      const key = meeting.room + ', ' + meeting.day;
+    if ((meeting.room || ignoreRoom) && meeting.day && meeting.slot) {
+      const key = (meeting.room || '') + ', ' + meeting.day;
       if (!groups[key]) {
         groups[key] = [];
       }
@@ -319,7 +326,12 @@ export function groupSessionMeetings(session, project) {
  */
 export function computeSessionCalendarUpdates(session, project) {
   // Compute the list of calendar entries that we need
-  const meetings = groupSessionMeetings(session, project);
+  // Note: we ignore room assignments when the room won't be displayed: it is
+  // common to prepare an initial schedule of group meetings at TPAC and then
+  // reset room assignments so that they can be re-assigned based on
+  // registration numbers; and we don't want calendar entries to get canceled
+  // when that happens.
+  const meetings = groupSessionMeetings(session, project, project.metadata.rooms === 'hide');
 
   // Retrieve info about calendar entries that are already associated with the
   // session from the session description
