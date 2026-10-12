@@ -38,6 +38,12 @@ export default function () {
             .addItem('Recover published schedule (from GitHub)', 'importGrid')
             .addItem('Fetch event info, rooms, days, slots (from GitHub)', 'importMetadata')
         )
+        .addSubMenu(
+          SpreadsheetApp.getUi()
+            .createMenu('Change room assignments in schedule sheet')
+            .addItem('Move currently selected meeting to another room', 'moveMeetingToAnotherRoom')
+            .addItem('Swap rooms of currently selected meetings', 'swapMeetingsRooms')
+        )
     )
     .addToUi();
 }

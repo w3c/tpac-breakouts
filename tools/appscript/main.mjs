@@ -29,6 +29,8 @@ import _createRepository from './create-repository.mjs';
 import _setAuthorizationToken from './set-authorization-token.mjs';
 import _fetchRegistrants from './fetch-registrants.mjs';
 import _exportEmails from './export-emails.mjs';
+import _moveMeetingToAnotherRoom from './move-meeting-room.mjs';
+import _swapMeetingsRooms from './swap-meetings-rooms.mjs';
 
 function main() { _createOnOpenTrigger(); }
 function addTPACMenu() { _addTPACMenu(); }
@@ -45,3 +47,5 @@ function createRepository() { _createRepository(); }
 function setAuthorizationToken() { _setAuthorizationToken(); }
 function fetchRegistrants() { _fetchRegistrants(); }
 function exportEmails() { _exportEmails(); }
+function moveMeetingToAnotherRoom() { _moveMeetingToAnotherRoom(); }
+function swapMeetingsRooms() { _swapMeetingsRooms(); }
