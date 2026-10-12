@@ -65,7 +65,7 @@ export default function () {
     }
 
     console.log(`- selected session: ${selectedSession.number} - ${selectedSession.range.getValue()}`);
-    let dayRange = sheet.getRange(session.range.getRow(), 1, 1);
+    let dayRange = sheet.getRange(selectedSession.range.getRow(), 1, 1);
     if (dayRange.isPartOfMerge()) {
       const mergedRanges = dayRange.getMergedRanges();
       dayRange = mergedRanges[0];
