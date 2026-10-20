@@ -148,6 +148,10 @@ async function copyFiles(project) {
   bundleFiles['package.json'] = JSON.stringify({
     dependencies: {
       'tpac-breakouts': 'github:w3c/tpac-breakouts'
+    },
+    allowScripts: {
+      'puppeteer': true,
+      'tpac-breakouts@0.9.0': true
     }
   }, null, 2);
 
