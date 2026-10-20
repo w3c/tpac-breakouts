@@ -107,12 +107,12 @@ async function main(format) {
           console.warn('Wait 4s to ease load on server... done');
         }
         finally {
-          page.close();
+          await page.close();
         }
       }
     }
     finally {
-      browser.close();
+      await browser.close();
     }
     console.warn('Retrieving chair emails... done');
   }

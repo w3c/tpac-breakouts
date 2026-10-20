@@ -59,7 +59,7 @@ async function main(format) {
     session.description = parseSessionBody(session.body);
   }
 
-  // project.sessions = project.sessions.slice(0, 4);
+  project.sessions = project.sessions.slice(0, 4);
   const sessions = project.sessions;
   sessions.sort((s1, s2) => s1.number - s2.number);
 
@@ -89,12 +89,12 @@ async function main(format) {
           console.warn('Wait 4s to ease load on server... done');
         }
         finally {
-          page.close();
+          await page.close();
         }
       }
     }
     finally {
-      browser.close();
+      await browser.close();
     }
     console.warn('Retrieving calendar participants... done');
   }
@@ -108,7 +108,11 @@ async function main(format) {
     }
   });
 
-  for (const [slot, sessions] of Object.entries(perSlot)) {
+  const slots = Object.keys(perSlot)
+  slots.sort();
+
+  for (const slot of slots) {
+    const sessions = perSlot[slot];
     sessions.sort((s1, s2) => {
       if (s1.participants !== s2.participants) {
         return s2.participants - s1.participants;
