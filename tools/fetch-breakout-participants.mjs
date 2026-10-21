@@ -59,7 +59,7 @@ async function main(format) {
     session.description = parseSessionBody(session.body);
   }
 
-  project.sessions = project.sessions.slice(0, 4);
+  // project.sessions = project.sessions.slice(0, 4);
   const sessions = project.sessions;
   sessions.sort((s1, s2) => s1.number - s2.number);
 
