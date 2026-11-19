@@ -45,16 +45,16 @@
     "node": ">=20"
   },
   "dependencies": {
-    "commander": "^15.0.0",
-    "googleapis": "^181.0.0",
+    "commander": "^15.1.0",
+    "googleapis": "^189.0.0",
     "irc": "^0.5.2",
-    "puppeteer": "^25.12.0",
+    "puppeteer": "^25.17.0",
     "webvtt-parser": "^2.2.0",
     "yaml": "^2.9.1"
   },
   "devDependencies": {
     "@google/clasp": "^3.4.1",
-    "rollup": "^4.63.4"
+    "rollup": "^4.68.2"
   },
   "allowScripts": {
     "puppeteer": true
